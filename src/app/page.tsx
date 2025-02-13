@@ -1,23 +1,23 @@
 "use client";
 
 import { useBskyAuthContext } from "@/contexts/bskyAuthProvider";
-import { bskyAuthClient } from "@/instances";
 import { useCallback, useState } from "react";
 
 export default function Home() {
-  const { authenticated } = useBskyAuthContext();
+  const { authenticated, bskyAuthClient } = useBskyAuthContext();
 
   const [handle, setHandle] = useState<string>("");
 
   const signIn = useCallback(async () => {
+    if (!bskyAuthClient) return;
     try {
       await bskyAuthClient.signIn(handle, {
-        display: "popup",
+        scope: "atproto transition:generic",
       });
     } catch (err) {
       console.log(err);
     }
-  }, [handle]);
+  }, [handle, bskyAuthClient]);
 
   return (
     <>
