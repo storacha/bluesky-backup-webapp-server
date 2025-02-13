@@ -1,7 +1,9 @@
-import { bskyAuthClient } from "@/instances";
 import { Agent } from "@atproto/api";
 import { ProfileViewBasic } from "@atproto/api/dist/client/types/app/bsky/actor/defs";
-import { OAuthSession } from "@atproto/oauth-client-browser";
+import {
+  OAuthSession,
+  BrowserOAuthClient,
+} from "@atproto/oauth-client-browser";
 import { useQuery } from "@tanstack/react-query";
 import {
   createContext,
@@ -18,6 +20,7 @@ type BskyAuthContextProps = {
   session?: OAuthSession;
   state?: string;
   userProfile?: ProfileViewBasic;
+  bskyAuthClient?: BrowserOAuthClient;
 };
 
 const BskyAuthContext = createContext<BskyAuthContextProps>({
@@ -30,21 +33,22 @@ type Props = {
 
 export const BskyAuthProvider = ({ children }: Props) => {
   const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const [bskyAuthClient, setBskyAuthClient] = useState<BrowserOAuthClient>();
   const [session, setSession] = useState<OAuthSession>();
   const [state, setState] = useState<string>();
 
   const bskyAgent = useMemo(() => {
     if (!authenticated || !session) return;
-    return new Agent(session);
+    const agent = new Agent(session);
+    return agent;
   }, [authenticated, session]);
 
   const { data: userProfile } = useQuery({
     queryKey: ["bsky", "profile"],
     queryFn: async () => {
-      if (!authenticated || !bskyAgent) return;
-      const result = (
-        await bskyAgent.getProfile({ actor: bskyAgent.assertDid })
-      ).data;
+      if (!authenticated || !bskyAgent || !bskyAgent.did) return;
+      const result = (await bskyAgent.getProfile({ actor: bskyAgent.did }))
+        .data;
       return result;
     },
     enabled: authenticated && !!bskyAgent,
@@ -52,7 +56,13 @@ export const BskyAuthProvider = ({ children }: Props) => {
 
   useEffect(() => {
     const initBsky = async () => {
-      const result = await bskyAuthClient.init();
+      const bskyAuthClient = await BrowserOAuthClient.load({
+        clientId: "https://spread-accurately-group-misc.trycloudflare.com/",
+        handleResolver: "https://bsky.social",
+      });
+      setBskyAuthClient(bskyAuthClient);
+
+      const result = await bskyAuthClient.init(true);
 
       if (result) {
         const { session, state } = result as {
@@ -69,6 +79,7 @@ export const BskyAuthProvider = ({ children }: Props) => {
           setState(state);
         } else {
           console.log(`${session.sub} was restored (last active session)`);
+
           setAuthenticated(true);
           setSession(session);
         }
@@ -85,6 +96,7 @@ export const BskyAuthProvider = ({ children }: Props) => {
         session,
         state,
         userProfile,
+        bskyAuthClient,
       }}
     >
       {children}
