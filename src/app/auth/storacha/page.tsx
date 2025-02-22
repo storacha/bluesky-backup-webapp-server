@@ -8,10 +8,10 @@ function Identity () {
   return (
     <div className="m-12">
       <p className="mb-6">
-        You're signed in as <b>{accounts[0].toEmail()}</b>.
+        You&apos;re signed in as <b>{accounts[0].toEmail()}</b>.
       </p>
       <p>
-        Your local agent's DID is
+        Your local agent&apos;s DID is
       </p>
       <p className="max-w-xl overflow-hidden text-ellipsis">
         {client?.agent.did()}
