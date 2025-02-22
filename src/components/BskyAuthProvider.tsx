@@ -1,36 +1,23 @@
+'use client'
+
+import { BskyAuthContext } from "@/contexts";
 import { Agent } from "@atproto/api";
-import { ProfileViewBasic } from "@atproto/api/dist/client/types/app/bsky/actor/defs";
 import {
   OAuthSession,
   BrowserOAuthClient,
 } from "@atproto/oauth-client-browser";
 import { useQuery } from "@tanstack/react-query";
 import {
-  createContext,
   JSX,
   ReactNode,
-  useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
 
-type BskyAuthContextProps = {
-  authenticated: boolean;
-  session?: OAuthSession;
-  state?: string;
-  userProfile?: ProfileViewBasic;
-  bskyAuthClient?: BrowserOAuthClient;
-};
-
-const BskyAuthContext = createContext<BskyAuthContextProps>({
-  authenticated: false,
-});
-
 type Props = {
   children: JSX.Element | JSX.Element[] | ReactNode;
 };
-
 export const BskyAuthProvider = ({ children }: Props) => {
   const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [bskyAuthClient, setBskyAuthClient] = useState<BrowserOAuthClient>();
@@ -104,6 +91,4 @@ export const BskyAuthProvider = ({ children }: Props) => {
   );
 };
 
-export const useBskyAuthContext = () => {
-  return useContext(BskyAuthContext);
-};
+export default BskyAuthProvider

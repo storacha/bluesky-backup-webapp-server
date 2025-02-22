@@ -1,1 +1,1 @@
-export * from "./bskyAuthProvider";
+export * from "./bluesky";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useBskyAuthContext } from "@/contexts/bskyAuthProvider";
+import { useBskyAuthContext } from "@/contexts/bluesky";
 import { useCallback, useState } from "react";
 
 export default function Home() {
