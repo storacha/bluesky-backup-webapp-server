@@ -43,6 +43,7 @@ jobs:
           echo "NEXT_PUBLIC_STORACHA_GATEWAY_HOST=https://staging.w3s.link" >> .env
           echo "NEXT_PUBLIC_STORACHA_GATEWAY_ID=did:web:staging.w3s.link" >> .env
           echo "NEXT_PUBLIC_IPFS_GATEWAY_URL=https://%ROOT_CID%.ipfs-staging.w3s.link" >> .env
+          echo "NEXT_PUBLIC_BLUESKY_CLIENT_URI=${{ (github.ref_name == 'main') && 'https://bluesky-backup-staging.pages.dev/' || 'https://bluesky-backup-preview.pages.dev/' }}" >> .env
           echo "NEXT_PUBLIC_SENTRY_ENV=staging" >> .env
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> .env
       # as long as this uses https://github.com/cloudflare/next-on-pages/blob/dc529d7efa8f8568ea8f71b5cdcf78df89be6c12/packages/next-on-pages/bin/index.js,
@@ -136,6 +137,7 @@ jobs:
           echo "NEXT_PUBLIC_STORACHA_GATEWAY_ID=did:web:w3s.link" >> .env
           echo "NEXT_PUBLIC_IPFS_GATEWAY_URL=https://%ROOT_CID%.ipfs.w3s.link" >> .env
           echo "NEXT_PUBLIC_SENTRY_ENV=production" >> .env
+          echo "NEXT_PUBLIC_BLUESKY_CLIENT_URI=https://bluesky-backup-production.pages.dev/" >> .env
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> .env
       - run: pnpm pages:build
         # as long as this uses https://github.com/cloudflare/next-on-pages/blob/dc529d7efa8f8568ea8f71b5cdcf78df89be6c12/packages/next-on-pages/bin/index.js,

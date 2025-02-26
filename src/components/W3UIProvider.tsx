@@ -1,9 +1,9 @@
-import { Provider as W3UIProvider } from '@w3ui/react'
+import { Provider } from '@w3ui/react'
 
-export default function Provider({ children }: { children: React.ReactNode }) {
+export default function W3UIProvider({ children }: { children: React.ReactNode }) {
   return (
-    <W3UIProvider>
+    <Provider>
       {children}
-    </W3UIProvider>
+    </Provider>
   )
 }

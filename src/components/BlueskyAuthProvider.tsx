@@ -1,6 +1,7 @@
 'use client'
 
 import { BskyAuthContext } from "@/contexts";
+import { blueskyClientMetadata } from "@/lib/bluesky";
 import { Agent } from "@atproto/api";
 import {
   OAuthSession,
@@ -43,8 +44,8 @@ export const BskyAuthProvider = ({ children }: Props) => {
 
   useEffect(() => {
     const initBsky = async () => {
-      const bskyAuthClient = await BrowserOAuthClient.load({
-        clientId: "https://spread-accurately-group-misc.trycloudflare.com/",
+      const bskyAuthClient = new BrowserOAuthClient({
+        clientMetadata: blueskyClientMetadata,
         handleResolver: "https://bsky.social",
       });
       setBskyAuthClient(bskyAuthClient);

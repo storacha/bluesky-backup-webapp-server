@@ -2,7 +2,6 @@
 
 import { Authenticator, useW3 } from '@w3ui/react'
 import { AuthenticationEnsurer } from '@/components/Authenticator'
-import { Provider as W3UIProvider } from '@w3ui/react'
 
 function Identity () {
   const [{ client, accounts }] = useW3()
@@ -21,14 +20,13 @@ function Identity () {
   )
 }
 
-export default function StorachaAuthenticator() {
+
+export default function StorachaAuthenticator () {
   return (
-    <W3UIProvider>
-      <Authenticator>
-        <AuthenticationEnsurer>
-          <Identity />
-        </AuthenticationEnsurer>
-      </Authenticator>
-    </W3UIProvider>
+    <Authenticator>
+      <AuthenticationEnsurer>
+        <Identity />
+      </AuthenticationEnsurer>
+    </Authenticator>
   )
 }

@@ -22,14 +22,23 @@ export default function RootProviders ({
       })
   );
 
-  const BskyAuthProvider = dynamic(() => import('../components/BskyAuthProvider'), {
+  const BskyAuthProvider = dynamic(() => import('../components/BlueskyAuthProvider'), {
+    loading: () => <p>Loading...</p>,
+    ssr: false
+  })
+
+  const StorachaAuthProvider = dynamic(() => import('../components/W3UIProvider'), {
     loading: () => <p>Loading...</p>,
     ssr: false
   })
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BskyAuthProvider>{children}</BskyAuthProvider>
+      <BskyAuthProvider>
+        <StorachaAuthProvider>
+          {children}
+        </StorachaAuthProvider>
+      </BskyAuthProvider>
     </QueryClientProvider>
   );
 }
