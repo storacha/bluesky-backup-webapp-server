@@ -1,3 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+.btn {
+  @apply px-2 py-1 border rounded-lg;
+}
+
+.ipt {
+  @apply px-2 py-1 border rounded-lg;
+}

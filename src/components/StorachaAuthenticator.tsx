@@ -6,7 +6,7 @@ import { AuthenticationEnsurer } from '@/components/Authenticator'
 function Identity () {
   const [{ client, accounts }] = useW3()
   return (
-    <div className="m-12">
+    <div>
       <p className="mb-6">
         You&apos;re signed in as <b>{accounts[0].toEmail()}</b>.
       </p>

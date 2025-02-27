@@ -32,8 +32,13 @@ export default function BlueskyAuthenticator () {
             }}
             value={handle}
             placeholder="Bluesky Handle"
+            className="ipt"
           />
-          <button onClick={signIn}>Sign in</button>
+          <button
+            onClick={signIn}
+            className="btn">
+            Sign in
+          </button>
         </div>
       )}
     </div>

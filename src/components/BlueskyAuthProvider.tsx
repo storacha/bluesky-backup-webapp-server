@@ -27,8 +27,7 @@ export const BskyAuthProvider = ({ children }: Props) => {
 
   const bskyAgent = useMemo(() => {
     if (!authenticated || !session) return;
-    const agent = new Agent(session);
-    return agent;
+    return new Agent(session);
   }, [authenticated, session]);
 
   const { data: userProfile } = useQuery({
@@ -85,6 +84,7 @@ export const BskyAuthProvider = ({ children }: Props) => {
         state,
         userProfile,
         bskyAuthClient,
+        agent: bskyAgent
       }}
     >
       {children}
