@@ -18,28 +18,35 @@ export const blueskyClientMetadata: OAuthClientMetadataInput = {
     "dpop_bound_access_tokens": true
 }
 
-interface BackupOptions {
+export interface BackupMetadataStore {
+    setLatestCommit: (accountDid: string, commitRev: string) => Promise<void>
+    addRepo: (cid: string, backupId: number, accountDid: string) => Promise<void>
+    addBlob: (cid: string, backupId: number, accountDid: string) => Promise<void>
+    addBackup: (accountDid: string) => Promise<number>
+}
+
+export interface BackupOptions {
     eventTarget?: EventTarget
 }
 
-export async function backup (profile: ProfileViewBasic, agent: Agent, storachaClient: Client, { eventTarget }: BackupOptions = {}) {
+export async function backup (profile: ProfileViewBasic, agent: Agent, storachaClient: Client, metadataStore: BackupMetadataStore, { eventTarget }: BackupOptions = {}) {
     const accountDid = profile.did
+    const backupId = await metadataStore.addBackup(accountDid)
 
-    // TODO
-    //const commitRev = await agent.com.atproto.sync.getLatestCommit({ did: accountDid })
-    //localDb.SetLatestCommit(accountDid, commitRev)
+    const commitResp = await agent.com.atproto.sync.getLatestCommit({ did: accountDid })
+    await metadataStore.setLatestCommit(accountDid, commitResp.data.rev)
 
     console.log("backing up repo")
     eventTarget?.dispatchEvent(new CustomEvent('repo:fetching', { detail: { did: accountDid } }))
     const repoRes = await agent.com.atproto.sync.getRepo({ did: accountDid })
+    console.log("got repo with headers", repoRes.headers)
 
     eventTarget?.dispatchEvent(new CustomEvent('repo:uploading'))
     const storachaRepoCid = await storachaClient.uploadCAR(new Blob([repoRes.data]))
     eventTarget?.dispatchEvent(new CustomEvent('repo:uploaded', { detail: { cid: storachaRepoCid } }))
 
 
-    // TODO
-    // await localDb.AddRepo(accountDid, repoStorachaCid)
+    await metadataStore.addRepo(storachaRepoCid.toString(), backupId, accountDid)
 
     let blobCursor: string | undefined = undefined
 
@@ -67,8 +74,7 @@ export async function backup (profile: ProfileViewBasic, agent: Agent, storachaC
             const storachaBlobCid = await storachaClient.uploadFile(new Blob([blobRes.data]))
             eventTarget?.dispatchEvent(new CustomEvent('blob:uploaded', { detail: { cid: storachaBlobCid, i, count: listedBlobs.data.cids.length } }))
 
-            // TODO
-            // await localDb.AddBlob(accountDid, blobStorachaCid)
+            await metadataStore.addBlob(storachaBlobCid.toString(), backupId, accountDid)
             i++
         }
 

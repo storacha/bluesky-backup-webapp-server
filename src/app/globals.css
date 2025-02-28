@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 .btn {
-  @apply px-2 py-1 border rounded-lg;
+  @apply px-2 py-1 border rounded-lg cursor-pointer hover:bg-white;
 }
 
 .ipt {

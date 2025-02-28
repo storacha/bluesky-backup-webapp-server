@@ -1,6 +1,6 @@
 // copied from console
 
-import { DID, UnknownLink } from '@w3ui/react'
+import { UnknownLink } from '@w3ui/react'
 
 export const B = 1024
 export const MB = 1024 * B
@@ -11,7 +11,7 @@ export function shortenCID(cid: UnknownLink) {
   return shorten(cid.toString(), 5, 4)
 }
 
-export function shortenDID(did: DID) {
+export function shortenDID(did: string) {
   return shorten(did, 14, 4)
 }
 
