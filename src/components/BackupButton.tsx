@@ -8,32 +8,79 @@ import { SpaceFinder } from "./SpaceFinder"
 
 export default function BackupButton () {
   const [isBackingUp, setIsBackingUp] = useState(false)
-  const [spaceDid, setSpaceDid] = useState<Space>()
+  const [selectedSpace, setSelectedSpace] = useState<Space>()
   const [storacha] = useW3()
   const bluesky = useBskyAuthContext()
+  const backupEvents = new EventTarget()
+  const space = selectedSpace  ?? storacha?.spaces[0]
   async function onClick () {
-    if (spaceDid && bluesky.userProfile && bluesky.agent && storacha.client) {
-      await storacha.client.setCurrentSpace(spaceDid.did())
+    if (space && bluesky.userProfile && bluesky.agent && storacha.client) {
+      await storacha.client.setCurrentSpace(space.did())
 
       setIsBackingUp(true)
-      await backup(bluesky.userProfile, bluesky.agent, storacha.client)
+      await backup(bluesky.userProfile, bluesky.agent, storacha.client, { eventTarget: backupEvents })
       setIsBackingUp(false)
     } else {
-      console.log(bluesky.userProfile, bluesky.agent, storacha.client)
+      console.log('not backing up, profile, agent, client:', bluesky.userProfile, bluesky.agent, storacha.client)
     }
   }
   const userAuthenticatedToBothServices = bluesky.userProfile && (storacha.accounts.length > 0)
+  const [backupProgressComponent, setBackupProgressComponent] = useState(
+    <>
+      Backing up your Bluesky account...
+    </>
+  )
+  backupEvents.addEventListener('repo:fetching', () => {
+    setBackupProgressComponent(
+      <>
+        Backing up your Bluesky account...
+      </>
+    )
+  })
+  backupEvents.addEventListener('repo:fetching', () => {
+    setBackupProgressComponent(
+      <>
+        Backing up your Bluesky account...
+      </>
+    )
+  })
+  backupEvents.addEventListener('repo:uploaded', () => {
+    setBackupProgressComponent(
+      <>
+        Backup started...
+      </>
+    )
+  })
+  backupEvents.addEventListener('blob:fetching', (e) => {
+    const { i: loaded, count: total } = (e as CustomEvent).detail ?? { i: 0, count: 1 }
+    const percentComplete = Math.floor((loaded / total) * 100)
+    setBackupProgressComponent(
+      <div>
+        <h3>Backing up your Bluesky account...</h3>
+        <div className='relative flex flex-row justify-start border'>
+          <div className='bg-black h-4' style={{ width: `${percentComplete}%` }}>
+          </div>
+        </div>
+      </div>
+    )
+  })
   return userAuthenticatedToBothServices ? (
-
     isBackingUp ? (
       <div>
-        Backup In Progress! Please check the developer console to see progress.
+        {backupProgressComponent}
       </div>
     ) : (
       <div>
-        <SpaceFinder selected={spaceDid} setSelected={setSpaceDid} spaces={storacha.spaces} />
-        <button onClick={onClick} disabled={!spaceDid}>
-          {spaceDid ? "Back It Up!" : "Please Pick a Space"}
+        <p>Please choose the Storacha space where you&apos;d like to back up your Bluesky account:</p>
+        {storacha.spaces && (storacha.spaces.length > 0) && (
+          <SpaceFinder 
+            selected={space} setSelected={setSelectedSpace} spaces={storacha.spaces} 
+            className="w-52"/>
+        )}
+        <button
+          onClick={onClick} disabled={!space}
+          className="btn">
+          {space ? "Back It Up!" : "Please Pick a Space"}
         </button>
       </div>
     )

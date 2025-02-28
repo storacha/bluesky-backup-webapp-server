@@ -13,6 +13,7 @@ import {
 } from "react";
 
 type BskyAuthContextProps = {
+  initialized: boolean;
   authenticated: boolean;
   session?: OAuthSession;
   state?: string;
@@ -22,6 +23,7 @@ type BskyAuthContextProps = {
 };
 
 export const BskyAuthContext = createContext<BskyAuthContextProps>({
+  initialized: false,
   authenticated: false,
 });
 

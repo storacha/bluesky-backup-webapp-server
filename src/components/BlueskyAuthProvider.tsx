@@ -24,6 +24,7 @@ export const BskyAuthProvider = ({ children }: Props) => {
   const [bskyAuthClient, setBskyAuthClient] = useState<BrowserOAuthClient>();
   const [session, setSession] = useState<OAuthSession>();
   const [state, setState] = useState<string>();
+  const [initialized, setInitialized] = useState(false)
 
   const bskyAgent = useMemo(() => {
     if (!authenticated || !session) return;
@@ -71,6 +72,7 @@ export const BskyAuthProvider = ({ children }: Props) => {
           setSession(session);
         }
       }
+      setInitialized(true)
     };
 
     initBsky();
@@ -79,6 +81,7 @@ export const BskyAuthProvider = ({ children }: Props) => {
   return (
     <BskyAuthContext.Provider
       value={{
+        initialized,
         authenticated,
         session,
         state,
