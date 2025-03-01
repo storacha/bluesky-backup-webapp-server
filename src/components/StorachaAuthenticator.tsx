@@ -28,5 +28,5 @@ export default function StorachaAuthenticator () {
         <Identity />
       </AuthenticationEnsurer>
     </Authenticator>
-  )
+   )
 }

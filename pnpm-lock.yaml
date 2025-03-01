@@ -23,9 +23,18 @@ importers:
       '@tailwindcss/postcss':
         specifier: ^4.0.9
         version: 4.0.9
+      '@ipld/dag-ucan':
+        specifier: ^3.4.5
+        version: 3.4.5
       '@tanstack/react-query':
         specifier: ^5.66.0
         version: 5.66.0(react@18.3.1)
+      '@ucanto/client':
+        specifier: ^9.0.1
+        version: 9.0.1
+      '@ucanto/transport':
+        specifier: ^9.1.1
+        version: 9.1.1
       '@w3ui/react':
         specifier: ^2.5.5
         version: 2.5.5(@types/react@18.3.18)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
