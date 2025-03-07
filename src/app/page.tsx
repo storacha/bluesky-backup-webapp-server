@@ -5,7 +5,7 @@ import { Backups } from "@/components/Backups";
 
 export default function Home () {
   return (
-    <div className="bg-white/80 p-10 h-screen">
+    <div className="bg-white/80 p-10 h-full min-h-screen">
       <h1 className="text-lg mb-8 font-bold font-mono uppercase">Bluesky Backups</h1>
       <div className="mb-4">
         <h4 className="text-sm font-bold font-mono uppercase">Bluesky Auth</h4>

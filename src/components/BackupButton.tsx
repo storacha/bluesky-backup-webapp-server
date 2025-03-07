@@ -11,8 +11,8 @@ const backupMetadataStore: BackupMetadataStore = {
   async setLatestCommit (accountDid, commitRev) {
     await db.commits.put({ accountDid, commitRev })
   },
-  async addRepo (cid, backupId, accountDid) {
-    await db.repos.put({ cid, backupId, accountDid })
+  async addRepo (cid, uploadCid, backupId, accountDid) {
+    await db.repos.put({ cid, uploadCid, backupId, accountDid })
   },
   async addBlob (cid, backupId, accountDid) {
     await db.blobs.put({ cid, backupId, accountDid })

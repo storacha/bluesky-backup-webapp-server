@@ -1,7 +1,7 @@
 import { Agent } from "@atproto/api";
 import { ProfileViewBasic } from "@atproto/api/dist/client/types/app/bsky/actor/defs";
 import { OAuthClientMetadataInput } from "@atproto/oauth-client-browser";
-import { Client } from "@w3ui/react";
+import { CARLink, Client } from "@w3ui/react";
 
 export const blueskyClientUri = process.env.NEXT_PUBLIC_BLUESKY_CLIENT_URI || "https://localhost:3000/"
 
@@ -20,7 +20,7 @@ export const blueskyClientMetadata: OAuthClientMetadataInput = {
 
 export interface BackupMetadataStore {
     setLatestCommit: (accountDid: string, commitRev: string) => Promise<void>
-    addRepo: (cid: string, backupId: number, accountDid: string) => Promise<void>
+    addRepo: (cid: string, uploadCid: string, backupId: number, accountDid: string) => Promise<void>
     addBlob: (cid: string, backupId: number, accountDid: string) => Promise<void>
     addBackup: (accountDid: string) => Promise<number>
 }
@@ -42,11 +42,20 @@ export async function backup (profile: ProfileViewBasic, agent: Agent, storachaC
     console.log("got repo with headers", repoRes.headers)
 
     eventTarget?.dispatchEvent(new CustomEvent('repo:uploading'))
-    const storachaRepoCid = await storachaClient.uploadCAR(new Blob([repoRes.data]))
+    let storachaRepoCid: CARLink | undefined;
+    const storachaUploadCid = await storachaClient.uploadCAR(new Blob([repoRes.data]), {
+        onShardStored: (carMetadata) => {
+            storachaRepoCid = carMetadata.cid
+        },
+        // set shard size to 4 GiB - the maximum shard size
+        shardSize: 1024 * 1024 * 1024 * 4
+    })
     eventTarget?.dispatchEvent(new CustomEvent('repo:uploaded', { detail: { cid: storachaRepoCid } }))
-
-
-    await metadataStore.addRepo(storachaRepoCid.toString(), backupId, accountDid)
+    if (storachaRepoCid) {
+        await metadataStore.addRepo(storachaRepoCid.toString(), storachaUploadCid.toString(), backupId, accountDid)
+    } else {
+        console.warn("Uploaded CAR but did not find a CID, this is very surprising and your backup cannot be recorded!")
+    }
 
     let blobCursor: string | undefined = undefined
 

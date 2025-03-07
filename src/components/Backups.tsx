@@ -52,9 +52,9 @@ export function Backups ({ className = '' }: { className?: string }) {
   )
 }
 
-export function Repos ({ id, className = '' }: { id: string, className?: string }) {
+export function Repos ({ backupId, className = '' }: { backupId: string, className?: string }) {
   const repos = useLiveQuery(() => db.
-    repos.where('backupId').equals(parseInt(id)).toArray())
+    repos.where('backupId').equals(parseInt(backupId)).toArray())
   return (
     <div className={className}>
       <h2 className="text-sm font-mono font-bold uppercase mb-2">Repos</h2>
@@ -63,7 +63,10 @@ export function Repos ({ id, className = '' }: { id: string, className?: string 
           <thead className="text-left">
             <tr>
               <th>
-                CID
+                Upload CID
+              </th>
+              <th>
+                Repo CID
               </th>
               <th>
                 Bluesky Account DID
@@ -73,6 +76,11 @@ export function Repos ({ id, className = '' }: { id: string, className?: string 
           <tbody>
             {repos?.map(repo => (
               <tr key={repo.cid} className="odd:bg-gray-100/80">
+                <td>
+                  <a href={`https://w3s.link/ipfs/${repo.uploadCid}`}>
+                    {shortenCID(repo.uploadCid)}
+                  </a>
+                </td>
                 <td>
                   <a href={`https://w3s.link/ipfs/${repo.cid}`}>
                     {shortenCID(repo.cid)}
@@ -90,9 +98,9 @@ export function Repos ({ id, className = '' }: { id: string, className?: string 
   )
 }
 
-export function Blobs ({ id, className = '' }: { id: string, className?: string }) {
+export function Blobs ({ backupId, className = '' }: { backupId: string, className?: string }) {
   const blobs = useLiveQuery(() => db.
-    blobs.where('backupId').equals(parseInt(id)).toArray())
+    blobs.where('backupId').equals(parseInt(backupId)).toArray())
 
   return (
     <div className={className}>

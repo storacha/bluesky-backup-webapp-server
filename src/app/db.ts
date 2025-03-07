@@ -10,6 +10,7 @@ interface Backup {
 
 interface Repo {
   cid: string;
+  uploadCid: string;
   backupId: number;
   accountDid: string;
 }
@@ -47,7 +48,7 @@ const db = new Dexie('storacha-bluesky-backups') as Dexie & {
 // Schema declaration:
 db.version(1).stores({
   backups: 'id++, accountDid, createdAt',
-  repos: 'cid, backupId, accountDid',
+  repos: 'cid, uploadCid, backupId, accountDid',
   blobs: 'cid, backupId, accountDid',
   commits: 'accountDid, commitRev'
 });

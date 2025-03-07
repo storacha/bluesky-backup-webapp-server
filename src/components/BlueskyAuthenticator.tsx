@@ -1,10 +1,11 @@
 "use client";
 
-import { useBskyAuthContext } from "@/contexts/bluesky";
+import { useBskyAuthContext } from "@/contexts";
+import { REQUIRED_ATPROTO_SCOPE } from "@/lib/constants";
 import { useCallback, useState } from "react";
 
 export default function BlueskyAuthenticator () {
-  const { initialized, authenticated, bskyAuthClient } = useBskyAuthContext();
+  const { initialized, authenticated, bskyAuthClient, userProfile, session } = useBskyAuthContext();
 
   const [handle, setHandle] = useState<string>("");
 
@@ -12,7 +13,7 @@ export default function BlueskyAuthenticator () {
     if (!bskyAuthClient) return;
     try {
       await bskyAuthClient.signIn(handle, {
-        scope: "atproto transition:generic",
+        scope: REQUIRED_ATPROTO_SCOPE,
       });
     } catch (err) {
       console.log(err);
@@ -23,7 +24,9 @@ export default function BlueskyAuthenticator () {
     <div>
       {initialized ? (
         authenticated ? (
-          <div>Authenticated to Bluesky!</div>
+          <div>
+            Authenticated to Bluesky as {userProfile?.handle} on {session?.serverMetadata.issuer}
+          </div>
         ) : (
           <div>
             <input

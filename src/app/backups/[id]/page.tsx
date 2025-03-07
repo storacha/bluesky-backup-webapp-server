@@ -1,4 +1,5 @@
 import { Blobs, Repos } from "@/components/Backups"
+import Restore from "@/components/Restore"
 
 export const runtime = 'edge'
 
@@ -8,12 +9,13 @@ export interface BackupsProps {
 
 export default async function Backups ({ params }: BackupsProps) {
   const id = (await params).id
-
+  
   return (
-    <div className="bg-white/80 p-10 h-screen">
+    <div className="bg-white/80 p-10 h-full min-h-screen">
       <h1 className="text-xl font-mono font-bold uppercase">Backup {id}</h1>
-      <Repos id={id} className='py-4 w-full' />
-      <Blobs id={id} className='py-4 w-full' />
+      <Repos backupId={id} className='py-4 w-full' />
+      <Blobs backupId={id} className='py-4 w-full' />
+      <Restore backupId={id} />
     </div>
   )
 }
