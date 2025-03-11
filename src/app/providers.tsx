@@ -3,6 +3,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
+import { BackupsProvider } from "@/contexts/backups";
+import { Loader } from "@/components/Loader";
 
 export default function RootProviders ({
   children,
@@ -23,22 +25,24 @@ export default function RootProviders ({
   );
 
   const BskyAuthProvider = dynamic(() => import('../components/BlueskyAuthProvider'), {
-    loading: () => <p>Loading...</p>,
+    loading: () => <Loader />,
     ssr: false
   })
 
   const StorachaAuthProvider = dynamic(() => import('../components/W3UIProvider'), {
-    loading: () => <p>Loading...</p>,
+    loading: () => <Loader />,
     ssr: false
   })
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BskyAuthProvider>
-        <StorachaAuthProvider>
-          {children}
-        </StorachaAuthProvider>
-      </BskyAuthProvider>
+      <BackupsProvider>
+        <BskyAuthProvider>
+          <StorachaAuthProvider>
+            {children}
+          </StorachaAuthProvider>
+        </BskyAuthProvider>
+      </BackupsProvider>
     </QueryClientProvider>
   );
 }

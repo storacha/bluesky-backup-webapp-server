@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@theme {
+  --color-bluesky-blue: #1185fe;
+  --color-storacha-red: #E91315;
+  --color-storacha-blue: #0176CE;
+  --color-storacha-yellow: #FFC83F;
+}
+
 .btn {
   @apply px-2 py-1 border rounded-lg cursor-pointer hover:bg-white;
 }

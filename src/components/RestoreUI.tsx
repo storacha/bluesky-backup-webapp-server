@@ -1,6 +1,6 @@
 'use client'
 
-import db from "@/app/db"
+import db from "@/lib/db"
 import { Agent, CredentialSession } from '@atproto/api'
 import { blueskyClientMetadata } from "@/lib/bluesky"
 import { useLiveQuery } from "dexie-react-hooks"
@@ -50,9 +50,9 @@ export async function oauthToPds (pdsUrl: string, handle: string) {
   })
   return { client: bskyAuthClient, session, agent }
 }
-export default function RestoreButton ({ backupId }: { backupId: string }) {
+export default function RestoreButton ({ backupId }: { backupId: number }) {
   const repos = useLiveQuery(() => db.
-    repos.where('backupId').equals(parseInt(backupId)).toArray())
+    repos.where('backupId').equals(backupId).toArray())
 
   const [sourceSession, setSourceSession] = useState<CredentialSession>()
   const [sourceAgent, setSourceAgent] = useState<Agent>()
@@ -131,7 +131,6 @@ export default function RestoreButton ({ backupId }: { backupId: string }) {
   }
   return (
     <div>
-      <h3>Restore this backup to a new server:</h3>
       <div className="flex flex-row justify-evenly">
         <div>
           {sourceSession ? (

@@ -36,11 +36,11 @@ export default function BlueskyAuthenticator () {
               }}
               value={handle}
               placeholder="Full Bluesky Handle (eg, racha.bsky.social)"
-              className="ipt w-82"
+              className="px-2 py-1 border rounded-s-lg w-82 hover:bg-white outline-none"
             />
             <button
               onClick={signIn}
-              className="btn">
+              className="px-2 py-1 border rounded-e-lg cursor-pointer hover:bg-white">
               Sign in
             </button>
           </div>

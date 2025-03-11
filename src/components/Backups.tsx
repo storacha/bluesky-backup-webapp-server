@@ -1,15 +1,16 @@
 'use client'
 
-import db from "@/app/db"
+import { useBackupsContext } from "@/contexts/backups"
+import { Backup, Blob, Repo } from "@/lib/db"
 import { shortenCID, shortenDID } from "@/lib/ui"
 import { useLiveQuery } from "dexie-react-hooks"
 
 export function Backups ({ className = '' }: { className?: string }) {
-  const backups = useLiveQuery(() => db.backups.toArray())
+  const { backupsStore } = useBackupsContext()
+  const backups = useLiveQuery<Backup[]>(() => backupsStore.listBackups())
 
   return (
     <div className={className}>
-      <h2 className="text-sm font-mono font-bold uppercase mb-2">Backups</h2>
       <div className='p-2 bg-white/50 rounded-lg'>
         <table className="table-auto w-full">
           <thead className="text-left">
@@ -52,9 +53,9 @@ export function Backups ({ className = '' }: { className?: string }) {
   )
 }
 
-export function Repos ({ backupId, className = '' }: { backupId: string, className?: string }) {
-  const repos = useLiveQuery(() => db.
-    repos.where('backupId').equals(parseInt(backupId)).toArray())
+export function Repos ({ backupId, className = '' }: { backupId: number, className?: string }) {
+  const { backupsStore } = useBackupsContext()
+  const repos = useLiveQuery<Repo[]>(() => backupsStore.listRepos(backupId))
   return (
     <div className={className}>
       <h2 className="text-sm font-mono font-bold uppercase mb-2">Repos</h2>
@@ -98,10 +99,9 @@ export function Repos ({ backupId, className = '' }: { backupId: string, classNa
   )
 }
 
-export function Blobs ({ backupId, className = '' }: { backupId: string, className?: string }) {
-  const blobs = useLiveQuery(() => db.
-    blobs.where('backupId').equals(parseInt(backupId)).toArray())
-
+export function Blobs ({ backupId, className = '' }: { backupId: number, className?: string }) {
+  const { backupsStore } = useBackupsContext()
+  const blobs = useLiveQuery<Blob[]>(() => backupsStore.listBlobs(backupId))
   return (
     <div className={className}>
       <h2 className="text-sm font-mono font-bold uppercase mb-2">Blobs</h2>

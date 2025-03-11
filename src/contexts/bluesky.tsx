@@ -12,7 +12,7 @@ import {
   useContext,
 } from "react";
 
-type BskyAuthContextProps = {
+export type BskyAuthContextProps = {
   initialized: boolean;
   authenticated: boolean;
   session?: OAuthSession;

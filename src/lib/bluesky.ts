@@ -1,7 +1,10 @@
+'use client'
+
 import { Agent } from "@atproto/api";
 import { ProfileViewBasic } from "@atproto/api/dist/client/types/app/bsky/actor/defs";
 import { OAuthClientMetadataInput } from "@atproto/oauth-client-browser";
 import { CARLink, Client } from "@w3ui/react";
+import { BackupMetadataStore } from "./backupMetadataStore";
 
 export const blueskyClientUri = process.env.NEXT_PUBLIC_BLUESKY_CLIENT_URI || "https://localhost:3000/"
 
@@ -16,13 +19,6 @@ export const blueskyClientMetadata: OAuthClientMetadataInput = {
     "token_endpoint_auth_method": "none",
     "scope": "atproto transition:generic",
     "dpop_bound_access_tokens": true
-}
-
-export interface BackupMetadataStore {
-    setLatestCommit: (accountDid: string, commitRev: string) => Promise<void>
-    addRepo: (cid: string, uploadCid: string, backupId: number, accountDid: string) => Promise<void>
-    addBlob: (cid: string, backupId: number, accountDid: string) => Promise<void>
-    addBackup: (accountDid: string) => Promise<number>
 }
 
 export interface BackupOptions {

@@ -1,17 +1,19 @@
 "use client";
 
-import RootProviders from "./providers";
 import './globals.css'
+import RootProviders from "@/app/providers";
 
-export default function RootLayout({
+export default function RootLayout ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
-      <body className="bg-[url(/bluesky-storacha.webp)] bg-contain backdrop-blur-xs">
-        <RootProviders>{children}</RootProviders>
+      <body>
+        <RootProviders>
+          {children}
+        </RootProviders>
       </body>
     </html>
   );
