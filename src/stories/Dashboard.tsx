@@ -26,7 +26,10 @@ export const Dashboard = () => {
             storacha.accounts?.[0] ? (
               <BackupUI />
             ) : (
-              <StorachaAuthenticator />
+              <div className="flex flex-col items-center">
+                <h4 className="mb-4 font-bold">Next, please log in to your Storacha account:</h4>
+                <StorachaAuthenticator />
+              </div>
             )
           ) : (
             <div>

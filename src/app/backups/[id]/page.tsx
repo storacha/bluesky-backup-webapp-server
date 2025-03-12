@@ -1,4 +1,5 @@
 import Backup from "@/components/Backup"
+import PageLayout from "@/components/PageLayout"
 
 export const runtime = 'edge'
 
@@ -10,6 +11,8 @@ export default async function Backups ({ params }: BackupsProps) {
   const id = parseInt((await params).id)
 
   return (
-    <Backup id={id} />
+    <PageLayout>
+      <Backup id={id} />
+    </PageLayout>
   )
 }

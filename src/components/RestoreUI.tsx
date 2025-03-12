@@ -8,6 +8,7 @@ import { OAuthSession, BrowserOAuthClient } from "@atproto/oauth-client-browser"
 import { ATPROTO_DEFAULT_SINK, ATPROTO_DEFAULT_SOURCE, REQUIRED_ATPROTO_SCOPE } from "@/lib/constants";
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { Secp256k1Keypair } from "@atproto/crypto"
 
 type LoginFn = (identifier: string, password: string, options?: { server?: string }) => Promise<void>
 
@@ -20,6 +21,10 @@ interface LoginForm {
 interface AtprotoLoginFormProps {
   login: LoginFn
   defaultServer?: string
+}
+
+interface PlcTokenForm {
+  token: string
 }
 
 type CreateAccountFn = (handle: string, password: string, email: string, options?: { server?: string, inviteCode?: string }) => Promise<void>
@@ -50,15 +55,29 @@ export async function oauthToPds (pdsUrl: string, handle: string) {
   })
   return { client: bskyAuthClient, session, agent }
 }
-export default function RestoreButton ({ backupId }: { backupId: number }) {
+
+interface RestoreDialogViewProps {
+  sourceSession?: CredentialSession
+  sinkSession?: CredentialSession
+  loginToSource: LoginFn
+  loginToSink: LoginFn
+  createAccount: CreateAccountFn
+  restore: () => Promise<void>
+  sendPlcRestoreAuthorizationEmail: () => Promise<void>
+  isPlcRestoreAuthorizationEmailSent?: boolean
+  setupPlcRestore: (plcToken: string) => Promise<void>
+  isPlcRestoreSetup?: boolean
+}
+
+export default function RestoreDialog ({ backupId }: { backupId: number }) {
   const repos = useLiveQuery(() => db.
     repos.where('backupId').equals(backupId).toArray())
-
   const [sourceSession, setSourceSession] = useState<CredentialSession>()
   const [sourceAgent, setSourceAgent] = useState<Agent>()
   const [sinkSession, setSinkSession] = useState<CredentialSession>()
   const [sinkAgent, setSinkAgent] = useState<Agent>()
-
+  const [plcOp, setPlcOp] = useState<unknown>()
+  const [plceRestoreAuthorizationEmailSent, setPlcRestoreAuthorizationEmailSent] = useState<boolean>(false)
   const loginToSource: LoginFn = async (identifier: string, password: string, { server = ATPROTO_DEFAULT_SOURCE } = { server: ATPROTO_DEFAULT_SOURCE }) => {
     const session = new CredentialSession(new URL(server))
     await session.login({ identifier, password })
@@ -113,8 +132,38 @@ export default function RestoreButton ({ backupId }: { backupId: number }) {
     }
   }
 
+  async function sendPlcRestoreAuthorizationEmail () {
+    if (sourceAgent) {
+      await sourceAgent.com.atproto.identity.requestPlcOperationSignature()
+      setPlcRestoreAuthorizationEmailSent(true)
+    } else {
+      console.warn('could not send PLC operation authorization, sourceAgent is not truthy')
+    }
+  }
+
+  async function setupPlcRestore (plcToken: string) {
+    if (sourceAgent && sinkAgent) {
+      const recoveryKey = await Secp256k1Keypair.create({ exportable: true })
+
+      const getDidCredentials =
+        await sinkAgent.com.atproto.identity.getRecommendedDidCredentials()
+      const rotationKeys = getDidCredentials.data.rotationKeys ?? []
+      if (!rotationKeys) {
+        throw new Error('No rotation key provided')
+      }
+      const plcOpResponse = await sourceAgent.com.atproto.identity.signPlcOperation({
+        token: plcToken,
+        rotationKeys: [recoveryKey.did(), ...rotationKeys],
+        ...getDidCredentials.data
+      })
+      setPlcOp(plcOpResponse.data.operation)
+    } else {
+      console.log("could not create plcOp:", sourceAgent, sinkAgent, plcToken)
+    }
+  }
+
   async function restore () {
-    if (repos && sinkAgent) {
+    if (repos && sinkAgent && plcOp) {
       for (const repo of repos) {
         console.log("restoring", repo.cid)
         const response = await fetch(`https://w3s.link/ipfs/${repo.cid}`)
@@ -122,21 +171,70 @@ export default function RestoreButton ({ backupId }: { backupId: number }) {
           encoding: 'application/vnd.ipld.car',
         })
       }
+      await sinkAgent.com.atproto.identity.submitPlcOperation({
+        operation: plcOp,
+      })
       await sinkAgent.com.atproto.server.activateAccount()
 
     } else {
-      console.log('not restoring:')
-      console.log('repos', repos)
+      console.log('not restoring:', repos, sinkAgent, plcOp)
     }
   }
+  return (
+    <RestoreDialogView
+      sourceSession={sourceSession}
+      sinkSession={sinkSession}
+      loginToSink={loginToSink}
+      loginToSource={loginToSource}
+      createAccount={createAccount}
+      restore={restore}
+      sendPlcRestoreAuthorizationEmail={sendPlcRestoreAuthorizationEmail}
+      isPlcRestoreAuthorizationEmailSent={plceRestoreAuthorizationEmailSent}
+      setupPlcRestore={setupPlcRestore}
+      isPlcRestoreSetup={!!plcOp}
+    />
+  )
+}
+
+export function RestoreDialogView ({
+  sourceSession,
+  sinkSession,
+  loginToSource,
+  loginToSink,
+  createAccount,
+  restore,
+  sendPlcRestoreAuthorizationEmail,
+  isPlcRestoreAuthorizationEmailSent,
+  setupPlcRestore,
+  isPlcRestoreSetup
+}: RestoreDialogViewProps) {
   return (
     <div>
       <div className="flex flex-row justify-evenly">
         <div>
           {sourceSession ? (
-            <h3 className="text-lg uppercase">
-              Authenticated to your old Bluesky host {sourceSession.pdsUrl?.toString()}
-            </h3>
+            sinkSession ? (
+              isPlcRestoreAuthorizationEmailSent ? (
+                isPlcRestoreSetup ? (
+                  <button onClick={restore} className='btn'>Restore</button>
+                ) : (
+                  <PlcTokenForm setPlcToken={setupPlcRestore} />
+                )
+              ) : (
+                <button className="btn"
+                  onClick={() => sendPlcRestoreAuthorizationEmail()}>
+                  Send Restore Authorization Confirmation Code
+                </button>
+              )
+            ) : (
+              <div className="my-4">
+                <h3 className="font-bold">Authenticate to new Bluesky server</h3>
+                <AtprotoLoginForm login={loginToSink} defaultServer={ATPROTO_DEFAULT_SINK} />
+                <h4 className="font-bold">OR</h4>
+                <h3 className="font-bold">Create a new Bluesky account</h3>
+                <AtprotoCreateAccountForm createAccount={createAccount} defaultServer={ATPROTO_DEFAULT_SINK} />
+              </div>
+            )
           ) : (
             <div className="my-4">
               <h3 className="font-bold">Authenticate to current Bluesky server</h3>
@@ -144,29 +242,7 @@ export default function RestoreButton ({ backupId }: { backupId: number }) {
             </div>
           )}
         </div>
-        <div>
-          {sinkSession ? (
-            <div>
-              Authenticated to your new Bluesky host {sinkSession.pdsUrl?.toString()}
-            </div>
-          ) : (
-            <div className="my-4">
-              <h3 className="font-bold">Authenticate to new Bluesky server</h3>
-              <AtprotoLoginForm login={loginToSink} defaultServer={ATPROTO_DEFAULT_SINK} />
-              <h4 className="font-bold">OR</h4>
-              <h3 className="font-bold">Create a new Bluesky account</h3>
-              <AtprotoCreateAccountForm createAccount={createAccount} defaultServer={ATPROTO_DEFAULT_SINK} />
-            </div>
-          )}
-        </div>
       </div>
-      {(sourceSession && sinkSession) ? (
-        <button onClick={restore} className='btn'>Restore</button>
-      ) : (
-        <div>
-          Please log in to your old and new Bluesky servers.
-        </div>
-      )}
     </div>
   )
 }
@@ -196,6 +272,24 @@ function AtprotoLoginForm ({ login, defaultServer }: AtprotoLoginFormProps) {
           className="ipt w-full" />
       </label>
       <input className="btn" type="submit" value="Log In" />
+    </form>
+  )
+}
+
+function PlcTokenForm ({ setPlcToken }: { setPlcToken: (token: string) => void }) {
+  const {
+    register,
+    handleSubmit,
+  } = useForm<PlcTokenForm>()
+
+  return (
+    <form onSubmit={handleSubmit((data) => setPlcToken(data.token))}
+      className="flex flex-col space-y-2">
+      <label>
+        <h4 className="text-xs uppercase font-bold">Confirmation Code</h4>
+        <input {...register('token')} className="ipt w-full" />
+      </label>
+      <input className="btn" type="submit" value="Set Confirmation Code" />
     </form>
   )
 }

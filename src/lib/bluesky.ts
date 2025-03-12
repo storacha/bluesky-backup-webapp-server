@@ -1,5 +1,3 @@
-'use client'
-
 import { Agent } from "@atproto/api";
 import { ProfileViewBasic } from "@atproto/api/dist/client/types/app/bsky/actor/defs";
 import { OAuthClientMetadataInput } from "@atproto/oauth-client-browser";
