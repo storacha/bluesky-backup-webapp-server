@@ -29,7 +29,7 @@ export default function RootProviders ({
     ssr: false
   })
 
-  const StorachaAuthProvider = dynamic(() => import('../components/W3UIProvider'), {
+  const StorachaAuthProvider = dynamic(() => import('../components/StorachaProvider'), {
     loading: () => <Loader />,
     ssr: false
   })

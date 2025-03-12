@@ -11,6 +11,10 @@ export const servicePrincipal = DID.parse(
   process.env.NEXT_PUBLIC_STORACHA_SERVICE_DID ?? 'did:web:web3.storage'
 )
 
+export const receiptsURL = new URL(
+  process.env.NEXT_PUBLIC_STORACHA_RECEIPTS_URL ?? 'https://up.storacha.network/receipt/'
+)
+
 export const serviceConnection = connect<Service>({
   id: servicePrincipal,
   codec: CAR.outbound,

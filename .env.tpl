@@ -1,6 +1,6 @@
 # set these to your upload API service URL and the DID your service is using as its service DID
-NEXT_PUBLIC_STORACHA_SERVICE_URL=https://staging.up.web3.storage
-NEXT_PUBLIC_STORACHA_RECEIPTS_URL=https://staging.up.web3.storage/receipt/
+NEXT_PUBLIC_STORACHA_SERVICE_URL=https://staging.up.storacha.network
+NEXT_PUBLIC_STORACHA_RECEIPTS_URL=https://staging.up.storacha.network/receipt/
 NEXT_PUBLIC_STORACHA_SERVICE_DID=did:web:staging.web3.storage
 NEXT_PUBLIC_STORACHA_PROVIDER=did:web:staging.web3.storage
 
