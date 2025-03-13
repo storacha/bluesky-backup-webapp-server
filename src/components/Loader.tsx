@@ -32,6 +32,6 @@ export function UploadLoader ({ uploadProgress, className = '' }: LoaderProps): 
   )
 }
 
-export function Loader (): ReactNode {
-  return <ArrowPathIcon className="animate-spin h-12 w-12 mx-auto mt-12" />
+export function Loader ({ className }: { className?: string }): ReactNode {
+  return <ArrowPathIcon className={`animate-spin ${className || "h-12 w-12 mx-auto mt-12"}`} />
 }

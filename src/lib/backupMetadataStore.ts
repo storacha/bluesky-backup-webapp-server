@@ -5,8 +5,7 @@ interface BlobOptions {
 }
 
 export interface BackupMetadataStore {
-  setLatestCommit: (accountDid: string, commitRev: string) => Promise<void>
-  addRepo: (cid: string, uploadCid: string, backupId: number, accountDid: string) => Promise<void>
+  addRepo: (cid: string, uploadCid: string, backupId: number, accountDid: string, commit: string) => Promise<void>
   addPrefsDoc: (cid: string, backupId: number, accountDid: string) => Promise<void>
   addBlob: (cid: string, backupId: number, accountDid: string, opts: BlobOptions) => Promise<void>
   addBackup: (accountDid: string) => Promise<number>
@@ -19,17 +18,14 @@ export interface BackupMetadataStore {
 type BackupMetadataStoreInitializer = (db: BackupsDB) => BackupMetadataStore
 
 export const newBackupMetadataStore: BackupMetadataStoreInitializer = (db) => ({
-  async setLatestCommit (accountDid, commitRev) {
-    await db.commits.put({ accountDid, commitRev })
-  },
-  async addRepo (cid, uploadCid, backupId, accountDid) {
-    await db.repos.put({ cid, uploadCid, backupId, accountDid })
+  async addRepo (cid, uploadCid, backupId, accountDid, commit) {
+    await db.repos.put({ cid, uploadCid, backupId, accountDid, commit, createdAt: new Date() })
   },
   async addPrefsDoc (cid, backupId, accountDid) {
-    await db.prefsDocs.put({ cid, backupId, accountDid })
+    await db.prefsDocs.put({ cid, backupId, accountDid, createdAt: new Date() })
   },
   async addBlob (cid, backupId, accountDid, { contentType } = {}) {
-    await db.blobs.put({ cid, contentType, backupId, accountDid })
+    await db.blobs.put({ cid, contentType, backupId, accountDid, createdAt: new Date() })
   },
   async addBackup (accountDid) {
     return await db.backups.add({ accountDid, createdAt: new Date() })

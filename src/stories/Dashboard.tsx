@@ -35,7 +35,7 @@ export const Dashboard = () => {
                 plan ? (
                   <BackupUI />
                 ) : (
-                  <div>
+                  <div className="min-w-5xl">
                     Sign up for a Storacha plan to continue!
                     <StripePricingTable />
                   </div>

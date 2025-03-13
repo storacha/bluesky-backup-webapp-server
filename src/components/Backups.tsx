@@ -72,6 +72,9 @@ export function Repo ({ backupId, className = '' }: { backupId: number, classNam
               <th>
                 Bluesky Account DID
               </th>
+              <th>
+                Commit
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -89,6 +92,9 @@ export function Repo ({ backupId, className = '' }: { backupId: number, classNam
                 </td>
                 <td>
                   {shortenDID(repo.accountDid)}
+                </td>
+                <td>
+                  {repo.commit}
                 </td>
               </tr>
             )}

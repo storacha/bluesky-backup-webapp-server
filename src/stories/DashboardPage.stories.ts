@@ -46,7 +46,10 @@ export const StorachaAuthenticatedWithBackups: Story = {
     withReactContext({
       context: StorachaContext,
       contextValue: [{
-        accounts: [{}],
+        accounts: [{
+          did: () => "did:mailto:example.com:test",
+          toEmail: () => "test@example.com"
+        }],
         client: {},
         spaces: [{did: () => "did:key:bafybeiabc123"}]
       }]
