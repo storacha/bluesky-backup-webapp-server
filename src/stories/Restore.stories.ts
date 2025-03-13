@@ -15,7 +15,10 @@ const meta = {
     loginToSource: fn(),
     loginToSink: fn(),
     createAccount: fn(),
-    restore: fn(),
+    restoreRepo: fn(),
+    restoreBlobs: fn(),
+    restorePrefsDoc: fn(),
+    transferIdentity: fn(),
     sendPlcRestoreAuthorizationEmail: fn(),
     setupPlcRestore: fn()
   },

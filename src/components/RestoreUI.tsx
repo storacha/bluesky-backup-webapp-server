@@ -5,7 +5,7 @@ import { Agent, CredentialSession } from '@atproto/api'
 import { blueskyClientMetadata } from "@/lib/bluesky"
 import { useLiveQuery } from "dexie-react-hooks"
 import { OAuthSession, BrowserOAuthClient } from "@atproto/oauth-client-browser";
-import { ATPROTO_DEFAULT_SINK, ATPROTO_DEFAULT_SOURCE, REQUIRED_ATPROTO_SCOPE } from "@/lib/constants";
+import { ATPROTO_DEFAULT_SINK, ATPROTO_DEFAULT_SOURCE, GATEWAY_HOST, REQUIRED_ATPROTO_SCOPE } from "@/lib/constants";
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Secp256k1Keypair } from "@atproto/crypto"
@@ -62,7 +62,10 @@ interface RestoreDialogViewProps {
   loginToSource: LoginFn
   loginToSink: LoginFn
   createAccount: CreateAccountFn
-  restore: () => Promise<void>
+  restoreRepo: () => Promise<void>
+  restoreBlobs: () => Promise<void>
+  restorePrefsDoc: () => Promise<void>
+  transferIdentity: () => Promise<void>
   sendPlcRestoreAuthorizationEmail: () => Promise<void>
   isPlcRestoreAuthorizationEmailSent?: boolean
   setupPlcRestore: (plcToken: string) => Promise<void>
@@ -70,8 +73,12 @@ interface RestoreDialogViewProps {
 }
 
 export default function RestoreDialog ({ backupId }: { backupId: number }) {
-  const repos = useLiveQuery(() => db.
-    repos.where('backupId').equals(backupId).toArray())
+  const repo = useLiveQuery(() => db.
+    repos.where('backupId').equals(backupId).first())
+  const blobs = useLiveQuery(() => db.
+    blobs.where('backupId').equals(backupId).toArray())
+  const prefsDoc = useLiveQuery(() => db.
+    prefsDocs.where('backupId').equals(backupId).first())
   const [sourceSession, setSourceSession] = useState<CredentialSession>()
   const [sourceAgent, setSourceAgent] = useState<Agent>()
   const [sinkSession, setSinkSession] = useState<CredentialSession>()
@@ -158,28 +165,58 @@ export default function RestoreDialog ({ backupId }: { backupId: number }) {
       })
       setPlcOp(plcOpResponse.data.operation)
     } else {
-      console.log("could not create plcOp:", sourceAgent, sinkAgent, plcToken)
+      console.warn("could not create plcOp:", sourceAgent, sinkAgent, plcToken)
     }
   }
 
-  async function restore () {
-    if (repos && sinkAgent && plcOp) {
-      for (const repo of repos) {
-        console.log("restoring", repo.cid)
-        const response = await fetch(`https://w3s.link/ipfs/${repo.cid}`)
-        await sinkAgent.com.atproto.repo.importRepo(new Uint8Array(await response.arrayBuffer()), {
-          encoding: 'application/vnd.ipld.car',
+  async function restoreRepo () {
+    if (repo && sinkAgent) {
+      console.log("restoring", repo.cid)
+      const response = await fetch(`${GATEWAY_HOST}/ipfs/${repo.cid}`)
+      await sinkAgent.com.atproto.repo.importRepo(new Uint8Array(await response.arrayBuffer()), {
+        encoding: 'application/vnd.ipld.car',
+      })
+    } else {
+      console.warn('not restoring:', repo, sinkAgent)
+    }
+  }
+
+  async function restoreBlobs () {
+    if (blobs && sinkAgent) {
+      for (const blob of blobs) {
+        console.log("restoring", blob.cid)
+        const response = await fetch(`${GATEWAY_HOST}/ipfs/${blob.cid}`)
+        await sinkAgent.com.atproto.repo.uploadBlob(new Uint8Array(await response.arrayBuffer()), {
+          encoding: blob.contentType,
         })
       }
+    } else {
+      console.warn('not restoring:', blobs, sinkAgent)
+    }
+  }
+
+  async function restorePrefsDoc () {
+    if (prefsDoc && sinkAgent) {
+      console.log("restoring", prefsDoc.cid)
+      const response = await fetch(`${GATEWAY_HOST}/ipfs/${prefsDoc.cid}`)
+      await sinkAgent.app.bsky.actor.putPreferences(await response.json())
+    } else {
+      console.warn('not restoring:', prefsDoc, sinkAgent)
+    }
+  }
+
+  async function transferIdentity () {
+    if (sinkAgent && plcOp) {
+
       await sinkAgent.com.atproto.identity.submitPlcOperation({
         operation: plcOp,
       })
       await sinkAgent.com.atproto.server.activateAccount()
-
     } else {
-      console.log('not restoring:', repos, sinkAgent, plcOp)
+      console.warn('not transferring identity: ', sinkAgent, plcOp)
     }
   }
+
   return (
     <RestoreDialogView
       sourceSession={sourceSession}
@@ -187,7 +224,10 @@ export default function RestoreDialog ({ backupId }: { backupId: number }) {
       loginToSink={loginToSink}
       loginToSource={loginToSource}
       createAccount={createAccount}
-      restore={restore}
+      restoreRepo={restoreRepo}
+      restoreBlobs={restoreBlobs}
+      restorePrefsDoc={restorePrefsDoc}
+      transferIdentity={transferIdentity}
       sendPlcRestoreAuthorizationEmail={sendPlcRestoreAuthorizationEmail}
       isPlcRestoreAuthorizationEmailSent={plceRestoreAuthorizationEmailSent}
       setupPlcRestore={setupPlcRestore}
@@ -202,7 +242,10 @@ export function RestoreDialogView ({
   loginToSource,
   loginToSink,
   createAccount,
-  restore,
+  restoreRepo,
+  restoreBlobs,
+  restorePrefsDoc,
+  transferIdentity,
   sendPlcRestoreAuthorizationEmail,
   isPlcRestoreAuthorizationEmailSent,
   setupPlcRestore,
@@ -214,18 +257,37 @@ export function RestoreDialogView ({
         <div>
           {sourceSession ? (
             sinkSession ? (
-              isPlcRestoreAuthorizationEmailSent ? (
-                isPlcRestoreSetup ? (
-                  <button onClick={restore} className='btn'>Restore</button>
-                ) : (
-                  <PlcTokenForm setPlcToken={setupPlcRestore} />
-                )
-              ) : (
-                <button className="btn"
-                  onClick={() => sendPlcRestoreAuthorizationEmail()}>
-                  Send Restore Authorization Confirmation Code
-                </button>
-              )
+              <div className="flex flex-row">
+                <div>
+                  <button onClick={restoreRepo} className='btn'>Restore Repo</button>
+                  <button onClick={restoreBlobs} className='btn'>Restore Blobs</button>
+                  <button onClick={restorePrefsDoc} className='btn'>Restore Preferences</button>
+                </div>
+                <div>
+                  {
+                    isPlcRestoreAuthorizationEmailSent ? (
+                      isPlcRestoreSetup ? (
+                        <div>
+                          <p>
+                            Click here to transfer your identity from {sourceSession?.pdsUrl?.toString()} to {sinkSession?.pdsUrl?.toString()}.
+                          </p>
+                          <h5>
+                            WARNING: this process is irreversible!
+                          </h5>
+                          <button onClick={transferIdentity} className='btn'>Transfer Identity</button>
+                        </div>
+                      ) : (
+                        <PlcTokenForm setPlcToken={setupPlcRestore} />
+                      )
+                    ) : (
+                      <button className="btn"
+                        onClick={() => sendPlcRestoreAuthorizationEmail()}>
+                        Send Restore Authorization Confirmation Code
+                      </button>
+                    )
+                  }
+                </div>
+              </div>
             ) : (
               <div className="my-4">
                 <h3 className="font-bold">Authenticate to new Bluesky server</h3>

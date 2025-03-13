@@ -82,7 +82,32 @@ export const StorachaAuthenticated: Story = {
     withReactContext({
       context: StorachaContext,
       contextValue: [{
-        accounts: [{}],
+        accounts: [{
+          did: () => 'did:mailto:example.com:test',
+          toEmail: () => 'test@example.com',
+          plan: { get: () => ({ ok: null }) }
+        }],
+        client: {},
+        spaces: []
+      }]
+    })
+  ]
+};
+
+export const StorachaAuthenticatedWithPlan: Story = {
+  decorators: [
+    withReactContext({
+      context: BlueskyContext,
+      contextValue: { initialized: true, authenticated: true, userProfile: {} }
+    }),
+    withReactContext({
+      context: StorachaContext,
+      contextValue: [{
+        accounts: [{
+          did: () => 'did:mailto:example.com:test',
+          toEmail: () => 'test@example.com',
+          plan: { get: () => ({ ok: { product: 'did:web:test' } }) }
+        }],
         client: {},
         spaces: []
       }]
@@ -99,9 +124,14 @@ export const StorachaAuthenticatedWithSpaces: Story = {
     withReactContext({
       context: StorachaContext,
       contextValue: [{
-        accounts: [{}],
+        accounts: [{
+          did: () => 'did:mailto:example.com:test',
+
+          toEmail: () => 'test@example.com',
+          plan: { get: () => ({ ok: { product: 'did:web:test' } }) }
+        }],
         client: {},
-        spaces: [{did: () => "did:key:bafybeiabc123"}]
+        spaces: [{ did: () => "did:key:bafybeiabc123" }]
       }]
     })
   ]
@@ -116,9 +146,12 @@ export const StorachaAuthenticatedWithBackups: Story = {
     withReactContext({
       context: StorachaContext,
       contextValue: [{
-        accounts: [{}],
+        accounts: [{
+          did: () => 'did:mailto:test:example.com',
+          plan: { get: () => ({ ok: { product: 'did:web:test' } }) }
+        }],
         client: {},
-        spaces: [{did: () => "did:key:bafybeiabc123"}]
+        spaces: [{ did: () => "did:key:bafybeiabc123" }]
       }]
     }),
     withReactContext({

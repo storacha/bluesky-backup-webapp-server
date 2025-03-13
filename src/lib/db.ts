@@ -14,11 +14,17 @@ export interface Repo {
   backupId: number;
   accountDid: string;
 }
+export interface PrefsDoc {
+  cid: string;
+  backupId: number;
+  accountDid: string;
+}
 
 export interface Blob {
   cid: string;
   backupId: number;
   accountDid: string;
+  contentType?: string;
 }
 
 export interface Commit {
@@ -35,6 +41,10 @@ export type BackupsDB = Dexie & {
     Repo,
     'cid'
   >;
+  prefsDocs: EntityTable<
+  PrefsDoc,
+  'cid'
+>;
   blobs: EntityTable<
     Blob,
     'cid'
@@ -52,7 +62,8 @@ function newDB (name: string = 'storacha-bluesky-backups') {
   db.version(1).stores({
     backups: 'id++, accountDid, createdAt',
     repos: 'cid, uploadCid, backupId, accountDid',
-    blobs: 'cid, backupId, accountDid',
+    prefsDocs: 'cid, backupId, accountDid',
+    blobs: 'cid, contentType, backupId, accountDid',
     commits: 'accountDid, commitRev'
   })
   return db

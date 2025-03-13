@@ -54,7 +54,28 @@ export default function BackupButton ({
   backupEvents.addEventListener('repo:uploaded', () => {
     setBackupProgressComponent(
       <>
-        Backup started...
+        Repo uploaded...
+      </>
+    )
+  })
+  backupEvents.addEventListener('prefs:fetching', () => {
+    setBackupProgressComponent(
+      <>
+        Fetching preferences...
+      </>
+    )
+  })
+  backupEvents.addEventListener('prefs:uploading', () => {
+    setBackupProgressComponent(
+      <>
+        Backing up preferences...
+      </>
+    )
+  })
+  backupEvents.addEventListener('prefs:uploading', () => {
+    setBackupProgressComponent(
+      <>
+        Preferences backed up!
       </>
     )
   })
@@ -63,7 +84,7 @@ export default function BackupButton ({
     const percentComplete = Math.floor((loaded / total) * 100)
     setBackupProgressComponent(
       <div>
-        <h3>Backing up your Bluesky account...</h3>
+        <h3>Backing up your blobs, this may take a while...</h3>
         <div className='relative flex flex-row justify-start border'>
           <div className='bg-black h-4' style={{ width: `${percentComplete}%` }}>
           </div>

@@ -12,19 +12,35 @@ import BackupUI from '@/components/BackupUI';
 import { useBackupsContext } from '@/contexts/backups';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Backups } from '@/components/Backups';
+import { usePlan } from '@/app/hooks';
+import StripePricingTable from '@/components/StripePricingTable';
 
 export const Dashboard = () => {
   const bluesky = useBskyAuthContext()
   const [storacha] = useW3()
   const { backupsStore } = useBackupsContext()
   const backups = useLiveQuery(() => backupsStore.listBackups())
+  const storachaAccount = storacha.accounts?.[0]
+  const { data, isLoading: planIsLoading } = usePlan(storachaAccount)
+  const plan = data?.product
   return (
     <div className="flex flex-col space-y-4 items-start mt-16">
       <div className="bg-white/80 backdrop-blur-3xl p-16 rounded border border-bluesky-blue">
         {bluesky.initialized ? (
           bluesky.authenticated ? (
-            storacha.accounts?.[0] ? (
-              <BackupUI />
+            storachaAccount ? (
+              planIsLoading ? (
+                <Loader />
+              ) : (
+                plan ? (
+                  <BackupUI />
+                ) : (
+                  <div>
+                    Sign up for a Storacha plan to continue!
+                    <StripePricingTable />
+                  </div>
+                )
+              )
             ) : (
               <div className="flex flex-col items-center">
                 <h4 className="mb-4 font-bold">Next, please log in to your Storacha account:</h4>

@@ -1,13 +1,13 @@
 'use client'
 
 import { useBackupsContext } from "@/contexts/backups"
-import { Backup, Blob, Repo } from "@/lib/db"
+import { GATEWAY_HOST } from "@/lib/constants"
 import { shortenCID, shortenDID } from "@/lib/ui"
 import { useLiveQuery } from "dexie-react-hooks"
 
 export function Backups ({ className = '' }: { className?: string }) {
   const { backupsStore } = useBackupsContext()
-  const backups = useLiveQuery<Backup[]>(() => backupsStore.listBackups())
+  const backups = useLiveQuery(() => backupsStore.listBackups())
 
   return (
     <div className={className}>
@@ -53,9 +53,9 @@ export function Backups ({ className = '' }: { className?: string }) {
   )
 }
 
-export function Repos ({ backupId, className = '' }: { backupId: number, className?: string }) {
+export function Repo ({ backupId, className = '' }: { backupId: number, className?: string }) {
   const { backupsStore } = useBackupsContext()
-  const repos = useLiveQuery<Repo[]>(() => backupsStore.listRepos(backupId))
+  const repo = useLiveQuery(() => backupsStore.getRepo(backupId))
   return (
     <div className={className}>
       <h2 className="text-sm font-mono font-bold uppercase mb-2">Repos</h2>
@@ -75,15 +75,15 @@ export function Repos ({ backupId, className = '' }: { backupId: number, classNa
             </tr>
           </thead>
           <tbody>
-            {repos?.map(repo => (
+            {repo && (
               <tr key={repo.cid} className="odd:bg-gray-100/80">
                 <td>
-                  <a href={`https://w3s.link/ipfs/${repo.uploadCid}`}>
+                  <a href={`${GATEWAY_HOST}/ipfs/${repo.uploadCid}`}>
                     {shortenCID(repo.uploadCid)}
                   </a>
                 </td>
                 <td>
-                  <a href={`https://w3s.link/ipfs/${repo.cid}`}>
+                  <a href={`${GATEWAY_HOST}/ipfs/${repo.cid}`}>
                     {shortenCID(repo.cid)}
                   </a>
                 </td>
@@ -91,7 +91,45 @@ export function Repos ({ backupId, className = '' }: { backupId: number, classNa
                   {shortenDID(repo.accountDid)}
                 </td>
               </tr>
-            ))}
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+export function Prefs ({ backupId, className = '' }: { backupId: number, className?: string }) {
+  const { backupsStore } = useBackupsContext()
+  const prefsDoc = useLiveQuery(() => backupsStore.getPrefsDoc(backupId))
+  return (
+    <div className={className}>
+      <h2 className="text-sm font-mono font-bold uppercase mb-2">Preferences</h2>
+      <div className='p-2 bg-white/50 rounded-lg'>
+        <table className="table-auto w-full">
+          <thead className="text-left">
+            <tr>
+              <th>
+                CID
+              </th>
+              <th>
+                Bluesky Account DID
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {prefsDoc && (
+              <tr key={prefsDoc.cid} className="odd:bg-gray-100/80">
+                <td>
+                  <a href={`${GATEWAY_HOST}/ipfs/${prefsDoc.cid}`}>
+                    {shortenCID(prefsDoc.cid)}
+                  </a>
+                </td>
+                <td>
+                  {shortenDID(prefsDoc.accountDid)}
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -101,7 +139,7 @@ export function Repos ({ backupId, className = '' }: { backupId: number, classNa
 
 export function Blobs ({ backupId, className = '' }: { backupId: number, className?: string }) {
   const { backupsStore } = useBackupsContext()
-  const blobs = useLiveQuery<Blob[]>(() => backupsStore.listBlobs(backupId))
+  const blobs = useLiveQuery(() => backupsStore.listBlobs(backupId))
   return (
     <div className={className}>
       <h2 className="text-sm font-mono font-bold uppercase mb-2">Blobs</h2>
@@ -121,7 +159,7 @@ export function Blobs ({ backupId, className = '' }: { backupId: number, classNa
             {blobs?.map(blob => (
               <tr key={blob.cid} className="odd:bg-gray-100/80">
                 <td>
-                  <a href={`https://w3s.link/ipfs/${blob.cid}`}>
+                  <a href={`${GATEWAY_HOST}/ipfs/${blob.cid}`}>
                     {shortenCID(blob.cid)}
                   </a>
                 </td>

@@ -40,8 +40,8 @@ jobs:
           echo "NEXT_PUBLIC_STORACHA_SERVICE_URL=https://staging.up.storacha.network" >> .env
           echo "NEXT_PUBLIC_STORACHA_RECEIPTS_URL=https://staging.up.storacha.network/receipt/" >> .env
           echo "NEXT_PUBLIC_STORACHA_PROVIDER=did:web:staging.web3.storage" >> .env
-          echo "NEXT_PUBLIC_STORACHA_GATEWAY_HOST=https://staging.w3s.link" >> .env
-          echo "NEXT_PUBLIC_STORACHA_GATEWAY_ID=did:web:staging.w3s.link" >> .env
+          echo "NEXT_PUBLIC_STORACHA_GATEWAY_HOST=https://ipfs-staging.w3s.link" >> .env
+          echo "NEXT_PUBLIC_STORACHA_GATEWAY_ID=did:web:ipfs-staging.w3s.link" >> .env
           echo "NEXT_PUBLIC_IPFS_GATEWAY_URL=https://%ROOT_CID%.ipfs-staging.w3s.link" >> .env
           echo "NEXT_PUBLIC_BLUESKY_CLIENT_URI=${{ (github.ref_name == 'main') && 'https://bluesky-backup-staging.pages.dev/' || 'https://bluesky-backup-preview.pages.dev/' }}" >> .env
           echo "NEXT_PUBLIC_SENTRY_ENV=staging" >> .env
