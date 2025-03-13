@@ -5,7 +5,7 @@ import { fn } from '@storybook/test';
 import { CredentialSession } from '@atproto/api';
 
 const meta = {
-  title: 'Restore',
+  title: 'components/Restore',
   component: RestoreDialogView,
   parameters: {
     layout: 'centered',

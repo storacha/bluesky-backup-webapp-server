@@ -1,4 +1,4 @@
-import { DashboardPage } from "@/stories/DashboardPage";
+import { DashboardPage } from "@/components/DashboardPage";
 
 export default function Home () {
   return (

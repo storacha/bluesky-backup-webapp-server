@@ -2,7 +2,6 @@
 
 import React from 'react';
 
-import './button.css';
 import { useBskyAuthContext } from '@/contexts';
 import { Loader } from '@/components/Loader';
 import StorachaAuthenticator from '@/components/StorachaAuthenticator';

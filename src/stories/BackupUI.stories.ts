@@ -21,7 +21,7 @@ const storacha = {
   spaces: [space]
 }
 const meta = {
-  title: 'BackupUI',
+  title: 'components/BackupUI',
   component: BackupUIView,
   parameters: {
     layout: 'centered',

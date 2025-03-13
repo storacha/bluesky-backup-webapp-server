@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Dashboard } from './Dashboard';
+import { Dashboard } from '../components/Dashboard';
 import { Context as StorachaContext } from '@w3ui/react';
 import { withReactContext } from 'storybook-react-context'
 import { BskyAuthContext as BlueskyContext } from '@/contexts';
@@ -9,7 +9,7 @@ import { backupMetadataStore } from '@/lib/backupMetadataStore';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-  title: 'Dashboard',
+  title: 'components/Dashboard',
   component: Dashboard,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout

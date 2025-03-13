@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { BackupPage } from './BackupPage';
+import { BackupPage } from '../components/BackupPage';
 import { Context as StorachaContext } from '@w3ui/react';
 import { withReactContext } from 'storybook-react-context'
 import { BskyAuthContext as BlueskyContext } from '@/contexts';
 import { BackupsContext } from '@/contexts/backups';
 
 const meta = {
-  title: 'BackupPage',
+  title: 'pages/BackupPage',
   component: BackupPage,
   parameters: {
     layout: 'fullscreen',
