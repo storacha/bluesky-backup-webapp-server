@@ -232,7 +232,7 @@ export function BackupUIView ({
                 <Loader className="w-6 h-6" />
               ) : (
                 <button
-                  onClick={onClickBackupRepo} disabled={!space || isBackingUpBlobs}
+                  onClick={onClickBackupRepo} disabled={!space || isBackingUpRepo}
                   className="rounded-full cursor-pointer hover:bg-red-400 border">
                   <ArrowRightCircleIcon className="w-6 h-6" />
                 </button>

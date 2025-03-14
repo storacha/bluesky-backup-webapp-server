@@ -1,6 +1,6 @@
 'use client'
 
-import db from "@/lib/db"
+import db, { Blob, PrefsDoc, Repo } from "@/lib/db"
 import { Agent, CredentialSession } from '@atproto/api'
 import { blueskyClientMetadata } from "@/lib/bluesky"
 import { useLiveQuery } from "dexie-react-hooks"
@@ -9,6 +9,10 @@ import { ATPROTO_DEFAULT_SINK, ATPROTO_DEFAULT_SOURCE, GATEWAY_HOST, REQUIRED_AT
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Secp256k1Keypair } from "@atproto/crypto"
+import { AdjustmentsHorizontalIcon, ArrowRightCircleIcon, CircleStackIcon, CloudIcon, IdentificationIcon } from "@heroicons/react/20/solid"
+import { Loader } from "./Loader"
+import { shorten, shortenDID } from "@/lib/ui"
+import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 
 type LoginFn = (identifier: string, password: string, options?: { server?: string }) => Promise<void>
 
@@ -62,6 +66,17 @@ interface RestoreDialogViewProps {
   loginToSource: LoginFn
   loginToSink: LoginFn
   createAccount: CreateAccountFn
+  repo?: Repo
+  blobs?: Blob[]
+  prefsDoc?: PrefsDoc
+  isRestoringRepo?: boolean
+  isRestoringBlobs?: boolean
+  isRestoringPrefsDoc?: boolean
+  isTransferringIdentity?: boolean
+  isRepoRestored?: boolean
+  areBlobsRestored?: boolean
+  isPrefsDocRestored?: boolean
+  isIdentityTransferred?: boolean
   restoreRepo: () => Promise<void>
   restoreBlobs: () => Promise<void>
   restorePrefsDoc: () => Promise<void>
@@ -79,6 +94,14 @@ export default function RestoreDialog ({ backupId }: { backupId: number }) {
     blobs.where('backupId').equals(backupId).toArray())
   const prefsDoc = useLiveQuery(() => db.
     prefsDocs.where('backupId').equals(backupId).first())
+  const [isRestoringRepo, setIsRestoringRepo] = useState<boolean>(false)
+  const [isRestoringBlobs, setIsRestoringBlobs] = useState<boolean>(false)
+  const [isRestoringPrefsDoc, setIsRestoringPrefsDoc] = useState<boolean>(false)
+  const [isTransferringIdentity, setIsTransferringIdentity] = useState<boolean>(false)
+  const [isRepoRestored, setIsRepoRestored] = useState<boolean>(false)
+  const [areBlobsRestored, setAreBlobsRestored] = useState<boolean>(false)
+  const [isPrefsDocRestored, setIsPrefsDocRestored] = useState<boolean>(false)
+  const [isIdentityTransferred, setIsIdentityTransferred] = useState<boolean>(false)
   const [sourceSession, setSourceSession] = useState<CredentialSession>()
   const [sourceAgent, setSourceAgent] = useState<Agent>()
   const [sinkSession, setSinkSession] = useState<CredentialSession>()
@@ -171,18 +194,23 @@ export default function RestoreDialog ({ backupId }: { backupId: number }) {
 
   async function restoreRepo () {
     if (repo && sinkAgent) {
+      setIsRestoringRepo(true)
       console.log("restoring", repo.cid)
       const response = await fetch(`${GATEWAY_HOST}/ipfs/${repo.cid}`)
       await sinkAgent.com.atproto.repo.importRepo(new Uint8Array(await response.arrayBuffer()), {
         encoding: 'application/vnd.ipld.car',
       })
+      setIsRestoringRepo(false)
+      setIsRepoRestored(true)
     } else {
       console.warn('not restoring:', repo, sinkAgent)
     }
   }
 
   async function restoreBlobs () {
+    console.log("RESTORING BLOPBS!")
     if (blobs && sinkAgent) {
+      setIsRestoringBlobs(true)
       for (const blob of blobs) {
         console.log("restoring", blob.cid)
         const response = await fetch(`${GATEWAY_HOST}/ipfs/${blob.cid}`)
@@ -190,6 +218,8 @@ export default function RestoreDialog ({ backupId }: { backupId: number }) {
           encoding: blob.contentType,
         })
       }
+      setIsRestoringBlobs(false)
+      setAreBlobsRestored(true)
     } else {
       console.warn('not restoring:', blobs, sinkAgent)
     }
@@ -197,9 +227,12 @@ export default function RestoreDialog ({ backupId }: { backupId: number }) {
 
   async function restorePrefsDoc () {
     if (prefsDoc && sinkAgent) {
+      setIsRestoringPrefsDoc(true)
       console.log("restoring", prefsDoc.cid)
       const response = await fetch(`${GATEWAY_HOST}/ipfs/${prefsDoc.cid}`)
       await sinkAgent.app.bsky.actor.putPreferences(await response.json())
+      setIsRestoringPrefsDoc(false)
+      setIsPrefsDocRestored(true)
     } else {
       console.warn('not restoring:', prefsDoc, sinkAgent)
     }
@@ -207,11 +240,13 @@ export default function RestoreDialog ({ backupId }: { backupId: number }) {
 
   async function transferIdentity () {
     if (sinkAgent && plcOp) {
-
+      setIsTransferringIdentity(true)
       await sinkAgent.com.atproto.identity.submitPlcOperation({
         operation: plcOp,
       })
       await sinkAgent.com.atproto.server.activateAccount()
+      setIsTransferringIdentity(false)
+      setIsIdentityTransferred(true)
     } else {
       console.warn('not transferring identity: ', sinkAgent, plcOp)
     }
@@ -232,6 +267,17 @@ export default function RestoreDialog ({ backupId }: { backupId: number }) {
       isPlcRestoreAuthorizationEmailSent={plceRestoreAuthorizationEmailSent}
       setupPlcRestore={setupPlcRestore}
       isPlcRestoreSetup={!!plcOp}
+      repo={repo}
+      blobs={blobs}
+      prefsDoc={prefsDoc}
+      isRestoringRepo={isRestoringRepo}
+      isRestoringBlobs={isRestoringBlobs}
+      isRestoringPrefsDoc={isRestoringPrefsDoc}
+      isTransferringIdentity={isTransferringIdentity}
+      isRepoRestored={isRepoRestored}
+      areBlobsRestored={areBlobsRestored}
+      isPrefsDocRestored={isPrefsDocRestored}
+      isIdentityTransferred={isIdentityTransferred}
     />
   )
 }
@@ -249,43 +295,208 @@ export function RestoreDialogView ({
   sendPlcRestoreAuthorizationEmail,
   isPlcRestoreAuthorizationEmailSent,
   setupPlcRestore,
-  isPlcRestoreSetup
+  isPlcRestoreSetup,
+  repo,
+  blobs,
+  prefsDoc,
+  isRestoringRepo,
+  isRestoringBlobs,
+  isRestoringPrefsDoc,
+  isTransferringIdentity,
+  isRepoRestored,
+  areBlobsRestored,
+  isPrefsDocRestored,
+  isIdentityTransferred
 }: RestoreDialogViewProps) {
+  const [showTransferAuthorization, setShowTransferAuthorization] = useState(false)
   return (
     <div>
       <div className="flex flex-row justify-evenly">
         <div>
           {sourceSession ? (
             sinkSession ? (
-              <div className="flex flex-row">
+              <div className="flex flex-col">
                 <div>
-                  <button onClick={restoreRepo} className='btn'>Restore Repo</button>
-                  <button onClick={restoreBlobs} className='btn'>Restore Blobs</button>
-                  <button onClick={restorePrefsDoc} className='btn'>Restore Preferences</button>
+                  <div className="flex flex-row items-center w-full">
+                    <div className="w-28"></div>
+                    <div className="w-24">
+                      <h4 className="text-center uppercase text-xs font-bold">
+                        Storacha
+                      </h4>
+                    </div>
+                    <div className="w-6 h-6">
+                    </div>
+                    <div className="w-24">
+                      <h4 className="text-center uppercase text-xs font-bold">
+                        {sinkSession?.pdsUrl?.hostname}
+                      </h4>
+                      <div className="text-xs w-full truncate">{sinkSession.did && shortenDID(sinkSession.did)}</div>
+                    </div>
+                  </div>
+                  <div className="flex flex-row items-center my-2 space-x-8">
+
+                    <h5 className="font-bold uppercase text-sm text-right w-28">Repository</h5>
+                    <Popover className="relative">
+                      <PopoverButton className="outline-none">
+                        <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
+                          <CircleStackIcon className="w-4 h-4" />
+                        </div>
+                      </PopoverButton>
+                      <PopoverPanel anchor="bottom" className="flex flex-col bg-white border rounded p-2">
+                        <div>
+                          Account: {repo?.accountDid}
+                        </div>
+                        <div>
+                          Created At: {repo?.createdAt.toDateString()}
+                        </div>
+                      </PopoverPanel>
+                    </Popover>
+                    {isRestoringRepo ? (
+                      <Loader className="w-6 h-6" />
+                    ) : (
+                      <button
+                        onClick={restoreRepo} disabled={isRestoringRepo}
+                        className="rounded-full cursor-pointer hover:bg-red-400 border">
+                        <ArrowRightCircleIcon className="w-6 h-6" />
+                      </button>
+                    )}
+                    <div className={`${isRepoRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
+                      <CircleStackIcon className="w-4 h-4" />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-row items-center my-2 space-x-8">
+
+                    <h5 className="font-bold uppercase text-sm text-right w-28">Blobs</h5>
+                    <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
+                      <span className="font-bold text-sm ">
+                        {blobs?.length || '0'}
+                      </span>
+                    </div>
+                    {isRestoringBlobs ? (
+                      <Loader className="w-6 h-6" />
+                    ) : (
+                      <button
+                        onClick={restoreBlobs} disabled={isRestoringBlobs}
+                        className="rounded-full cursor-pointer hover:bg-red-400 border">
+                        <ArrowRightCircleIcon className="w-6 h-6" />
+                      </button>
+                    )}
+                    <div className={`${areBlobsRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
+                      <CloudIcon className="w-4 h-4" />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-row items-center my-2 space-x-8">
+
+                    <h5 className="font-bold uppercase text-sm text-right w-28">Preferences</h5>
+                    <Popover className="relative">
+                      <PopoverButton className="outline-none">
+                        <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
+                          <AdjustmentsHorizontalIcon className="w-4 h-4" />
+                        </div>
+                      </PopoverButton>
+                      <PopoverPanel anchor="bottom" className="flex flex-col bg-white border rounded p-2">
+                        <div>
+                          Account: {prefsDoc?.accountDid}
+                        </div>
+                        <div>
+                          Created At: {prefsDoc?.createdAt.toDateString()}
+                        </div>
+                      </PopoverPanel>
+                    </Popover>
+                    {isRestoringPrefsDoc ? (
+                      <Loader className="w-6 h-6" />
+                    ) : (
+                      <button
+                        onClick={restorePrefsDoc} disabled={isRestoringPrefsDoc}
+                        className="rounded-full cursor-pointer hover:bg-red-400 border">
+                        <ArrowRightCircleIcon className="w-6 h-6" />
+                      </button>
+                    )}
+                    <div className={`${isPrefsDocRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
+                      <AdjustmentsHorizontalIcon className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <div className="flex flex-row items-center w-full mt-8">
+                    <div className="w-28"></div>
+                    <div className="w-24">
+                      <h4 className="text-center uppercase text-xs font-bold">
+                        {sourceSession?.pdsUrl?.hostname && shorten(sourceSession?.pdsUrl?.hostname, 10)}
+                      </h4>
+                      <div className="text-xs w-full truncate">{sourceSession.did && shortenDID(sourceSession.did)}</div>
+                    </div>
+                    <div className="w-6 h-6">
+                    </div>
+                    <div className="w-24">
+                      <h4 className="text-center uppercase text-xs font-bold">
+                        {sinkSession?.pdsUrl?.hostname && shorten(sinkSession?.pdsUrl?.hostname, 10)}
+                      </h4>
+                      <div className="text-xs w-full truncate">{sinkSession.did && shortenDID(sinkSession.did)}</div>
+                    </div>
+                  </div>
+                  <div className="flex flex-row items-center my-2 space-x-8">
+                    <h5 className="font-bold uppercase text-sm text-right w-28">Identity</h5>
+                    <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
+                      <IdentificationIcon className="w-4 h-4" />
+                    </div>
+                    {isTransferringIdentity ? (
+                      <Loader className="w-6 h-6" />
+                    ) : (
+                      isPlcRestoreAuthorizationEmailSent ? (
+                        isPlcRestoreSetup ? (
+                          <div className="flex flex-col items-center">
+                            <button
+                              onClick={transferIdentity} disabled={isTransferringIdentity}
+                              className="rounded-full cursor-pointer hover:bg-red-400 border m-auto">
+                              <ArrowRightCircleIcon className="w-6 h-6" />
+                            </button>
+                            <Popover className="relative h-0 w-0">
+                              <PopoverButton className="w-0 h-0"></PopoverButton>
+                              <PopoverPanel static anchor="bottom" className="flex flex-col bg-white border rounded p-2">
+                                <h5 className="w-56 m-auto text-center text-xs font-bold uppercase">
+                                  Identity Transfer is not currently reversible, please use caution!
+                                </h5>
+                              </PopoverPanel>
+                            </Popover>
+                          </div>
+                        ) : (
+                          <PlcTokenForm setPlcToken={setupPlcRestore} />
+                        )
+                      ) : (
+                        showTransferAuthorization ? (
+                          <div className="flex flex-col w-24 items-center">
+                            <button
+                              onClick={sendPlcRestoreAuthorizationEmail} disabled={isTransferringIdentity}
+                              className="rounded-full cursor-pointer hover:bg-red-400 border text-xs font-bold uppercase py-1 px-2">
+                              Send Email
+                            </button>
+                            <Popover className="relative h-0 w-0">
+                              <PopoverButton className="w-0 h-0"></PopoverButton>
+                              <PopoverPanel static anchor="bottom" className="flex flex-col bg-white border rounded p-2">
+                                <h5 className="w-56 m-auto text-center text-xs font-bold uppercase mt-2">
+                                  To transfer your identity you must provide a confirmation code sent to the email registered with your current PDS host.
+                                </h5>
+                              </PopoverPanel>
+                            </Popover>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => { setShowTransferAuthorization(true) }} disabled={isTransferringIdentity}
+                            className="rounded-full cursor-pointer hover:bg-red-400 border">
+                            <ArrowRightCircleIcon className="w-6 h-6" />
+                          </button>
+                        )
+                      )
+                    )}
+
+                    <div className={`${isIdentityTransferred ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
+                      <IdentificationIcon className="w-4 h-4" />
+                    </div>
+                  </div>
                 </div>
                 <div>
-                  {
-                    isPlcRestoreAuthorizationEmailSent ? (
-                      isPlcRestoreSetup ? (
-                        <div>
-                          <p>
-                            Click here to transfer your identity from {sourceSession?.pdsUrl?.toString()} to {sinkSession?.pdsUrl?.toString()}.
-                          </p>
-                          <h5>
-                            WARNING: this process is irreversible!
-                          </h5>
-                          <button onClick={transferIdentity} className='btn'>Transfer Identity</button>
-                        </div>
-                      ) : (
-                        <PlcTokenForm setPlcToken={setupPlcRestore} />
-                      )
-                    ) : (
-                      <button className="btn"
-                        onClick={() => sendPlcRestoreAuthorizationEmail()}>
-                        Send Restore Authorization Confirmation Code
-                      </button>
-                    )
-                  }
+
                 </div>
               </div>
             ) : (
@@ -348,10 +559,9 @@ function PlcTokenForm ({ setPlcToken }: { setPlcToken: (token: string) => void }
     <form onSubmit={handleSubmit((data) => setPlcToken(data.token))}
       className="flex flex-col space-y-2">
       <label>
-        <h4 className="text-xs uppercase font-bold">Confirmation Code</h4>
-        <input {...register('token')} className="ipt w-full" />
+        <input {...register('token')} placeholder="Confirmation Code" className="ipt w-full" />
       </label>
-      <input className="btn" type="submit" value="Set Confirmation Code" />
+      <input className="btn text-xs uppercase font-bold" type="submit" value="Confirm" />
     </form>
   )
 }

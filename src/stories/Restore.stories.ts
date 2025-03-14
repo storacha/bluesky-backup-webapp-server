@@ -4,6 +4,18 @@ import { RestoreDialogView } from '@/components/RestoreUI';
 import { fn } from '@storybook/test';
 import { CredentialSession } from '@atproto/api';
 
+
+
+const sourceSession = {
+  did: 'did:key:sourceabc123xyz',
+  pdsUrl: new URL('https://bsky.social')
+} as CredentialSession
+
+const sinkSession = {
+  did: 'did:key:sinkabc123xyz',
+  pdsUrl: new URL('https://atproto.example.com')
+} as CredentialSession
+
 const meta = {
   title: 'components/Restore',
   component: RestoreDialogView,
@@ -33,29 +45,29 @@ export const Initial: Story = {};
 
 export const SourceAuthenticated: Story = {
   args: {
-    sourceSession: {} as CredentialSession
+    sourceSession,
   }
 };
 
 export const SinkAuthenticated: Story = {
   args: {
-    sourceSession: {} as CredentialSession,
-    sinkSession: {} as CredentialSession
+    sourceSession,
+    sinkSession,
   }
 };
 
 export const RecoveryConfirmationEmailSent: Story = {
   args: {
-    sourceSession: {} as CredentialSession,
-    sinkSession: {} as CredentialSession,
+    sourceSession,
+    sinkSession,
     isPlcRestoreAuthorizationEmailSent: true
   }
 };
 
 export const PlcRestoreSetup: Story = {
   args: {
-    sourceSession: {} as CredentialSession,
-    sinkSession: {} as CredentialSession,
+    sourceSession,
+    sinkSession,
     isPlcRestoreAuthorizationEmailSent: true,
     isPlcRestoreSetup: true
   }
