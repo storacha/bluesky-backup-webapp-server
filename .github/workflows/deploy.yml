@@ -98,7 +98,7 @@ jobs:
             - ⛅️ ${{ steps.cloudflare_url.outputs.stdout }}
 
             [build log](/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
-  
+
   changelog:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Changelog

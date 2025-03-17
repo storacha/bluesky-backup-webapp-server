@@ -1,20 +1,18 @@
-"use client";
+'use client'
 
 import './globals.css'
-import RootProviders from "@/app/providers";
+import RootProviders from '@/app/providers'
 
-export default function RootLayout ({
+export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="en">
       <body>
-        <RootProviders>
-          {children}
-        </RootProviders>
+        <RootProviders>{children}</RootProviders>
       </body>
     </html>
-  );
+  )
 }

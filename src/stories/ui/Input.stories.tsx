@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import Input from '@/components/Input';
+import type { Meta, StoryObj } from '@storybook/react'
+import Input from '@/components/Input'
 
 const meta: Meta<typeof Input> = {
   title: 'UI/Input',
@@ -29,16 +29,16 @@ const meta: Meta<typeof Input> = {
       control: 'text',
     },
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof Input>;
+export default meta
+type Story = StoryObj<typeof Input>
 
 export const Default: Story = {
   args: {
     placeholder: 'Enter text...',
   },
-};
+}
 
 export const WithLabel: Story = {
   args: {
@@ -46,7 +46,7 @@ export const WithLabel: Story = {
     placeholder: 'Enter your email',
     type: 'email',
   },
-};
+}
 
 export const WithHelperText: Story = {
   args: {
@@ -54,7 +54,7 @@ export const WithHelperText: Story = {
     helperText: 'Must be at least 8 characters',
     type: 'password',
   },
-};
+}
 
 export const WithError: Story = {
   args: {
@@ -62,28 +62,28 @@ export const WithError: Story = {
     value: 'invalid@email',
     error: 'Please enter a valid email address',
   },
-};
+}
 
 export const Outline: Story = {
   args: {
     variant: 'outline',
     placeholder: 'Outline variant',
   },
-};
+}
 
 export const Filled: Story = {
   args: {
     variant: 'filled',
     placeholder: 'Filled variant',
   },
-};
+}
 
 export const Disabled: Story = {
   args: {
     disabled: true,
     value: 'Disabled input',
   },
-};
+}
 
 export const AllVariants: Story = {
   render: () => (
@@ -93,4 +93,4 @@ export const AllVariants: Story = {
       <Input variant="filled" placeholder="Filled variant" />
     </div>
   ),
-};
+}

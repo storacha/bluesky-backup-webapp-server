@@ -1,23 +1,23 @@
-"use client";
+'use client'
 
-import { Fragment } from "react";
-import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { Fragment } from 'react'
+import { Menu, Transition } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 export interface DropdownItem {
-  label: string;
-  onClick?: () => void;
-  icon?: React.ReactNode;
-  disabled?: boolean;
+  label: string
+  onClick?: () => void
+  icon?: React.ReactNode
+  disabled?: boolean
 }
 
 export interface DropdownProps {
-  trigger?: React.ReactNode;
-  items: DropdownItem[];
-  className?: string;
-  align?: 'left' | 'center' | 'right';
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  children?: React.ReactNode;
+  trigger?: React.ReactNode
+  items: DropdownItem[]
+  className?: string
+  align?: 'left' | 'center' | 'right'
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
+  children?: React.ReactNode
 }
 
 export default function Dropdown({
@@ -31,30 +31,37 @@ export default function Dropdown({
   const variants = {
     primary: 'bg-[var(--color-storacha-red)] text-white hover:bg-[#B30F10]',
     secondary: 'bg-red-100 text-[var(--color-storacha-red)] hover:bg-red-200',
-    outline: 'border-2 border-[var(--color-storacha-red)] text-[var(--color-storacha-red)] hover:bg-[var(--color-storacha-red)] hover:text-white',
-    ghost: 'text-[var(--color-storacha-red)] hover:bg-[var(--color-storacha-red)]/10'
-  };
+    outline:
+      'border-2 border-[var(--color-storacha-red)] text-[var(--color-storacha-red)] hover:bg-[var(--color-storacha-red)] hover:text-white',
+    ghost:
+      'text-[var(--color-storacha-red)] hover:bg-[var(--color-storacha-red)]/10',
+  }
 
   const getAlignmentClasses = () => {
     switch (align) {
       case 'left':
-        return 'left-0 origin-top-left';
+        return 'left-0 origin-top-left'
       case 'center':
-        return 'left-1/2 transform -translate-x-1/2 origin-top';
+        return 'left-1/2 transform -translate-x-1/2 origin-top'
       case 'right':
       default:
-        return 'right-0 origin-top-right';
+        return 'right-0 origin-top-right'
     }
-  };
+  }
 
   return (
     <Menu as="div" className={`relative inline-block text-left ${className}`}>
       <div className="flex justify-center">
-        <Menu.Button className={`inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 ${variants[variant]}`}>
+        <Menu.Button
+          className={`inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 ${variants[variant]}`}
+        >
           {trigger || (
             <>
               Options
-              <ChevronDownIcon className="ml-2 -mr-1 h-5 w-5" aria-hidden="true" />
+              <ChevronDownIcon
+                className="ml-2 -mr-1 h-5 w-5"
+                aria-hidden="true"
+              />
             </>
           )}
         </Menu.Button>
@@ -75,7 +82,9 @@ export default function Dropdown({
 
           <div className="py-1 max-h-80 overflow-y-auto">
             {items.length === 0 ? (
-              <div className="px-4 py-3 text-sm text-gray-500 text-center italic">No items available</div>
+              <div className="px-4 py-3 text-sm text-gray-500 text-center italic">
+                No items available
+              </div>
             ) : (
               items.map((item, index) => (
                 <Menu.Item key={index} disabled={item.disabled}>
@@ -92,7 +101,9 @@ export default function Dropdown({
                       disabled={item.disabled}
                     >
                       {item.icon && (
-                        <span className={`mr-3 h-5 w-5 ${active ? 'text-[var(--color-storacha-red)]' : 'text-gray-500'} group-hover:text-[var(--color-storacha-red)]`}>
+                        <span
+                          className={`mr-3 h-5 w-5 ${active ? 'text-[var(--color-storacha-red)]' : 'text-gray-500'} group-hover:text-[var(--color-storacha-red)]`}
+                        >
                           {item.icon}
                         </span>
                       )}
@@ -106,5 +117,5 @@ export default function Dropdown({
         </Menu.Items>
       </Transition>
     </Menu>
-  );
+  )
 }

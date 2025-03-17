@@ -1,4 +1,4 @@
-import { blueskyClientMetadata } from "@/lib/bluesky";
+import { blueskyClientMetadata } from '@/lib/bluesky'
 
 export const runtime = 'edge'
 

@@ -1,6 +1,6 @@
 /**
- * UTILITIES ADAPTED FROM @ucanto/principal 
- * 
+ * UTILITIES ADAPTED FROM @ucanto/principal
+ *
  * TODO: EXPOSE FROM @ucanto/principal OR PULL TO A SHARED LIBRARY
  */
 
@@ -34,11 +34,11 @@ export const keyParams = {
 }
 
 export const symkeyParams = {
-  name: "AES-GCM",
+  name: 'AES-GCM',
   length: 256,
 }
 
-export async function calculateDID (publicKey: CryptoKey) {
+export async function calculateDID(publicKey: CryptoKey) {
   // Next we need to encode public key for the `did()` method. To do this we first export
   // Subject Public Key Info (SPKI) using web crypto API.
   const spki = await crypto.subtle.exportKey('spki', publicKey)
@@ -48,19 +48,27 @@ export async function calculateDID (publicKey: CryptoKey) {
   return `did:key:${base58btc.encode(publicBytes)}`
 }
 
-export async function keysToKeypair ({ publicKey, privateKey }: { publicKey: CryptoKey, privateKey: CryptoKey }): Promise<KeyPair> {
+export async function keysToKeypair({
+  publicKey,
+  privateKey,
+}: {
+  publicKey: CryptoKey
+  privateKey: CryptoKey
+}): Promise<KeyPair> {
   const did = await calculateDID(publicKey)
   return {
     publicKey,
     privateKey,
     did: () => did,
-    toSecret: async () => JSON.stringify(
-      {
-        publicKey: await crypto.subtle.exportKey('jwk', publicKey),
-        privateKey: await crypto.subtle.exportKey('jwk', privateKey),
-      },
-      null, 2
-    )
+    toSecret: async () =>
+      JSON.stringify(
+        {
+          publicKey: await crypto.subtle.exportKey('jwk', publicKey),
+          privateKey: await crypto.subtle.exportKey('jwk', privateKey),
+        },
+        null,
+        2
+      ),
   }
 }
 
@@ -69,20 +77,18 @@ export async function keysToKeypair ({ publicKey, privateKey }: { publicKey: Cry
  * but specified encrypt and decrypt capabilities and exposes the DID generation
  * functions to make it easier to identify the key in the UI.
  */
-export async function generateNewKeyPair (): Promise<KeyPair> {
-  const keys = await crypto.subtle.generateKey(
-    keyParams,
-    true,
-    ['encrypt', 'decrypt']
-  )
+export async function generateNewKeyPair(): Promise<KeyPair> {
+  const keys = await crypto.subtle.generateKey(keyParams, true, [
+    'encrypt',
+    'decrypt',
+  ])
   return keysToKeypair(keys)
 }
 
-export async function generateNewSymkey (): Promise<CryptoKey> {
-  const key = await crypto.subtle.generateKey(
-    symkeyParams,
-    true,
-    ['encrypt', 'decrypt']
-  )
+export async function generateNewSymkey(): Promise<CryptoKey> {
+  const key = await crypto.subtle.generateKey(symkeyParams, true, [
+    'encrypt',
+    'decrypt',
+  ])
   return key
 }

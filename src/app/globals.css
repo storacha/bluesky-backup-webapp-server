@@ -1,10 +1,10 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @plugin "@tailwindcss/typography";
 @theme {
   --color-bluesky-blue: #1185fe;
-  --color-storacha-red: #E91315;
-  --color-storacha-blue: #0176CE;
-  --color-storacha-yellow: #FFC83F;
+  --color-storacha-red: #e91315;
+  --color-storacha-blue: #0176ce;
+  --color-storacha-yellow: #ffc83f;
 }
 
 @layer components {

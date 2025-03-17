@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react'
 
-import PageLayout from '@/components/PageLayout';
-import Backup from '@/components/Backup';
+import PageLayout from '@/components/PageLayout'
+import Backup from '@/components/Backup'
 
 export const BackupPage = ({ id }: { id: number }) => {
   return (
@@ -9,4 +9,4 @@ export const BackupPage = ({ id }: { id: number }) => {
       <Backup id={id} />
     </PageLayout>
   )
-};
+}

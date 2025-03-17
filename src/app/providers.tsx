@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { useState } from "react";
-import dynamic from "next/dynamic";
-import { BackupsProvider } from "@/contexts/backups";
-import { Loader } from "@/components/Loader";
-import { KeychainProvider } from "@/contexts/keychain";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import React, { useState } from 'react'
+import dynamic from 'next/dynamic'
+import { BackupsProvider } from '@/contexts/backups'
+import { Loader } from '@/components/Loader'
+import { KeychainProvider } from '@/contexts/keychain'
 
-export default function RootProviders ({
+export default function RootProviders({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   const [queryClient] = useState(
     () =>
@@ -23,29 +23,33 @@ export default function RootProviders ({
           },
         },
       })
-  );
+  )
 
-  const BskyAuthProvider = dynamic(() => import('../components/BlueskyAuthProvider'), {
-    loading: () => <Loader />,
-    ssr: false
-  })
+  const BskyAuthProvider = dynamic(
+    () => import('../components/BlueskyAuthProvider'),
+    {
+      loading: () => <Loader />,
+      ssr: false,
+    }
+  )
 
-  const StorachaAuthProvider = dynamic(() => import('../components/StorachaProvider'), {
-    loading: () => <Loader />,
-    ssr: false
-  })
+  const StorachaAuthProvider = dynamic(
+    () => import('../components/StorachaProvider'),
+    {
+      loading: () => <Loader />,
+      ssr: false,
+    }
+  )
 
   return (
     <QueryClientProvider client={queryClient}>
       <BackupsProvider>
         <StorachaAuthProvider>
           <KeychainProvider>
-            <BskyAuthProvider>
-              {children}
-            </BskyAuthProvider>
+            <BskyAuthProvider>{children}</BskyAuthProvider>
           </KeychainProvider>
         </StorachaAuthProvider>
       </BackupsProvider>
     </QueryClientProvider>
-  );
+  )
 }

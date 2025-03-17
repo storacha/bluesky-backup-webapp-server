@@ -1,6 +1,6 @@
 /**
- * UTILITIES COPIED FROM @ucanto/principal 
- * 
+ * UTILITIES COPIED FROM @ucanto/principal
+ *
  * TODO: EXPOSE FROM @ucanto/principal OR PULL TO A SHARED LIBRARY
  */
 
@@ -21,7 +21,7 @@ export const UNUSED_BIT_PAD = 0x00
  * @param {number} length
  * @returns {Uint8Array}
  */
-export const encodeDERLength = length => {
+export const encodeDERLength = (length) => {
   if (length <= 127) {
     return new Uint8Array([length])
   }
@@ -102,7 +102,7 @@ export const into = (input, expectedTag, offset) => {
 /**
  * @param {Uint8Array} input
  */
-export const encodeBitString = input => {
+export const encodeBitString = (input) => {
   // encode input length + 1 for unused bit pad
   const length = encodeDERLength(input.byteLength + 1)
   // allocate a buffer of desired size
@@ -135,7 +135,7 @@ export const encodeBitString = input => {
 /**
  * @param {Uint8Array} input
  */
-export const encodeOctetString = input => {
+export const encodeOctetString = (input) => {
   // encode input length
   const length = encodeDERLength(input.byteLength)
   // allocate a buffer of desired size
@@ -159,7 +159,7 @@ export const encodeOctetString = input => {
 /**
  * @param {Uint8Array[]} sequence
  */
-export const encodeSequence = sequence => {
+export const encodeSequence = (sequence) => {
   // calculate bytelength for all the parts
   let byteLength = 0
   for (const item of sequence) {
@@ -204,7 +204,7 @@ export const readSequence = (bytes, offset = 0) => {
 /**
  * @param {Uint8Array} input
  */
-export const encodeInt = input => {
+export const encodeInt = (input) => {
   const extra = input.byteLength === 0 || input[0] & 0x80 ? 1 : 0
 
   // encode input length
