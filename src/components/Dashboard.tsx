@@ -29,7 +29,9 @@ export const Dashboard = () => {
           bluesky.authenticated ? (
             storachaAccount ? (
               planIsLoading ? (
-                <Loader />
+                <div className="w-100">
+                  <Loader />
+                </div>
               ) : (
                 plan ? (
                   <BackupUI />
@@ -56,7 +58,9 @@ export const Dashboard = () => {
             </div>
           )
         ) : (
-          <Loader />
+          <div className="w-100">
+            <Loader />
+          </div>
         )}
       </div>
       <div className="w-full bg-white/80 backdrop-blur-3xl p-16 rounded border border-bluesky-blue">
@@ -66,7 +70,11 @@ export const Dashboard = () => {
         ) : (
           <span>You have not yet created any backups.</span>
         )) : (
-          <Loader />
+          // we should wrap loader in a container with a fixed width
+          // to avoid layout-shifts
+          <div className="w-100">
+            <Loader />
+          </div>
         )}
       </div>
     </div>
