@@ -4,20 +4,26 @@ import { useBskyAuthContext } from "@/contexts";
 import { REQUIRED_ATPROTO_SCOPE } from "@/lib/constants";
 import { useCallback, useState } from "react";
 
-export default function BlueskyAuthenticator () {
-  const { initialized, authenticated, bskyAuthClient, userProfile, session } = useBskyAuthContext();
+export default function BlueskyAuthenticator() {
+  const { initialized, authenticated, bskyAuthClient, userProfile, session } =
+    useBskyAuthContext();
 
   const [handle, setHandle] = useState<string>("");
+  const [isPending, setIsPending] = useState<boolean>(false);
 
   const signIn = useCallback(async () => {
     if (!bskyAuthClient) return;
+    setIsPending(true);
     try {
       await bskyAuthClient.signIn(handle, {
         scope: REQUIRED_ATPROTO_SCOPE,
       });
     } catch (err) {
       console.log(err);
+      setIsPending(false);
     }
+
+    setIsPending(false);
   }, [handle, bskyAuthClient]);
 
   return (
@@ -25,7 +31,8 @@ export default function BlueskyAuthenticator () {
       {initialized ? (
         authenticated ? (
           <div>
-            Authenticated to Bluesky as {userProfile?.handle} on {session?.serverMetadata.issuer}
+            Authenticated to Bluesky as {userProfile?.handle} on{" "}
+            {session?.serverMetadata.issuer}
           </div>
         ) : (
           <div>
@@ -40,11 +47,14 @@ export default function BlueskyAuthenticator () {
             />
             <button
               onClick={signIn}
-              className="px-2 py-1 border rounded-e-lg cursor-pointer hover:bg-white">
-              Sign in
+              disabled={isPending}
+              className="px-2 py-1 border rounded-e-lg cursor-pointer hover:bg-white disabled:opacity-50"
+            >
+              {isPending ? "Redirecting..." : "Sign in"}
             </button>
           </div>
-        )) : (
+        )
+      ) : (
         <div>Loading...</div>
       )}
     </div>
