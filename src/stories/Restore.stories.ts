@@ -24,6 +24,7 @@ const meta = {
   },
   tags: ['autodocs'],
   args: {
+    keys: [],
     loginToSource: fn(),
     loginToSink: fn(),
     createAccount: fn(),

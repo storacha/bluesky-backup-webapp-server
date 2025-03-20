@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { BackupsProvider } from "@/contexts/backups";
 import { Loader } from "@/components/Loader";
+import { KeychainProvider } from "@/contexts/keychain";
 
 export default function RootProviders ({
   children,
@@ -37,11 +38,13 @@ export default function RootProviders ({
   return (
     <QueryClientProvider client={queryClient}>
       <BackupsProvider>
-        <BskyAuthProvider>
-          <StorachaAuthProvider>
-            {children}
-          </StorachaAuthProvider>
-        </BskyAuthProvider>
+        <StorachaAuthProvider>
+          <KeychainProvider>
+            <BskyAuthProvider>
+              {children}
+            </BskyAuthProvider>
+          </KeychainProvider>
+        </StorachaAuthProvider>
       </BackupsProvider>
     </QueryClientProvider>
   );

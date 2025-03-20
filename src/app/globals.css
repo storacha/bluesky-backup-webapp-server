@@ -7,10 +7,12 @@
   --color-storacha-yellow: #FFC83F;
 }
 
-.btn {
-  @apply px-2 py-1 border rounded-lg cursor-pointer hover:bg-white;
-}
+@layer components {
+  .btn {
+    @apply px-2 py-1 border rounded-lg cursor-pointer hover:bg-white;
+  }
 
-.ipt {
-  @apply px-2 py-1 border rounded-lg;
+  .ipt {
+    @apply px-2 py-1 border rounded-lg;
+  }
 }

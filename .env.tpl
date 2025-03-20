@@ -5,7 +5,7 @@ NEXT_PUBLIC_STORACHA_SERVICE_DID=did:web:staging.web3.storage
 NEXT_PUBLIC_STORACHA_PROVIDER=did:web:staging.web3.storage
 
 # set these to your gateway service URL and DID 
-NEXT_PUBLIC_STORACHA_GATEWAY_HOST=https://ipfs-staging.w3s.link
+NEXT_PUBLIC_STORACHA_GATEWAY_HOSTNAME=ipfs-staging.w3s.link
 NEXT_PUBLIC_STORACHA_GATEWAY_ID=did:web:ipfs-staging.w3s.link
 
 # Sentry

@@ -41,6 +41,12 @@ const meta = {
     onClickBackupPrefsDoc: fn(),
     onClickInitializeBackup: fn(),
     onClickQuickPublicBackup: fn(),
+    encryptRepo: false,
+    setEncryptRepo: fn(),
+    encryptBlobs: false,
+    setEncryptBlobs: fn(),
+    encryptPrefsDoc: true,
+    setEncryptPrefsDoc: fn()
   },
   decorators: [
   ]

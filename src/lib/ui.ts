@@ -7,7 +7,7 @@ export const MB = 1024 * B
 export const GB = 1024 * MB
 export const TB = 1024 * GB
 
-export function shortenCID(cid: UnknownLink) {
+export function shortenCID(cid: UnknownLink | string) {
   return shorten(cid.toString(), 5, 4)
 }
 
