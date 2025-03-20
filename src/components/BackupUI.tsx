@@ -6,11 +6,11 @@ import { ContextState as StorachaContext, Space, useW3 } from "@w3ui/react"
 import { useState } from "react"
 import { SpaceFinder } from "./SpaceFinder"
 import { useLiveQuery } from "dexie-react-hooks"
-import { AdjustmentsHorizontalIcon, ArrowRightCircleIcon, CircleStackIcon, CloudIcon, KeyIcon, LockClosedIcon } from "@heroicons/react/20/solid"
+import { AdjustmentsHorizontalIcon, ArrowRightCircleIcon, CircleStackIcon, CloudIcon, PlusCircleIcon, KeyIcon, LockClosedIcon } from "@heroicons/react/20/solid"
 import { useBackupsContext } from "@/contexts/backups"
 import { Blob, PrefsDoc, Repo } from "@/lib/db"
-import { Loader } from "./Loader"
 import { CreateSpaceModal } from "./CreateSpace"
+import Button from "./Button"
 import { Key, useKeychainContext } from "@/contexts/keychain"
 import { shortenDID } from "@/lib/ui"
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react"
@@ -271,13 +271,15 @@ export function BackupUIView ({
                       selected={space} setSelected={setSelectedSpace} spaces={storacha.spaces}
                       className="w-52 -mt-1"
                     />
-                    <p className="text-sm">Don&apos;t want to use this space?</p>
-                    <p
-                      onClick={() => setIsModalOpen(true)}
-                      className="underline text-sm hover:cursor-pointer"
-                    >
-                      Create a new one
-                    </p>
+                    <div className="flex items-center justify-end gap-1 mt-1">
+                      <Button 
+                        onClick={() => setIsModalOpen(true)}
+                        variant="ghost"
+                      >
+                        <PlusCircleIcon className="h-5 w-5 mr-1" />
+                        <span className="text-sm">Create new</span>
+                      </Button>
+                    </div>
                   </div>
                 </div>
                 <div className="flex flex-row items-center w-full space-x-0">
@@ -304,13 +306,21 @@ export function BackupUIView ({
                   </div>
                   <EncryptionButton state={encryptRepo} setState={setEncryptRepo} selectedKey={selectedKey} />
                   {isBackingUpRepo ? (
-                    <Loader className="w-6 h-6" />
+                    <Button
+                      isLoading
+                      hideLoadingText
+                      variant="outline"
+                      className="rounded-full p-1.5"
+                      aria-label="Backing up repository"
+                    />
                   ) : (
-                    <button
-                      onClick={onClickBackupRepo} disabled={!space || isBackingUpBlobs}
-                      className="rounded-full cursor-pointer hover:bg-red-400 border">
-                      <ArrowRightCircleIcon className="w-6 h-6" />
-                    </button>
+                    <Button
+                      onClick={onClickBackupRepo}
+                      disabled={!space || isBackingUpBlobs}
+                      variant="outline"
+                      className="rounded-full p-1.5"
+                      leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                    />
                   )}
                   <div className="flex flex-row items-center">
                     <div className={`${repo ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
@@ -329,13 +339,21 @@ export function BackupUIView ({
                   </div>
                   <EncryptionButton state={encryptBlobs} setState={setEncryptBlobs} selectedKey={selectedKey} />
                   {isBackingUpBlobs ? (
-                    <Loader className="w-6 h-6" />
+                    <Button
+                      isLoading
+                      hideLoadingText
+                      variant="outline"
+                      className="rounded-full p-1.5"
+                      aria-label="Backing up blobs"
+                    />
                   ) : (
-                    <button
-                      onClick={onClickBackupBlobs} disabled={!space || isBackingUpBlobs}
-                      className="rounded-full cursor-pointer hover:bg-red-400 border">
-                      <ArrowRightCircleIcon className="w-6 h-6" />
-                    </button>
+                    <Button
+                      onClick={onClickBackupBlobs}
+                      disabled={!space || isBackingUpBlobs}
+                      variant="outline"
+                      className="rounded-full p-1.5"
+                      leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                    />
                   )}
                   <div className="flex flex-row items-center">
                     <div className={`${blobs && (blobs.length > 0) ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
@@ -357,13 +375,21 @@ export function BackupUIView ({
                   </div>
                   <EncryptionButton state={encryptPrefsDoc} setState={setEncryptPrefsDoc} selectedKey={selectedKey} />
                   {isBackingUpPrefsDoc ? (
-                    <Loader className="w-6 h-6" />
+                    <Button
+                      isLoading
+                      hideLoadingText
+                      variant="outline"
+                      className="rounded-full p-1.5"
+                      aria-label="Backing up preferences"
+                    />
                   ) : (
-                    <button
-                      onClick={onClickBackupPrefsDoc} disabled={!space || isBackingUpPrefsDoc}
-                      className="rounded-full cursor-pointer hover:bg-red-400 border">
-                      <ArrowRightCircleIcon className="w-6 h-6" />
-                    </button>
+                    <Button
+                      onClick={onClickBackupPrefsDoc}
+                      disabled={!space || isBackingUpPrefsDoc}
+                      variant="outline"
+                      className="rounded-full p-1.5"
+                      leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                    />
                   )}
                   <div className="flex flex-row items-center">
                     <div className={`${prefsDoc ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
@@ -377,12 +403,14 @@ export function BackupUIView ({
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col">
-                <button
-                  onClick={onClickInitializeBackup} disabled={!space}
-                  className="btn font-bold bg-red-500 text-white uppercase m-auto px-4 py-2">
-                  Start Backup
-                </button>
+              <div className="flex flex-col w-100 justify-center items-center gap-1">
+                <Button
+                  onClick={onClickInitializeBackup}
+                  disabled={!space}
+                  variant="primary"
+                >
+                  Initialize Backup
+                </Button>
               </div>
             )
           ) : (
@@ -399,12 +427,12 @@ export function BackupUIView ({
                 <p className="text-md text-center w-150">
                   You are logged in to Storacha, but we could not find any Storacha Spaces. Click the button below to create one.
                 </p>
-                <button
+                <Button
                   onClick={() => setIsModalOpen(true)}
-                  className="hover:cursor-pointer w-40 h-10 rounded-3xl bg-red-600 text-white hover:bg-red-700 transition-colors"
+                  variant="primary"
                 >
                   Create new Space
-                </button>
+                </Button>
               </div>
             )
           )}
@@ -422,4 +450,5 @@ export function BackupUIView ({
       )}
     </>
   )
+
 }

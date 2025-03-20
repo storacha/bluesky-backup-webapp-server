@@ -1,18 +1,10 @@
-// copied from console
-
 import type { Space } from "@w3ui/react";
-
-import React, { Fragment, useState } from "react";
-import {
-  Combobox,
-  ComboboxButton,
-  ComboboxInput,
-  ComboboxOption,
-  ComboboxOptions,
-  Transition,
-} from "@headlessui/react";
-import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { useState } from "react";
+import { ChevronDownIcon, CheckIcon } from "@heroicons/react/20/solid";
 import { shortenDID } from "@/lib/ui";
+import Dropdown from "./Dropdown";
+import Input from "./Input";
+import type { DropdownItem } from "./Dropdown";
 
 interface SpaceFinderProps {
   spaces: Space[];
@@ -28,98 +20,52 @@ export function SpaceFinder({
   className = "",
 }: SpaceFinderProps): JSX.Element {
   const [query, setQuery] = useState("");
-  const filtered =
-    query === ""
-      ? spaces
-      : spaces.filter((space: Space) =>
-          (space.name || space.did())
-            .toLowerCase()
-            .replace(/\s+/g, "")
-            .includes(query.toLowerCase().replace(/\s+/g, ""))
-        );
+
+  const filtered = query === ""
+    ? spaces
+    : spaces.filter((space: Space) =>
+        (space.name || space.did())
+          .toLowerCase()
+          .replace(/\s+/g, "")
+          .includes(query.toLowerCase().replace(/\s+/g, ""))
+      );
+
+  const dropdownItems: DropdownItem[] = filtered.map((space) => ({
+    label: space.name || shortenDID(space.did()),
+    icon: selected && space.did() === selected.did() ? (
+      <CheckIcon className="h-4 w-4 text-[var(--color-storacha-red)]" />
+    ) : undefined,
+    onClick: () => {
+      if (setSelected) {
+        setSelected(space);
+      }
+    }
+  }));
+
+  const triggerContent = (
+    <div className="flex items-center justify-between w-full">
+      <span className="truncate">
+        {selected ? (selected.name || shortenDID(selected.did())) : "Select a space"}
+      </span>
+      <ChevronDownIcon className="ml-2 h-5 w-5" />
+    </div>
+  );
 
   return (
-    <div className={`${className}`}>
-      <Combobox
-        value={selected}
-        onChange={setSelected}
-        by={(a, b) => a?.did() === b?.did()}
+    <div className={className}>
+      <Dropdown
+        items={dropdownItems}
+        variant="secondary"
+        align="right"
+        className="w-full"
+        trigger={triggerContent}
       >
-        <div className="relative mt-1">
-          <div className="relative w-full overflow-hidden rounded-md bg-white text-left shadow-md">
-            <ComboboxInput
-              className="w-full border-none py-2 pl-3 pr-10 text-sm text-gray-900"
-              displayValue={(space: Space) =>
-                space.name || shortenDID(space.did())
-              }
-              onChange={(event) => {
-                setQuery(event.target.value);
-              }}
-            />
-            <ComboboxButton className="absolute inset-y-0 right-0 flex items-center pl-1 pr-2">
-              <ChevronUpDownIcon
-                className="h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
-            </ComboboxButton>
-          </div>
-          <Transition
-            as={Fragment}
-            leave="transition ease-in duration-100"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-            afterLeave={() => {
-              setQuery("");
-            }}
-          >
-            <ComboboxOptions
-              className="absolute mt-1 max-h-96 w-full bg-white rounded-md pt-1 shadow-lg overflow-scroll z-10"
-              static
-            >
-              {filtered.length === 0 && query !== "" ? (
-                <div className="relative select-non py-2 px-4 font-mono text-sm text-red-500">
-                  (╯°□°)╯︵ ┻━┻
-                </div>
-              ) : (
-                filtered.map((space) => (
-                  <ComboboxOption
-                    key={space.did()}
-                    className={({ focus }) =>
-                      `relative select-none py-2 pl-9 pr-4 ${
-                        focus
-                          ? "bg-hot-yellow-light cursor-pointer text-hot-red"
-                          : "text-black"
-                      }`
-                    }
-                    value={space}
-                  >
-                    {({ selected, focus }) => (
-                      <>
-                        <span
-                          className={`block overflow-hidden text-ellipsis whitespace-nowrap ${
-                            selected ? "font-medium" : ""
-                          }`}
-                        >
-                          {space.name || shortenDID(space.did())}
-                        </span>
-                        {selected ? (
-                          <span
-                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                              focus ? "" : ""
-                            }`}
-                          >
-                            ⁂
-                          </span>
-                        ) : null}
-                      </>
-                    )}
-                  </ComboboxOption>
-                ))
-              )}
-            </ComboboxOptions>
-          </Transition>
-        </div>
-      </Combobox>
+        <Input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search for a space"
+        />
+      </Dropdown>
     </div>
   );
 }

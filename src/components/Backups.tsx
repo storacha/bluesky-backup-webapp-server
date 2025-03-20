@@ -4,6 +4,7 @@ import { useBackupsContext } from "@/contexts/backups"
 import { cidUrl } from "@/lib/storacha"
 import { shortenCID, shortenDID } from "@/lib/ui"
 import { useLiveQuery } from "dexie-react-hooks"
+import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from "./Table"
 
 export function Backups ({ className = '' }: { className?: string }) {
   const { backupsStore } = useBackupsContext()
@@ -12,42 +13,36 @@ export function Backups ({ className = '' }: { className?: string }) {
   return (
     <div className={className}>
       <div className='p-2 bg-white/50 rounded-lg'>
-        <table className="table-auto w-full">
-          <thead className="text-left">
-            <tr>
-              <th>
-                Backup
-              </th>
-              <th>
-                Account DID
-              </th>
-              <th>
-                Created At
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHeaderCell>Backup</TableHeaderCell>
+              <TableHeaderCell>Account DID</TableHeaderCell>
+              <TableHeaderCell>Created At</TableHeaderCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {backups?.map((backup) => (
-              <tr key={backup.id} className="odd:bg-gray-100/80">
-                <td>
-                  <a href={`/backups/${backup.id}`}>
+              <TableRow key={backup.id}>
+                <TableCell>
+                  <a href={`/backups/${backup.id}`} className="text-[var(--color-bluesky-blue)] hover:underline">
                     {backup.id}
                   </a>
-                </td>
-                <td>
-                  <a href={`/backups/${backup.id}`}>
+                </TableCell>
+                <TableCell>
+                  <a href={`/backups/${backup.id}`} className="font-mono text-sm">
                     {shortenDID(backup.accountDid)}
                   </a>
-                </td>
-                <td>
+                </TableCell>
+                <TableCell>
                   <a href={`/backups/${backup.id}`}>
                     {backup.createdAt.toDateString()}
                   </a>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   )
@@ -60,54 +55,40 @@ export function Repo ({ backupId, className = '' }: { backupId: number, classNam
     <div className={className}>
       <h2 className="text-sm font-mono font-bold uppercase mb-2">Repos</h2>
       <div className='p-2 bg-white/50 rounded-lg'>
-        <table className="table-auto w-full">
-          <thead className="text-left">
-            <tr>
-              <th>
-                Upload CID
-              </th>
-              <th>
-                Repo CID
-              </th>
-              <th>
-                Bluesky Account DID
-              </th>
-              <th>
-                Commit
-              </th>
-              <th>
-                Encrypted With
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHeaderCell>Upload CID</TableHeaderCell>
+              <TableHeaderCell>Repo CID</TableHeaderCell>
+              <TableHeaderCell>Bluesky Account DID</TableHeaderCell>
+              <TableHeaderCell>Commit</TableHeaderCell>
+              <TableHeaderCell>Encrypted With</TableHeaderCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {repo && (
-              <tr key={repo.cid} className="odd:bg-gray-100/80">
-                <td>
-                  <a href={cidUrl(repo.cid)}>
+              <TableRow>
+                <TableCell>
+                  <a href={cidUrl(repo.cid)} className="font-mono text-sm">
                     {shortenCID(repo.cid)}
                   </a>
-                </td>
-                <td>
+                </TableCell>
+                <TableCell>
                   {repo.repoCid && (
-                    <a href={cidUrl(repo.repoCid)}>
+                    <a href={cidUrl(repo.repoCid)} className="font-mono text-sm">
                       {shortenCID(repo.repoCid)}
                     </a>
                   )}
-                </td>
-                <td>
-                  {shortenDID(repo.accountDid)}
-                </td>
-                <td>
-                  {repo.commit}
-                </td>
-                <td>
+                </TableCell>
+                <TableCell className="font-mono text-sm">{shortenDID(repo.accountDid)}</TableCell>
+                <TableCell>{repo.commit}</TableCell>
+                <TableCell>
                   {repo.encryptedWith && shortenDID(repo.encryptedWith)}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   )
@@ -120,38 +101,30 @@ export function Prefs ({ backupId, className = '' }: { backupId: number, classNa
     <div className={className}>
       <h2 className="text-sm font-mono font-bold uppercase mb-2">Preferences</h2>
       <div className='p-2 bg-white/50 rounded-lg'>
-        <table className="table-auto w-full">
-          <thead className="text-left">
-            <tr>
-              <th>
-                CID
-              </th>
-              <th>
-                Bluesky Account DID
-              </th>
-              <th>
-                Encrypted With
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHeaderCell>CID</TableHeaderCell>
+              <TableHeaderCell>Bluesky Account DID</TableHeaderCell>
+              <TableHeaderCell>Encrypted With</TableHeaderCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {prefsDoc && (
-              <tr key={prefsDoc.cid} className="odd:bg-gray-100/80">
-                <td>
-                  <a href={cidUrl(prefsDoc.cid)}>
+              <TableRow key={prefsDoc.cid}>
+                <TableCell>
+                  <a href={cidUrl(prefsDoc.cid)} className="font-mono text-sm">
                     {shortenCID(prefsDoc.cid)}
                   </a>
-                </td>
-                <td>
-                  {shortenDID(prefsDoc.accountDid)}
-                </td>
-                <td>
+                </TableCell>
+                <TableCell className="font-mono text-sm">{shortenDID(prefsDoc.accountDid)}</TableCell>
+                <TableCell>
                   {prefsDoc.encryptedWith && shortenDID(prefsDoc.encryptedWith)}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   )
@@ -164,38 +137,32 @@ export function Blobs ({ backupId, className = '' }: { backupId: number, classNa
     <div className={className}>
       <h2 className="text-sm font-mono font-bold uppercase mb-2">Blobs</h2>
       <div className='p-2 bg-white/50 rounded-lg'>
-        <table className="table-auto w-full">
-          <thead className="text-left">
-            <tr>
-              <th>
-                CID
-              </th>
-              <th>
-                Bluesky Account DID
-              </th>
-              <th>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHeaderCell>CID</TableHeaderCell>
+              <TableHeaderCell>Bluesky Account DID</TableHeaderCell>
+              <TableHeaderCell>
                 Encrypted With
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHeaderCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {blobs?.map(blob => (
-              <tr key={blob.cid} className="odd:bg-gray-100/80">
-                <td>
-                  <a href={cidUrl(blob.cid)}>
+              <TableRow key={blob.cid}>
+                <TableCell>
+                  <a href={cidUrl(blob.cid)} className="font-mono text-sm">
                     {shortenCID(blob.cid)}
                   </a>
-                </td>
-                <td>
-                  {shortenDID(blob.accountDid)}
-                </td>
-                <td>
+                </TableCell>
+                <TableCell className="font-mono text-sm">{shortenDID(blob.accountDid)}</TableCell>
+                <TableCell>
                   {blob.encryptedWith && shortenDID(blob.encryptedWith)}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   )

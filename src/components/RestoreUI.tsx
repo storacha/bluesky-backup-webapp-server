@@ -10,9 +10,10 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Secp256k1Keypair } from "@atproto/crypto"
 import { AdjustmentsHorizontalIcon, ArrowRightCircleIcon, CircleStackIcon, CloudIcon, IdentificationIcon, KeyIcon } from "@heroicons/react/20/solid"
-import { Loader } from "./Loader"
 import { shorten, shortenDID } from "@/lib/ui"
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
+import Button from "./Button"
+import Input from "./Input"
 import { Key, useKeychainContext } from "@/contexts/keychain"
 import Keychain from "./Keychain"
 import { cidUrl } from "@/lib/storacha"
@@ -366,7 +367,6 @@ export function RestoreDialogView ({
                     </div>
                   </div>
                   <div className="flex flex-row items-center my-2 space-x-8">
-
                     <h5 className="font-bold uppercase text-sm text-right w-28">Repository</h5>
                     <Popover className="relative">
                       <PopoverButton className="outline-none">
@@ -384,13 +384,21 @@ export function RestoreDialogView ({
                       </PopoverPanel>
                     </Popover>
                     {isRestoringRepo ? (
-                      <Loader className="w-6 h-6" />
+                      <Button 
+                        isLoading
+                        hideLoadingText
+                        variant="outline"
+                        className="rounded-full p-1.5"
+                        aria-label="Restoring repository"
+                      />
                     ) : (
-                      <button
-                        onClick={restoreRepo} disabled={isRestoringRepo}
-                        className="rounded-full cursor-pointer hover:bg-red-400 border">
-                        <ArrowRightCircleIcon className="w-6 h-6" />
-                      </button>
+                      <Button
+                        onClick={restoreRepo} 
+                        disabled={isRestoringRepo}
+                        variant="outline"
+                        className="rounded-full p-1.5"
+                        leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                      />
                     )}
                     <div className={`${isRepoRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
                       <CircleStackIcon className="w-4 h-4" />
@@ -398,7 +406,6 @@ export function RestoreDialogView ({
                   </div>
 
                   <div className="flex flex-row items-center my-2 space-x-8">
-
                     <h5 className="font-bold uppercase text-sm text-right w-28">Blobs</h5>
                     <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
                       <span className="font-bold text-sm ">
@@ -406,13 +413,21 @@ export function RestoreDialogView ({
                       </span>
                     </div>
                     {isRestoringBlobs ? (
-                      <Loader className="w-6 h-6" />
+                      <Button 
+                        isLoading
+                        hideLoadingText
+                        variant="outline"
+                        className="rounded-full p-1.5"
+                        aria-label="Restoring blobs"
+                      />
                     ) : (
-                      <button
-                        onClick={restoreBlobs} disabled={isRestoringBlobs}
-                        className="rounded-full cursor-pointer hover:bg-red-400 border">
-                        <ArrowRightCircleIcon className="w-6 h-6" />
-                      </button>
+                      <Button
+                        onClick={restoreBlobs} 
+                        disabled={isRestoringBlobs}
+                        variant="outline"
+                        className="rounded-full p-1.5"
+                        leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                      />
                     )}
                     <div className={`${areBlobsRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
                       <CloudIcon className="w-4 h-4" />
@@ -420,7 +435,6 @@ export function RestoreDialogView ({
                   </div>
 
                   <div className="flex flex-row items-center my-2 space-x-8">
-
                     <h5 className="font-bold uppercase text-sm text-right w-28">Preferences</h5>
                     <Popover className="relative">
                       <PopoverButton className="outline-none">
@@ -438,13 +452,21 @@ export function RestoreDialogView ({
                       </PopoverPanel>
                     </Popover>
                     {isRestoringPrefsDoc ? (
-                      <Loader className="w-6 h-6" />
+                      <Button 
+                        isLoading
+                        hideLoadingText
+                        variant="outline"
+                        className="rounded-full p-1.5"
+                        aria-label="Restoring preferences"
+                      />
                     ) : (
-                      <button
-                        onClick={restorePrefsDoc} disabled={isRestoringPrefsDoc}
-                        className="rounded-full cursor-pointer hover:bg-red-400 border">
-                        <ArrowRightCircleIcon className="w-6 h-6" />
-                      </button>
+                      <Button
+                        onClick={restorePrefsDoc} 
+                        disabled={isRestoringPrefsDoc}
+                        variant="outline"
+                        className="rounded-full p-1.5"
+                        leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                      />
                     )}
                     <div className={`${isPrefsDocRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
                       <AdjustmentsHorizontalIcon className="w-4 h-4" />
@@ -473,16 +495,24 @@ export function RestoreDialogView ({
                       <IdentificationIcon className="w-4 h-4" />
                     </div>
                     {isTransferringIdentity ? (
-                      <Loader className="w-6 h-6" />
+                      <Button 
+                        isLoading
+                        hideLoadingText
+                        variant="outline"
+                        className="rounded-full p-1.5"
+                        aria-label="Transferring identity"
+                      />
                     ) : (
                       isPlcRestoreAuthorizationEmailSent ? (
                         isPlcRestoreSetup ? (
                           <div className="flex flex-col items-center">
-                            <button
-                              onClick={transferIdentity} disabled={isTransferringIdentity}
-                              className="rounded-full cursor-pointer hover:bg-red-400 border m-auto">
-                              <ArrowRightCircleIcon className="w-6 h-6" />
-                            </button>
+                            <Button
+                              onClick={transferIdentity} 
+                              disabled={isTransferringIdentity}
+                              variant="outline"
+                              className="rounded-full p-1.5 m-auto"
+                              leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                            />
                             <Popover className="relative h-0 w-0">
                               <PopoverButton className="w-0 h-0"></PopoverButton>
                               <PopoverPanel static anchor="bottom" className="flex flex-col bg-white border rounded p-2">
@@ -498,11 +528,14 @@ export function RestoreDialogView ({
                       ) : (
                         showTransferAuthorization ? (
                           <div className="flex flex-col w-24 items-center">
-                            <button
-                              onClick={sendPlcRestoreAuthorizationEmail} disabled={isTransferringIdentity}
-                              className="rounded-full cursor-pointer hover:bg-red-400 border text-xs font-bold uppercase py-1 px-2">
+                            <Button
+                              onClick={sendPlcRestoreAuthorizationEmail} 
+                              disabled={isTransferringIdentity}
+                              variant="primary"
+                              className="text-xs font-bold uppercase py-1 px-2"
+                            >
                               Send Email
-                            </button>
+                            </Button>
                             <Popover className="relative h-0 w-0">
                               <PopoverButton className="w-0 h-0"></PopoverButton>
                               <PopoverPanel static anchor="bottom" className="flex flex-col bg-white border rounded p-2">
@@ -513,11 +546,13 @@ export function RestoreDialogView ({
                             </Popover>
                           </div>
                         ) : (
-                          <button
-                            onClick={() => { setShowTransferAuthorization(true) }} disabled={isTransferringIdentity}
-                            className="rounded-full cursor-pointer hover:bg-red-400 border">
-                            <ArrowRightCircleIcon className="w-6 h-6" />
-                          </button>
+                          <Button
+                            onClick={() => { setShowTransferAuthorization(true) }} 
+                            disabled={isTransferringIdentity}
+                            variant="outline"
+                            className="rounded-full p-1.5"
+                            leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                          />
                         )
                       )
                     )}
@@ -561,22 +596,27 @@ function AtprotoLoginForm ({ login, defaultServer }: AtprotoLoginFormProps) {
   return (
     <form onSubmit={handleSubmit((data) => login(data.handle, data.password, { server: data.server || `https://${defaultServer}` }))}
       className="flex flex-col space-y-2">
-      <label>
-        <h4 className="text-xs uppercase font-bold">Server</h4>
-        <input {...register('server')}
-          className="ipt w-full" placeholder={`https://${defaultServer}`} />
-      </label>
-      <label>
-        <h4 className="text-xs uppercase font-bold">Handle</h4>
-        <input {...register('handle')}
-          className="ipt w-full" placeholder={`racha.${defaultServer}`} />
-      </label>
-      <label>
-        <h4 className="text-xs uppercase font-bold">Password</h4>
-        <input type="password" {...register('password')}
-          className="ipt w-full" />
-      </label>
-      <input className="btn" type="submit" value="Log In" />
+      <Input
+        label="Server"
+        placeholder={`https://${defaultServer}`}
+        {...register('server')}
+      />
+      <Input
+        label="Handle"
+        placeholder={`racha.${defaultServer}`}
+        {...register('handle')}
+      />
+      <Input
+        label="Password"
+        type="password"
+        {...register('password')}
+      />
+      <Button
+        type="submit"
+        variant="primary"
+      >
+        Log In
+      </Button>
     </form>
   )
 }
@@ -590,10 +630,17 @@ function PlcTokenForm ({ setPlcToken }: { setPlcToken: (token: string) => void }
   return (
     <form onSubmit={handleSubmit((data) => setPlcToken(data.token))}
       className="flex flex-col space-y-2">
-      <label>
-        <input {...register('token')} placeholder="Confirmation Code" className="ipt w-full" />
-      </label>
-      <input className="btn text-xs uppercase font-bold" type="submit" value="Confirm" />
+      <Input
+        placeholder="Confirmation Code"
+        {...register('token')}
+      />
+      <Button
+        type="submit"
+        variant="primary"
+        className="text-xs uppercase font-bold"
+      >
+        Confirm
+      </Button>
     </form>
   )
 }
@@ -610,32 +657,36 @@ function AtprotoCreateAccountForm ({ createAccount, defaultServer }: AtprotoCrea
       inviteCode: data.inviteCode
     }))}
       className="flex flex-col space-y-2">
-      <label>
-        <h4 className="text-xs uppercase font-bold">Server</h4>
-        <input {...register('server')}
-          className="ipt w-full w-full" placeholder={`https://${defaultServer}`} />
-      </label>
-      <label>
-        <h4 className="text-xs uppercase font-bold">Handle</h4>
-        <input {...register('handle')}
-          className="ipt w-full w-full" placeholder={`racha.${defaultServer}`} />
-      </label>
-      <label>
-        <h4 className="text-xs uppercase font-bold">Email</h4>
-        <input {...register('email')}
-          className="ipt w-full w-full" placeholder={`racha@storacha.network`} />
-      </label>
-      <label>
-        <h4 className="text-xs uppercase font-bold">Password</h4>
-        <input type="password" {...register('password')}
-          className="ipt w-full w-full" />
-      </label>
-      <label>
-        <h4 className="text-xs uppercase font-bold">Invite Code</h4>
-        <input {...register('inviteCode')}
-          className="ipt w-full w-full" />
-      </label>
-      <input className="btn" type="submit" value="Log In" />
+      <Input
+        label="Server"
+        placeholder={`https://${defaultServer}`}
+        {...register('server')}
+      />
+      <Input
+        label="Handle"
+        placeholder={`racha.${defaultServer}`}
+        {...register('handle')}
+      />
+      <Input
+        label="Email"
+        placeholder="racha@storacha.network"
+        {...register('email')}
+      />
+      <Input
+        label="Password"
+        type="password"
+        {...register('password')}
+      />
+      <Input
+        label="Invite Code"
+        {...register('inviteCode')}
+      />
+      <Button
+        type="submit"
+        variant="primary"
+      >
+        Log In
+      </Button>
     </form>
   )
 }

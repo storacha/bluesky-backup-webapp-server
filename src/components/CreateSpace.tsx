@@ -4,7 +4,9 @@ import * as Storacha from "@web3-storage/w3up-client/account"
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import * as StorachaSpace from "@web3-storage/w3up-client/space"
-import {shorten} from "@/lib/ui"
+import { shorten } from "@/lib/ui"
+import Button from "./Button"
+import Input from "./Input"
 
 type SpaceCreationState = "idle" | "creating-space" | "creating-delegation"
 
@@ -78,31 +80,28 @@ export const CreateSpace = ({ account, onSuccess }: CreateSpaceProps) => {
       {step === "name" ? (
         <>
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-gray-700">
-              Space Name
-            </label>
-            <input
-              type="text"
+            <Input
+              label="Space Name"
               value={spaceName}
-              className="h-10 w-full rounded-lg border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 px-4 text-sm outline-none transition-all"
               placeholder="e.g. Flying Geese"
+              variant="default"
               onChange={(e: ChangeEvent<HTMLInputElement>) => setSpaceName(e.target.value)}
             />
           </div>
-          <button
+          <Button
             onClick={onCreateSpace}
             disabled={state === "creating-space"}
-            className="hover:cursor-pointer inline-flex items-center justify-center h-10 rounded-xl bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition-colors"
+            variant="primary"
+            isLoading={state === "creating-space"}
           >
             {state === "creating-space" ? (
               <div className="flex items-center justify-center gap-2 w-full">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
                 <span className="truncate text-center text-sm transition-transform duration-300">
                   Creating {shorten(spaceName, 12)}.
                 </span>
               </div>
             ) : "Create Space"}
-          </button>
+          </Button>
         </>
       ) : (
         <div className="flex flex-col gap-4">
@@ -116,25 +115,25 @@ export const CreateSpace = ({ account, onSuccess }: CreateSpaceProps) => {
             <div className="bg-gray-100 p-4 rounded-lg font-mono text-sm break-all">
               {recoveryKey}
             </div>
-            <button
+            <Button
               onClick={copyRecoveryKey}
-              className="h-10 hover:cursor-pointer rounded-xl bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+              variant="secondary"
             >
               {hasCopiedKey ? "Copied!" : "Copy to Clipboard"}
-            </button>
+            </Button>
           </div>
-          <button
+          <Button
             onClick={createDelegation}
             disabled={!hasCopiedKey || state === "creating-delegation"}
-            className="hover:cursor-pointer inline-flex items-center justify-center h-10 rounded-xl bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition-colors"
+            variant="primary"
+            isLoading={state === "creating-delegation"}
           >
             {state === "creating-delegation" ? (
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 Securing Recovery...
               </div>
             ) : "Create delegation"}
-          </button>
+          </Button>
         </div>
       )}
     </div>
