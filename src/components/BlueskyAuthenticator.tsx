@@ -70,7 +70,7 @@ export default function BlueskyAuthenticator() {
           label="Bluesky Handle"
           placeholder="e.g., racha.bsky.social"
           value={handle}
-          onChange={(e) => setHandle(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHandle(e.target.value)}
           error={error || undefined}
           disabled={isLoading}
           variant="default"

@@ -62,7 +62,7 @@ export function SpaceFinder({
       >
         <Input
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement >) => setQuery(e.target.value)}
           placeholder="Search for a space"
         />
       </Dropdown>
