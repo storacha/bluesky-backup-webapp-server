@@ -1,28 +1,43 @@
 "use client";
 
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+type AsType = "input" | "textarea";
+type ElementType<T extends AsType = "input"> = T extends "textarea" ? HTMLTextAreaElement : HTMLInputElement;
+
+export interface BaseInputProps {
   variant?: 'default' | 'outline' | 'filled';
   error?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   label?: string;
   helperText?: string;
+  as?: AsType;
+  rows?: number;
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(({
-  className = '',
-  variant = 'default',
-  error,
-  leftIcon,
-  rightIcon,
-  label,
-  helperText,
-  disabled,
-  id,
-  ...props
-}, ref) => {
+export type InputProps<T extends AsType = "input"> = BaseInputProps & 
+  (T extends "textarea" 
+    ? React.TextareaHTMLAttributes<HTMLTextAreaElement> 
+    : React.InputHTMLAttributes<HTMLInputElement>);
+
+const Input = forwardRef(<T extends AsType = "input">(
+  {
+    className = '',
+    variant = 'default',
+    error,
+    leftIcon,
+    rightIcon,
+    label,
+    helperText,
+    disabled,
+    id,
+    as = "input" as T,
+    rows = 3,
+    ...props
+  }: InputProps<T>,
+  ref: React.Ref<ElementType<T>>
+) => {
   const baseStyles = 'w-full px-4 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none';
   
   const variants = {
@@ -37,6 +52,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
     baseStyles,
     variants[variant],
     error ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : '',
+    leftIcon ? 'pl-10' : '',
+    rightIcon ? 'pr-10' : '',
     className
   ].join(' ');
 
@@ -56,17 +73,26 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
             {leftIcon}
           </span>
         )}
-        <input
-          ref={ref}
-          id={inputId}
-          className={`
-            ${classes}
-            ${leftIcon ? 'pl-10' : ''}
-            ${rightIcon ? 'pr-10' : ''}
-          `}
-          disabled={disabled}
-          {...props}
-        />
+        
+        {as === "textarea" ? (
+          <textarea
+            ref={ref as React.Ref<HTMLTextAreaElement>}
+            id={inputId}
+            className={classes}
+            disabled={disabled}
+            rows={rows}
+            {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+          />
+        ) : (
+          <input
+            ref={ref as React.Ref<HTMLInputElement>}
+            id={inputId}
+            className={classes}
+            disabled={disabled}
+            {...props as React.InputHTMLAttributes<HTMLInputElement>}
+          />
+        )}
+        
         {rightIcon && (
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
             {rightIcon}
