@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/storacha/bluesky-backup-webapp/compare/blusky-backup-app-v1.0.0...blusky-backup-app-v1.1.0) (2025-03-21)
+
+
+### Features
+
+* enhances Keychain component ([#37](https://github.com/storacha/bluesky-backup-webapp/issues/37)) ([6a14754](https://github.com/storacha/bluesky-backup-webapp/commit/6a14754e01dc323a7f2f71075fdcfa1234ef8314))
+
+
+### Bug Fixes
+
+* configure production pricing table ([#39](https://github.com/storacha/bluesky-backup-webapp/issues/39)) ([a35e46c](https://github.com/storacha/bluesky-backup-webapp/commit/a35e46cbb4bbbac4615281dd7f53382399d11834))
+
 ## 1.0.0 (2025-03-20)
 
 
