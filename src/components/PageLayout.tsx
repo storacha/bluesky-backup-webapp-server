@@ -7,7 +7,7 @@ export default function PageLayout ({
 }>) {
   return (
     <div className="bg-[url(/bluesky-storacha.webp)] bg-contain">
-      <div className="min-h-screen py-16 flex flex-col items-center bg-white/30 backdrop-blur-xs">
+      <div className="min-h-screen py-8 flex flex-col items-center bg-white/30 backdrop-blur-xs">
         {children}
       </div>
     </div>

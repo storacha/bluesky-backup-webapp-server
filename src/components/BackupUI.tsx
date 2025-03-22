@@ -246,10 +246,10 @@ export function BackupUIView ({
   return (
     <>
       {userAuthenticatedToBothServices ? (
-        <div>
+        <div className="flex flex-col items-center">
           {space ? (
             currentBackupId ? (
-              <div className="flex flex-col w-xl">
+              <div className="flex flex-col items-center w-xl">
                 <div className="flex flex-row justify-between items-center mb-4 space-x-8">
                   <h3 className="uppercase font-bold">Creating Backup #{currentBackupId}</h3>
                   <div className="flex flex-row items-center w-52">
@@ -269,10 +269,10 @@ export function BackupUIView ({
                     <h4 className="uppercase text-xs font-bold text-right">Storacha Space</h4>
                     <SpaceFinder
                       selected={space} setSelected={setSelectedSpace} spaces={storacha.spaces}
-                      className="w-52 -mt-1"
+                      className="-mt-1 max-w-lg"
                     />
                     <div className="flex items-center justify-end gap-1 mt-1">
-                      <Button 
+                      <Button
                         onClick={() => setIsModalOpen(true)}
                         variant="ghost"
                       >
@@ -282,128 +282,154 @@ export function BackupUIView ({
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-row items-center w-full space-x-0">
-                  <div className="w-36"></div>
-                  <div className="w-24">
-                    <h4 className="text-center uppercase text-xs font-bold">
-                      {bluesky.session?.server.issuer.split("//")[1]}
-                    </h4>
-                    <div className="text-xs w-full truncate">{bluesky.userProfile?.did}</div>
-                  </div>
-                  <div className="w-20 h-6">
-                  </div>
-                  <div className="w-24">
-                    <h4 className="text-center uppercase text-xs font-bold">
-                      Storacha
-                    </h4>
-                    <div className="text-xs w-full truncate text-center">{space.name || space.did()}</div>
-                  </div>
+                <div className="prose-sm text-center mb-4">
+                  <p>
+                    Use the <b>keychain</b> 🗝️ above to create a private key if you&apos;d like to encrypt your data. Be sure to export 📝 your key and <b>save</b> it in a password manager or another <b>secure</b> location!
+                  </p>
+                  <p>
+                    If you <b>don&apos;t</b> want to encrypt 🤪, or if you&apos;ve already created a key ✅, you can back up your <b>ATProto Repository</b> 🔗, &ldquo;blobs&rdquo; of data like images 🏞️ and videos, and preferences 🛠️ <b>separately</b> below ⤵️.
+                  </p>
+                  <p>
+                    If you choose not to <b>encrypt</b> 😰, please know that your data will be uploaded to a <b>public network</b> replicated around the world 🌍🌏🌎 - while it can be deleted from <b>Storacha&apos;s</b> 🐔 servers, once it&apos;s <b>flown the coop</b> 🐣 it will be hard to ensure it&apos;s really gone!
+                  </p>
+                  <p>
+                    Encrypting at least your preferences is highly recommended 🤓 - they are <b>private</b> on your PDS 👁️!
+                  </p>
                 </div>
-                <div className="flex flex-row items-center my-2 space-x-8">
-                  <h5 className="font-bold uppercase text-sm text-right w-28">Repository</h5>
-                  <div className="ml-8 rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
-                    <CircleStackIcon className="w-4 h-4" />
+                <div className="flex flex-col">
+                  <div className="flex flex-row items-center w-full space-x-0 my-4">
+                    <div className="w-36"></div>
+                    <div className="w-24">
+                      <h4 className="text-center uppercase text-xs font-bold">
+                        {bluesky.session?.server.issuer.split("//")[1]}
+                      </h4>
+                      <div className="text-xs w-full truncate text-center">
+                        {bluesky.userProfile?.did}
+                      </div>
+                    </div>
+                    <div className="w-24 h-6">
+                    </div>
+                    <div className="w-24">
+                      <h4 className="text-center uppercase text-xs font-bold">
+                        Storacha
+                      </h4>
+                      <div className="text-xs w-full truncate text-center">{space.name || space.did()}</div>
+                    </div>
                   </div>
-                  <EncryptionButton state={encryptRepo} setState={setEncryptRepo} selectedKey={selectedKey} />
-                  {isBackingUpRepo ? (
-                    <Button
-                      isLoading
-                      hideLoadingText
-                      variant="outline"
-                      className="rounded-full p-1.5"
-                      aria-label="Backing up repository"
-                    />
-                  ) : (
-                    <Button
-                      onClick={onClickBackupRepo}
-                      disabled={!space || isBackingUpBlobs}
-                      variant="outline"
-                      className="rounded-full p-1.5"
-                      leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
-                    />
-                  )}
-                  <div className="flex flex-row items-center">
-                    <div className={`${repo ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
+                  <div className="flex flex-row items-center my-2 space-x-8">
+                    <h5 className="font-bold uppercase text-sm text-right w-28">Repository</h5>
+                    <div className="ml-8 rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
                       <CircleStackIcon className="w-4 h-4" />
                     </div>
-                    {repo && encryptRepo && (
-                      <LockClosedIcon
-                        className={`w-6 h-6 cursor-pointer p-1 rounded-lg text-emerald-500`} />
+                    <EncryptionButton state={encryptRepo} setState={setEncryptRepo} selectedKey={selectedKey} />
+                    {isBackingUpRepo ? (
+                      <Button
+                        isLoading
+                        hideLoadingText
+                        variant="outline"
+                        className="rounded-full w-8 h-8"
+                        aria-label="Backing up repository"
+                      />
+                    ) : (
+                      <Button
+                        onClick={onClickBackupRepo}
+                        disabled={!space || isBackingUpBlobs}
+                        variant="outline"
+                        className="rounded-full w-8 h-8"
+                        leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                      />
                     )}
-                  </div>
-                </div>
-                <div className="flex flex-row items-center my-2 space-x-8">
-                  <h5 className="font-bold uppercase text-sm text-right w-28">Blobs</h5>
-                  <div className="ml-8 rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
-                    <CloudIcon className="w-4 h-4" />
-                  </div>
-                  <EncryptionButton state={encryptBlobs} setState={setEncryptBlobs} selectedKey={selectedKey} />
-                  {isBackingUpBlobs ? (
-                    <Button
-                      isLoading
-                      hideLoadingText
-                      variant="outline"
-                      className="rounded-full p-1.5"
-                      aria-label="Backing up blobs"
-                    />
-                  ) : (
-                    <Button
-                      onClick={onClickBackupBlobs}
-                      disabled={!space || isBackingUpBlobs}
-                      variant="outline"
-                      className="rounded-full p-1.5"
-                      leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
-                    />
-                  )}
-                  <div className="flex flex-row items-center">
-                    <div className={`${blobs && (blobs.length > 0) ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
-                      <span className="font-bold text-sm ">
-                        {blobs?.length || '0'}
-                      </span>
+                    <div className="flex flex-row items-center">
+                      <div className={`${repo ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
+                        <CircleStackIcon className="w-4 h-4" />
+                      </div>
+                      {repo && encryptRepo && (
+                        <LockClosedIcon
+                          className={`w-6 h-6 cursor-pointer p-1 rounded-lg text-emerald-500`} />
+                      )}
                     </div>
-                    {blobs && (blobs.length > 0) && encryptBlobs && (
-                      <LockClosedIcon
-                        className={`w-6 h-6 cursor-pointer p-1 rounded-lg text-emerald-500`} />
+                  </div>
+                  <div className="flex flex-row items-center my-2 space-x-8">
+                    <h5 className="font-bold uppercase text-sm text-right w-28">Blobs</h5>
+                    <div className="ml-8 rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
+                      <CloudIcon className="w-4 h-4" />
+                    </div>
+                    <EncryptionButton state={encryptBlobs} setState={setEncryptBlobs} selectedKey={selectedKey} />
+                    {isBackingUpBlobs ? (
+                      <Button
+                        isLoading
+                        hideLoadingText
+                        variant="outline"
+                        className="rounded-full w-8 h-8"
+                        aria-label="Backing up blobs"
+                      />
+                    ) : (
+                      <Button
+                        onClick={onClickBackupBlobs}
+                        disabled={!space || isBackingUpBlobs}
+                        variant="outline"
+                        className="rounded-full w-8 h-8"
+                        leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                      />
                     )}
+                    <div className="flex flex-row items-center">
+                      <div className={`${blobs && (blobs.length > 0) ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
+                        <span className="font-bold text-sm ">
+                          {blobs?.length || '0'}
+                        </span>
+                      </div>
+                      {blobs && (blobs.length > 0) && encryptBlobs && (
+                        <LockClosedIcon
+                          className={`w-6 h-6 cursor-pointer p-1 rounded-lg text-emerald-500`} />
+                      )}
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex flex-row items-center my-2 space-x-8">
-                  <h5 className="font-bold uppercase text-sm text-right w-28">Preferences</h5>
-                  <div className="ml-8 rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
-                    <AdjustmentsHorizontalIcon className="w-4 h-4" />
-                  </div>
-                  <EncryptionButton state={encryptPrefsDoc} setState={setEncryptPrefsDoc} selectedKey={selectedKey} />
-                  {isBackingUpPrefsDoc ? (
-                    <Button
-                      isLoading
-                      hideLoadingText
-                      variant="outline"
-                      className="rounded-full p-1.5"
-                      aria-label="Backing up preferences"
-                    />
-                  ) : (
-                    <Button
-                      onClick={onClickBackupPrefsDoc}
-                      disabled={!space || isBackingUpPrefsDoc}
-                      variant="outline"
-                      className="rounded-full p-1.5"
-                      leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
-                    />
-                  )}
-                  <div className="flex flex-row items-center">
-                    <div className={`${prefsDoc ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
+                  <div className="flex flex-row items-center my-2 space-x-8">
+                    <h5 className="font-bold uppercase text-sm text-right w-28">Preferences</h5>
+                    <div className="ml-8 rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
                       <AdjustmentsHorizontalIcon className="w-4 h-4" />
                     </div>
-                    {prefsDoc && encryptPrefsDoc && (
-                      <LockClosedIcon
-                        className={`w-6 h-6 cursor-pointer p-1 rounded-lg text-emerald-500`} />
+                    <EncryptionButton state={encryptPrefsDoc} setState={setEncryptPrefsDoc} selectedKey={selectedKey} />
+                    {isBackingUpPrefsDoc ? (
+                      <Button
+                        isLoading
+                        hideLoadingText
+                        variant="outline"
+                        className="rounded-full w-8 h-8"
+                        aria-label="Backing up preferences"
+                      />
+                    ) : (
+                      <Button
+                        onClick={onClickBackupPrefsDoc}
+                        disabled={!space || isBackingUpPrefsDoc}
+                        variant="outline"
+                        className="rounded-full w-8 h-8"
+                        leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                      />
                     )}
+                    <div className="flex flex-row items-center">
+                      <div className={`${prefsDoc ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
+                        <AdjustmentsHorizontalIcon className="w-4 h-4" />
+                      </div>
+                      {prefsDoc && encryptPrefsDoc && (
+                        <LockClosedIcon
+                          className={`w-6 h-6 cursor-pointer p-1 rounded-lg text-emerald-500`} />
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col w-100 justify-center items-center gap-1">
+              <div className="flex flex-col justify-center items-center space-y-4">
+                <div className="prose-sm text-center mb-8">
+                  <p>
+                    {`Great, you're logged in to Bluesky 🦋 and Storacha 🐔!`}
+                  </p>
+                  <p>
+                    {`Click "Initialize Backup" 👇 to get started 👷 with your first backup 👈!`}
+                  </p>
+                </div>
                 <Button
                   onClick={onClickInitializeBackup}
                   disabled={!space}
@@ -424,8 +450,8 @@ export function BackupUIView ({
               </div>
             ) : (
               <div className="w-full flex flex-col gap-4 justify-center items-center">
-                <p className="text-md text-center w-150">
-                  You are logged in to Storacha, but we could not find any Storacha Spaces. Click the button below to create one.
+                <p className="text-md text-center max-w-xl">
+                  You are logged in to Storacha, but we could not find any Storacha Spaces.
                 </p>
                 <Button
                   onClick={() => setIsModalOpen(true)}

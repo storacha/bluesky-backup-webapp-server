@@ -62,7 +62,7 @@ const Input = forwardRef(<T extends AsType = "input">(
       {label && (
         <label 
           htmlFor={inputId}
-          className="text-sm font-medium text-gray-700"
+          className="text-xs text-gray-700 uppercase font-bold"
         >
           {label}
         </label>

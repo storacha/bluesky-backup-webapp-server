@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@plugin "@tailwindcss/typography";
 @theme {
   --color-bluesky-blue: #1185fe;
   --color-storacha-red: #E91315;
