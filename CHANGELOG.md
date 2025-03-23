@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/storacha/bluesky-backup-webapp/compare/blusky-backup-app-v1.2.2...blusky-backup-app-v1.2.3) (2025-03-23)
+
+
+### Bug Fixes
+
+* deactivate old account after activating new ([#46](https://github.com/storacha/bluesky-backup-webapp/issues/46)) ([8a8f656](https://github.com/storacha/bluesky-backup-webapp/commit/8a8f656d0ce3b8b62868ea4844f06c53e31440a4))
+
 ## [1.2.2](https://github.com/storacha/bluesky-backup-webapp/compare/blusky-backup-app-v1.2.1...blusky-backup-app-v1.2.2) (2025-03-23)
 
 
