@@ -25,7 +25,7 @@ export const Dashboard = () => {
   const plan = data?.product
   return (
     <div className="flex flex-col space-y-4 items-center mt-16">
-      <div className="bg-white/80 backdrop-blur-3xl p-16 rounded border border-bluesky-blue flex flex-col items-center min-w-3xl">
+      <div className="bg-white/80 backdrop-blur-3xl p-16 rounded border border-bluesky-blue flex flex-col items-center">
         {bluesky.initialized ? (
           bluesky.authenticated ? (
             storachaAccount ? (
