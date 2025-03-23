@@ -262,12 +262,13 @@ export default function RestoreDialog ({ backupId }: { backupId: number }) {
   }
 
   async function transferIdentity () {
-    if (sinkAgent && plcOp) {
+    if (sourceAgent && sinkAgent && plcOp) {
       setIsTransferringIdentity(true)
       await sinkAgent.com.atproto.identity.submitPlcOperation({
         operation: plcOp,
       })
       await sinkAgent.com.atproto.server.activateAccount()
+      await sourceAgent.com.atproto.server.deactivateAccount()
       setIsTransferringIdentity(false)
       setIsIdentityTransferred(true)
     } else {
