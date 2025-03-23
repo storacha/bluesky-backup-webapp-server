@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/storacha/bluesky-backup-webapp/compare/blusky-backup-app-v1.2.0...blusky-backup-app-v1.2.1) (2025-03-23)
+
+
+### Bug Fixes
+
+* bugfixes, polish! ([#42](https://github.com/storacha/bluesky-backup-webapp/issues/42)) ([f21e75e](https://github.com/storacha/bluesky-backup-webapp/commit/f21e75e2d6fd27364f117729f2a76b0ccd249d6f))
+
 ## [1.2.0](https://github.com/storacha/bluesky-backup-webapp/compare/blusky-backup-app-v1.1.0...blusky-backup-app-v1.2.0) (2025-03-22)
 
 
