@@ -77,6 +77,15 @@ export const Dashboard = () => {
                   If you&apos;d like to migrate 🦆 to a new <b>Bluesky Personal Data Server</b> we&apos;ll help you decrypt your backup 🔓, load it into the new server 🚚 and then transfer your
                   identity by providing <b>cryptographic</b> proof 🕵️ to your old server that <b>you&apos;ve moved!</b>
                 </p>
+                <p>
+                  ‼️ Please note ‼️ This service should be considered &ldquo;early alpha&rdquo; and definitely has some rough edges.
+                </p>
+                <p>
+                  If you&apos;d like to contribute 💪 to its development we&apos;d love to see 👀 you at
+                  {' '}<a className="underline text-bluesky-blue font-bold" href="https://github.com/storacha/bluesky-backup-webapp/">
+                    github.com/storacha/bluesky-backup-webapp/
+                  </a>
+                </p>
                 <p className="font-bold text-base">To get started, please log in to your Bluesky account:</p>
               </div>
               <div className="flex flex-col items-center w-full">

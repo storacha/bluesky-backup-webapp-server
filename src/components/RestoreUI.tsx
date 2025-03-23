@@ -339,154 +339,155 @@ export function RestoreDialogView ({
     <div className="max-w-2xl">
       <div className="flex flex-row justify-evenly">
         <div>
-          {sinkSession ? (
-            <div className="flex flex-col items-center">
-              <div className="w-full flex flex-row">
-                <Popover className="relative">
-                  <PopoverButton className="outline-none cursor-pointer hover:bg-gray-100 p-2">
-                    <KeyIcon className="w-6 h-6" />
-                  </PopoverButton>
-                  <PopoverPanel anchor="bottom" className="flex flex-col bg-white border rounded p-2">
-                    <Keychain />
-                  </PopoverPanel>
-                </Popover>
-              </div>
+          {sourceSession ? (
+
+            sinkSession ? (
               <div className="flex flex-col items-center">
-                <div className="prose-sm text-center mb-4">
-                  <p>
-                    Great 🎉 ! You can use the buttons below to <b>pull</b> your data out of Storacha 🐔 and load it into your <b>new</b> Personal Data Server 🖥️.
-                  </p>
-                  <p>
-                    If your backup is <b>encrypted</b> 🔏 you&apos;ll need to ensure the decryption key 🔑 is available. Use the key icon above 👆 to <b>import</b> your private key if needed.
-                  </p>
+                <div className="w-full flex flex-row">
+                  <Popover className="relative">
+                    <PopoverButton className="outline-none cursor-pointer hover:bg-gray-100 p-2">
+                      <KeyIcon className="w-6 h-6" />
+                    </PopoverButton>
+                    <PopoverPanel anchor="bottom" className="flex flex-col bg-white border rounded p-2">
+                      <Keychain />
+                    </PopoverPanel>
+                  </Popover>
                 </div>
-                <div className="flex flex-col items-start">
-                  <div className="flex flex-row items-center w-full mb-4">
-                    <div className="w-32"></div>
-                    <div className="w-24">
-                      <h4 className="text-center uppercase text-xs font-bold">
-                        Storacha
-                      </h4>
+                <div className="flex flex-col items-center">
+                  <div className="prose-sm text-center mb-4">
+                    <p>
+                      Great 🎉 ! You can use the buttons below to <b>pull</b> your data out of Storacha 🐔 and load it into your <b>new</b> Personal Data Server 🖥️.
+                    </p>
+                    <p>
+                      If your backup is <b>encrypted</b> 🔏 you&apos;ll need to ensure the decryption key 🔑 is available. Use the key icon above 👆 to <b>import</b> your private key if needed.
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-start">
+                    <div className="flex flex-row items-center w-full mb-4">
+                      <div className="w-32"></div>
+                      <div className="w-24">
+                        <h4 className="text-center uppercase text-xs font-bold">
+                          Storacha
+                        </h4>
+                      </div>
+                      <div className="w-8 h-6">
+                      </div>
+                      <div className="w-44">
+                        <h4 className="text-center uppercase text-xs font-bold">
+                          {sinkSession?.serviceUrl.hostname}
+                        </h4>
+                        <div className="text-center text-xs w-full truncate">
+                          {sinkSession.did && shortenDID(sinkSession.did)}
+                        </div>
+                      </div>
                     </div>
-                    <div className="w-8 h-6">
+                    <div className="flex flex-row items-center my-2 space-x-12">
+                      <h5 className="font-bold uppercase text-sm text-right w-28">Repository</h5>
+                      <Popover className="relative">
+                        <PopoverButton className="outline-none">
+                          <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
+                            <CircleStackIcon className="w-4 h-4" />
+                          </div>
+                        </PopoverButton>
+                        <PopoverPanel anchor="bottom" className="flex flex-col bg-white border rounded p-2">
+                          <div>
+                            Account: {repo?.accountDid}
+                          </div>
+                          <div>
+                            Created At: {repo?.createdAt.toDateString()}
+                          </div>
+                        </PopoverPanel>
+                      </Popover>
+                      {isRestoringRepo ? (
+                        <Button
+                          isLoading
+                          hideLoadingText
+                          variant="outline"
+                          className="rounded-full w-8 h-8"
+                          aria-label="Restoring repository"
+                        />
+                      ) : (
+                        <Button
+                          onClick={restoreRepo}
+                          disabled={isRestoringRepo}
+                          variant="outline"
+                          className="rounded-full w-8 h-8"
+                          leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                        />
+                      )}
+                      <div className={`${isRepoRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
+                        <CircleStackIcon className="w-4 h-4" />
+                      </div>
                     </div>
-                    <div className="w-44">
-                      <h4 className="text-center uppercase text-xs font-bold">
-                        {sinkSession?.serviceUrl.hostname}
-                      </h4>
-                      <div className="text-center text-xs w-full truncate">
-                        {sinkSession.did && shortenDID(sinkSession.did)}
+
+                    <div className="flex flex-row items-center my-2 space-x-12">
+                      <h5 className="font-bold uppercase text-sm text-right w-28">Blobs</h5>
+                      <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
+                        <span className="font-bold text-sm ">
+                          {blobs?.length || '0'}
+                        </span>
+                      </div>
+                      {isRestoringBlobs ? (
+                        <Button
+                          isLoading
+                          hideLoadingText
+                          variant="outline"
+                          className="rounded-full w-8 h-8"
+                          aria-label="Restoring blobs"
+                        />
+                      ) : (
+                        <Button
+                          onClick={restoreBlobs}
+                          disabled={isRestoringBlobs}
+                          variant="outline"
+                          className="rounded-full w-8 h-8"
+                          leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                        />
+                      )}
+                      <div className={`${areBlobsRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
+                        <CloudIcon className="w-4 h-4" />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-row items-center my-2 space-x-12">
+                      <h5 className="font-bold uppercase text-sm text-right w-28">Preferences</h5>
+                      <Popover className="relative">
+                        <PopoverButton className="outline-none">
+                          <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
+                            <AdjustmentsHorizontalIcon className="w-4 h-4" />
+                          </div>
+                        </PopoverButton>
+                        <PopoverPanel anchor="bottom" className="flex flex-col bg-white border rounded p-2">
+                          <div>
+                            Account: {prefsDoc?.accountDid}
+                          </div>
+                          <div>
+                            Created At: {prefsDoc?.createdAt.toDateString()}
+                          </div>
+                        </PopoverPanel>
+                      </Popover>
+                      {isRestoringPrefsDoc ? (
+                        <Button
+                          isLoading
+                          hideLoadingText
+                          variant="outline"
+                          className="rounded-full w-8 h-8"
+                          aria-label="Restoring preferences"
+                        />
+                      ) : (
+                        <Button
+                          onClick={restorePrefsDoc}
+                          disabled={isRestoringPrefsDoc}
+                          variant="outline"
+                          className="rounded-full w-8 h-8"
+                          leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                        />
+                      )}
+                      <div className={`${isPrefsDocRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
+                        <AdjustmentsHorizontalIcon className="w-4 h-4" />
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-row items-center my-2 space-x-12">
-                    <h5 className="font-bold uppercase text-sm text-right w-28">Repository</h5>
-                    <Popover className="relative">
-                      <PopoverButton className="outline-none">
-                        <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
-                          <CircleStackIcon className="w-4 h-4" />
-                        </div>
-                      </PopoverButton>
-                      <PopoverPanel anchor="bottom" className="flex flex-col bg-white border rounded p-2">
-                        <div>
-                          Account: {repo?.accountDid}
-                        </div>
-                        <div>
-                          Created At: {repo?.createdAt.toDateString()}
-                        </div>
-                      </PopoverPanel>
-                    </Popover>
-                    {isRestoringRepo ? (
-                      <Button
-                        isLoading
-                        hideLoadingText
-                        variant="outline"
-                        className="rounded-full w-8 h-8"
-                        aria-label="Restoring repository"
-                      />
-                    ) : (
-                      <Button
-                        onClick={restoreRepo}
-                        disabled={isRestoringRepo}
-                        variant="outline"
-                        className="rounded-full w-8 h-8"
-                        leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
-                      />
-                    )}
-                    <div className={`${isRepoRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
-                      <CircleStackIcon className="w-4 h-4" />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-row items-center my-2 space-x-12">
-                    <h5 className="font-bold uppercase text-sm text-right w-28">Blobs</h5>
-                    <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
-                      <span className="font-bold text-sm ">
-                        {blobs?.length || '0'}
-                      </span>
-                    </div>
-                    {isRestoringBlobs ? (
-                      <Button
-                        isLoading
-                        hideLoadingText
-                        variant="outline"
-                        className="rounded-full w-8 h-8"
-                        aria-label="Restoring blobs"
-                      />
-                    ) : (
-                      <Button
-                        onClick={restoreBlobs}
-                        disabled={isRestoringBlobs}
-                        variant="outline"
-                        className="rounded-full w-8 h-8"
-                        leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
-                      />
-                    )}
-                    <div className={`${areBlobsRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
-                      <CloudIcon className="w-4 h-4" />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-row items-center my-2 space-x-12">
-                    <h5 className="font-bold uppercase text-sm text-right w-28">Preferences</h5>
-                    <Popover className="relative">
-                      <PopoverButton className="outline-none">
-                        <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
-                          <AdjustmentsHorizontalIcon className="w-4 h-4" />
-                        </div>
-                      </PopoverButton>
-                      <PopoverPanel anchor="bottom" className="flex flex-col bg-white border rounded p-2">
-                        <div>
-                          Account: {prefsDoc?.accountDid}
-                        </div>
-                        <div>
-                          Created At: {prefsDoc?.createdAt.toDateString()}
-                        </div>
-                      </PopoverPanel>
-                    </Popover>
-                    {isRestoringPrefsDoc ? (
-                      <Button
-                        isLoading
-                        hideLoadingText
-                        variant="outline"
-                        className="rounded-full w-8 h-8"
-                        aria-label="Restoring preferences"
-                      />
-                    ) : (
-                      <Button
-                        onClick={restorePrefsDoc}
-                        disabled={isRestoringPrefsDoc}
-                        variant="outline"
-                        className="rounded-full w-8 h-8"
-                        leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
-                      />
-                    )}
-                    <div className={`${isPrefsDocRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}>
-                      <AdjustmentsHorizontalIcon className="w-4 h-4" />
-                    </div>
-                  </div>
-                </div>
-                {sourceSession ? (
                   <div className="flex flex-col items-center">
                     <div className="prose-sm text-center mt-16">
                       <p>
@@ -590,43 +591,44 @@ export function RestoreDialogView ({
                     </div>
                   </div>
 
-                ) : (
-                  <div className="my-8 flex flex-col items-center min-w-96 space-y-4">
-                    <div className="prose-sm text-center mb-4">
-                      <p>
-                        If you&apos;d like to transfer your identity 🪪 to a new <b>Personal Data Store</b> you can initiate
-                        do that here by logging in 🪵 to your existing account.
-                      </p>
-                    </div>
-                    <h3 className="font-bold mb-2">Authenticate to your existing Personal Data Server:</h3>
-                    <div className="w-96">
-                      <AtprotoLoginForm login={loginToSource} defaultServer={ATPROTO_DEFAULT_SOURCE} />
-                    </div>
-                  </div>
-                )}
+
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="my-4 flex flex-col items-center ">
+                <div className="prose-sm text-center mb-4">
+                  <p>
+                    If you&apos;d like to restore this backup to a <b>P</b>ersonal <b>D</b>ata <b>S</b>erver,
+                    log in 🧑‍💻 to it here. Your session will be stored in memory 🧠 in your browser, so you&apos;ll need to
+                    log in again if you reload the page 📜
+                  </p>
+                </div>
+                <h3 className="font-bold mb-2">Authenticate to Personal Data Server</h3>
+                <div className="w-96">
+                  <AtprotoLoginForm login={loginToSink} defaultServer={ATPROTO_DEFAULT_SINK} />
+                </div>
+                <div className="prose-sm text-center my-8">
+                  <p>
+                    <b>OR</b>, if you need to create a new account, you can do that here ⬇️
+                  </p>
+                </div>
+                <h3 className="font-bold mb-2">Create a new Bluesky account</h3>
+                <div className="w-96">
+                  <AtprotoCreateAccountForm createAccount={createAccount} defaultServer={ATPROTO_DEFAULT_SINK} />
+                </div>
+              </div>
+            )
           ) : (
-            <div className="my-4 flex flex-col items-center ">
+            <div className="my-8 flex flex-col items-center min-w-96 space-y-4">
               <div className="prose-sm text-center mb-4">
                 <p>
-                  If you&apos;d like to restore this backup to a <b>P</b>ersonal <b>D</b>ata <b>S</b>erver,
-                  log in 🧑‍💻 to it here. Your session will be stored in memory 🧠 in your browser, so you&apos;ll need to
-                  log in again if you reload the page 📜
+                  If you&apos;d like to transfer your identity 🪪 to a new <b>Personal Data Store</b> you can initiate
+                  that here by logging in 🪵 to your existing account.
                 </p>
               </div>
-              <h3 className="font-bold mb-2">Authenticate to Personal Data Server</h3>
+              <h3 className="font-bold mb-2">Authenticate to your existing Personal Data Server:</h3>
               <div className="w-96">
-                <AtprotoLoginForm login={loginToSink} defaultServer={ATPROTO_DEFAULT_SINK} />
-              </div>
-              <div className="prose-sm text-center my-8">
-                <p>
-                  <b>OR</b>, if you need to create a new account, you can do that here ⬇️
-                </p>
-              </div>
-              <h3 className="font-bold mb-2">Create a new Bluesky account</h3>
-              <div className="w-96">
-                <AtprotoCreateAccountForm createAccount={createAccount} defaultServer={ATPROTO_DEFAULT_SINK} />
+                <AtprotoLoginForm login={loginToSource} defaultServer={ATPROTO_DEFAULT_SOURCE} />
               </div>
             </div>
           )}
@@ -740,7 +742,7 @@ function AtprotoCreateAccountForm ({ createAccount, defaultServer }: AtprotoCrea
         type="submit"
         variant="primary"
       >
-        Log In
+        Create Account
       </Button>
     </form>
   )
