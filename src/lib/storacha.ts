@@ -1,5 +1,5 @@
-import { Account, Client, Space } from "@w3ui/react"
-import { GATEWAY_HOSTNAME } from "./constants"
+import { Account, Client, Space } from '@w3ui/react'
+import { GATEWAY_HOSTNAME } from './constants'
 
 export interface StorachaProps {
   account?: Account

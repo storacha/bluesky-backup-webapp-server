@@ -1,5 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { Table, TableHeader, TableBody, TableRow, TableCell, TableHeaderCell } from '@/components/Table';
+import type { Meta, StoryObj } from '@storybook/react'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHeaderCell,
+} from '@/components/Table'
 
 const meta: Meta<typeof Table> = {
   title: 'UI/Table',
@@ -14,13 +21,13 @@ const meta: Meta<typeof Table> = {
       options: ['simple', 'striped'],
     },
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof Table>;
+export default meta
+type Story = StoryObj<typeof Table>
 
 const SampleData = [
-  { 
+  {
     backupId: 'backup_01',
     handle: 'jay.bsky.social',
     did: 'did:plc:7iza6de2p63z3uxr7zjj2w5n',
@@ -28,7 +35,7 @@ const SampleData = [
     carSize: '156.3 MB',
     status: 'Synced',
   },
-  { 
+  {
     backupId: 'backup_02',
     handle: 'alice.bsky.team',
     did: 'did:plc:q6jy2idwyi3mnkqxqt6d7e7d',
@@ -36,7 +43,7 @@ const SampleData = [
     carSize: '89.7 MB',
     status: 'Pending',
   },
-  { 
+  {
     backupId: 'backup_03',
     handle: 'bob.bsky.social',
     did: 'did:plc:ragtjsm2j2vknr3wypswmr3n',
@@ -44,7 +51,7 @@ const SampleData = [
     carSize: '234.1 MB',
     status: 'Failed',
   },
-];
+]
 
 export const Simple: Story = {
   render: () => (
@@ -64,7 +71,9 @@ export const Simple: Story = {
           <TableRow key={row.backupId}>
             <TableCell className="font-mono">{row.backupId}</TableCell>
             <TableCell>@{row.handle}</TableCell>
-            <TableCell className="font-mono text-xs text-gray-600">{row.did}</TableCell>
+            <TableCell className="font-mono text-xs text-gray-600">
+              {row.did}
+            </TableCell>
             <TableCell>{new Date(row.createdAt).toLocaleString()}</TableCell>
             <TableCell>{row.carSize}</TableCell>
             <TableCell>{row.status}</TableCell>
@@ -73,7 +82,7 @@ export const Simple: Story = {
       </TableBody>
     </Table>
   ),
-};
+}
 
 export const Striped: Story = {
   render: () => (
@@ -93,7 +102,9 @@ export const Striped: Story = {
           <TableRow key={row.backupId}>
             <TableCell className="font-mono">{row.backupId}</TableCell>
             <TableCell>@{row.handle}</TableCell>
-            <TableCell className="font-mono text-xs text-gray-600">{row.did}</TableCell>
+            <TableCell className="font-mono text-xs text-gray-600">
+              {row.did}
+            </TableCell>
             <TableCell>{new Date(row.createdAt).toLocaleString()}</TableCell>
             <TableCell>{row.carSize}</TableCell>
             <TableCell>{row.status}</TableCell>
@@ -102,7 +113,7 @@ export const Striped: Story = {
       </TableBody>
     </Table>
   ),
-};
+}
 
 export const WithCustomCells: Story = {
   render: () => (
@@ -126,7 +137,7 @@ export const WithCustomCells: Story = {
               </code>
             </TableCell>
             <TableCell>
-              <a 
+              <a
                 href={`https://bsky.app/profile/${row.handle}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -140,18 +151,18 @@ export const WithCustomCells: Story = {
                 {row.did}
               </span>
             </TableCell>
-            <TableCell>
-              {new Date(row.createdAt).toLocaleString()}
-            </TableCell>
+            <TableCell>{new Date(row.createdAt).toLocaleString()}</TableCell>
             <TableCell>{row.carSize}</TableCell>
             <TableCell>
-              <span className={`px-2 py-1 rounded-full text-xs ${
-                row.status === 'Synced' 
-                  ? 'bg-green-100 text-green-700' 
-                  : row.status === 'Pending'
-                  ? 'bg-yellow-100 text-yellow-700'
-                  : 'bg-red-100 text-red-700'
-              }`}>
+              <span
+                className={`px-2 py-1 rounded-full text-xs ${
+                  row.status === 'Synced'
+                    ? 'bg-green-100 text-green-700'
+                    : row.status === 'Pending'
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : 'bg-red-100 text-red-700'
+                }`}
+              >
                 {row.status}
               </span>
             </TableCell>
@@ -160,4 +171,4 @@ export const WithCustomCells: Story = {
       </TableBody>
     </Table>
   ),
-};
+}

@@ -1,12 +1,19 @@
-import { Account, DID, PlanGetSuccess, PlanSetSuccess, PlanSetFailure, Result } from '@w3ui/react'
+import {
+  Account,
+  DID,
+  PlanGetSuccess,
+  PlanSetSuccess,
+  PlanSetFailure,
+  Result,
+} from '@w3ui/react'
 import useSWR, { SWRResponse } from 'swr'
 import { logAndCaptureError } from './sentry'
-
 
 /**
  * calculate the cache key for a plan's account
  */
-const planKey = (account: Account) => account ? `/plan/${account.did()}` : undefined
+const planKey = (account: Account) =>
+  account ? `/plan/${account.did()}` : undefined
 
 type UsePlanResult = SWRResponse<PlanGetSuccess | undefined> & {
   setPlan: (plan: DID) => Promise<Result<PlanSetSuccess, PlanSetFailure>>
@@ -20,7 +27,7 @@ export const usePlan = (account: Account) => {
       if (result.error) throw new Error('getting plan', { cause: result.error })
       return result.ok
     },
-    onError: logAndCaptureError
+    onError: logAndCaptureError,
   })
   // @ts-expect-error it's important to assign this into the existing object
   // to avoid calling the getters in SWRResponse when copying values over -

@@ -9,8 +9,8 @@ import {
 } from './asn1.js'
 
 /**
- * UTILITIES COPIED FROM @ucanto/principal 
- * 
+ * UTILITIES COPIED FROM @ucanto/principal
+ *
  * TODO: EXPOSE FROM @ucanto/principal OR PULL TO A SHARED LIBRARY
  */
 
@@ -54,7 +54,7 @@ export const SPKI_PARAMS_ENCODED = new Uint8Array([
  * @param {API.ByteView<RSAPublicKey>} key
  * @returns {API.ByteView<SubjectPublicKeyInfo>}
  */
-export const encode = key =>
+export const encode = (key) =>
   encodeSequence([SPKI_PARAMS_ENCODED, encodeBitString(key)])
 
 /**
@@ -62,7 +62,7 @@ export const encode = key =>
  * @param {API.ByteView<SubjectPublicKeyInfo>} info
  * @returns {API.ByteView<RSAPublicKey>}
  */
-export const decode = info => {
+export const decode = (info) => {
   // go into the top-level SEQUENCE
   const offset = enterSequence(info, 0)
   // skip the header we expect (SKPI_PARAMS_ENCODED)

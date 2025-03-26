@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react'
 
-import PageLayout from '@/components/PageLayout';
-import { Dashboard } from './Dashboard';
+import PageLayout from '@/components/PageLayout'
+import { Dashboard } from './Dashboard'
 
 export const DashboardPage = () => {
   return (
@@ -9,4 +9,4 @@ export const DashboardPage = () => {
       <Dashboard />
     </PageLayout>
   )
-};
+}

@@ -1,24 +1,24 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react'
 
-import { BackupUIView } from '@/components/BackupUI';
-import { fn } from '@storybook/test';
-import { BskyAuthContextProps } from '@/contexts';
-import { Account, ContextState, Space } from '@w3ui/react';
-import { ProfileViewBasic } from '@atproto/api/dist/client/types/app/bsky/actor/defs';
-import { Blob, PrefsDoc, Repo } from '@/lib/db';
+import { BackupUIView } from '@/components/BackupUI'
+import { fn } from '@storybook/test'
+import { BskyAuthContextProps } from '@/contexts'
+import { Account, ContextState, Space } from '@w3ui/react'
+import { ProfileViewBasic } from '@atproto/api/dist/client/types/app/bsky/actor/defs'
+import { Blob, PrefsDoc, Repo } from '@/lib/db'
 
 // @ts-expect-error this is fine for now
-const space = { did: () => "did:key:asdfawer" } as Space
+const space = { did: () => 'did:key:asdfawer' } as Space
 // @ts-expect-error this is fine for now
 const bluesky = {
   userProfile: {
-    did: 'did:plc:abc123'
+    did: 'did:plc:abc123',
   } as ProfileViewBasic,
-  session: { server: { issuer: 'https://bsky.social' } }
+  session: { server: { issuer: 'https://bsky.social' } },
 } as BskyAuthContextProps
 const storacha = {
   accounts: [{} as Account],
-  spaces: [space]
+  spaces: [space],
 }
 const meta = {
   title: 'components/BackupUI',
@@ -46,82 +46,81 @@ const meta = {
     encryptBlobs: false,
     setEncryptBlobs: fn(),
     encryptPrefsDoc: true,
-    setEncryptPrefsDoc: fn()
+    setEncryptPrefsDoc: fn(),
   },
-  decorators: [
-  ]
-} satisfies Meta<typeof BackupUIView>;
+  decorators: [],
+} satisfies Meta<typeof BackupUIView>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
-export const Initial: Story = {};
+export const Initial: Story = {}
 
 export const Authenticated: Story = {
   args: {
     bluesky,
-    storacha
-  }
-};
+    storacha,
+  },
+}
 
 export const BackupCreator: Story = {
   args: {
     bluesky,
     storacha,
-    currentBackupId: 1
-  }
-};
+    currentBackupId: 1,
+  },
+}
 
 export const BackingUpRepo: Story = {
   args: {
     bluesky,
     storacha,
     currentBackupId: 1,
-    isBackingUpRepo: true
-  }
-};
+    isBackingUpRepo: true,
+  },
+}
 
 export const BackingUpBlobs: Story = {
   args: {
     bluesky,
     storacha,
     currentBackupId: 1,
-    isBackingUpBlobs: true
-  }
-};
+    isBackingUpBlobs: true,
+  },
+}
 
 export const BackingUpPrefsDoc: Story = {
   args: {
     bluesky,
     storacha,
     currentBackupId: 1,
-    isBackingUpPrefsDoc: true
-  }
-};
+    isBackingUpPrefsDoc: true,
+  },
+}
 
 export const BackedUpRepo: Story = {
   args: {
     bluesky,
     storacha,
     currentBackupId: 1,
-    repo: {} as Repo
-  }
-};
+    repo: {} as Repo,
+  },
+}
 
 export const BackedUpBlobs: Story = {
   args: {
     bluesky,
     storacha,
     currentBackupId: 1,
-    blobs: [{} as Blob]
-  }
-};
+    blobs: [{} as Blob],
+  },
+}
 
 export const BackedUpPrefsDoc: Story = {
   args: {
     bluesky,
     storacha,
     currentBackupId: 1,
-    prefsDoc: {} as PrefsDoc
-  }
-};
+    prefsDoc: {} as PrefsDoc,
+  },
+}

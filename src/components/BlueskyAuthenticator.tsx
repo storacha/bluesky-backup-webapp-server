@@ -1,33 +1,34 @@
-"use client";
+'use client'
 
-import { useBskyAuthContext } from "@/contexts";
-import { REQUIRED_ATPROTO_SCOPE } from "@/lib/constants";
-import { useCallback, useState } from "react";
-import Button from "./Button";
-import Input from "./Input";
+import { useBskyAuthContext } from '@/contexts'
+import { REQUIRED_ATPROTO_SCOPE } from '@/lib/constants'
+import { useCallback, useState } from 'react'
+import Button from './Button'
+import Input from './Input'
 
 export default function BlueskyAuthenticator() {
-  const { initialized, authenticated, bskyAuthClient, userProfile, session } = useBskyAuthContext();
-  const [handle, setHandle] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { initialized, authenticated, bskyAuthClient, userProfile, session } =
+    useBskyAuthContext()
+  const [handle, setHandle] = useState<string>('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const signIn = useCallback(async () => {
-    if (!bskyAuthClient) return;
-    setIsLoading(true);
-    setError(null);
+    if (!bskyAuthClient) return
+    setIsLoading(true)
+    setError(null)
 
     try {
       await bskyAuthClient.signIn(handle, {
         scope: REQUIRED_ATPROTO_SCOPE,
-      });
+      })
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to sign in');
-      console.error(err);
+      setError(err instanceof Error ? err.message : 'Failed to sign in')
+      console.error(err)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  }, [handle, bskyAuthClient]);
+  }, [handle, bskyAuthClient])
 
   if (!initialized) {
     return (
@@ -36,7 +37,7 @@ export default function BlueskyAuthenticator() {
           Initializing...
         </Button>
       </div>
-    );
+    )
   }
 
   if (authenticated && userProfile) {
@@ -44,7 +45,7 @@ export default function BlueskyAuthenticator() {
       <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-sm">
         <div className="flex flex-col gap-1">
           <div className="text-sm text-gray-600">
-            Authenticated to Bluesky as{" "}
+            Authenticated to Bluesky as{' '}
             <span className="font-medium text-[var(--color-bluesky-blue)]">
               {userProfile.handle}
             </span>
@@ -54,15 +55,15 @@ export default function BlueskyAuthenticator() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-sm w-full max-w-md">
       <form
         onSubmit={(e) => {
-          e.preventDefault();
-          signIn();
+          e.preventDefault()
+          signIn()
         }}
         className="flex flex-col gap-4"
       >
@@ -70,7 +71,9 @@ export default function BlueskyAuthenticator() {
           label="Bluesky Handle"
           placeholder="e.g., racha.bsky.social"
           value={handle}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHandle(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setHandle(e.target.value)
+          }
           error={error || undefined}
           disabled={isLoading}
           variant="default"
@@ -86,5 +89,5 @@ export default function BlueskyAuthenticator() {
         </Button>
       </form>
     </div>
-  );
+  )
 }

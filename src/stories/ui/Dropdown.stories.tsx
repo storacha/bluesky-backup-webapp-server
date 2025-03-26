@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import Dropdown from '@/components/Dropdown';
-import { 
-  ArrowRightIcon, 
-  TrashIcon, 
+import type { Meta, StoryObj } from '@storybook/react'
+import Dropdown from '@/components/Dropdown'
+import {
+  ArrowRightIcon,
+  TrashIcon,
   PencilIcon,
-  DocumentDuplicateIcon 
-} from '@heroicons/react/24/outline';
+  DocumentDuplicateIcon,
+} from '@heroicons/react/24/outline'
 
 const meta = {
   title: 'UI/Dropdown',
@@ -24,10 +24,10 @@ const meta = {
       options: ['left', 'center', 'right'],
     },
   },
-} satisfies Meta<typeof Dropdown>;
+} satisfies Meta<typeof Dropdown>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 const defaultItems = [
   {
@@ -46,35 +46,35 @@ const defaultItems = [
     onClick: () => console.log('Delete clicked'),
     disabled: true,
   },
-];
+]
 
 export const Primary: Story = {
   args: {
     items: defaultItems,
     variant: 'primary',
   },
-};
+}
 
 export const Secondary: Story = {
   args: {
     items: defaultItems,
     variant: 'secondary',
   },
-};
+}
 
 export const Outline: Story = {
   args: {
     items: defaultItems,
     variant: 'outline',
   },
-};
+}
 
 export const Ghost: Story = {
   args: {
     items: defaultItems,
     variant: 'ghost',
   },
-};
+}
 
 export const CustomTrigger: Story = {
   args: {
@@ -86,18 +86,18 @@ export const CustomTrigger: Story = {
       </div>
     ),
   },
-};
+}
 
 export const LeftAligned: Story = {
   args: {
     items: defaultItems,
     align: 'left',
   },
-};
+}
 
 export const CenterAligned: Story = {
   args: {
     items: defaultItems,
     align: 'center',
   },
-};
+}

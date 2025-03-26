@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-export default function PageLayout ({
+export default function PageLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <div className="bg-[url(/bluesky-storacha.webp)] bg-contain">
@@ -11,5 +11,5 @@ export default function PageLayout ({
         {children}
       </div>
     </div>
-  );
+  )
 }

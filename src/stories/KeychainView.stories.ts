@@ -1,19 +1,19 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react'
 
-import { KeychainView } from '@/components/Keychain';
-import { fn } from '@storybook/test';
+import { KeychainView } from '@/components/Keychain'
+import { fn } from '@storybook/test'
 
 const keyPair = {
   publicKey: {} as CryptoKey,
   PrivateKey: {} as CryptoKey,
   did: () => 'did:key:keypair',
-  toSecret: async () => "secret secret, I've got a secret!"
+  toSecret: async () => "secret secret, I've got a secret!",
 }
 
 const key = {
   id: keyPair.did(),
   symkeyCid: 'bafybeigreable',
-  keyPair
+  keyPair,
 }
 
 const publicOnlyKeyPair = {
@@ -24,7 +24,7 @@ const publicOnlyKeyPair = {
 const publicOnlyKey = {
   id: publicOnlyKeyPair.did(),
   symkeyCid: 'bafybeipublicgrawf34af4',
-  keyPair: publicOnlyKeyPair
+  keyPair: publicOnlyKeyPair,
 }
 
 const metaOnlyKey = {
@@ -44,19 +44,18 @@ const meta = {
     generateKeyPair: async () => publicOnlyKey,
     setSelectedKey: fn(),
     importKey: fn(),
-    forgetKey: fn()
+    forgetKey: fn(),
   },
-  decorators: [
-  ]
-} satisfies Meta<typeof KeychainView>;
+  decorators: [],
+} satisfies Meta<typeof KeychainView>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
-export const Initial: Story = {};
+export const Initial: Story = {}
 
 export const WithKeys: Story = {
   args: {
     keys: [publicOnlyKey, key, metaOnlyKey],
-  }
-};
+  },
+}

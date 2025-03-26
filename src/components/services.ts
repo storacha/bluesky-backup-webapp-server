@@ -12,7 +12,8 @@ export const servicePrincipal = DID.parse(
 )
 
 export const receiptsURL = new URL(
-  process.env.NEXT_PUBLIC_STORACHA_RECEIPTS_URL ?? 'https://up.storacha.network/receipt/'
+  process.env.NEXT_PUBLIC_STORACHA_RECEIPTS_URL ??
+    'https://up.storacha.network/receipt/'
 )
 
 export const serviceConnection = connect<Service>({
