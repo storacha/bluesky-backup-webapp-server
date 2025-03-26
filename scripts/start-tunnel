@@ -13,6 +13,9 @@
 # also help you install ngrok, and prepare a `.env.local` file if you need one.
 # Passes all of its arguments to `ngrok http`.
 
+# Enable associative arrays
+typeset -A kv_pairs
+
 # Ensure ngrok is installed
 ensure_ngrok() {
   if ! command -v ngrok >/dev/null; then
@@ -40,22 +43,101 @@ cleanup() {
   sed -i '' '/#ngrok/d' .env.local
 }
 
+spinners=(
+  "◠◡◠◡   "
+  " ◠◡◠◡  "
+  "  ◠◡◠◡ "
+  "   ◠◡◠◡"
+  "◡◠◡◠   "
+  " ◡◠◡◠  "
+  "  ◡◠◡◠ "
+  "   ◡◠◡◠"
+)
+
+# Same visual width as the spinner
+connected_marker="  ╼══╾ "
+
+# Sets the terminal title
+set_title() {
+  echo -en "\033]0;🧑‍💻 $1 🌐$2\a"
+}
+
+spinner() {
+  while true; do
+    for s in "${spinners[@]}"; do
+      set_title "$s"
+      sleep 0.2
+    done
+  done
+}
+
+connecting() {
+  if [[ -z $spinner_pid ]]; then
+    spinner &
+    spinner_pid=$!
+  fi
+}
+
+connected() {
+  if [[ -n $spinner_pid ]]; then
+    kill "$spinner_pid" 2>/dev/null
+    wait "$spinner_pid" 2>/dev/null
+    unset spinner_pid
+  fi
+  if [[ -n $addr && -n $url ]]; then
+    detail="【${addr#http://localhost} → $url】"
+  fi
+  set_title "$connected_marker" "$detail"
+}
+
 coproc {
   # Close the coproc fd held by the coproc itself, so it can exit when the
   # script exits.
   # https://www.zsh.org/mla/users/2011/msg00095.html
   coproc :
 
-  # Whenever a tunnel starts, write the URL to .env.local. Being at the end of
-  # the file, this will take precedence over any existing value.
-  sed -un 's/.* msg="started tunnel" .*url=\([^ ]*\)/\1/p' | {
-    while read -r url; do
+  state="connecting"
+
+  while read -r line; do
+    # Get the keys and values in the current line
+    # Note that values can either have no whitespace or be quoted and contain whitespace.
+    while [[ $line =~ '^([^=]+)="([^"]*)"(.*)$' || $line =~ '^([^=]+)=([^[:space:]]*)(.*)$' ]]; do
+      key=${match[1]}
+      value=${match[2]}
+      kv_pairs[$key]=$value
+      line=${match[3]# }
+    done
+
+    # Access the 'msg' field to determine the action
+    case ${kv_pairs[msg]} in
+    "started tunnel")
+      addr=${kv_pairs[addr]}
+      url=${kv_pairs[url]}
+      state="connected"
+      ;;
+    "tunnel session started")
+      state="connected"
+      # Whenever a session connects, write the URL to .env.local. Being at the
+      # end of the file, this will take precedence over any existing value.
       # In case we've just reconnected
       cleanup
       # Write the URL to .env.local
       echo "NEXT_PUBLIC_BLUESKY_CLIENT_URI=$url #ngrok" >>.env.local
-    done
-  }
+      ;;
+    "session closed, starting reconnect loop")
+      state="connecting"
+      ;;
+    esac
+
+    case $state in
+    "connecting")
+      connecting
+      ;;
+    "connected")
+      connected
+      ;;
+    esac
+  done
 } >&2
 
 ensure_ngrok
@@ -65,5 +147,8 @@ ensure_ngrok
 
 # Clean up anything left over
 cleanup
-ngrok http http://localhost:3000 --log /dev/fd/3 "$@" 3>&p
+ngrok http 3000 --log /dev/fd/3 "$@" 3>&p
 cleanup
+
+# Reset title
+echo -en "\033]0; \a"
