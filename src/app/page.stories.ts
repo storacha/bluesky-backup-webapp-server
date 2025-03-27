@@ -3,7 +3,8 @@ import type { Meta, StoryObj } from '@storybook/react'
 import Page from './page'
 
 const meta = {
-  title: 'pages/Root',
+  // Uses division slash (∕) instead of regular slash (/) in the title.
+  title: '∕',
   component: Page,
   parameters: {
     layout: 'fullscreen',
@@ -13,4 +14,5 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Initialized: Story = {}
+export const Default: Story = {}
+Default.storyName = '∕'

@@ -1,10 +1,15 @@
+import { dmSans, epilogue } from './globalStyle'
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${dmSans.className} ${dmSans.variable} ${epilogue.variable}`}
+    >
       <body>{children}</body>
     </html>
   )

@@ -5,10 +5,21 @@ import { PHASE_DEVELOPMENT_SERVER } from 'next/dist/shared/lib/constants'
 import { Configuration as WebpackConfig } from 'webpack'
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: [
+    {
+      directory: '../src/app',
+      titlePrefix: 'Pages',
+    },
+    {
+      directory: '../src/stories',
+      titlePrefix: 'Other',
+    },
+  ],
   addons: [
-    '@storybook/addon-essentials',
-    '@storybook/addon-onboarding',
+    {
+      name: '@storybook/addon-essentials',
+      options: { actions: false, controls: false },
+    },
     '@chromatic-com/storybook',
   ],
   framework: {
@@ -60,10 +71,19 @@ function supportCssModules(webpackConfig: WebpackConfig) {
             {
               loader: 'css-loader',
               options: {
+                importLoaders: 1,
                 esModule: false,
                 modules: {
                   exportLocalsConvention: 'asIs',
                   mode: 'pure',
+                },
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: ['postcss-nested'],
                 },
               },
             },
