@@ -1,8 +1,3 @@
-'use client'
-
-import './globals.css'
-import RootProviders from '@/app/providers'
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -10,9 +5,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <RootProviders>{children}</RootProviders>
-      </body>
+      <body>{children}</body>
     </html>
   )
 }
