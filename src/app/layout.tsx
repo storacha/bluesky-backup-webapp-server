@@ -1,4 +1,4 @@
-import { dmSans, epilogue } from './globalStyle'
+import { dmMono, dmSans, epilogue } from './globalStyle'
 
 export default function RootLayout({
   children,
@@ -8,7 +8,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.className} ${dmSans.variable} ${epilogue.variable}`}
+      className={`${dmSans.className} ${dmSans.variable} ${dmMono.variable} ${epilogue.variable}`}
     >
       <body>{children}</body>
     </html>

@@ -8,20 +8,20 @@ const config: StorybookConfig = {
   stories: [
     {
       directory: '../src/app',
+      files: 'page.stories.*',
       titlePrefix: 'Pages',
+    },
+    {
+      directory: '../src/app',
+      files: '!(page).stories.*',
+      titlePrefix: 'Components',
     },
     {
       directory: '../src/stories',
       titlePrefix: 'Other',
     },
   ],
-  addons: [
-    {
-      name: '@storybook/addon-essentials',
-      options: { actions: false, controls: false },
-    },
-    '@chromatic-com/storybook',
-  ],
+  addons: ['@storybook/addon-essentials', '@chromatic-com/storybook'],
   framework: {
     name: '@storybook/nextjs',
     options: {},

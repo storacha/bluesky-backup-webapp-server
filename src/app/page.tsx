@@ -1,4 +1,5 @@
 import { styled } from 'next-yak'
+import { LoginArea } from './LoginArea'
 
 const Outside = styled.div`
   display: flex;
@@ -25,10 +26,8 @@ const Main = styled.main`
 
 const Tagline = styled.h2`
   font-size: 60px;
-  font-family: var(--font-epilogue-500);
+  font-family: var(--font-epilogue);
 `
-
-const Login = styled.div``
 
 const Footer = styled.footer`
   padding: 2rem;
@@ -43,7 +42,7 @@ export default function Home() {
           <Tagline>Backup & Restore your Bluesky Account</Tagline>
         </div>
         <div>
-          <Login>Login</Login>
+          <LoginArea emailAddress="timothy-chalamet@gmail.com" />
         </div>
       </Main>
       <Footer>STORACHA</Footer>

@@ -1,6 +1,6 @@
 import React from 'react'
 import type { Preview } from '@storybook/react'
-import { dmSans, epilogue } from '../src/app/globalStyle'
+import { dmMono, dmSans, epilogue } from '../src/app/globalStyle'
 
 const preview: Preview = {
   parameters: {
@@ -14,7 +14,7 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <div
-        className={`${dmSans.className} ${dmSans.variable} ${epilogue.variable}`}
+        className={`${dmSans.className} ${dmSans.variable} ${dmMono.variable} ${epilogue.variable}`}
       >
         <Story />
       </div>
