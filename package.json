@@ -24,6 +24,7 @@
     "@heroicons/react": "^2.2.0",
     "@ipld/dag-ucan": "^3.4.5",
     "@sentry/nextjs": "^9.5.0",
+    "@storacha/ui-react": "^2.5.24",
     "@tailwindcss/postcss": "^4.0.9",
     "@tanstack/react-query": "^5.66.0",
     "@ucanto/client": "^9.0.1",

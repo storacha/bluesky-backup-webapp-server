@@ -8,12 +8,12 @@ const config: StorybookConfig = {
   stories: [
     {
       directory: '../src/app',
-      files: 'page.stories.*',
+      files: '*.stories.*',
       titlePrefix: 'Pages',
     },
     {
-      directory: '../src/app',
-      files: '!(page).stories.*',
+      directory: '../src/components',
+      files: '**/*.stories.*',
       titlePrefix: 'Components',
     },
     {
