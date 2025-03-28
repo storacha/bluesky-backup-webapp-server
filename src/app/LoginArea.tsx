@@ -1,4 +1,5 @@
 import { styled } from 'next-yak'
+import { Stack } from './Stack'
 
 const Outside = styled.div`
   border: 1px solid var(--color-gray-light);
@@ -18,12 +19,6 @@ const H4 = styled.h4`
   line-height: 1.5rem;
   font-weight: 400;
   color: var(--color-gray-medium);
-`
-
-const Stack = styled.div<{ $gap?: string }>`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ $gap = 0 }) => $gap};
 `
 
 const Input = styled.div`

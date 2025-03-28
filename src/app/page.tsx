@@ -1,5 +1,6 @@
 import { styled } from 'next-yak'
 import { LoginArea } from './LoginArea'
+import { Stack } from './Stack'
 
 const Outside = styled.div`
   display: flex;
@@ -14,14 +15,7 @@ const Header = styled.header`
 
 const Main = styled.main`
   flex: 1 0 auto;
-
-  display: flex;
-  flex-direction: row;
   padding: 2rem;
-
-  & > * {
-    flex: 1 1 0;
-  }
 `
 
 const Tagline = styled.h2`
@@ -38,12 +32,14 @@ export default function Home() {
     <Outside>
       <Header>Storacha</Header>
       <Main>
-        <div>
-          <Tagline>Backup & Restore your Bluesky Account</Tagline>
-        </div>
-        <div>
-          <LoginArea emailAddress="timothy-chalamet@gmail.com" />
-        </div>
+        <Stack $gap="2.5rem" $direction="row" $even>
+          <div>
+            <Tagline>Backup & Restore your Bluesky Account</Tagline>
+          </div>
+          <div>
+            <LoginArea emailAddress="timothy-chalamet@gmail.com" />
+          </div>
+        </Stack>
       </Main>
       <Footer>STORACHA</Footer>
     </Outside>
