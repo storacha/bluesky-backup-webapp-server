@@ -1,7 +1,6 @@
 'use client'
 
 import { useAuthenticator } from '@storacha/ui-react'
-import { LogOutButton } from './authentication'
 import { Stack } from '@/components/ui'
 import { Sidebar } from './Sidebar'
 import { styled } from 'next-yak'
@@ -15,7 +14,10 @@ export function LoggedIn() {
   const [{ accounts, spaces }] = useAuthenticator()
   return (
     <Outside $direction="row" $gap="1rem">
-      <Sidebar />
+      <Sidebar
+        backupConfigs={['Backup #1', 'Bluesky #452']}
+        selectedConfig={'Backup #1'}
+      />
       <div>
         <h1>Logged In</h1>
         <p>You are logged in as {accounts[0].toEmail()}!</p>
