@@ -1,11 +1,11 @@
-import { Authenticated, LogOutButton } from './authentication'
+import { Authenticated } from './authentication'
 import { LoginScreen } from '../components/LoginScreen'
+import { LoggedIn } from './LoggedIn'
 
 export default function Home() {
   return (
     <Authenticated unauthenticated={<LoginScreen />}>
-      <div>Authenticated</div>
-      <LogOutButton>Log Out</LogOutButton>
+      <LoggedIn />
     </Authenticated>
   )
 }
