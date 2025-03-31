@@ -1,7 +1,4 @@
-'use client'
-
-import './globals.css'
-import RootProviders from '@/app/providers'
+import { dmMono, dmSans, epilogue } from './globalStyle'
 
 export default function RootLayout({
   children,
@@ -9,10 +6,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body>
-        <RootProviders>{children}</RootProviders>
-      </body>
+    <html
+      lang="en"
+      className={`${dmSans.className} ${dmSans.variable} ${dmMono.variable} ${epilogue.variable}`}
+    >
+      <body>{children}</body>
     </html>
   )
 }
