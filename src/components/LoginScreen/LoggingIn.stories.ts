@@ -4,7 +4,6 @@ import { fn } from '@storybook/test'
 import { LoggingIn } from './LoggingIn'
 
 const meta = {
-  title: 'LoggingIn',
   component: LoggingIn,
   args: {
     email: 'timothy-chalamet@gmail.com',

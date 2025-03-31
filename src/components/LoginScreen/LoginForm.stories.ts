@@ -4,7 +4,6 @@ import { fn } from '@storybook/test'
 import { LoginForm } from './LoginForm'
 
 const meta = {
-  title: 'LoginForm',
   component: LoginForm,
   args: {
     email: 'timothy-chalamet@gmail.com',
