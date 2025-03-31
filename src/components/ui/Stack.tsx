@@ -1,8 +1,9 @@
 import { css, styled } from 'next-yak'
+import { Property } from 'csstype'
 
 export const Stack = styled.div<{
-  $direction?: 'row' | 'column'
-  $gap?: string
+  $direction?: Property.FlexDirection
+  $gap?: Property.Gap
   $even?: boolean
 }>`
   display: flex;
