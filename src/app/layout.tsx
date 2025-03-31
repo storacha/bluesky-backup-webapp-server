@@ -9,14 +9,14 @@ export default function RootLayout({
 }>) {
   return (
     <StorachaProvider>
-      <Authenticator>
-        <html
-          lang="en"
-          className={`${dmSans.className} ${dmSans.variable} ${dmMono.variable} ${epilogue.variable}`}
-        >
-          <body>{children}</body>
-        </html>
-      </Authenticator>
+      <html
+        lang="en"
+        className={`${dmSans.className} ${dmSans.variable} ${dmMono.variable} ${epilogue.variable}`}
+      >
+        <body>
+          <Authenticator as="div">{children}</Authenticator>
+        </body>
+      </html>
     </StorachaProvider>
   )
 }
