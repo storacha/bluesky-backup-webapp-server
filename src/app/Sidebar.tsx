@@ -88,7 +88,13 @@ const LogOutButton = styled(BaseLogOutButton)`
   ${actionButtonStyle}
 `
 
-export function Sidebar() {
+export function Sidebar({
+  backupConfigs,
+  selectedConfig,
+}: {
+  backupConfigs: string[]
+  selectedConfig: string | null
+}) {
   return (
     <SidebarOutside>
       <Stack>
@@ -96,8 +102,11 @@ export function Sidebar() {
         <Heading>Backup Configs</Heading>
         <Stack $gap="1rem">
           <ConfigList>
-            <ConfigItem $selected>Backup #1</ConfigItem>
-            <ConfigItem>Bluesky #452</ConfigItem>
+            {backupConfigs.map((config) => (
+              <ConfigItem key={config} $selected={config === selectedConfig}>
+                {config}
+              </ConfigItem>
+            ))}
           </ConfigList>
           <AddConfig>Add new backup config</AddConfig>
         </Stack>
