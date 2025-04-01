@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { linkTo } from '@storybook/addon-links'
 import { fn } from '@storybook/test'
 
 import { LoginForm } from './LoginForm'
@@ -9,6 +10,18 @@ const meta = {
     email: 'timothy-chalamet@gmail.com',
     setEmail: fn(),
   },
+  decorators: [
+    (Story) => (
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          linkTo('Components/LoginScreen/LoggingIn')()
+        }}
+      >
+        <Story />
+      </form>
+    ),
+  ],
 } satisfies Meta<typeof LoginForm>
 
 export default meta

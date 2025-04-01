@@ -51,6 +51,7 @@
     "@eslint/eslintrc": "^3",
     "@opennextjs/cloudflare": "^0.6.6",
     "@storybook/addon-essentials": "^8.6.4",
+    "@storybook/addon-links": "^8.6.4",
     "@storybook/addon-onboarding": "^8.6.4",
     "@storybook/blocks": "^8.6.4",
     "@storybook/experimental-addon-test": "^8.6.4",
