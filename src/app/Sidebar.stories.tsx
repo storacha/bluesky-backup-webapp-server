@@ -1,7 +1,8 @@
 import type { Decorator, Meta, StoryObj } from '@storybook/react'
 
-import { Sidebar } from './Sidebar'
+import { linkTo } from '@storybook/addon-links'
 import { SWRConfig } from 'swr'
+import { Sidebar } from './Sidebar'
 
 const withFullViewportHeight: Decorator = (Story) => (
   <div style={{ display: 'flex', height: '100vh' }}>
@@ -30,6 +31,29 @@ const withData = (data: Record<string, unknown>): Decorator =>
     )
   }
 
+const withLinks = (
+  data: Record<string, Parameters<typeof linkTo>>
+): Decorator =>
+  function WithLinksDecorator(Story) {
+    return (
+      <div
+        onClickCapture={(e) => {
+          if (e.target instanceof HTMLAnchorElement) {
+            e.preventDefault()
+            const href = e.target.getAttribute('href')
+            if (href && href in data) {
+              linkTo(...data[href])()
+            } else {
+              throw new Error(`No link given in story for ${href}`)
+            }
+          }
+        }}
+      >
+        <Story />
+      </div>
+    )
+  }
+
 const meta = {
   // Uses division slash (∕) instead of regular slash (/) in the title.
   title: '∕/Sidebar',
@@ -43,6 +67,9 @@ const meta = {
       '/api/backup-configs': {
         backupConfigs: [],
       },
+    }),
+    withLinks({
+      '/configs/new': ['Pages/∕', 'Logged In'],
     }),
   ],
   args: {

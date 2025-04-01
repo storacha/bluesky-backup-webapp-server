@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { linkTo } from '@storybook/addon-links'
 import { Account } from '@storacha/ui-react'
 import Page from './page'
-import { withAuthContext } from '../../.storybook/decorators'
+import { withAuthContext } from '@/../.storybook/decorators'
 
 const meta = {
   // Uses division slash (∕) instead of regular slash (/) in the title.
