@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@atproto/api':
-        specifier: ^0.13.35
-        version: 0.13.35
+        specifier: ^0.14.16
+        version: 0.14.20
       '@atproto/crypto':
         specifier: ^0.4.4
         version: 0.4.4
@@ -312,11 +312,14 @@ packages:
   '@atproto-labs/simple-store@0.1.2':
     resolution: {integrity: sha512-9vTNvyPPBs44tKVFht16wGlilW8u4wpEtKwLkWbuNEh3h9TTQ8zjVhEoGZh/v73G4Otr9JUOSIq+/5+8OZD2mQ==}
 
-  '@atproto/api@0.13.35':
-    resolution: {integrity: sha512-vsEfBj0C333TLjDppvTdTE0IdKlXuljKSveAeI4PPx/l6eUKNnDTsYxvILtXUVzwUlTDmSRqy5O4Ryh78n1b7g==}
+  '@atproto/api@0.14.20':
+    resolution: {integrity: sha512-Daip22+u9N+EVPk9PsEEVrTfjIqGczXnAT7o2EHGd0JsOzMbp3a6wmW1beKqYDzPf+Dc36/39JeUYYqhB3fKjg==}
 
   '@atproto/common-web@0.4.0':
     resolution: {integrity: sha512-ZYL0P9myHybNgwh/hBY0HaBzqiLR1B5/ie5bJpLQAg0whRzNA28t8/nU2vh99tbsWcAF0LOD29M8++LyENJLNQ==}
+
+  '@atproto/common-web@0.4.1':
+    resolution: {integrity: sha512-Ghh+djHYMAUCktLKwr2IuGgtjcwSWGudp+K7+N7KBA9pDDloOXUEY8Agjc5SHSo9B1QIEFkegClU5n+apn2e0w==}
 
   '@atproto/crypto@0.4.4':
     resolution: {integrity: sha512-Yq9+crJ7WQl7sxStVpHgie5Z51R05etaK9DLWYG/7bR5T4bhdcIgF6IfklLShtZwLYdVVj+K15s0BqW9a8PSDA==}
@@ -334,6 +337,9 @@ packages:
   '@atproto/jwk@0.1.4':
     resolution: {integrity: sha512-dSRuEi0FbxL5ln6hEFHp5ZW01xbQH9yJi5odZaEYpcA6beZHf/bawlU12CQy/CDsbC3FxSqrBw7Q2t7mvdSBqw==}
 
+  '@atproto/lexicon@0.4.10':
+    resolution: {integrity: sha512-uDbP20vetBgtXPuxoyRcvOGBt2gNe1dFc9yYKcb6jWmXfseHiGTnIlORJOLBXIT2Pz15Eap4fLxAu6zFAykD5A==}
+
   '@atproto/lexicon@0.4.9':
     resolution: {integrity: sha512-/tmEuHQFr51V2V7EAVJzaA40sqJ7ylAZpR962VbOsPtmcdOHvezbjVHYEMXgfb927hS+xqbVyzBTbu5w9v8prA==}
 
@@ -346,14 +352,14 @@ packages:
   '@atproto/oauth-types@0.2.4':
     resolution: {integrity: sha512-V2LnlXi1CSmBQWTQgDm8l4oN7xYxlftVwM7hrvYNP+Jxo3Ozfe0QLK1Wy/CH6/ZqzrBBhYvcbf4DJYTUwPA+hw==}
 
-  '@atproto/syntax@0.3.4':
-    resolution: {integrity: sha512-8CNmi5DipOLaVeSMPggMe7FCksVag0aO6XZy9WflbduTKM4dFZVCs4686UeMLfGRXX+X966XgwECHoLYrovMMg==}
-
   '@atproto/syntax@0.4.0':
     resolution: {integrity: sha512-b9y5ceHS8YKOfP3mdKmwAx5yVj9294UN7FG2XzP6V5aKUdFazEYRnR9m5n5ZQFKa3GNvz7de9guZCJ/sUTcOAA==}
 
   '@atproto/xrpc@0.6.11':
     resolution: {integrity: sha512-J2cZP8FjoDN0UkyTYBlCvKvxwBbDm4dld47u6FQK30RJy9YpSiUkdxJJ10NYqpi7JVny3M0qWQgpWJDV94+PdA==}
+
+  '@atproto/xrpc@0.6.12':
+    resolution: {integrity: sha512-Ut3iISNLujlmY9Gu8sNU+SPDJDvqlVzWddU8qUr0Yae5oD4SguaUFjjhireMGhQ3M5E0KljQgDbTmnBo1kIZ3w==}
 
   '@aws-crypto/crc32@5.2.0':
     resolution: {integrity: sha512-nLbCWqQNgUiwwtFsen1AdzAtvuLRsQS8rYgMuxCrdKf9kOssamGLuPwyTY9wyYblNr9+1XM8v6zoDTPPSIeANg==}
@@ -7647,18 +7653,25 @@ snapshots:
 
   '@atproto-labs/simple-store@0.1.2': {}
 
-  '@atproto/api@0.13.35':
+  '@atproto/api@0.14.20':
     dependencies:
-      '@atproto/common-web': 0.4.0
-      '@atproto/lexicon': 0.4.9
-      '@atproto/syntax': 0.3.4
-      '@atproto/xrpc': 0.6.11
+      '@atproto/common-web': 0.4.1
+      '@atproto/lexicon': 0.4.10
+      '@atproto/syntax': 0.4.0
+      '@atproto/xrpc': 0.6.12
       await-lock: 2.2.2
       multiformats: 9.9.0
       tlds: 1.256.0
       zod: 3.24.2
 
   '@atproto/common-web@0.4.0':
+    dependencies:
+      graphemer: 1.4.0
+      multiformats: 9.9.0
+      uint8arrays: 3.0.0
+      zod: 3.24.2
+
+  '@atproto/common-web@0.4.1':
     dependencies:
       graphemer: 1.4.0
       multiformats: 9.9.0
@@ -7688,6 +7701,14 @@ snapshots:
 
   '@atproto/jwk@0.1.4':
     dependencies:
+      multiformats: 9.9.0
+      zod: 3.24.2
+
+  '@atproto/lexicon@0.4.10':
+    dependencies:
+      '@atproto/common-web': 0.4.1
+      '@atproto/syntax': 0.4.0
+      iso-datestring-validator: 2.2.2
       multiformats: 9.9.0
       zod: 3.24.2
 
@@ -7730,13 +7751,16 @@ snapshots:
       '@atproto/jwk': 0.1.4
       zod: 3.24.2
 
-  '@atproto/syntax@0.3.4': {}
-
   '@atproto/syntax@0.4.0': {}
 
   '@atproto/xrpc@0.6.11':
     dependencies:
       '@atproto/lexicon': 0.4.9
+      zod: 3.24.2
+
+  '@atproto/xrpc@0.6.12':
+    dependencies:
+      '@atproto/lexicon': 0.4.10
       zod: 3.24.2
 
   '@aws-crypto/crc32@5.2.0':
