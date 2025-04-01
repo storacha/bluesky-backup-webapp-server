@@ -5,6 +5,7 @@ import { css, styled } from 'next-yak'
 import { Suspense } from 'react'
 import useSWR from 'swr'
 import { Loader } from '@/components/Loader'
+import { roundRectStyle } from '../components/ui'
 
 const SidebarOutside = styled.nav`
   display: flex;
@@ -39,13 +40,8 @@ const ConfigList = styled.ul`
 `
 
 const configItemLikeStyle = css`
-  border-radius: 0.75rem;
-  padding: 1rem;
-  border-width: 1px;
-  border-style: solid;
-  border-color: transparent;
+  ${roundRectStyle}
   background-color: var(--color-white);
-
   /* TK: Correct box-shadow */
   box-shadow: 0px 0px 20px -5px var(--color-gray-light);
 `
@@ -62,7 +58,7 @@ const ConfigItem = styled.li<{ $selected?: boolean }>`
     `}
 `
 
-const AddConfig = styled.button`
+const AddConfig = styled.a`
   ${configItemLikeStyle}
 
   box-shadow: none;
@@ -101,7 +97,7 @@ export function Sidebar({ selectedConfig }: { selectedConfig: string | null }) {
           <Suspense fallback={<Loader />}>
             <Configs selectedConfig={selectedConfig} />
           </Suspense>
-          <AddConfig>Add new backup config</AddConfig>
+          <AddConfig href="/configs/new">Add new config…</AddConfig>
         </Stack>
       </Stack>
       <Stack $gap="1rem">
