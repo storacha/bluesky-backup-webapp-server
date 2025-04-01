@@ -2,6 +2,9 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid'
 import { Stack } from '@/components/ui/Stack'
 import { LogOutButton as BaseLogOutButton } from './authentication'
 import { css, styled } from 'next-yak'
+import { Suspense } from 'react'
+import useSWR from 'swr'
+import { Loader } from '@/components/Loader'
 
 const SidebarOutside = styled.nav`
   display: flex;
@@ -88,26 +91,16 @@ const LogOutButton = styled(BaseLogOutButton)`
   ${actionButtonStyle}
 `
 
-export function Sidebar({
-  backupConfigs,
-  selectedConfig,
-}: {
-  backupConfigs: string[]
-  selectedConfig: string | null
-}) {
+export function Sidebar({ selectedConfig }: { selectedConfig: string | null }) {
   return (
     <SidebarOutside>
       <Stack>
         <Header>Storacha</Header>
         <Heading>Backup Configs</Heading>
         <Stack $gap="1rem">
-          <ConfigList>
-            {backupConfigs.map((config) => (
-              <ConfigItem key={config} $selected={config === selectedConfig}>
-                {config}
-              </ConfigItem>
-            ))}
-          </ConfigList>
+          <Suspense fallback={<Loader />}>
+            <Configs selectedConfig={selectedConfig} />
+          </Suspense>
           <AddConfig>Add new backup config</AddConfig>
         </Stack>
       </Stack>
@@ -117,5 +110,25 @@ export function Sidebar({
         </LogOutButton>
       </Stack>
     </SidebarOutside>
+  )
+}
+
+function Configs({ selectedConfig }: { selectedConfig: string | null }) {
+  const { data } = useSWR<{ backupConfigs: string[] }>('/api/backup-configs', {
+    suspense: true,
+  })
+
+  // This should never happen, since we are using suspense and not conditionally
+  // fetching.
+  if (!data) return null
+
+  return (
+    <ConfigList>
+      {data.backupConfigs.map((config) => (
+        <ConfigItem key={config} $selected={config === selectedConfig}>
+          {config}
+        </ConfigItem>
+      ))}
+    </ConfigList>
   )
 }
