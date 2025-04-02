@@ -35,7 +35,7 @@ jobs:
       pull-requests: write
     environment:
       name: ${{ (github.ref_name == 'main') && 'staging' || format('preview-{0}', github.ref_name) }}
-      url: ${{ (github.ref_name == 'main') && 'https://staging.atbackups.storacha.network' || steps.cloudflare_url.outputs.stdout }}
+      url: ${{ (github.ref_name == 'main') && 'https://bbs-staging.storacha.network' || steps.cloudflare_url.outputs.stdout }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/pnpm
