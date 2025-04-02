@@ -1,58 +1,14 @@
 import type { Decorator, Meta, StoryObj } from '@storybook/react'
 
-import { linkTo } from '@storybook/addon-links'
-import { SWRConfig } from 'swr'
+import { withLinks } from '@storybook/addon-links'
 import { Sidebar } from './Sidebar'
+import { withData } from '../../.storybook/decorators'
 
 const withFullViewportHeight: Decorator = (Story) => (
   <div style={{ display: 'flex', height: '100vh' }}>
     <Story />
   </div>
 )
-
-const withData = (data: Record<string, unknown>): Decorator =>
-  function WithDataDecorator(Story) {
-    return (
-      <SWRConfig
-        value={{
-          // Provide a local cache, so it doesn't persist between stories.
-          provider: () => new Map(),
-          async fetcher(resource) {
-            if (resource in data) {
-              return data[resource]
-            } else {
-              throw new Error(`No data given in story for ${resource}`)
-            }
-          },
-        }}
-      >
-        <Story />
-      </SWRConfig>
-    )
-  }
-
-const withLinks = (
-  data: Record<string, Parameters<typeof linkTo>>
-): Decorator =>
-  function WithLinksDecorator(Story) {
-    return (
-      <div
-        onClickCapture={(e) => {
-          if (e.target instanceof HTMLAnchorElement) {
-            e.preventDefault()
-            const href = e.target.getAttribute('href')
-            if (href && href in data) {
-              linkTo(...data[href])()
-            } else {
-              throw new Error(`No link given in story for ${href}`)
-            }
-          }
-        }}
-      >
-        <Story />
-      </div>
-    )
-  }
 
 const meta = {
   // Uses division slash (∕) instead of regular slash (/) in the title.

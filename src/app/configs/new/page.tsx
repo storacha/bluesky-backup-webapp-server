@@ -4,6 +4,7 @@ import { styled } from 'next-yak'
 import { shortenDID } from '@/lib/ui'
 import { roundRectStyle, Stack } from '@/components/ui'
 import { useAuthenticator } from '@storacha/ui-react'
+import useSWR from 'swr'
 
 // TODO: Deal with unauthenticated
 
@@ -14,58 +15,84 @@ const Outside = styled(Stack)`
   padding: 2rem;
 `
 
-const AccountSelector = styled.div`
+const LocationSelectorBox = styled.div`
   ${roundRectStyle}
   border-color: var(--color-gray-light);
   background-color: var(--color-white);
 `
 
 export default function NewConfig() {
-  const [{ spaces }] = useAuthenticator()
-
-  const blueskyAccounts = [
-    {
-      did: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
-      handle: '@chalametoui.bsky.social',
-    },
-    {
-      did: 'did:plc:vv44vwwbr3lmbjht3p5fd7wz',
-      handle: '@isupposeichal.bsky.social',
-    },
-  ]
-
   return (
     <Outside>
       <Stack $direction="row" $gap="1rem" $even>
-        <AccountSelector>
-          <Stack>
-            Bluesky
-            <select>
-              {blueskyAccounts.map((account) => (
-                <option key={account.did} value={account.did}>
-                  {account.handle}
-                </option>
-              ))}
-              <hr />
-              <option value="-">Log into a Bluesky account…</option>
-            </select>
-          </Stack>
-        </AccountSelector>
-        <AccountSelector>
-          <Stack>
-            Storacha
-            <select>
-              {spaces.map((space) => (
-                <option key={space.did()} value={space.did()}>
-                  {space.name}
-                  {/* Em space */}
-                  {' '}({shortenDID(space.did())})
-                </option>
-              ))}
-            </select>
-          </Stack>
-        </AccountSelector>
+        <BlueskyAccountSelect />
+        <StorachaSpaceSelect />
       </Stack>
     </Outside>
+  )
+}
+
+const BlueskyAccountSelect = () => {
+  const { data: atprotoAccounts } = useSWR<
+    {
+      did: string
+      handle: string
+    }[]
+  >('/api/atproto-accounts')
+
+  return (
+    <LocationSelect label="Bluesky">
+      {atprotoAccounts && (
+        <>
+          {atprotoAccounts.map((account) => (
+            <option key={account.did} value={account.did}>
+              {account.handle}
+            </option>
+          ))}
+          {atprotoAccounts.length === 0 && <option value="-"></option>}
+          <hr />
+          <option value="-">Log into a Bluesky account…</option>
+        </>
+      )}
+    </LocationSelect>
+  )
+}
+
+const StorachaSpaceSelect = () => {
+  const [{ spaces, accounts }] = useAuthenticator()
+
+  const account = accounts[0]
+
+  return (
+    <LocationSelect label="Storacha">
+      {account && (
+        <optgroup label={account.toEmail()}>
+          {spaces.map((space) => (
+            <option key={space.did()} value={space.did()}>
+              {space.name}
+              {/* Em space */}
+              {' '}({shortenDID(space.did())})
+            </option>
+          ))}
+        </optgroup>
+      )}
+    </LocationSelect>
+  )
+}
+
+const LocationSelect = ({
+  label,
+  children,
+}: {
+  label: string
+  children: React.ReactNode
+}) => {
+  return (
+    <LocationSelectorBox>
+      <Stack>
+        {label}
+        <select>{children}</select>
+      </Stack>
+    </LocationSelectorBox>
   )
 }
