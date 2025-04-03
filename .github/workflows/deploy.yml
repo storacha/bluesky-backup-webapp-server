@@ -73,30 +73,6 @@ jobs:
           apiToken: ${{ secrets.CF_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           environment: ${{ (github.ref_name == 'main') && 'staging' || 'preview' }}
-      - name: Find Cloudflare Pages preview URL
-        uses: mathiasvr/command-output@v1.1.0
-        id: cloudflare_url
-        with:
-          run: egrep -o 'https?://[^ ]+' <(echo "${{ steps.cloudflare.outputs.stdout }}")
-      - name: Find Current Pull Request
-        uses: jwalton/gh-find-current-pr@v1.3.0
-        id: finder
-      - name: Update Preview URLs PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2.2.0
-        with:
-          number: ${{ steps.finder.outputs.pr }}
-          message: |
-            ### Website preview 🔗✨
-            - ⛅️ ${{ steps.cloudflare_url.outputs.stdout }}
-
-            [build log](/${{ github.repository }}/actions/runs/${{ github.run_id }})
-      - name: Add Preview URLs as Job Summary
-        run: |
-          echo "
-          ### Website preview 🔗✨
-            - ⛅️ ${{ steps.cloudflare_url.outputs.stdout }}
-
-            [build log](/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
 
   changelog:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
