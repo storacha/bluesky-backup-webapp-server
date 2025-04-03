@@ -71,6 +71,7 @@ jobs:
           SENTRY_UPLOAD: ${{ secrets.SENTRY_UPLOAD }}
         with:
           apiToken: ${{ secrets.CF_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
           environment: ${{ (github.ref_name == 'main') && 'staging' || 'preview' }}
       - name: Find Cloudflare Pages preview URL
         uses: mathiasvr/command-output@v1.1.0
@@ -165,4 +166,5 @@ jobs:
           SENTRY_UPLOAD: ${{ secrets.SENTRY_UPLOAD }}
         with:
           apiToken: ${{ secrets.CF_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
           environment: 'production'
