@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@atproto-labs/simple-store':
+        specifier: ^0.1.2
+        version: 0.1.2
       '@atproto/api':
         specifier: ^0.14.16
         version: 0.14.20
@@ -17,6 +20,9 @@ importers:
       '@atproto/oauth-client-browser':
         specifier: ^0.3.9
         version: 0.3.12
+      '@atproto/oauth-client-node':
+        specifier: ^0.2.13
+        version: 0.2.14
       '@headlessui/react':
         specifier: ^2.2.0
         version: 2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -26,6 +32,9 @@ importers:
       '@ipld/dag-ucan':
         specifier: ^3.4.5
         version: 3.4.5
+      '@opennextjs/cloudflare':
+        specifier: ^0.6.6
+        version: 0.6.6(wrangler@4.7.0)
       '@sentry/nextjs':
         specifier: ^9.10.1
         version: 9.10.1(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(encoding@0.1.13)(next@15.1.6(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.98.0(esbuild@0.25.2))
@@ -41,6 +50,9 @@ importers:
       '@ucanto/client':
         specifier: ^9.0.1
         version: 9.0.1
+      '@ucanto/core':
+        specifier: ^10.3.1
+        version: 10.3.1
       '@ucanto/interface':
         specifier: ^10.2.0
         version: 10.2.0
@@ -50,6 +62,9 @@ importers:
       '@ucanto/transport':
         specifier: ^9.1.1
         version: 9.1.1
+      '@ucanto/validator':
+        specifier: ^9.1.0
+        version: 9.1.0
       '@w3ui/react':
         specifier: ^2.5.5
         version: 2.5.5(@types/react@18.3.20)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -71,6 +86,9 @@ importers:
       next-yak:
         specifier: '4'
         version: 4.1.1
+      proper-url-join:
+        specifier: ^2.1.2
+        version: 2.1.2
       react:
         specifier: ^18.0.0
         version: 18.3.1
@@ -99,9 +117,6 @@ importers:
       '@eslint/eslintrc':
         specifier: ^3
         version: 3.3.1
-      '@opennextjs/cloudflare':
-        specifier: ^0.6.6
-        version: 0.6.6(wrangler@4.7.0)
       '@storybook/addon-essentials':
         specifier: ^8.6.4
         version: 8.6.12(@types/react@18.3.20)(storybook@8.6.12(prettier@3.5.3))
@@ -135,6 +150,9 @@ importers:
       '@types/node':
         specifier: ^20
         version: 20.17.30
+      '@types/proper-url-join':
+        specifier: ^2.1.5
+        version: 2.1.5
       '@types/react':
         specifier: ^18
         version: 18.3.20
@@ -294,8 +312,16 @@ packages:
   '@atproto-labs/did-resolver@0.1.11':
     resolution: {integrity: sha512-qXNzIX2GPQnxT1gl35nv/8ErDdc4Fj/+RlJE7oyE7JGkFAPUyuY03TvKJ79SmWFsWE8wyTXEpLuphr9Da1Vhkw==}
 
+  '@atproto-labs/fetch-node@0.1.8':
+    resolution: {integrity: sha512-OOTIhZNPEDDm7kaYU8iYRgzM+D5n3mP2iiBSyKuLakKTaZBL5WwYlUsJVsqX26SnUXtGEroOJEVJ6f66OcG80w==}
+    engines: {node: '>=18.7.0'}
+
   '@atproto-labs/fetch@0.2.2':
     resolution: {integrity: sha512-QyafkedbFeVaN20DYUpnY2hcArYxjdThPXbYMqOSoZhcvkrUqaw4xDND4wZB5TBD9cq2yqe9V6mcw9P4XQKQuQ==}
+
+  '@atproto-labs/handle-resolver-node@0.1.14':
+    resolution: {integrity: sha512-+kOf+xENdxUNrrLoIcp/L4ommIa1SHnwfHIWbxumXnacfurjMOnZhfXeiNsEguaAxDNYpqDNpKsFBtcgjffXvQ==}
+    engines: {node: '>=18.7.0'}
 
   '@atproto-labs/handle-resolver@0.1.7':
     resolution: {integrity: sha512-nb4uAOgRVMp2NGVTJnor4ohqySbd1KyB5VzQLaRjMaPwH60Al057eTqiKRbeH/xD7hOBPNj1m0YjgxzvyAnWkg==}
@@ -346,8 +372,15 @@ packages:
   '@atproto/oauth-client-browser@0.3.12':
     resolution: {integrity: sha512-VmpBoNIMOzfRZyAlimhBZ5WZftIf/Ysyi77cytxL9gHKIyB/tTUgB1oB4zSv3Oid01bPQHx73sMMIVfYEZ1Fpw==}
 
+  '@atproto/oauth-client-node@0.2.14':
+    resolution: {integrity: sha512-KDQWhkCqwVJtuBmqBLRo9sOL9Mw9SkFmCe1s+t6asdkfe1uMezvSTYCi5SIR+E4vwrYSIq2z6ZvWbc/XV3UwEQ==}
+    engines: {node: '>=18.7.0'}
+
   '@atproto/oauth-client@0.3.12':
     resolution: {integrity: sha512-tDQzq/6PNspWeHBrYGZ+LU7t7PM/+0Ealk8V2PUfncGObLz0iPDS4RbWAzy0GH1foee1qIfRdiiKiEymMGIZDw==}
+
+  '@atproto/oauth-client@0.3.13':
+    resolution: {integrity: sha512-PqE6hWG6bhpu5OUbccoAZjoj9LQroStuPjXqkHCsnUfQGmruzuNmzMS0myLdoWCx+NSGr4sMgUPjGzAHXSLoaQ==}
 
   '@atproto/oauth-types@0.2.4':
     resolution: {integrity: sha512-V2LnlXi1CSmBQWTQgDm8l4oN7xYxlftVwM7hrvYNP+Jxo3Ozfe0QLK1Wy/CH6/ZqzrBBhYvcbf4DJYTUwPA+hw==}
@@ -3631,6 +3664,9 @@ packages:
   '@types/prop-types@15.7.14':
     resolution: {integrity: sha512-gNMvNH49DJ7OJYv+KAKn0Xp45p8PLl6zo2YnvDIbTd4J6MER2BmWN49TG7n9LvkyihINxeKW8+3bfS2yDC9dzQ==}
 
+  '@types/proper-url-join@2.1.5':
+    resolution: {integrity: sha512-jPPpj0tQFl5mL6BVwlUCqJXXTjel5zig+AQgIYjERwm2rdS04y6cxQsVndmWPaz1Cv+DDGtxtYzvhSLmp/eYEw==}
+
   '@types/react-copy-to-clipboard@5.0.7':
     resolution: {integrity: sha512-Gft19D+as4M+9Whq1oglhmK49vqPhcLzk8WfvfLvaYMIPYanyfLy0+CwFucMJfdKoSFyySPmkkWn8/E6voQXjQ==}
 
@@ -4594,6 +4630,10 @@ packages:
       supports-color:
         optional: true
 
+  decode-uri-component@0.2.2:
+    resolution: {integrity: sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ==}
+    engines: {node: '>=0.10'}
+
   dedent@0.7.0:
     resolution: {integrity: sha512-Q6fKUPqnAHAyhiUgFU7BUzLiv0kd8saH9al7tnu5Q/okj6dnupxyTgFIBjVzJATdfIAm9NAsvXNzjaKa+bxVyA==}
 
@@ -5069,6 +5109,10 @@ packages:
     resolution: {integrity: sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==}
     engines: {node: '>=8'}
 
+  filter-obj@1.1.0:
+    resolution: {integrity: sha512-8rXg1ZnX7xzy2NGDVkBVaAy+lSlPNwad13BtgSlLuxfIslyt5Vg64U7tFcCt4WS1R0hvtnQybT/IyCkGZ3DpXQ==}
+    engines: {node: '>=0.10.0'}
+
   filter-obj@2.0.2:
     resolution: {integrity: sha512-lO3ttPjHZRfjMcxWKb1j1eDhTFsu4meeR3lnMcnBFhk6RuLhvEiuALu2TlfL310ph4lCYYwgF/ElIjdP739tdg==}
     engines: {node: '>=8'}
@@ -5388,6 +5432,10 @@ packages:
   ipaddr.js@1.9.1:
     resolution: {integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==}
     engines: {node: '>= 0.10'}
+
+  ipaddr.js@2.2.0:
+    resolution: {integrity: sha512-Ag3wB2o37wslZS19hZqorUnrnzSkpOVy+IiiDEiTqNubEYpYuHWIf6K4psgN2ZWKExS4xhVCrRVfb/wfW8fWJA==}
+    engines: {node: '>= 10'}
 
   ipfs-utils@9.0.14:
     resolution: {integrity: sha512-zIaiEGX18QATxgaS0/EOQNoo33W0islREABAcxXE8n7y2MGAlB+hdsxXn4J0hGZge8IqVQhW8sWIb+oJz2yEvg==}
@@ -6450,6 +6498,9 @@ packages:
   prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
 
+  proper-url-join@2.1.2:
+    resolution: {integrity: sha512-wp0MVpPYbQhwxRFjFkhWwHUoH5PyAA0SCVUpwRxjc9JzSzddPB4GDhu5I+eCYhdpG0S7jvVubsLPEi4pFd77rg==}
+
   protobufjs@7.4.0:
     resolution: {integrity: sha512-mRUWCc3KUU4w1jU8sGxICXH/gNS94DvI1gxqDvBzhj1JpcsimQkYiOJfwsPUykUI5ZaspFbSgmBLER8IrQ3tqw==}
     engines: {node: '>=12.0.0'}
@@ -6460,6 +6511,9 @@ packages:
 
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
+
+  psl@1.15.0:
+    resolution: {integrity: sha512-JZd3gMVBAVQkSs6HdNZo9Sdo0LNcQeMNP3CozBJb3JYC/QUYZTnKxP+f8oWRX4rHP5EurWxqAHTSwUCjlNKa1w==}
 
   public-encrypt@4.0.3:
     resolution: {integrity: sha512-zVpa8oKZSz5bTMTFClc1fQOnyyEzpl5ozpi1B5YcvBrdohMjH2rfsBtyXcuNuwjsDIXmBYlF2N5FlJYhR29t8Q==}
@@ -6478,6 +6532,10 @@ packages:
   qs@6.14.0:
     resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
     engines: {node: '>=0.6'}
+
+  query-string@7.1.3:
+    resolution: {integrity: sha512-hh2WYhq4fi8+b+/2Kg9CEge4fDPvHS534aOOvOZeQ3+Vf2mCFsaFBYj0i+iXcAq6I9Vzp5fjMFBlONvayDC1qg==}
+    engines: {node: '>=6'}
 
   querystring-es3@0.2.1:
     resolution: {integrity: sha512-773xhDQnZBMFobEiztv8LIl70ch5MSF/jUQVlhwFyBILqq96anmoctVIYz+ZRp0qbCKATTn6ev02M3r7Ga5vqA==}
@@ -6845,6 +6903,10 @@ packages:
     resolution: {integrity: sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==}
     engines: {node: '>= 8'}
 
+  split-on-first@1.1.0:
+    resolution: {integrity: sha512-43ZssAJaMusuKWL8sKUBQXHWOpq8d6CfN/u1p4gUzfJkM05C8rxTmYrkIPTXapZpORA6LkkzcUulJ8FqA7Uudw==}
+    engines: {node: '>=6'}
+
   stable-hash@0.0.5:
     resolution: {integrity: sha512-+L3ccpzibovGXFK+Ap/f8LOS0ahMrHTf3xu7mMLSpEGU0EO9ucaysSylKo9eRDFNhWve/y275iPmIZ4z39a9iA==}
 
@@ -6899,6 +6961,10 @@ packages:
   streamsearch@1.1.0:
     resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
     engines: {node: '>=10.0.0'}
+
+  strict-uri-encode@2.0.0:
+    resolution: {integrity: sha512-QwiXZgpRcKkhTj2Scnn++4PKtWsH0kpzZ62L2R6c/LUVYv7hVnZqcg2+sMuT6R7Jusu1vviK/MFsu6kNJfWlEQ==}
+    engines: {node: '>=4'}
 
   string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
@@ -7219,6 +7285,10 @@ packages:
   undici@5.29.0:
     resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
     engines: {node: '>=14.0'}
+
+  undici@6.21.2:
+    resolution: {integrity: sha512-uROZWze0R0itiAKVPsYhFov9LxrPMHLMEQFszeI2gCN6bnIIZ8twzBCJcN2LJrBBLfrP0t1FW0g+JmKVl8Vk1g==}
+    engines: {node: '>=18.17'}
 
   unenv@2.0.0-rc.15:
     resolution: {integrity: sha512-J/rEIZU8w6FOfLNz/hNKsnY+fFHWnu9MH4yRbSZF3xbbGHovcetXPs7sD+9p8L6CeNC//I9bhRYAOsBt2u7/OA==}
@@ -7627,9 +7697,23 @@ snapshots:
       '@atproto/did': 0.1.5
       zod: 3.24.2
 
+  '@atproto-labs/fetch-node@0.1.8':
+    dependencies:
+      '@atproto-labs/fetch': 0.2.2
+      '@atproto-labs/pipe': 0.1.0
+      ipaddr.js: 2.2.0
+      psl: 1.15.0
+      undici: 6.21.2
+
   '@atproto-labs/fetch@0.2.2':
     dependencies:
       '@atproto-labs/pipe': 0.1.0
+
+  '@atproto-labs/handle-resolver-node@0.1.14':
+    dependencies:
+      '@atproto-labs/fetch-node': 0.1.8
+      '@atproto-labs/handle-resolver': 0.1.7
+      '@atproto/did': 0.1.5
 
   '@atproto-labs/handle-resolver@0.1.7':
     dependencies:
@@ -7731,6 +7815,18 @@ snapshots:
       '@atproto/oauth-client': 0.3.12
       '@atproto/oauth-types': 0.2.4
 
+  '@atproto/oauth-client-node@0.2.14':
+    dependencies:
+      '@atproto-labs/did-resolver': 0.1.11
+      '@atproto-labs/handle-resolver-node': 0.1.14
+      '@atproto-labs/simple-store': 0.1.2
+      '@atproto/did': 0.1.5
+      '@atproto/jwk': 0.1.4
+      '@atproto/jwk-jose': 0.1.5
+      '@atproto/jwk-webcrypto': 0.1.5
+      '@atproto/oauth-client': 0.3.13
+      '@atproto/oauth-types': 0.2.4
+
   '@atproto/oauth-client@0.3.12':
     dependencies:
       '@atproto-labs/did-resolver': 0.1.11
@@ -7743,6 +7839,21 @@ snapshots:
       '@atproto/jwk': 0.1.4
       '@atproto/oauth-types': 0.2.4
       '@atproto/xrpc': 0.6.11
+      multiformats: 9.9.0
+      zod: 3.24.2
+
+  '@atproto/oauth-client@0.3.13':
+    dependencies:
+      '@atproto-labs/did-resolver': 0.1.11
+      '@atproto-labs/fetch': 0.2.2
+      '@atproto-labs/handle-resolver': 0.1.7
+      '@atproto-labs/identity-resolver': 0.1.15
+      '@atproto-labs/simple-store': 0.1.2
+      '@atproto-labs/simple-store-memory': 0.1.2
+      '@atproto/did': 0.1.5
+      '@atproto/jwk': 0.1.4
+      '@atproto/oauth-types': 0.2.4
+      '@atproto/xrpc': 0.6.12
       multiformats: 9.9.0
       zod: 3.24.2
 
@@ -12189,6 +12300,10 @@ snapshots:
 
   '@types/prop-types@15.7.14': {}
 
+  '@types/proper-url-join@2.1.5':
+    dependencies:
+      query-string: 7.1.3
+
   '@types/react-copy-to-clipboard@5.0.7':
     dependencies:
       '@types/react': 18.3.20
@@ -13390,6 +13505,8 @@ snapshots:
     dependencies:
       ms: 2.1.3
 
+  decode-uri-component@0.2.2: {}
+
   dedent@0.7.0: {}
 
   deep-eql@5.0.2: {}
@@ -14101,6 +14218,8 @@ snapshots:
     dependencies:
       to-regex-range: 5.0.1
 
+  filter-obj@1.1.0: {}
+
   filter-obj@2.0.2: {}
 
   finalhandler@2.1.0:
@@ -14458,6 +14577,8 @@ snapshots:
       side-channel: 1.1.0
 
   ipaddr.js@1.9.1: {}
+
+  ipaddr.js@2.2.0: {}
 
   ipfs-utils@9.0.14(encoding@0.1.13):
     dependencies:
@@ -15491,6 +15612,10 @@ snapshots:
       object-assign: 4.1.1
       react-is: 16.13.1
 
+  proper-url-join@2.1.2:
+    dependencies:
+      query-string: 7.1.3
+
   protobufjs@7.4.0:
     dependencies:
       '@protobufjs/aspromise': 1.1.2
@@ -15513,6 +15638,10 @@ snapshots:
 
   proxy-from-env@1.1.0: {}
 
+  psl@1.15.0:
+    dependencies:
+      punycode: 2.3.1
+
   public-encrypt@4.0.3:
     dependencies:
       bn.js: 4.12.1
@@ -15533,6 +15662,13 @@ snapshots:
   qs@6.14.0:
     dependencies:
       side-channel: 1.1.0
+
+  query-string@7.1.3:
+    dependencies:
+      decode-uri-component: 0.2.2
+      filter-obj: 1.1.0
+      split-on-first: 1.1.0
+      strict-uri-encode: 2.0.0
 
   querystring-es3@0.2.1: {}
 
@@ -16039,6 +16175,8 @@ snapshots:
 
   source-map@0.7.4: {}
 
+  split-on-first@1.1.0: {}
+
   stable-hash@0.0.5: {}
 
   stackback@0.0.2: {}
@@ -16095,6 +16233,8 @@ snapshots:
       get-iterator: 1.0.2
 
   streamsearch@1.1.0: {}
+
+  strict-uri-encode@2.0.0: {}
 
   string-width@4.2.3:
     dependencies:
@@ -16425,6 +16565,8 @@ snapshots:
   undici@5.29.0:
     dependencies:
       '@fastify/busboy': 2.1.1
+
+  undici@6.21.2: {}
 
   unenv@2.0.0-rc.15:
     dependencies:
