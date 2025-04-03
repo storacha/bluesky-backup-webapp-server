@@ -31,7 +31,12 @@ export default function SWRConfigProvider({
   return (
     <SWRConfig
       value={{
-        async fetcher(resource) {
+        // NB: This is not declared `async`! The errors thrown here represent
+        // mistakes, not handleable errors, and should present in development as
+        // big obvious errors, thus they must be thrown synchronously, before
+        // the fetching promise even begins. Errors thrown in the fetcher itself
+        // will appear as the `error` property of the response.
+        fetcher(resource) {
           if (typeof resource === 'string') {
             resource = ['api', resource]
           }
