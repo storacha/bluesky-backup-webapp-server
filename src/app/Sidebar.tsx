@@ -2,10 +2,9 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid'
 import { Stack } from '@/components/ui/Stack'
 import { LogOutButton as BaseLogOutButton } from './authentication'
 import { css, styled } from 'next-yak'
-import { Suspense } from 'react'
-import useSWR from 'swr'
 import { Loader } from '@/components/Loader'
 import { roundRectStyle } from '../components/ui'
+import { useSWR } from './swr'
 
 const SidebarOutside = styled.nav`
   display: flex;
@@ -94,9 +93,7 @@ export function Sidebar({ selectedConfig }: { selectedConfig: string | null }) {
         <Header>Storacha</Header>
         <Heading>Backup Configs</Heading>
         <Stack $gap="1rem">
-          <Suspense fallback={<Loader />}>
-            <Configs selectedConfig={selectedConfig} />
-          </Suspense>
+          <Configs selectedConfig={selectedConfig} />
           <AddConfig href="/configs/new">Add new config…</AddConfig>
         </Stack>
       </Stack>
@@ -110,13 +107,9 @@ export function Sidebar({ selectedConfig }: { selectedConfig: string | null }) {
 }
 
 function Configs({ selectedConfig }: { selectedConfig: string | null }) {
-  const { data } = useSWR<{ backupConfigs: string[] }>('/api/backup-configs', {
-    suspense: true,
-  })
+  const { data } = useSWR(['api', '/api/backup-configs'])
 
-  // This should never happen, since we are using suspense and not conditionally
-  // fetching.
-  if (!data) return null
+  if (!data) return <Loader />
 
   return (
     <ConfigList>
