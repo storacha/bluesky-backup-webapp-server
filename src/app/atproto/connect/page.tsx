@@ -45,16 +45,20 @@ const useAtprotoDelegation = () => {
   const [{ client, accounts }] = useAuthenticator()
   const account = accounts[0]
 
-  // When client or account is null, the key function will fail, signalling SWR
-  // not to fetch. Thus, we use `!` here.
+  const issuer = client?.agent?.issuer
+
+  // Use regular SWR, not our wrapper, because we need to use an inline fetcher
+  // for access to the `issuer`, which doesn't serialize well into a key.
   return useSWR(
     () => [
       'delegation',
-      { issuer: client!.agent.issuer.did(), audience: account!.did() },
+      // When client or account is null, the key function will fail, signalling
+      // SWR not to fetch. Thus, we use `!` here.
+      { issuer: issuer!.did(), account: account!.did() },
     ],
     async () => {
       const delegation = await atproto.delegate({
-        issuer: client!.agent.issuer,
+        issuer: issuer!,
         audience: { did: () => 'did:web:bskybackups.storacha.network' },
         with: account!.did(),
       })
@@ -69,6 +73,8 @@ const useAtprotoDelegation = () => {
     }
   ).data
 }
+
+// Belongs somewhere else:
 
 /**
  * The ability change atproto logins on this service for a given Account.
