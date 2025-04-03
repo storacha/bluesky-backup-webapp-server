@@ -1,4 +1,16 @@
+# IMPORTANT: After editing this file, run `pnpm cf-typegen` to regenerate the
+# types for the Cloudflare Workers runtime.
+
+main = ".open-next/worker.js"
 name = "bluesky-backup-dev"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = ".vercel/output/static"
+assets = { directory = ".open-next/assets", binding = "ASSETS" }
+
+[[kv_namespaces]]
+binding = "BLUESKY_AUTH_SESSION_STORE"
+id = "0ba166be0635430ba3dfd9ba5fa2ac14"
+
+[[kv_namespaces]]
+binding = "BLUESKY_AUTH_STATE_STORE"
+id = "260c99a20b724842bd9e0b69c6a57747"
