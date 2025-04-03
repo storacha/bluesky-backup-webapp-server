@@ -63,18 +63,15 @@ jobs:
           echo "NEXT_PUBLIC_SENTRY_ENV=staging" >> .env
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> .env
       - run: pnpm cf:build
-      - name: Deploy preview build to Cloudflare Pages
-        id: cloudflare
-        run: | 
-              {
-                echo 'WRANGLER_OUTPUT<<EOF'
-                pnpm wrangler deploy --project-name "$CLOUDFLARE_PROJECT_NAME" --branch "$GITHUB_REF_NAME" --commit-hash "$GITHUB_SHA"
-                echo EOF
-              } >> "$GITHUB_OUTPUT"
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
-          CLOUDFLARE_PROJECT_NAME: ${{ (github.ref_name == 'main') && 'bbs-staging' || 'bbs-preview' }}
+          ENV: 'staging' # inform the build process what the env is
+          SENTRY_TOKEN: ${{ secrets.SENTRY_TOKEN }}
+          SENTRY_UPLOAD: ${{ secrets.SENTRY_UPLOAD }}
+        with:
+          apiToken: ${{ secrets.CF_TOKEN }}
+          environment: ${{ (github.ref_name == 'main') && 'staging' || 'preview' }}
       - name: Find Cloudflare Pages preview URL
         uses: mathiasvr/command-output@v1.1.0
         id: cloudflare_url
@@ -160,8 +157,12 @@ jobs:
           echo "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_51LO87hF6A5ufQX5vQTO5BHyz8y9ybJp4kg1GsBjYuqwluuwtQTkbeZzkoQweFQDlv7JaGjuIdUWAyuwXp3tmCfsM005lJK9aS8" >> .env
       - run: pnpm cf:build
         env: {}
-      - name: Deploy preview build to Cloudflare Pages
-        run: npx wrangler deploy --project-name bbs-production --branch "main" --commit-hash "$GITHUB_SHA"
+      - name: Deploy to prod
+        uses: cloudflare/wrangler-action@v3
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          ENV: 'production' # inform the build process what the env is
+          SENTRY_TOKEN: ${{ secrets.SENTRY_TOKEN }}
+          SENTRY_UPLOAD: ${{ secrets.SENTRY_UPLOAD }}
+        with:
+          apiToken: ${{ secrets.CF_TOKEN }}
+          environment: 'production'
