@@ -1,7 +1,7 @@
 import StorachaProvider from '@/components/StorachaProvider'
 import { dmMono, dmSans, epilogue } from './globalStyle'
 import { Authenticator } from './authentication'
-import SWRConfigProvider from './SWRConfigProvider'
+import { SWRConfigProvider } from './swr'
 
 export default function RootLayout({
   children,
