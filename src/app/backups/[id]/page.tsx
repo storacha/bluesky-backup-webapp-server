@@ -1,8 +1,6 @@
 import Backup from '@/components/Backup'
 import PageLayout from '@/components/PageLayout'
 
-export const runtime = 'edge'
-
 export interface BackupsProps {
   params: Promise<{ id: string }>
 }

@@ -9,12 +9,12 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "test": "pnpm lint",
-    "pages:build": "pnpm dlx @cloudflare/next-on-pages@1",
-    "pages:preview": "pnpm run pages:build && wrangler pages dev",
-    "pages:deploy": "pnpm run pages:build && wrangler pages deploy",
+    "cf:build": "opennextjs-cloudflare build",
+    "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "chromatic": "npx chromatic --project-token=chpt_16f8b46e085e799"
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@atproto/api": "^0.13.35",
@@ -23,7 +23,7 @@
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@ipld/dag-ucan": "^3.4.5",
-    "@sentry/nextjs": "^9.5.0",
+    "@sentry/nextjs": "^9.10.1",
     "@storacha/ui-react": "^2.5.24",
     "@tailwindcss/postcss": "^4.0.9",
     "@tanstack/react-query": "^5.66.0",
@@ -48,8 +48,8 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.5",
-    "@cloudflare/next-on-pages": "^1.13.7",
     "@eslint/eslintrc": "^3",
+    "@opennextjs/cloudflare": "^0.6.6",
     "@storybook/addon-essentials": "^8.6.4",
     "@storybook/addon-onboarding": "^8.6.4",
     "@storybook/blocks": "^8.6.4",
@@ -81,7 +81,7 @@
     "typescript": "^5",
     "vitest": "^3.0.8",
     "webpack": "^5.98.0",
-    "wrangler": "^3.109.3"
+    "wrangler": "^4.7.0"
   },
   "eslintConfig": {
     "extends": [
