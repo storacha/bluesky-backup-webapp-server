@@ -43,4 +43,8 @@ next-env.d.ts
 # wrangler
 .wrangler
 
+# storybook
 *storybook.log
+
+# cloudflare
+.open-next
