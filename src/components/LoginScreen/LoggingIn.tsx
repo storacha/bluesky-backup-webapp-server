@@ -1,4 +1,5 @@
-import { B, Button, H3, Stack } from './components'
+import { Stack } from '@/components/ui'
+import { B, Button, H3 } from './components'
 
 export const LoggingIn = ({
   email,
