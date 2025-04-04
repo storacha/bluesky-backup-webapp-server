@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import Page from './page'
 import { withAuthContext, withData } from '@/../.storybook/decorators'
-import { Space } from '@storacha/ui-react'
+import { Account, Space } from '@storacha/ui-react'
 
 const meta = {
   // Uses division slash (∕) instead of regular slash (/) in the title.
@@ -12,19 +12,13 @@ const meta = {
     layout: 'fullscreen',
   },
   decorators: [
-    withData({
-      '/api/atproto-accounts': [
-        {
-          did: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
-          handle: '@chalametoui.bsky.social',
-        },
-        {
-          did: 'did:plc:vv44vwwbr3lmbjht3p5fd7wz',
-          handle: '@isupposeichal.bsky.social',
-        },
-      ],
-    }),
     withAuthContext({
+      accounts: [
+        {
+          did: () => 'did:mailto:gmail.com:timothy-chalamet',
+          toEmail: () => 'timothy-chalamet@gmail.com',
+        } as unknown as Account,
+      ],
       spaces: [
         {
           name: 'Important Stuff',
@@ -36,6 +30,22 @@ const meta = {
         } as unknown as Space,
       ],
     }),
+    withData(
+      [
+        'api',
+        '/api/atproto-accounts',
+        { account: 'did:mailto:gmail.com:timothy-chalamet' },
+      ],
+      ['did:plc:ro3eio7zgqosf5gnxsq6ik5m', 'did:plc:vv44vwwbr3lmbjht3p5fd7wz']
+    ),
+    withData(
+      ['atproto-handle', 'did:plc:ro3eio7zgqosf5gnxsq6ik5m'],
+      'chalametoui.bsky.social'
+    ),
+    withData(
+      ['atproto-handle', 'did:plc:vv44vwwbr3lmbjht3p5fd7wz'],
+      'isupposeichal.bsky.social'
+    ),
   ],
 } satisfies Meta<typeof Page>
 

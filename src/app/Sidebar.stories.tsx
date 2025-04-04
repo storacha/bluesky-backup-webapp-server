@@ -19,10 +19,8 @@ const meta = {
   },
   decorators: [
     withFullViewportHeight,
-    withData({
-      '/api/backup-configs': {
-        backupConfigs: [],
-      },
+    withData(['api', '/api/backup-configs'], {
+      backupConfigs: [],
     }),
     withLinks({
       '/configs/new': ['Pages/∕', 'Logged In'],
@@ -41,10 +39,8 @@ export const NoBackupConfigs: Story = {}
 
 export const WithBackupConfigs: Story = {
   decorators: [
-    withData({
-      '/api/backup-configs': {
-        backupConfigs: ['Backup #1', 'Bluesky #452'],
-      },
+    withData(['api', '/api/backup-configs'], {
+      backupConfigs: ['Backup #1', 'Bluesky #452'],
     }),
   ],
   args: {
@@ -53,11 +49,7 @@ export const WithBackupConfigs: Story = {
 }
 
 export const WhileBackupConfigsLoading: Story = {
-  decorators: [
-    withData({
-      '/api/backup-configs': new Promise(() => {}),
-    }),
-  ],
+  decorators: [withData(['api', '/api/backup-configs'], new Promise(() => {}))],
   args: {
     selectedConfig: 'Backup #1',
   },
