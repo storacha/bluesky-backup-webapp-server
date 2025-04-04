@@ -2,9 +2,9 @@
 
 import { useAuthenticator } from '@storacha/ui-react'
 import { base64url } from 'multiformats/bases/base64'
-import { capability, DID } from '@ucanto/validator'
 import React, { useId } from 'react'
 import useSWR from 'swr'
+import { atproto } from '@/lib/capabilities'
 
 const ConnectPage: React.FC = () => {
   const [{ accounts }] = useAuthenticator()
@@ -61,8 +61,8 @@ const useAtprotoDelegation = () => {
         issuer: issuer!,
         audience: { did: () => 'did:web:bskybackups.storacha.network' },
         with: account!.did(),
+        proofs: client?.proofs([{can: atproto.can, with: account!.did()}])
       })
-
       const result = await delegation.archive()
 
       if (result.error) {
@@ -73,16 +73,3 @@ const useAtprotoDelegation = () => {
     }
   ).data
 }
-
-// Belongs somewhere else:
-
-/**
- * The ability change atproto logins on this service for a given Account.
- */
-const atproto = capability({
-  can: 'bskybackups.storacha.network/atproto',
-  /**
-   * The Account
-   */
-  with: DID,
-})

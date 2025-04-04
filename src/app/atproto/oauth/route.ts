@@ -1,3 +1,4 @@
+import { File } from 'node:buffer'
 import { createClient } from '../client'
 
 export async function POST(request: Request) {
@@ -18,8 +19,8 @@ export async function POST(request: Request) {
     return new Response('Missing ucan', { status: 400 })
   }
 
-  const client = createClient({ account })
-  const url = await client.authorize(handle, {
+  const client = createClient({ account: account as string })
+  const url = await client.authorize(handle as string, {
     state: JSON.stringify({ ucan }),
   })
   return Response.redirect(url)
