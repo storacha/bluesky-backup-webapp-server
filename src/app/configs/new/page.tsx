@@ -5,7 +5,7 @@ import { styled } from 'next-yak'
 import { shortenDID } from '@/lib/ui'
 import { roundRectStyle, Stack } from '@/components/ui'
 import { useAuthenticator } from '@storacha/ui-react'
-import useSWR from 'swr'
+import { useSWR } from '@/app/swr'
 
 // TODO: Deal with unauthenticated
 
@@ -58,7 +58,7 @@ const BlueskyAccountSelect = ({
   const [{ accounts }] = useAuthenticator()
   const account = accounts[0]
 
-  const { data: atprotoAccounts } = useSWR<string[]>(
+  const { data: atprotoAccounts } = useSWR(
     account && [
       'api',
       '/api/atproto-accounts',
@@ -107,7 +107,7 @@ const BlueskyAccountSelect = ({
 }
 
 const BlueskyOption = ({ did }: { did: string }) => {
-  const { data: handle, error } = useSWR<string>(['atproto-handle', did])
+  const { data: handle, error } = useSWR(['atproto-handle', did])
 
   if (error) {
     console.error('Error fetching Bluesky handle:', error)
@@ -133,17 +133,15 @@ const StorachaSpaceSelect = ({
 
   return (
     <LocationSelect label="Storacha" value={value} onChange={onChange}>
-      {account && (
-        <optgroup label={account.toEmail()}>
-          {spaces.map((space) => (
-            <option key={space.did()} value={space.did()}>
-              {space.name}
-              {/* Em space */}
-              {' '}({shortenDID(space.did())})
-            </option>
-          ))}
-        </optgroup>
-      )}
+      <optgroup label={account?.toEmail()}>
+        {spaces.map((space) => (
+          <option key={space.did()} value={space.did()}>
+            {space.name}
+            {/* Em space */}
+            {' '}({shortenDID(space.did())})
+          </option>
+        ))}
+      </optgroup>
     </LocationSelect>
   )
 }
