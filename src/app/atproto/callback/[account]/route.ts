@@ -5,9 +5,14 @@ import { Agent } from '@atproto/api'
 import { createClient } from '../../client'
 import { base64url } from 'multiformats/bases/base64'
 import { Capabilities, Delegation as DelegationType } from '@ucanto/interface'
-import { Delegation } from '@ucanto/core'
+import { Delegation, isDelegation } from '@ucanto/core'
 import { isDid } from '@atproto/oauth-client-node'
 import { atproto } from '@/lib/capabilities'
+
+
+const identity = (await ed25519.Signer.generate()).withDID(
+  'did:web:bskybackups.storacha.network'
+)
 
 /**
  * Mapping of known WebDIDs to their corresponding DIDKeys for Production and Staging environments.
@@ -26,6 +31,8 @@ export const principalMapping = {
   'did:web:staging.up.storacha.network': 'did:key:z6MkhcbEpJpEvNVDd3n5RurquVdqs5dPU16JDU5VZTDtFgnn',
   'did:web:staging.web3.storage': 'did:key:z6MkhcbEpJpEvNVDd3n5RurquVdqs5dPU16JDU5VZTDtFgnn', // legacy
   'did:web:staging.w3s.link': 'did:key:z6MkqK1d4thaCEXSGZ6EchJw3tDPhQriwynWDuR55ayATMNf',
+
+  'did:web:bskybackups.storacha.network': identity.toDIDKey(),
 } as Record<`did:web:${string}`, `did:key:${string}`>
 
 export async function GET (
@@ -84,20 +91,22 @@ export async function GET (
   )
 }
 
-const identity = (await ed25519.Signer.generate()).withDID(
-  'did:web:bskybackups.storacha.network'
-)
-
+const authority = (await ed25519.Verifier.parse('did:key:z6MkhcbEpJpEvNVDd3n5RurquVdqs5dPU16JDU5VZTDtFgnn')).withDID('did:web:staging.up.storacha.network')
 // TODO: Make this work and actually use it
 const authorize = async (
   account: `did:${string}:${string}`,
   proof: DelegationType<Capabilities>
 ) => {
+  // TODO extract the space more gracefully
+  if (!proof.proofs[0] || !isDelegation(proof.proofs[0])) {
+    throw "didn't want this to happen"
+  }
   const invocation = await atproto
     .invoke({
       issuer: identity,
-      audience: identity,
-      with: account,
+      audience: authority,
+      // TODO extract the space more gracefully
+      with: proof.proofs[0].issuer.did(),
       proofs: [proof],
     })
     .delegate()
@@ -107,7 +116,7 @@ const authorize = async (
   // Validate the invocation.
   const accessResult = await access(invocation, {
     capability: atproto,
-    authority: identity,
+    authority: authority,
     principal: Verifier,
     validateAuthorization: () => ok({}),
     resolveDIDKey: async (did: `did:${string}:${string}`) => {
@@ -122,11 +131,11 @@ const authorize = async (
 
     }
   })
-  // console.log("ACCESS RESULT")
-  // console.log(JSON.stringify(accessResult, null, 4))
-  // if (accessResult.error) {
-  //   console.log(accessResult.error.message)
-  // }
+  console.log("ACCESS RESULT")
+  console.log(JSON.stringify(accessResult, null, 4))
+  if (accessResult.error) {
+    console.log(accessResult.error.message)
+  }
   return accessResult
 }
 
