@@ -1,5 +1,5 @@
-import { Stack } from '@/components/ui'
-import { Button, H3, H4, Input } from './components'
+import { Button, Stack } from '@/components/ui'
+import { H3, H4, Input } from './components'
 
 export const LoginForm = ({
   email,

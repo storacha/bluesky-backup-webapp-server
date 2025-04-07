@@ -14,3 +14,8 @@ id = "0ba166be0635430ba3dfd9ba5fa2ac14"
 [[kv_namespaces]]
 binding = "BLUESKY_AUTH_STATE_STORE"
 id = "260c99a20b724842bd9e0b69c6a57747"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "petra-bluesky-backup"
+database_id = "5b4f79a8-d569-43cc-84f6-39e52ab06a93"

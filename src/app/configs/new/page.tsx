@@ -1,11 +1,15 @@
+// TODO: This whole page needs refactoring and breaking apart.
+
+/** @jsxImportSource next-yak */
 'use client'
 
-import { useEffect, useId, useState } from 'react'
-import { styled } from 'next-yak'
+import { ChangeEventHandler, useId, useRef } from 'react'
+import { css, styled } from 'next-yak'
 import { shortenDID } from '@/lib/ui'
-import { roundRectStyle, Stack } from '@/components/ui'
+import { Button, roundRectStyle, Stack } from '@/components/ui'
 import { useAuthenticator } from '@storacha/ui-react'
 import { useSWR } from '@/app/swr'
+import { action } from './action'
 
 // TODO: Deal with unauthenticated
 
@@ -16,45 +20,105 @@ const Outside = styled(Stack)`
   padding: 2rem;
 `
 
-const LocationSelectorBox = styled.div`
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+
+  > * {
+    flex: 1 1 0;
+  }
+`
+
+const Box = styled.div`
   ${roundRectStyle}
   border-color: var(--color-gray-light);
   background-color: var(--color-white);
+
+  /* TK: This seems unwise. We need this to force things to line up, but really
+  we need a better strategy for these boxes changing size. */
+  overflow: hidden;
 `
 
+const Checkbox = ({
+  label,
+  name,
+  defaultChecked,
+}: {
+  label: string
+  name: string
+  defaultChecked?: boolean
+}) => {
+  const id = useId()
+  return (
+    <Box>
+      <Stack
+        $direction="row"
+        $gap="0.5rem"
+        // Style hack for now to override the CSS reset. Soon, we'll make this a
+        // slider switch anyhow.
+        css={css`
+          & > input {
+            appearance: auto;
+          }
+        `}
+      >
+        <label htmlFor={id}>{label}</label>
+        <input
+          id={id}
+          name={name}
+          type="checkbox"
+          value="on"
+          defaultChecked={defaultChecked}
+        />
+      </Stack>
+    </Box>
+  )
+}
+
 export default function NewConfig() {
-  const [blueskyAccount, setBlueskyAccount] = useState<string>()
-  const [storachaSpace, setStorachaSpace] = useState<string>()
+  const [{ accounts }] = useAuthenticator()
+  const account = accounts[0]
+
+  if (!account) return null
 
   return (
     <Outside>
-      <Stack $direction="row" $gap="1rem" $even>
-        <BlueskyAccountSelect
-          value={blueskyAccount}
-          onChange={(e) => {
-            setBlueskyAccount(e.target.value)
-          }}
-        />
-        <StorachaSpaceSelect
-          value={storachaSpace}
-          onChange={(e) => {
-            setStorachaSpace(e.target.value)
-          }}
-        />
-      </Stack>
+      <form action={action}>
+        <h1>
+          {/* TODO: Provide a better default name */}
+          <input type="text" name="name" defaultValue="New Config" />
+        </h1>
+        {/* We may not need to send the account as a form field once we have real auth. */}
+        <input type="hidden" name="account" value={account.did()} />
+        <h2>Accounts</h2>
+        <Grid>
+          <BlueskyAccountSelect name="bluesky_account" />
+          <StorachaSpaceSelect name="storacha_space" />
+        </Grid>
+        <h2>Data</h2>
+        <Grid>
+          <Checkbox
+            label="Repository"
+            name="include_repository"
+            defaultChecked
+          />
+          <Checkbox label="Blobs" name="include_blobs" defaultChecked />
+          <Checkbox
+            label="Preferences"
+            name="include_preferences"
+            defaultChecked
+          />
+        </Grid>
+        <Button type="submit">Create Config</Button>
+      </form>
     </Outside>
   )
 }
 
 const LOG_INTO_BLUESKY_VALUE = '-'
 
-const BlueskyAccountSelect = ({
-  value,
-  onChange,
-}: {
-  value?: string
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void
-}) => {
+const BlueskyAccountSelect = ({ name }: { name: string }) => {
   const [{ accounts }] = useAuthenticator()
   const account = accounts[0]
 
@@ -68,28 +132,21 @@ const BlueskyAccountSelect = ({
     ]
   )
 
-  // If the value is not set, attempt to set it to the first account.
-  useEffect(() => {
-    if (!value && atprotoAccounts && atprotoAccounts[0]) {
-      onChange?.({
-        target: {
-          value: atprotoAccounts[0],
-        },
-      } as React.ChangeEvent<HTMLSelectElement>)
-    }
-  }, [atprotoAccounts, value, onChange])
-
-  const changeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  // If we select LOG_INTO_BLUESKY_VALUE, don't tell `onChange` about it, just
+  // set the value back to the previous value, and open the OAuth window.
+  const currentValueRef = useRef('')
+  const changeHandler: ChangeEventHandler<HTMLSelectElement> = async (e) => {
     const value = e.target.value
     if (value === LOG_INTO_BLUESKY_VALUE) {
+      e.target.value = currentValueRef.current
       window.open('/atproto/connect', 'atproto-connect', 'popup')
     } else {
-      onChange?.(e)
+      currentValueRef.current = value
     }
   }
 
   return (
-    <LocationSelect label="Bluesky" value={value} onChange={changeHandler}>
+    <LocationSelect label="Bluesky" name={name} onChange={changeHandler}>
       {atprotoAccounts && (
         <>
           {atprotoAccounts.map((account) => (
@@ -120,19 +177,13 @@ const BlueskyOption = ({ did }: { did: string }) => {
   )
 }
 
-const StorachaSpaceSelect = ({
-  value,
-  onChange,
-}: {
-  value?: string
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void
-}) => {
+const StorachaSpaceSelect = ({ name }: { name: string }) => {
   const [{ spaces, accounts }] = useAuthenticator()
 
   const account = accounts[0]
 
   return (
-    <LocationSelect label="Storacha" value={value} onChange={onChange}>
+    <LocationSelect label="Storacha" name={name}>
       <optgroup label={account?.toEmail()}>
         {spaces.map((space) => (
           <option key={space.did()} value={space.did()}>
@@ -147,26 +198,26 @@ const StorachaSpaceSelect = ({
 }
 
 const LocationSelect = ({
+  name,
   label,
-  value,
   onChange,
   children,
 }: {
+  name: string
   label: string
-  value?: string
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  onChange?: ChangeEventHandler<HTMLSelectElement>
   children: React.ReactNode
 }) => {
   const id = useId()
 
   return (
-    <LocationSelectorBox>
+    <Box>
       <Stack>
         <label htmlFor={id}>{label}</label>
-        <select id={id} value={value} onChange={onChange}>
+        <select id={id} name={name} onChange={onChange}>
           {children}
         </select>
       </Stack>
-    </LocationSelectorBox>
+    </Box>
   )
 }
