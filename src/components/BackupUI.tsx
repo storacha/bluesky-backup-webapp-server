@@ -1,4 +1,4 @@
-'use client'
+// 'use client'
 
 import { BskyAuthContextProps, useBskyAuthContext } from '@/contexts'
 import {
@@ -219,6 +219,8 @@ export default function BackupUI() {
     }
   }
 
+  if (!space) return null
+
   return (
     <BackupUIView
       bluesky={bluesky}
@@ -344,6 +346,8 @@ export function BackupUIView({
     )
   })
   const isBackingUp = isBackingUpBlobs || isBackingUpPrefsDoc || isBackingUpRepo
+  const account = storacha.accounts?.[0]
+  if (!account) return null
   return (
     <>
       {userAuthenticatedToBothServices ? (
@@ -625,7 +629,7 @@ export function BackupUIView({
       )}
       {isModalOpen && (
         <CreateSpaceModal
-          account={storacha.accounts?.[0]}
+          account={account}
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />

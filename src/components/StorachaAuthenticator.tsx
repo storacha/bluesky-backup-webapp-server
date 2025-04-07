@@ -70,6 +70,8 @@ export function AuthenticationEnsurer({
 
 function Identity() {
   const [{ client, accounts }] = useW3()
+  const account = accounts[0]
+  if (!account) return null
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-sm">
@@ -77,7 +79,7 @@ function Identity() {
         <div className="text-sm text-gray-600">
           Signed in as{' '}
           <span className="font-medium text-[var(--color-storacha-blue)]">
-            {accounts[0].toEmail()}
+            {account.toEmail()}
           </span>
         </div>
         {client?.agent.did() && (

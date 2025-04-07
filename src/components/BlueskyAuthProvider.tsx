@@ -75,7 +75,8 @@ export const BskyAuthProvider = ({ children }: Props) => {
         authenticated,
         session,
         state,
-        userProfile,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Old code, will delete soon
+        userProfile: userProfile as any,
         bskyAuthClient,
         agent: bskyAgent,
       }}
