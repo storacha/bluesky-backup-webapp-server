@@ -8,7 +8,7 @@ export const action = async (data: FormData) => {
     env: { DB },
   } = getCloudflareContext()
 
-  await DB.prepare(
+  const backupConfig = await DB.prepare(
     /* sql */ `
     INSERT INTO backup_configs (
       account_did,
@@ -20,6 +20,7 @@ export const action = async (data: FormData) => {
       include_preferences
     )
     VALUES(?, ?, ?, ?, ?, ?, ?)
+    RETURNING id
   `
   )
     .bind(
@@ -31,7 +32,11 @@ export const action = async (data: FormData) => {
       data.get('include_blobs') === 'on' ? true : false,
       data.get('include_preferences') === 'on' ? true : false
     )
-    .run()
+    .first()
 
-  redirect('/')
+  if (!backupConfig) {
+    throw new Error('Failed to create backup config')
+  }
+
+  redirect(`/configs/${backupConfig.id}`) // Redirect to the new config page
 }
