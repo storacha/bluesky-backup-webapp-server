@@ -1,8 +1,12 @@
 # set these to your upload API service URL and the DID your service is using as its service DID
 NEXT_PUBLIC_STORACHA_SERVICE_URL=https://staging.up.storacha.network
 NEXT_PUBLIC_STORACHA_RECEIPTS_URL=https://staging.up.storacha.network/receipt/
-NEXT_PUBLIC_STORACHA_SERVICE_DID=did:web:staging.web3.storage
-NEXT_PUBLIC_STORACHA_PROVIDER=did:web:staging.web3.storage
+NEXT_PUBLIC_STORACHA_SERVICE_DID=did:web:staging.up.storacha.network
+NEXT_PUBLIC_STORACHA_PROVIDER=did:web:staging.up.storacha.network
+NEXT_PUBLIC_IDENTITY_AUTHORITY=did:web:staging.up.storacha.network
+
+# set to the multiformatted private key of this service, eg MgCZT5vOnYZoVAeyjnzuJIVY9J4LNtJ+f8Js0cTPuKUpFne0BVEDJjEu6quFIU8yp91/TY/+MYK8GvlKoTDnqOCovCVM=
+SERVER_IDENTITY_PRIVATE_KEY=
 
 # set these to your gateway service URL and DID 
 NEXT_PUBLIC_STORACHA_GATEWAY_HOSTNAME=ipfs-staging.w3s.link
