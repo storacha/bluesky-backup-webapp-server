@@ -5,6 +5,7 @@ import { css, styled } from 'next-yak'
 import { Loader } from '@/components/Loader'
 import { roundRectStyle } from '../components/ui'
 import { useSWR } from './swr'
+import Link from 'next/link'
 
 const SidebarOutside = styled.nav`
   display: flex;
@@ -57,7 +58,7 @@ const ConfigItem = styled.li<{ $selected?: boolean }>`
     `}
 `
 
-const AddConfig = styled.a`
+const AddConfig = styled(Link)`
   ${configItemLikeStyle}
 
   box-shadow: none;
@@ -86,14 +87,18 @@ const LogOutButton = styled(BaseLogOutButton)`
   ${actionButtonStyle}
 `
 
-export function Sidebar({ selectedConfig }: { selectedConfig: string | null }) {
+export function Sidebar({
+  selectedConfigId,
+}: {
+  selectedConfigId: number | null
+}) {
   return (
     <SidebarOutside>
       <Stack>
         <Header>Storacha</Header>
         <Heading>Backup Configs</Heading>
         <Stack $gap="1rem">
-          <Configs selectedConfig={selectedConfig} />
+          <Configs selectedConfigId={selectedConfigId} />
           <AddConfig href="/configs/new">Add new config…</AddConfig>
         </Stack>
       </Stack>
@@ -106,17 +111,17 @@ export function Sidebar({ selectedConfig }: { selectedConfig: string | null }) {
   )
 }
 
-function Configs({ selectedConfig }: { selectedConfig: string | null }) {
+function Configs({ selectedConfigId }: { selectedConfigId: number | null }) {
   const { data } = useSWR(['api', '/api/backup-configs'])
 
   if (!data) return <Loader />
 
   return (
     <ConfigList>
-      {data.backupConfigs.map((config) => (
-        <ConfigItem key={config} $selected={config === selectedConfig}>
-          {config}
-        </ConfigItem>
+      {data.map(({ id, name }) => (
+        <Link key={id} href={`/configs/${id}`}>
+          <ConfigItem $selected={id === selectedConfigId}>{name}</ConfigItem>
+        </Link>
       ))}
     </ConfigList>
   )

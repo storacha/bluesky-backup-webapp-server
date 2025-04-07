@@ -1,8 +1,7 @@
 import type { Decorator, Meta, StoryObj } from '@storybook/react'
 
-import { withLinks } from '@storybook/addon-links'
 import { Sidebar } from './Sidebar'
-import { withData } from '../../.storybook/decorators'
+import { withData, withLinks } from '../../.storybook/decorators'
 
 const withFullViewportHeight: Decorator = (Story) => (
   <div style={{ display: 'flex', height: '100vh' }}>
@@ -19,15 +18,15 @@ const meta = {
   },
   decorators: [
     withFullViewportHeight,
-    withData(['api', '/api/backup-configs'], {
-      backupConfigs: [],
-    }),
+    withData(['api', '/api/backup-configs'], []),
     withLinks({
-      '/configs/new': ['Pages/∕', 'Logged In'],
+      '/configs/new': ['Pages/∕configs∕new'],
+      '/configs/1': ['Pages/∕configs∕[id]'],
+      '/configs/2': ['Pages/∕configs∕[id]'],
     }),
   ],
   args: {
-    selectedConfig: null,
+    selectedConfigId: null,
   },
 } satisfies Meta<typeof Sidebar>
 
@@ -39,18 +38,40 @@ export const NoBackupConfigs: Story = {}
 
 export const WithBackupConfigs: Story = {
   decorators: [
-    withData(['api', '/api/backup-configs'], {
-      backupConfigs: ['Backup #1', 'Bluesky #452'],
-    }),
+    withData(
+      ['api', '/api/backup-configs'],
+      [
+        {
+          id: 1,
+          name: 'Backup #1',
+          bluesky_account: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
+          storacha_space:
+            'did:key:zMw6cW3gpcPQzNkdfprbTZZh2MajkgZ3MdbqgUsqmksvBPiz',
+          include_repository: true,
+          include_blobs: true,
+          include_preferences: false,
+        },
+        {
+          id: 2,
+          name: 'Bluesky #452',
+          bluesky_account: 'did:plc:vv44vwwbr3lmbjht3p5fd7wz',
+          storacha_space:
+            'did:key:zMwdHTDrZWDPyrEA2GLc3nnBTXcAn6RN3Lexio45ULK56BXA',
+          include_repository: false,
+          include_blobs: false,
+          include_preferences: true,
+        },
+      ]
+    ),
   ],
   args: {
-    selectedConfig: 'Backup #1',
+    selectedConfigId: 1,
   },
 }
 
 export const WhileBackupConfigsLoading: Story = {
   decorators: [withData(['api', '/api/backup-configs'], new Promise(() => {}))],
   args: {
-    selectedConfig: 'Backup #1',
+    selectedConfigId: 1,
   },
 }

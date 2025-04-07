@@ -19,23 +19,31 @@ type UsePlanResult = SWRResponse<PlanGetSuccess | undefined> & {
   setPlan: (plan: DID) => Promise<Result<PlanSetSuccess, PlanSetFailure>>
 }
 
-export const usePlan = (account: Account) => {
-  const result = useSWR<PlanGetSuccess | undefined>(planKey(account), {
-    fetcher: async () => {
-      if (!account) return
-      const result = await account.plan.get()
-      if (result.error) throw new Error('getting plan', { cause: result.error })
-      return result.ok
-    },
-    onError: logAndCaptureError,
-  })
-  // @ts-expect-error it's important to assign this into the existing object
-  // to avoid calling the getters in SWRResponse when copying values over -
-  // I can't think of a cleaner way to do this but open to refactoring
-  result.setPlan = async (plan: DID) => {
-    const setResult = await account.plan.set(plan)
-    await result.mutate()
-    return setResult
+export const usePlan = (account: Account | undefined) => {
+  const result = useSWR<PlanGetSuccess | undefined>(
+    account && planKey(account),
+    {
+      fetcher: async () => {
+        if (!account) return
+        const result = await account.plan.get()
+        if (result.error)
+          throw new Error('getting plan', { cause: result.error })
+        return result.ok
+      },
+      onError: logAndCaptureError,
+    }
+  )
+
+  if (account) {
+    // @ts-expect-error it's important to assign this into the existing object
+    // to avoid calling the getters in SWRResponse when copying values over -
+    // I can't think of a cleaner way to do this but open to refactoring
+    result.setPlan = async (plan: DID) => {
+      const setResult = await account.plan.set(plan)
+      await result.mutate()
+      return setResult
+    }
   }
+
   return result as UsePlanResult
 }

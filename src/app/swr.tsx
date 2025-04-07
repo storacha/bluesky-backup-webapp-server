@@ -3,14 +3,12 @@
 import { Agent } from '@atproto/api'
 import React from 'react'
 import useSWRBase, { SWRConfig, SWRResponse } from 'swr'
+import { BackupConfig } from './types'
 
 // This type defines what's fetchable with `useSWR`. It is a union of key/data
 // pairs. The key can match a pattern by being as wide as it needs to be.
 type Fetchable =
-  | [
-      ['api', '/api/backup-configs', Record<string, string>?],
-      { backupConfigs: string[] },
-    ]
+  | [['api', '/api/backup-configs', Record<string, string>?], BackupConfig[]]
   | [['api', '/api/atproto-accounts', Record<string, string>?], string[]]
   | [['atproto-handle', string], string]
 

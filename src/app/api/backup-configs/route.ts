@@ -1,4 +1,7 @@
+import { BackupConfig } from '@/app/types'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
+
+// NEEDS UCAN AUTHORIZATION
 
 export async function GET() {
   const {
@@ -7,9 +10,19 @@ export async function GET() {
 
   const { results } = await DB.prepare(
     /* sql */ `
-      SELECT * FROM backup_configs
+      SELECT id,
+        name,
+        bluesky_account,
+        storacha_space,
+        include_repository,
+        include_blobs,
+        include_preferences
+      
+       FROM backup_configs
+      -- TODO: Fetch configs for correct account
+      -- WHERE account_did = ?
     `
-  ).all()
+  ).all<BackupConfig>()
 
-  return Response.json({ backupConfigs: results.map((row) => row.name) })
+  return Response.json(results)
 }
