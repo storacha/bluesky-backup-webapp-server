@@ -1,5 +1,5 @@
 import { Agent } from '@atproto/api'
-import { ProfileViewBasic } from '@atproto/api/dist/client/types/app/bsky/actor/defs'
+import { ProfileViewDetailed } from '@atproto/api/dist/client/types/app/bsky/actor/defs'
 import { OAuthClientMetadataInput } from '@atproto/oauth-client-browser'
 import { CARLink, Client } from '@w3ui/react'
 import { BackupMetadataStore } from './backupMetadataStore'
@@ -30,7 +30,7 @@ export interface BackupOptions {
 }
 
 export async function initializeBackup(
-  profile: ProfileViewBasic,
+  profile: ProfileViewDetailed,
   metadataStore: BackupMetadataStore
 ): Promise<number> {
   const accountDid = profile.did
@@ -78,7 +78,7 @@ export async function encrypt(key: Key, blob: Blob): Promise<Blob> {
 
 export async function backupRepo(
   backupId: number,
-  profile: ProfileViewBasic,
+  profile: ProfileViewDetailed,
   agent: Agent,
   storachaClient: Client,
   metadataStore: BackupMetadataStore,
@@ -128,7 +128,7 @@ export async function backupRepo(
 
 export async function backupPrefs(
   backupId: number,
-  profile: ProfileViewBasic,
+  profile: ProfileViewDetailed,
   agent: Agent,
   storachaClient: Client,
   metadataStore: BackupMetadataStore,
@@ -165,7 +165,7 @@ export async function backupPrefs(
 
 export async function backupBlobs(
   backupId: number,
-  profile: ProfileViewBasic,
+  profile: ProfileViewDetailed,
   agent: Agent,
   storachaClient: Client,
   metadataStore: BackupMetadataStore,

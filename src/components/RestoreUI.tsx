@@ -137,7 +137,7 @@ export default function RestoreDialog({ backupId }: { backupId: number }) {
   const [sourceAgent, setSourceAgent] = useState<Agent>()
   const [sinkSession, setSinkSession] = useState<CredentialSession>()
   const [sinkAgent, setSinkAgent] = useState<Agent>()
-  const [plcOp, setPlcOp] = useState<unknown>()
+  const [plcOp, setPlcOp] = useState<{ [x: string]: unknown; }>()
   const [
     plceRestoreAuthorizationEmailSent,
     setPlcRestoreAuthorizationEmailSent,

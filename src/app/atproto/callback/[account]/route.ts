@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server'
-import { capability, DID } from '@ucanto/validator'
 import { Agent } from '@atproto/api'
 import { createClient } from '../../client'
 import { base64url } from 'multiformats/bases/base64'
@@ -93,14 +92,3 @@ const authorize = async (
 }
 
 */
-
-/**
- * The ability change atproto logins on this service for a given Account.
- */
-export const atproto = capability({
-  can: 'bskybackups.storacha.network/atproto',
-  /**
-   * The Account
-   */
-  with: DID,
-})

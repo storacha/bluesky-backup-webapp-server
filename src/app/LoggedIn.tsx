@@ -18,7 +18,7 @@ export function LoggedIn() {
       <Sidebar selectedConfig={'Backup #1'} />
       <div>
         <h1>Logged In</h1>
-        <p>You are logged in as {accounts[0].toEmail()}!</p>
+        <p>You are logged in as {accounts[0]?.toEmail()}!</p>
         <h2>Spaces</h2>
         <ul>
           {spaces.map((space) => (

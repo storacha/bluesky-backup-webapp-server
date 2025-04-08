@@ -252,7 +252,7 @@ export default function BackupUI() {
 export interface BackupUIViewProps {
   bluesky: BskyAuthContextProps
   storacha: StorachaContext
-  space: Space
+  space?: Space
   setSelectedSpace: (space: Space) => void
   backupEvents: EventTarget
   currentBackupId?: number
@@ -344,6 +344,7 @@ export function BackupUIView({
     )
   })
   const isBackingUp = isBackingUpBlobs || isBackingUpPrefsDoc || isBackingUpRepo
+  const account = storacha.accounts?.[0]
   return (
     <>
       {userAuthenticatedToBothServices ? (
@@ -623,9 +624,9 @@ export function BackupUIView({
       ) : (
         <div>Please authenticate to both Bluesky and Storacha to continue.</div>
       )}
-      {isModalOpen && (
+      {isModalOpen && account && (
         <CreateSpaceModal
-          account={storacha.accounts?.[0]}
+          account={account}
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />
