@@ -1,10 +1,8 @@
 import { NextRequest } from 'next/server'
-import { ok, access, capability, DID } from '@ucanto/validator'
-import { ed25519, Verifier } from '@ucanto/principal'
+import { capability, DID } from '@ucanto/validator'
 import { Agent } from '@atproto/api'
 import { createClient } from '../../client'
 import { base64url } from 'multiformats/bases/base64'
-import { Capabilities, Delegation as DelegationType } from '@ucanto/interface'
 import { Delegation } from '@ucanto/core'
 import { isDid } from '@atproto/oauth-client-node'
 
@@ -62,9 +60,13 @@ export async function GET(
   )
 }
 
+/* Addressed in a further PR:
+
+
 const identity = (await ed25519.Signer.generate()).withDID(
   'did:web:bskybackups.storacha.network'
 )
+
 
 // TODO: Make this work and actually use it
 const authorize = async (
@@ -89,6 +91,8 @@ const authorize = async (
   })
   return accessResult
 }
+
+*/
 
 /**
  * The ability change atproto logins on this service for a given Account.
