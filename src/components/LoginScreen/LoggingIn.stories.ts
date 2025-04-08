@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { fn } from '@storybook/test'
+import { linkTo } from '@storybook/addon-links'
 
 import { LoggingIn } from './LoggingIn'
 
@@ -7,7 +7,7 @@ const meta = {
   component: LoggingIn,
   args: {
     email: 'timothy-chalamet@gmail.com',
-    cancelLogin: fn(),
+    cancelLogin: linkTo('Components/LoginScreen/LoginForm'),
   },
 } satisfies Meta<typeof LoggingIn>
 
