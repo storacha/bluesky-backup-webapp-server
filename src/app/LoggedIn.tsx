@@ -12,7 +12,6 @@ const Outside = styled(Stack)`
 
 export function LoggedIn() {
   const [{ accounts, spaces }] = useAuthenticator()
-  console.log('accounts', accounts)
   const account = accounts[0]
   if (!account) return null
 
