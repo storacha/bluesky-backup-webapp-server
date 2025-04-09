@@ -4,7 +4,7 @@ import { getCloudflareContext } from '@opennextjs/cloudflare'
 
 // NEEDS UCAN AUTHORIZATION
 
-export async function GET () {
+export async function GET() {
   const {
     env: { DB },
   } = getCloudflareContext()

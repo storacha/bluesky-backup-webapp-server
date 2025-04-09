@@ -34,7 +34,7 @@ const useAtprotoDelegation = (): Uint8Array | undefined => {
         issuer: issuer!,
         audience: { did: () => SERVER_DID },
         with: account!.did(),
-        proofs: client?.proofs([{ can: atproto.can, with: account!.did() }])
+        proofs: client?.proofs([{ can: atproto.can, with: account!.did() }]),
       })
       const result = await delegation.archive()
 
@@ -47,43 +47,47 @@ const useAtprotoDelegation = (): Uint8Array | undefined => {
   ).data
 }
 
-export function LoggedIn () {
+export function LoggedIn() {
   const [{ accounts, spaces }] = useAuthenticator()
   const account = accounts[0]
-  const { data: sessionDID, error: sessionDIDError, mutate } = useSWR<string>(
-    '/session/did',
-    async (url: string) => {
-      const response = await fetch(url)
-      const body = await response.text()
-      if (response.status == 200) {
-        return body
-      } else {
-        throw new Error(body)
-      }
+  const {
+    data: sessionDID,
+    error: sessionDIDError,
+    mutate,
+  } = useSWR<string>('/session/did', async (url: string) => {
+    const response = await fetch(url)
+    const body = await response.text()
+    if (response.status == 200) {
+      return body
+    } else {
+      throw new Error(body)
     }
-  )
+  })
 
   const delegation = useAtprotoDelegation()
-  const createSession = useCallback(async function createSession () {
-    if (account) {
-      await fetch(`/session/create/${account.did()}`,
-        {
+  const createSession = useCallback(
+    async function createSession() {
+      if (account) {
+        await fetch(`/session/create/${account.did()}`, {
           method: 'POST',
-          body: delegation
+          body: delegation,
         })
-      await mutate()
-    } else {
-      throw new Error('no account, could not create session')
-    }
-  }, [account, delegation, mutate])
+        await mutate()
+      } else {
+        throw new Error('no account, could not create session')
+      }
+    },
+    [account, delegation, mutate]
+  )
 
-  const [sessionCreationAttempted, setSessionCreationAttempted] = useState(false)
+  const [sessionCreationAttempted, setSessionCreationAttempted] =
+    useState(false)
 
   useEffect(() => {
     // if the account is loaded, the session DID is erroring and we're not
     // currently creating a session, try to create one
     if (!sessionCreationAttempted && account && sessionDIDError) {
-      (async () => {
+      ;(async () => {
         try {
           await createSession()
           await mutate()
@@ -92,7 +96,13 @@ export function LoggedIn () {
         }
       })()
     }
-  }, [sessionCreationAttempted, account, sessionDIDError, mutate, createSession])
+  }, [
+    sessionCreationAttempted,
+    account,
+    sessionDIDError,
+    mutate,
+    createSession,
+  ])
   if (!account) return null
   return (
     <Outside $direction="row" $gap="1rem">

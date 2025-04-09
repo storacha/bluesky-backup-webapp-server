@@ -4,9 +4,7 @@ import { createClient } from '../client'
 import { isDid } from '@atproto/oauth-client-node'
 import { getSession } from '@/lib/sessions'
 
-export async function GET (
-  request: NextRequest
-) {
+export async function GET(request: NextRequest) {
   const { did: account } = await getSession()
   if (!account) {
     return new Response(`Not authorized`, {

@@ -1,17 +1,21 @@
-import { atproto } from '@/lib/capabilities';
-import { Capabilities } from '@ipld/dag-ucan';
-import { ok, Schema } from '@ucanto/core';
+import { atproto } from '@/lib/capabilities'
+import { Capabilities } from '@ipld/dag-ucan'
+import { ok, Schema } from '@ucanto/core'
 
-import { Delegation as DelegationType } from '@ucanto/interface';
-import { ed25519, Verifier } from '@ucanto/principal';
-import { access, DIDResolutionError } from '@ucanto/validator';
-import { SERVER_DID, IDENTITY_AUTHORITY } from '@/lib/constants';
-import { PRODUCTION_UPLOAD_SERVICE_PUBLIC_KEY, STAGING_UPLOAD_SERVICE_PUBLIC_KEY, DID_WEB, DID_KEY } from '@/lib/constants';
-import { SERVER_IDENTITY_PRIVATE_KEY } from "@/lib/server/constants";
+import { Delegation as DelegationType } from '@ucanto/interface'
+import { ed25519, Verifier } from '@ucanto/principal'
+import { access, DIDResolutionError } from '@ucanto/validator'
+import { SERVER_DID, IDENTITY_AUTHORITY } from '@/lib/constants'
+import {
+  PRODUCTION_UPLOAD_SERVICE_PUBLIC_KEY,
+  STAGING_UPLOAD_SERVICE_PUBLIC_KEY,
+  DID_WEB,
+  DID_KEY,
+} from '@/lib/constants'
+import { SERVER_IDENTITY_PRIVATE_KEY } from '@/lib/server/constants'
 
 const serverKey = ed25519.Signer.parse(SERVER_IDENTITY_PRIVATE_KEY)
 export const serverIdentity = serverKey.withDID(SERVER_DID)
-
 
 /**
  * Mapping of known WebDIDs to their corresponding DIDKeys for Production and Staging environments.
@@ -24,12 +28,14 @@ export const principalMapping = {
   // Production
   'did:web:up.storacha.network': PRODUCTION_UPLOAD_SERVICE_PUBLIC_KEY,
   'did:web:web3.storage': PRODUCTION_UPLOAD_SERVICE_PUBLIC_KEY, // legacy
-  'did:web:w3s.link': 'did:key:z6Mkha3NLZ38QiZXsUHKRHecoumtha3LnbYEL21kXYBFXvo5',
+  'did:web:w3s.link':
+    'did:key:z6Mkha3NLZ38QiZXsUHKRHecoumtha3LnbYEL21kXYBFXvo5',
 
   // Staging
   'did:web:staging.up.storacha.network': STAGING_UPLOAD_SERVICE_PUBLIC_KEY,
   'did:web:staging.web3.storage': STAGING_UPLOAD_SERVICE_PUBLIC_KEY, // legacy
-  'did:web:staging.w3s.link': 'did:key:z6MkqK1d4thaCEXSGZ6EchJw3tDPhQriwynWDuR55ayATMNf',
+  'did:web:staging.w3s.link':
+    'did:key:z6MkqK1d4thaCEXSGZ6EchJw3tDPhQriwynWDuR55ayATMNf',
 
   // Service
   [serverIdentity.did()]: serverIdentity.toDIDKey(),
@@ -38,9 +44,13 @@ export const principalMapping = {
 const authorityPublicKey = principalMapping[IDENTITY_AUTHORITY]
 console.log(IDENTITY_AUTHORITY)
 console.log(authorityPublicKey)
-if (!authorityPublicKey) throw new Error(`could not find public key for principal identified by IDENTITY_AUTHORITY=${IDENTITY_AUTHORITY}`)
+if (!authorityPublicKey)
+  throw new Error(
+    `could not find public key for principal identified by IDENTITY_AUTHORITY=${IDENTITY_AUTHORITY}`
+  )
 
-export const authority = ed25519.Verifier.parse(authorityPublicKey).withDID(IDENTITY_AUTHORITY)
+export const authority =
+  ed25519.Verifier.parse(authorityPublicKey).withDID(IDENTITY_AUTHORITY)
 
 export const authorize = async (
   account: `did:${string}:${string}`,
@@ -53,7 +63,7 @@ export const authorize = async (
       with: account,
       proofs: [proof],
     })
-    .delegate();
+    .delegate()
 
   // Validate the invocation.
   const accessResult = await access(invocation, {
@@ -64,14 +74,14 @@ export const authorize = async (
     validateAuthorization: () => ok({}),
     resolveDIDKey: async (did: `did:${string}:${string}`) => {
       if (Schema.did({ method: 'web' }).is(did)) {
-        const didweb = did as `did:web:${string}`;
-        const principal = principalMapping[didweb];
+        const didweb = did as `did:web:${string}`
+        const principal = principalMapping[didweb]
         if (principal) {
-          return ok(principal);
+          return ok(principal)
         }
       }
-      return { error: new DIDResolutionError(did) };
-    }
-  });
-  return accessResult;
-};
+      return { error: new DIDResolutionError(did) }
+    },
+  })
+  return accessResult
+}

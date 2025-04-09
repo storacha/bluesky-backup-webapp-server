@@ -4,7 +4,7 @@ import { isDid } from '@atproto/oauth-client-node'
 import { authorize } from '@/lib/server/auth'
 import { getSession } from '@/lib/sessions'
 
-export async function POST (
+export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ account: string }> }
 ) {
@@ -16,7 +16,9 @@ export async function POST (
     })
   }
   const body = await request.blob()
-  const delegationResult = await Delegation.extract(new Uint8Array(await body.arrayBuffer()))
+  const delegationResult = await Delegation.extract(
+    new Uint8Array(await body.arrayBuffer())
+  )
   if (delegationResult.error) {
     console.error(delegationResult.error)
     return new Response('Invalid UCAN', { status: 400 })
