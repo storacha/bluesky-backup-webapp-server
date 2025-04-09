@@ -71,6 +71,8 @@ export function AuthenticationEnsurer({
 function Identity() {
   const [{ client, accounts }] = useW3()
   const account = accounts[0]
+  if (!account) return null
+
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-sm">
       <div className="flex flex-col gap-2">

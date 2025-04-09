@@ -8,9 +8,10 @@ export const withLinks = (
     return (
       <div
         onClickCapture={(e) => {
-          if (e.target instanceof HTMLAnchorElement) {
+          const link = e.target instanceof Element && e.target.closest('a')
+          if (link) {
             e.preventDefault()
-            const href = e.target.getAttribute('href')
+            const href = link.getAttribute('href')
             if (href && data[href]) {
               linkTo(...data[href])()
             } else {
