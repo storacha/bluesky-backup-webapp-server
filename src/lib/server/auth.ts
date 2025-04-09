@@ -10,8 +10,8 @@ import {
   IDENTITY_AUTHORITY,
   PRODUCTION_UPLOAD_SERVICE_PUBLIC_KEY,
   STAGING_UPLOAD_SERVICE_PUBLIC_KEY,
-  DID_WEB,
-  DID_KEY,
+  DidWeb,
+  DidKey,
 } from '@/lib/constants'
 import { SERVER_IDENTITY_PRIVATE_KEY } from '@/lib/server/constants'
 
@@ -40,7 +40,7 @@ export const principalMapping = {
 
   // Service
   [serverIdentity.did()]: serverIdentity.toDIDKey(),
-} as Record<DID_WEB, DID_KEY>
+} as Record<DidWeb, DidKey>
 
 const authorityPublicKey = principalMapping[IDENTITY_AUTHORITY]
 console.log(IDENTITY_AUTHORITY)

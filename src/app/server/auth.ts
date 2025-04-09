@@ -9,13 +9,12 @@ import { SERVER_DID, IDENTITY_AUTHORITY } from '@/lib/constants'
 import {
   PRODUCTION_UPLOAD_SERVICE_PUBLIC_KEY,
   STAGING_UPLOAD_SERVICE_PUBLIC_KEY,
-  DID_WEB,
-  DID_KEY,
+  DidWeb,
+  DidKey,
 } from '@/lib/constants'
 import { SERVER_IDENTITY_PRIVATE_KEY } from '@/lib/server/constants'
 
-const serverKey = ed25519.Signer.parse(SERVER_IDENTITY_PRIVATE_KEY)
-export const serverIdentity = serverKey.withDID(SERVER_DID)
+export const serverIdentity = ed25519.Signer.parse(SERVER_IDENTITY_PRIVATE_KEY).withDID(SERVER_DID)
 
 /**
  * Mapping of known WebDIDs to their corresponding DIDKeys for Production and Staging environments.
@@ -39,11 +38,9 @@ export const principalMapping = {
 
   // Service
   [serverIdentity.did()]: serverIdentity.toDIDKey(),
-} as Record<DID_WEB, DID_KEY>
+} as Record<DidWeb, DidKey>
 
 const authorityPublicKey = principalMapping[IDENTITY_AUTHORITY]
-console.log(IDENTITY_AUTHORITY)
-console.log(authorityPublicKey)
 if (!authorityPublicKey)
   throw new Error(
     `could not find public key for principal identified by IDENTITY_AUTHORITY=${IDENTITY_AUTHORITY}`
