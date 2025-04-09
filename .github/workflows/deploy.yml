@@ -62,7 +62,7 @@ jobs:
           echo "NEXT_PUBLIC_BLUESKY_CLIENT_URI=${{ (github.ref_name == 'main') && 'https://bbs-staging.pages.dev/' || 'https://bbs-preview.pages.dev/' }}" >> .env
           echo "NEXT_PUBLIC_SENTRY_ENV=staging" >> .env
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> .env
-          echo "NEXT_PUBLIC_SERVER_DID='did:web:bsky.staging.storacha.network' >> .env
+          echo "NEXT_PUBLIC_SERVER_DID='did:web:bsky.staging.storacha.network'" >> .env
           echo "NEXT_PUBLIC_IDENTITY_AUTHORITY=did:web:staging.up.storacha.network" >> .env
           echo "SERVER_IDENTITY_PRIVATE_KEY=${{ secrets.STAGING_IDENTITY_PRIVATE_KEY }}" >> .env
           echo "SESSION_COOKIE_NAME=bsky-staging-storacha-network" >> .env
@@ -137,7 +137,7 @@ jobs:
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> .env
           echo "NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID=prctbl_1R58oLF6A5ufQX5vozallJKX" >> .env
           echo "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_51LO87hF6A5ufQX5vQTO5BHyz8y9ybJp4kg1GsBjYuqwluuwtQTkbeZzkoQweFQDlv7JaGjuIdUWAyuwXp3tmCfsM005lJK9aS8" >> .env
-          echo "NEXT_PUBLIC_SERVER_DID='did:web:bsky.storacha.network' >> .env
+          echo "NEXT_PUBLIC_SERVER_DID='did:web:bsky.storacha.network'" >> .env
           echo "NEXT_PUBLIC_IDENTITY_AUTHORITY=did:web:up.storacha.network" >> .env
           echo "SERVER_IDENTITY_PRIVATE_KEY=${{ secrets.PRODUCTION_IDENTITY_PRIVATE_KEY }}" >> .env
           echo "SESSION_COOKIE_NAME=bsky-storacha-network" >> .env
