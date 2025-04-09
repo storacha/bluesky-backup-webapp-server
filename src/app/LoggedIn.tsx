@@ -12,13 +12,15 @@ const Outside = styled(Stack)`
 
 export function LoggedIn() {
   const [{ accounts, spaces }] = useAuthenticator()
+  const account = accounts[0]
+  if (!account) return null
 
   return (
     <Outside $direction="row" $gap="1rem">
-      <Sidebar selectedConfig={'Backup #1'} />
+      <Sidebar selectedConfigId={null} />
       <div>
         <h1>Logged In</h1>
-        <p>You are logged in as {accounts[0].toEmail()}!</p>
+        <p>You are logged in as {account.toEmail()}!</p>
         <h2>Spaces</h2>
         <ul>
           {spaces.map((space) => (
