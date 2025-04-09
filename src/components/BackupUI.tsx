@@ -254,7 +254,7 @@ export default function BackupUI() {
 export interface BackupUIViewProps {
   bluesky: BskyAuthContextProps
   storacha: StorachaContext
-  space: Space
+  space?: Space
   setSelectedSpace: (space: Space) => void
   backupEvents: EventTarget
   currentBackupId?: number
