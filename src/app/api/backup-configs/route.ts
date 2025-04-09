@@ -1,12 +1,17 @@
 import { BackupConfig } from '@/app/types'
+import { getSession } from '@/lib/sessions'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 
 // NEEDS UCAN AUTHORIZATION
 
-export async function GET() {
+export async function GET () {
   const {
     env: { DB },
   } = getCloudflareContext()
+  const { did } = await getSession()
+  if (!did) {
+    return new Response('Not authorized', { status: 401 })
+  }
 
   const { results } = await DB.prepare(
     /* sql */ `
@@ -19,10 +24,11 @@ export async function GET() {
         include_preferences
       
        FROM backup_configs
-      -- TODO: Fetch configs for correct account
-      -- WHERE account_did = ?
+       WHERE account_did = ?
     `
-  ).all<BackupConfig>()
+  )
+    .bind(did)
+    .all<BackupConfig>()
 
   return Response.json(results)
 }

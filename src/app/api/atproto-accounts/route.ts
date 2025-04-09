@@ -1,9 +1,8 @@
 import { NextRequest } from 'next/server'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
+import { getSession } from '@/lib/sessions'
 
-// NEEDS UCAN AUTHORIZATION
-
-export async function GET(request: NextRequest) {
+export async function GET (request: NextRequest) {
   const {
     env: { BLUESKY_AUTH_SESSION_STORE },
   } = getCloudflareContext()
@@ -12,6 +11,10 @@ export async function GET(request: NextRequest) {
   const account = searchParams.get('account')
   if (!account) {
     return new Response('Missing account', { status: 400 })
+  }
+  const { did } = await getSession()
+  if (did !== account){
+    return new Response('Not authorized', { status: 401 })
   }
 
   const keysResult = await BLUESKY_AUTH_SESSION_STORE.list({
