@@ -79,7 +79,7 @@ function Identity() {
         <div className="text-sm text-gray-600">
           Signed in as{' '}
           <span className="font-medium text-[var(--color-storacha-blue)]">
-            {account?.toEmail()}
+            {account.toEmail()}
           </span>
         </div>
         {client?.agent.did() && (

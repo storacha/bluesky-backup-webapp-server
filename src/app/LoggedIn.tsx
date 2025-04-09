@@ -78,6 +78,7 @@ export function LoggedIn () {
   }, [account, delegation, mutate])
 
   const [sessionCreationAttempted, setSessionCreationAttempted] = useState(false)
+
   useEffect(() => {
     // if the account is loaded, the session DID is erroring and we're not
     // currently creating a session, try to create one
@@ -92,13 +93,13 @@ export function LoggedIn () {
       })()
     }
   }, [sessionCreationAttempted, account, sessionDIDError, mutate, createSession])
-
+  if (!account) return null
   return (
     <Outside $direction="row" $gap="1rem">
       <Sidebar selectedConfigId={null} />
       <div>
         <h1>Logged In</h1>
-        <p>You are logged in as {account?.toEmail()}!</p>
+        <p>You are logged in as {account.toEmail()}!</p>
         <p>You have established a server session as {sessionDID}!</p>
         <h2>Spaces</h2>
         <ul>
