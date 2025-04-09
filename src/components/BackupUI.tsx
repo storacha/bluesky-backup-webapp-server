@@ -627,7 +627,7 @@ export function BackupUIView({
       ) : (
         <div>Please authenticate to both Bluesky and Storacha to continue.</div>
       )}
-      {isModalOpen && account && (
+      {isModalOpen && (
         <CreateSpaceModal
           account={account}
           isOpen={isModalOpen}
