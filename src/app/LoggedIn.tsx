@@ -55,7 +55,6 @@ export function LoggedIn () {
     async (url: string) => {
       const response = await fetch(url)
       const body = await response.text()
-      console.log(response)
       if (response.status == 200) {
         return body
       } else {
