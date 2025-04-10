@@ -67,7 +67,7 @@ export const blueskyClientMetadata = ({
   application_type: 'web',
   grant_types: ['authorization_code', 'refresh_token'],
   response_types: ['code'],
-  redirect_uris: [urlJoin(blueskyClientUri, 'atproto', 'callback', account)],
+  redirect_uris: [urlJoin(blueskyClientUri, 'atproto', 'callback')],
   token_endpoint_auth_method: 'none',
   scope: 'atproto transition:generic',
   dpop_bound_access_tokens: true,

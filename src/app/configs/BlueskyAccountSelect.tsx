@@ -19,15 +19,7 @@ export const BlueskyAccountSelect = (
   const { data: atprotoAccounts } = useSWR(
     // We take "disabled" to mean not to show a select at all, so we don't need
     // options.
-    props.disabled
-      ? null
-      : account && [
-          'api',
-          '/api/atproto-accounts',
-          {
-            account: account.did(),
-          },
-        ]
+    props.disabled ? null : account && ['api', '/api/atproto-accounts']
   )
 
   // If we select LOG_INTO_BLUESKY_VALUE, don't tell `onChange` about it, just

@@ -31,11 +31,7 @@ const meta = {
       ],
     }),
     withData(
-      [
-        'api',
-        '/api/atproto-accounts',
-        { account: 'did:mailto:gmail.com:timothy-chalamet' },
-      ],
+      ['api', '/api/atproto-accounts'],
       ['did:plc:ro3eio7zgqosf5gnxsq6ik5m', 'did:plc:vv44vwwbr3lmbjht3p5fd7wz']
     ),
     withData(

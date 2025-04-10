@@ -42,6 +42,7 @@
     "@web3-storage/w3up-client": "^17.1.2",
     "dexie": "^4.0.11",
     "dexie-react-hooks": "^1.1.7",
+    "iron-session": "^8.0.4",
     "multiformats": "^13.3.2",
     "next": "15.1.6",
     "next-yak": "4",
