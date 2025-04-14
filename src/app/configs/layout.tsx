@@ -5,7 +5,6 @@ const Outside = styled(Stack)`
   background-color: var(--color-gray-medium-light);
   min-height: 100vh;
   align-items: stretch;
-  padding: 2rem;
 `
 
 export default function ConfigLayout({
@@ -13,5 +12,9 @@ export default function ConfigLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <Outside>{children}</Outside>
+  return (
+    <Outside $direction="row" $gap="1rem">
+      {children}
+    </Outside>
+  )
 }
