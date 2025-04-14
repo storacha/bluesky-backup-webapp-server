@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@atproto-labs/fetch-node':
+    hash: v5hnld2nyhavyoliis6xavjvve
+    path: patches/@atproto-labs__fetch-node.patch
+
 importers:
 
   .:
@@ -11,6 +16,12 @@ importers:
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
+
+  packages/durable-objects:
+    devDependencies:
+      wrangler:
+        specifier: ^4.10.0
+        version: 4.10.0
 
   packages/main:
     dependencies:
@@ -7651,7 +7662,7 @@ snapshots:
       '@atproto/did': 0.1.5
       zod: 3.24.2
 
-  '@atproto-labs/fetch-node@0.1.8':
+  '@atproto-labs/fetch-node@0.1.8(patch_hash=v5hnld2nyhavyoliis6xavjvve)':
     dependencies:
       '@atproto-labs/fetch': 0.2.2
       '@atproto-labs/pipe': 0.1.0
@@ -7671,7 +7682,7 @@ snapshots:
 
   '@atproto-labs/handle-resolver-node@0.1.14':
     dependencies:
-      '@atproto-labs/fetch-node': 0.1.8
+      '@atproto-labs/fetch-node': 0.1.8(patch_hash=v5hnld2nyhavyoliis6xavjvve)
       '@atproto-labs/handle-resolver': 0.1.7
       '@atproto/did': 0.1.5
 

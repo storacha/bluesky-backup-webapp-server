@@ -1,0 +1,10 @@
+{
+  "name": "bluesky-backup-app-durable-objects",
+  "private": true,
+  "scripts": {
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv --config wrangler.toml src/cloudflare-env.d.ts"
+  },
+  "devDependencies": {
+    "wrangler": "^4.10.0"
+  }
+}

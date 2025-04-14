@@ -10,5 +10,5 @@
     // including the contents of the compiled `.open-next` directory.
     "allowJs": false
   },
-  "include": ["../packages/durable-objects/**/*.tsts"]
+  "include": ["./**/*.ts"]
 }

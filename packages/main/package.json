@@ -13,9 +13,7 @@
     "cf:build": "opennextjs-cloudflare build",
     "cf:preview": "pnpm cf:build && opennextjs-cloudflare preview",
     "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "cf:typegen:main": "wrangler types --env-interface CloudflareEnv src/cloudflare-env.d.ts",
-    "cf:typegen:durable-objects": "wrangler types --env-interface CloudflareEnv --config wrangler.durable-objects.toml durable-objects/cloudflare-env.d.ts",
-    "cf:typegen": "pnpm cf:typegen:main && pnpm cf:typegen:durable-objects",
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv src/cloudflare-env.d.ts",
     "db:prepare:local": "wrangler d1 execute petra-bluesky-backup --local --file=./schema.sql",
     "storybook": "STORYBOOK_PROJECT_ROOT=\"$PWD\" storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -97,10 +95,5 @@
     "vitest": "^3.0.8",
     "webpack": "^5.98.0",
     "wrangler": "^4.10.0"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "@atproto-labs/fetch-node": "patches/@atproto-labs__fetch-node.patch"
-    }
   }
 }

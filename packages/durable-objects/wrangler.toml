@@ -1,4 +1,4 @@
-# TK: IMPORTANT: After editing this file, run `pnpm cf:typegen` to regenerate the
+# IMPORTANT: After editing this file, run `pnpm cf:typegen` to regenerate the
 # types for the Cloudflare Workers runtime.
 
 main = ".durable-objects/durable-objects/index.js"
@@ -16,7 +16,7 @@ tag = "v1"                        # Should be unique for each entry
 new_sqlite_classes = ["BackupDO"] # Array of new classes
 
 
-# Matches the bindings in the main worker (wrangler.toml)
+# Matches the bindings in the main worker
 
 [[kv_namespaces]]
 binding = "BLUESKY_AUTH_SESSION_STORE"

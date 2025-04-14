@@ -9,9 +9,15 @@
     "lint": "pnpm --recursive lint",
     "typecheck": "pnpm --recursive typecheck",
     "test": "pnpm --recursive test",
-    "storybook": "pnpm --filter bluesky-backup-app storybook"
+    "storybook": "pnpm --filter bluesky-backup-app storybook",
+    "cf:typegen": "pnpm --recursive cf:typegen"
   },
   "devDependencies": {
     "prettier": "^3.5.3"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@atproto-labs/fetch-node": "patches/@atproto-labs__fetch-node.patch"
+    }
   }
 }
