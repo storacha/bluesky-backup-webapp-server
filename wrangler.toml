@@ -19,6 +19,7 @@ id = "260c99a20b724842bd9e0b69c6a57747"
 binding = "DB"
 database_name = "bluesky-backup-dev"
 database_id = "ffffffff-ffff-ffff-ffff-ffffffffffff"
+preview_database_id = "DB"
 
 [[env.staging.d1_databases]]
 binding = "DB"
