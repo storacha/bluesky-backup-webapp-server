@@ -15,7 +15,7 @@ export async function GET(
   const { results } = await DB.prepare(
     /* sql */ `
       SELECT id,
-        backup_configs_id,
+        backup_config_id,
         repository_cid,
         blobs_cid,
         preferences_cid,
@@ -23,7 +23,7 @@ export async function GET(
       
        FROM backups
 
-      WHERE backup_configs_id = ?
+      WHERE backup_config_id = ?
 
       -- TODO: Fetch configs for correct account
     `

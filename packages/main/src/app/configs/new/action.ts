@@ -13,7 +13,7 @@ export const action = async (data: FormData) => {
     INSERT INTO backup_configs (
       account_did,
       name,
-      bluesky_account,
+      atproto_account,
       storacha_space,
       include_repository,
       include_blobs,
@@ -26,7 +26,7 @@ export const action = async (data: FormData) => {
     .bind(
       data.get('account'),
       data.get('name'),
-      data.get('bluesky_account'),
+      data.get('atproto_account'),
       data.get('storacha_space'),
       data.get('include_repository') === 'on' ? true : false,
       data.get('include_blobs') === 'on' ? true : false,

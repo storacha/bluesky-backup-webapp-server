@@ -7,6 +7,10 @@ compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 assets = { directory = ".open-next/assets", binding = "ASSETS" }
 
+services = [
+  { binding = "DURABLE_OBJECTS_WORKER", service = "bluesky-backup-durable-objects" },
+]
+
 [[kv_namespaces]]
 binding = "BLUESKY_AUTH_SESSION_STORE"
 id = "0ba166be0635430ba3dfd9ba5fa2ac14"

@@ -44,7 +44,7 @@ export const WithBackupConfigs: Story = {
         {
           id: 1,
           name: 'Backup #1',
-          bluesky_account: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
+          atproto_account: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
           storacha_space:
             'did:key:zMw6cW3gpcPQzNkdfprbTZZh2MajkgZ3MdbqgUsqmksvBPiz',
           include_repository: true,
@@ -54,7 +54,7 @@ export const WithBackupConfigs: Story = {
         {
           id: 2,
           name: 'Bluesky #452',
-          bluesky_account: 'did:plc:vv44vwwbr3lmbjht3p5fd7wz',
+          atproto_account: 'did:plc:vv44vwwbr3lmbjht3p5fd7wz',
           storacha_space:
             'did:key:zMwdHTDrZWDPyrEA2GLc3nnBTXcAn6RN3Lexio45ULK56BXA',
           include_repository: false,

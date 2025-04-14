@@ -7,6 +7,7 @@ import { Button } from '@/components/ui'
 import { createBackup } from './createBackup'
 import { useSWRConfig } from 'swr'
 import { shortenCID } from '@/lib/ui'
+import { useAuthenticator } from '@storacha/ui-react'
 
 export default function Config({
   params,
@@ -37,8 +38,13 @@ export default function Config({
 const CreateBackupButton = ({ configId }: { configId: number }) => {
   const { mutate } = useSWRConfig()
 
+  // TODO: Temporary until real auth is in place
+  const [{ accounts }] = useAuthenticator()
+  const account = accounts[0]
+  if (!account) return null
+
   const handleClick = async () => {
-    await createBackup()
+    await createBackup({ configId, account: account.did() })
     mutate(['api', `/api/backup-configs/${configId}/backups`])
   }
 

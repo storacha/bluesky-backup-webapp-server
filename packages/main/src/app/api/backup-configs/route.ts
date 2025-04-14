@@ -17,7 +17,7 @@ export async function GET() {
     /* sql */ `
       SELECT id,
         name,
-        bluesky_account,
+        atproto_account,
         storacha_space,
         include_repository,
         include_blobs,

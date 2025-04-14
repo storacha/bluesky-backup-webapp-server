@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../.durable-objects",
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+
+    // NOTE: This is surprisingly important! This stops the compiler from
+    // including the contents of the compiled `.open-next` directory.
+    "allowJs": false
+  },
+  "include": ["./**/*.ts"]
+}

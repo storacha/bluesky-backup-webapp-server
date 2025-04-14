@@ -1,0 +1,246 @@
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index 578af19b40cb9d2914f4be6d5af1260d19597514..22fdcabdbbbd201108f389292480257fdfb15f67 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -1,5 +1,4 @@
+ export * from '@atproto-labs/fetch';
+ export * from './safe.js';
+-export * from './unicast.js';
+ export * from './util.js';
+ //# sourceMappingURL=index.d.ts.map
+\ No newline at end of file
+diff --git a/dist/index.d.ts.map b/dist/index.d.ts.map
+index 50ee146c74153cc551556764914e5b7aa9d36ae8..8dff49a12bffb18072ed0cbb6dedd9de08b83e1b 100644
+--- a/dist/index.d.ts.map
++++ b/dist/index.d.ts.map
+@@ -1 +1 @@
+-{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../src/index.ts"],"names":[],"mappings":"AAAA,cAAc,qBAAqB,CAAA;AAEnC,cAAc,WAAW,CAAA;AACzB,cAAc,cAAc,CAAA;AAC5B,cAAc,WAAW,CAAA"}
+\ No newline at end of file
++{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../src/index.ts"],"names":[],"mappings":"AAAA,cAAc,qBAAqB,CAAA;AAEnC,cAAc,WAAW,CAAA;AAEzB,cAAc,WAAW,CAAA"}
+\ No newline at end of file
+diff --git a/dist/index.js b/dist/index.js
+index 56a7309f90727b0bc6b3d60bf0c36c612537237e..0f194e0fdf12b100c8ed9d1bb7ed3fd283547f16 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -16,6 +16,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ __exportStar(require("@atproto-labs/fetch"), exports);
+ __exportStar(require("./safe.js"), exports);
+-__exportStar(require("./unicast.js"), exports);
++// export * from './unicast.js'
+ __exportStar(require("./util.js"), exports);
+ //# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/dist/index.js.map b/dist/index.js.map
+index bfe90ce61468dd5b49b2b4251cf0cf6d2b327724..f3b99abac547a3b2667c9293e1d55c536df5851d 100644
+--- a/dist/index.js.map
++++ b/dist/index.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"index.js","sourceRoot":"","sources":["../src/index.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;AAAA,sDAAmC;AAEnC,4CAAyB;AACzB,+CAA4B;AAC5B,4CAAyB"}
+\ No newline at end of file
++{"version":3,"file":"index.js","sourceRoot":"","sources":["../src/index.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;AAAA,sDAAmC;AAEnC,4CAAyB;AACzB,+BAA+B;AAC/B,4CAAyB"}
+\ No newline at end of file
+diff --git a/dist/safe.d.ts.map b/dist/safe.d.ts.map
+index 85b2b09cd18b365142f31c362f0caf5b0a20a16e..eb12c6d15a68f511d1257d17915882b9cd69b763 100644
+--- a/dist/safe.d.ts.map
++++ b/dist/safe.d.ts.map
+@@ -1 +1 @@
+-{"version":3,"file":"safe.d.ts","sourceRoot":"","sources":["../src/safe.ts"],"names":[],"mappings":"AAAA,OAAO,EAEL,KAAK,EASN,MAAM,qBAAqB,CAAA;AAI5B,MAAM,MAAM,oBAAoB,GAAG,WAAW,CAC5C,UAAU,CAAC,OAAO,aAAa,CAAC,CAAC,CAAC,CAAC,CACpC,CAAA;AAED;;;;;GAKG;AACH,wBAAgB,aAAa,CAAC,EAC5B,KAAiC,EACjC,eAA4B,EAAE,QAAQ;AACtC,cAAqB,EACrB,eAAiC,EACjC,SAAiB,EACjB,SAA2B,EAC3B,WAAkB,EAClB,eAAiC,EACjC,OAAc,EACd,oBAAyE,GAC1E;;;;;;;;;;;CAAK,GAAG,KAAK,CAAC,OAAO,CAAC,CAsDtB"}
+\ No newline at end of file
++{"version":3,"file":"safe.d.ts","sourceRoot":"","sources":["../src/safe.ts"],"names":[],"mappings":"AAAA,OAAO,EAEL,KAAK,EASN,MAAM,qBAAqB,CAAA;AAK5B,MAAM,MAAM,oBAAoB,GAAG,WAAW,CAC5C,UAAU,CAAC,OAAO,aAAa,CAAC,CAAC,CAAC,CAAC,CACpC,CAAA;AAED;;;;;GAKG;AACH,wBAAgB,aAAa,CAAC,EAC5B,KAAiC,EACjC,eAA4B,EAAE,QAAQ;AACtC,cAAqB,EACrB,eAAiC,EACjC,SAAiB,EACjB,SAA2B,EAC3B,WAAkB,EAClB,eAAiC,EACjC,OAAc,EACd,oBAAyE,GAC1E;;;;;;;;;;;CAAK,GAAG,KAAK,CAAC,OAAO,CAAC,CA2DtB"}
+\ No newline at end of file
+diff --git a/dist/safe.js b/dist/safe.js
+index d2ecc9bedefceb097d46415b0596f791948398de..a97bf60233e10fc268b3eb9bfb680c648434df53 100644
+--- a/dist/safe.js
++++ b/dist/safe.js
+@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.safeFetchWrap = safeFetchWrap;
+ const fetch_1 = require("@atproto-labs/fetch");
+ const pipe_1 = require("@atproto-labs/pipe");
+-const unicast_js_1 = require("./unicast.js");
+ /**
+  * Wrap a fetch function with safety checks so that it can be safely used
+  * with user provided input (URL).
+@@ -12,6 +11,9 @@ const unicast_js_1 = require("./unicast.js");
+  */
+ function safeFetchWrap({ fetch = globalThis.fetch, responseMaxSize = 512 * 1024, // 512kB
+ ssrfProtection = true, allowCustomPort = !ssrfProtection, allowData = false, allowHttp = !ssrfProtection, allowIpHost = true, allowPrivateIps = !ssrfProtection, timeout = 10e3, forbiddenDomainNames = fetch_1.DEFAULT_FORBIDDEN_DOMAIN_NAMES, } = {}) {
++    if (!allowPrivateIps) {
++        throw new Error('allowPrivateIps is required in Cloudflare Workers');
++    }
+     return (0, fetch_1.toRequestTransformer)((0, pipe_1.pipe)(
+     /**
+      * Disable HTTP redirects
+@@ -43,12 +45,13 @@ ssrfProtection = true, allowCustomPort = !ssrfProtection, allowData = false, all
+      * input, let's mitigate resource exhaustion attacks by setting a timeout.
+      */
+     (0, fetch_1.timedFetch)(timeout, 
+-    /**
+-     * Since we will be fetching from the network based on user provided
+-     * input, we need to make sure that the request is not vulnerable to SSRF
+-     * attacks.
+-     */
+-    allowPrivateIps ? fetch : (0, unicast_js_1.unicastFetchWrap)({ fetch })), 
++    // /**
++    //  * Since we will be fetching from the network based on user provided
++    //  * input, we need to make sure that the request is not vulnerable to SSRF
++    //  * attacks.
++    //  */
++    // allowPrivateIps ? fetch : unicastFetchWrap({ fetch })
++    fetch), 
+     /**
+      * Since we will be fetching user owned data, we need to make sure that an
+      * attacker cannot force us to download a large amounts of data.
+diff --git a/dist/safe.js.map b/dist/safe.js.map
+index d0bdc61a7bb60534c43aac19528937bae6722850..68b4018726809bfda052e30aced75f83d4a0c4f3 100644
+--- a/dist/safe.js.map
++++ b/dist/safe.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"safe.js","sourceRoot":"","sources":["../src/safe.ts"],"names":[],"mappings":";;AAyBA,sCAiEC;AA1FD,+CAW4B;AAC5B,6CAAyC;AACzC,6CAA+C;AAM/C;;;;;GAKG;AACH,SAAgB,aAAa,CAAC,EAC5B,KAAK,GAAG,UAAU,CAAC,KAAc,EACjC,eAAe,GAAG,GAAG,GAAG,IAAI,EAAE,QAAQ;AACtC,cAAc,GAAG,IAAI,EACrB,eAAe,GAAG,CAAC,cAAc,EACjC,SAAS,GAAG,KAAK,EACjB,SAAS,GAAG,CAAC,cAAc,EAC3B,WAAW,GAAG,IAAI,EAClB,eAAe,GAAG,CAAC,cAAc,EACjC,OAAO,GAAG,IAAI,EACd,oBAAoB,GAAG,sCAAkD,MACvE,EAAE;IACJ,OAAO,IAAA,4BAAoB,EACzB,IAAA,WAAI;IACF;;OAEG;IACH,IAAA,qCAA6B,GAAE;IAE/B;;OAEG;IACH,WAAW,CAAC,CAAC,CAAC,iBAAS,CAAC,CAAC,CAAC,IAAA,kCAA0B,GAAE;IAEtD;;OAEG;IACH,IAAA,qCAA6B,EAAC;QAC5B,QAAQ,EAAE,KAAK;QACf,OAAO,EAAE,SAAS;QAClB,OAAO,EAAE,KAAK;QACd,OAAO,EAAE,SAAS,IAAI,EAAE,eAAe,EAAE;QACzC,QAAQ,EAAE,EAAE,eAAe,EAAE;KAC9B,CAAC;IAEF;;;;;OAKG;IACH,IAAA,2CAAmC,EAAC,oBAAoB,CAAC;IAEzD;;;OAGG;IACH,IAAA,kBAAU,EACR,OAAO;IAEP;;;;OAIG;IACH,eAAe,CAAC,CAAC,CAAC,KAAK,CAAC,CAAC,CAAC,IAAA,6BAAgB,EAAC,EAAE,KAAK,EAAE,CAAC,CACtD;IAED;;;OAGG;IACH,IAAA,6BAAqB,EAAC,eAAe,CAAC,CACvC,CACF,CAAA;AACH,CAAC"}
+\ No newline at end of file
++{"version":3,"file":"safe.js","sourceRoot":"","sources":["../src/safe.ts"],"names":[],"mappings":";;AA0BA,sCAsEC;AAhGD,+CAW4B;AAC5B,6CAAyC;AAQzC;;;;;GAKG;AACH,SAAgB,aAAa,CAAC,EAC5B,KAAK,GAAG,UAAU,CAAC,KAAc,EACjC,eAAe,GAAG,GAAG,GAAG,IAAI,EAAE,QAAQ;AACtC,cAAc,GAAG,IAAI,EACrB,eAAe,GAAG,CAAC,cAAc,EACjC,SAAS,GAAG,KAAK,EACjB,SAAS,GAAG,CAAC,cAAc,EAC3B,WAAW,GAAG,IAAI,EAClB,eAAe,GAAG,CAAC,cAAc,EACjC,OAAO,GAAG,IAAI,EACd,oBAAoB,GAAG,sCAAkD,MACvE,EAAE;IACJ,IAAI,CAAC,eAAe,EAAE,CAAC;QACrB,MAAM,IAAI,KAAK,CAAC,mDAAmD,CAAC,CAAA;IACtE,CAAC;IAED,OAAO,IAAA,4BAAoB,EACzB,IAAA,WAAI;IACF;;OAEG;IACH,IAAA,qCAA6B,GAAE;IAE/B;;OAEG;IACH,WAAW,CAAC,CAAC,CAAC,iBAAS,CAAC,CAAC,CAAC,IAAA,kCAA0B,GAAE;IAEtD;;OAEG;IACH,IAAA,qCAA6B,EAAC;QAC5B,QAAQ,EAAE,KAAK;QACf,OAAO,EAAE,SAAS;QAClB,OAAO,EAAE,KAAK;QACd,OAAO,EAAE,SAAS,IAAI,EAAE,eAAe,EAAE;QACzC,QAAQ,EAAE,EAAE,eAAe,EAAE;KAC9B,CAAC;IAEF;;;;;OAKG;IACH,IAAA,2CAAmC,EAAC,oBAAoB,CAAC;IAEzD;;;OAGG;IACH,IAAA,kBAAU,EACR,OAAO;IAEP,MAAM;IACN,uEAAuE;IACvE,4EAA4E;IAC5E,cAAc;IACd,MAAM;IACN,wDAAwD;IACxD,KAAK,CACN;IAED;;;OAGG;IACH,IAAA,6BAAqB,EAAC,eAAe,CAAC,CACvC,CACF,CAAA;AACH,CAAC"}
+\ No newline at end of file
+diff --git a/src/index.ts b/src/index.ts
+index 479b2dc0abb4b1082b5dec79830d69df28745273..f5a3b7a31e6ac096e8aab6bda5d03772013f94c7 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -1,5 +1,5 @@
+ export * from '@atproto-labs/fetch'
+ 
+ export * from './safe.js'
+-export * from './unicast.js'
++// export * from './unicast.js'
+ export * from './util.js'
+diff --git a/src/safe.ts b/src/safe.ts
+index 906c3898cb9eb8cabf6f7a33c24e24fd81e22cbf..5a897d9d7a5e5aca3d2d7f7dd51a2a611546c557 100644
+--- a/src/safe.ts
++++ b/src/safe.ts
+@@ -11,7 +11,8 @@ import {
+   toRequestTransformer,
+ } from '@atproto-labs/fetch'
+ import { pipe } from '@atproto-labs/pipe'
+-import { unicastFetchWrap } from './unicast.js'
++// Disabled for Cloudflare, where it's unsupported and unnecessary.
++// import { unicastFetchWrap } from './unicast.js'
+ 
+ export type SafeFetchWrapOptions = NonNullable<
+   Parameters<typeof safeFetchWrap>[0]
+@@ -35,6 +36,10 @@ export function safeFetchWrap({
+   timeout = 10e3,
+   forbiddenDomainNames = DEFAULT_FORBIDDEN_DOMAIN_NAMES as Iterable<string>,
+ } = {}): Fetch<unknown> {
++  if (!allowPrivateIps) {
++    throw new Error('allowPrivateIps is required in Cloudflare Workers')
++  }
++
+   return toRequestTransformer(
+     pipe(
+       /**
+@@ -73,19 +78,20 @@ export function safeFetchWrap({
+       timedFetch(
+         timeout,
+ 
+-        /**
+-         * Since we will be fetching from the network based on user provided
+-         * input, we need to make sure that the request is not vulnerable to SSRF
+-         * attacks.
+-         */
+-        allowPrivateIps ? fetch : unicastFetchWrap({ fetch }),
++        // /**
++        //  * Since we will be fetching from the network based on user provided
++        //  * input, we need to make sure that the request is not vulnerable to SSRF
++        //  * attacks.
++        //  */
++        // allowPrivateIps ? fetch : unicastFetchWrap({ fetch })
++        fetch
+       ),
+ 
+       /**
+        * Since we will be fetching user owned data, we need to make sure that an
+        * attacker cannot force us to download a large amounts of data.
+        */
+-      fetchMaxSizeProcessor(responseMaxSize),
+-    ),
++      fetchMaxSizeProcessor(responseMaxSize)
++    )
+   )
+ }
+diff --git a/tsconfig/base.json b/tsconfig/base.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..7e1739e90efec00ed2fdda81e1ed2b5fb6f9b7c3
+--- /dev/null
++++ b/tsconfig/base.json
+@@ -0,0 +1,40 @@
++{
++  "$schema": "https://json.schemastore.org/tsconfig",
++  "compilerOptions": {
++    "checkJs": true,
++
++    "strict": true,
++    "allowUnusedLabels": false,
++    "allowUnreachableCode": false,
++    "exactOptionalPropertyTypes": false,
++    "noFallthroughCasesInSwitch": false,
++    "noImplicitAny": false,
++    "noImplicitReturns": false,
++    "noUnusedLocals": true,
++    "noUnusedParameters": false,
++
++    "skipLibCheck": true,
++    "allowSyntheticDefaultImports": true,
++    "forceConsistentCasingInFileNames": true,
++    "esModuleInterop": true,
++    "isolatedModules": true,
++    "preserveSymlinks": false,
++    "useDefineForClassFields": true,
++
++    "lib": [],
++    "moduleResolution": "node",
++    "resolveJsonModule": true,
++    "types": [],
++
++    "noErrorTruncation": true,
++    "declaration": true,
++    "declarationMap": true,
++    "sourceMap": true,
++    "jsx": "preserve",
++    "module": "CommonJS",
++    "target": "ES2020"
++  },
++  "typeAcquisition": {
++    "enable": false
++  }
++}
+diff --git a/tsconfig/node.json b/tsconfig/node.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..3e59f51fa1828279bcddd7f1b9ecfd569c590226
+--- /dev/null
++++ b/tsconfig/node.json
+@@ -0,0 +1,8 @@
++{
++  "$schema": "https://json.schemastore.org/tsconfig",
++  "extends": "./base.json",
++  "compilerOptions": {
++    "lib": ["ES2023", "ScriptHost"],
++    "types": ["node"]
++  }
++}
+diff --git a/tsconfig.build.json b/tsconfig.build.json
+index ea00aba058e4cb2b693783675b85eb80b57c1379..6b3c946af98263318d3399ac6c421fe4d2c5c39f 100644
+--- a/tsconfig.build.json
++++ b/tsconfig.build.json
+@@ -1,5 +1,5 @@
+ {
+-  "extends": ["../../../tsconfig/node.json"],
++  "extends": ["./tsconfig/node.json"],
+   "compilerOptions": {
+     "outDir": "dist",
+     "rootDir": "src"
+diff --git a/tsconfig.build.tsbuildinfo b/tsconfig.build.tsbuildinfo
+index e3cfedb5b4884045ba177d31a711dc98f06511c1..5c6c342afbf2b51ddaa6ceba087b0e0c3c2b226d 100644
+--- a/tsconfig.build.tsbuildinfo
++++ b/tsconfig.build.tsbuildinfo
+@@ -1 +1 @@
+-{"root":["./src/index.ts","./src/safe.ts","./src/unicast.ts","./src/util.ts"],"version":"5.6.3"}
+\ No newline at end of file
++{"root":["./src/index.ts","./src/safe.ts","./src/unicast.ts","./src/util.ts"],"errors":true,"version":"5.8.3"}

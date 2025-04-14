@@ -37,7 +37,7 @@ const meta = {
         {
           id: 1,
           name: 'Backup #1',
-          bluesky_account: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
+          atproto_account: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
           storacha_space:
             'did:key:zMw6cW3gpcPQzNkdfprbTZZh2MajkgZ3MdbqgUsqmksvBPiz',
           include_repository: true,
@@ -51,22 +51,28 @@ const meta = {
       [
         {
           id: 1,
-          backup_configs_id: 1,
+          backup_config_id: 1,
+          repository_status: 'not-started',
           repository_cid:
             'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551repo',
+          blobs_status: 'not-started',
           blobs_cid:
             'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551blob',
+          preferences_status: 'not-started',
           preferences_cid:
             'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551pref',
           created_at: '2025-04-07 19:51:56',
         },
         {
           id: 2,
-          backup_configs_id: 1,
+          backup_config_id: 1,
+          repository_status: 'not-started',
           repository_cid:
             'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy552repo',
+          blobs_status: 'not-started',
           blobs_cid:
             'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy552blob',
+          preferences_status: 'not-started',
           preferences_cid:
             'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy552pref',
           created_at: '2025-04-07 20:51:56',
