@@ -17,5 +17,14 @@ id = "260c99a20b724842bd9e0b69c6a57747"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "petra-bluesky-backup"
-database_id = "5b4f79a8-d569-43cc-84f6-39e52ab06a93"
+database_name = "bluesky-backup-dev"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "bluesky-backup-staging"
+database_id = "070938c7-fea2-4bc3-8bf7-22130a5d2d5b"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "bluesky-backup-production"
+database_id = "f8e276cc-a9c9-4e3c-907f-b72ee4468e92"
