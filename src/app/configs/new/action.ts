@@ -1,6 +1,6 @@
 'use server'
 
-import { getCloudflareContext } from '@opennextjs/cloudflare'
+import { getCloudflareContext } from '@/lib/cloudflare'
 import { redirect } from 'next/navigation'
 
 export const action = async (data: FormData) => {

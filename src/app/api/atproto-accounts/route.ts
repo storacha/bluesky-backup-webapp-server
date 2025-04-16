@@ -1,4 +1,4 @@
-import { getCloudflareContext } from '@opennextjs/cloudflare'
+import { getCloudflareContext } from '@/lib/cloudflare'
 import { getSession } from '@/lib/sessions'
 
 export async function GET() {

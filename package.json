@@ -27,7 +27,6 @@
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@ipld/dag-ucan": "^3.4.5",
-    "@opennextjs/cloudflare": "^0.6.6",
     "@sentry/nextjs": "^9.10.1",
     "@storacha/ui-react": "^2.5.24",
     "@tailwindcss/postcss": "^4.0.9",
