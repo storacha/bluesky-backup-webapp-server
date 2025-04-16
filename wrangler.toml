@@ -30,3 +30,8 @@ database_id = "070938c7-fea2-4bc3-8bf7-22130a5d2d5b"
 binding = "DB"
 database_name = "bluesky-backup-production"
 database_id = "f8e276cc-a9c9-4e3c-907f-b72ee4468e92"
+
+[[env.preview.d1_databases]]
+binding = "DB"
+database_name = "bluesky-backup-preview"
+database_id = "1b926918-99a2-44cf-bd03-c466f2bb8e0e"
