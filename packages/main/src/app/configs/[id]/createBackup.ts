@@ -1,7 +1,7 @@
 'use server'
 
 import { getCloudflareContext } from '@opennextjs/cloudflare'
-import type DurableObjectsWorker from '../../../../.durable-objects/durable-objects'
+import type DurableObjectsWorker from 'bluesky-backup-app-durable-objects'
 import { BackupConfig } from '@/app/types'
 
 // TODO: Needs authorization.

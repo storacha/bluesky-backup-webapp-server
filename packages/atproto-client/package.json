@@ -1,0 +1,29 @@
+{
+  "name": "bluesky-backup-app-atproto-client",
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atproto-labs/handle-resolver": "^0.1.7",
+    "@atproto-labs/simple-store": "^0.1.2",
+    "@atproto/jwk": "^0.1.5",
+    "@atproto/jwk-jose": "^0.1.6",
+    "@atproto/jwk-webcrypto": "^0.1.6",
+    "@atproto/oauth-client": "^0.3.14",
+    "@atproto/oauth-client-node": "^0.2.15",
+    "@opennextjs/cloudflare": "^0.6.6",
+    "proper-url-join": "^2.1.2"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250414.0",
+    "@types/node": "catalog:",
+    "@types/proper-url-join": "^2.1.5",
+    "jose": "^6.0.10"
+  }
+}

@@ -1,0 +1,168 @@
+diff --git a/package.json b/package.json
+index 81347ca0b75a49147879d3c8dfa423aeaaa57441..df0204899867e799271bfddfd7a6aed3443c6dac 100644
+--- a/package.json
++++ b/package.json
+@@ -28,12 +28,13 @@
+     }
+   },
+   "dependencies": {
+-    "zod": "^3.23.8",
+     "@atproto-labs/simple-store": "0.1.2",
+     "@atproto-labs/simple-store-memory": "0.1.2",
+-    "@atproto/did": "0.1.5"
++    "@atproto/did": "0.1.5",
++    "zod": "^3.23.8"
+   },
+   "devDependencies": {
++    "@types/node": "^22.14.1",
+     "typescript": "^5.6.3"
+   },
+   "scripts": {
+diff --git a/pnpm-workspace.yaml b/pnpm-workspace.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/src/atproto-handle-resolver.ts b/src/atproto-handle-resolver.ts
+index f59917b20af0c0f9923fb4294cd65cc13fcb270d..b8006b7b87d22f64a3e9b76ec4a367f6adce0477 100644
+--- a/src/atproto-handle-resolver.ts
++++ b/src/atproto-handle-resolver.ts
+@@ -41,7 +41,7 @@ export class AtprotoHandleResolver implements HandleResolver {
+ 
+   async resolve(
+     handle: string,
+-    options?: ResolveHandleOptions,
++    options?: ResolveHandleOptions
+   ): Promise<ResolvedHandle> {
+     options?.signal?.throwIfAborted()
+ 
+@@ -54,24 +54,32 @@ export class AtprotoHandleResolver implements HandleResolver {
+     const wrappedOptions = { ...options, signal }
+ 
+     try {
++      console.log('atproto-handle-resolver: dnsPromise')
+       const dnsPromise = this.dnsResolver.resolve(handle, wrappedOptions)
++      console.log('atproto-handle-resolver: httpPromise')
+       const httpPromise = this.httpResolver.resolve(handle, wrappedOptions)
+ 
+       // Prevent uncaught promise rejection
+       httpPromise.catch(noop)
+ 
++      console.log('atproto-handle-resolver: await dnsPromise')
+       const dnsRes = await dnsPromise
++      console.log('atproto-handle-resolver: dnsRes', dnsRes)
+       if (dnsRes) return dnsRes
+ 
+       signal.throwIfAborted()
+ 
++      console.log('atproto-handle-resolver: await httpPromise')
+       const res = await httpPromise
++      console.log('atproto-handle-resolver: res', res)
+       if (res) return res
+ 
+       signal.throwIfAborted()
+ 
++      console.log('atproto-handle-resolver: dnsResolverFallback')
+       return this.dnsResolverFallback?.resolve(handle, wrappedOptions) ?? null
+     } finally {
++      console.log('atproto-handle-resolver: finally')
+       // Cancel pending requests, and remove "abort" listener on incoming signal
+       abortController.abort()
+     }
+diff --git a/tsconfig/base.json b/tsconfig/base.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..7e1739e90efec00ed2fdda81e1ed2b5fb6f9b7c3
+--- /dev/null
++++ b/tsconfig/base.json
+@@ -0,0 +1,40 @@
++{
++  "$schema": "https://json.schemastore.org/tsconfig",
++  "compilerOptions": {
++    "checkJs": true,
++
++    "strict": true,
++    "allowUnusedLabels": false,
++    "allowUnreachableCode": false,
++    "exactOptionalPropertyTypes": false,
++    "noFallthroughCasesInSwitch": false,
++    "noImplicitAny": false,
++    "noImplicitReturns": false,
++    "noUnusedLocals": true,
++    "noUnusedParameters": false,
++
++    "skipLibCheck": true,
++    "allowSyntheticDefaultImports": true,
++    "forceConsistentCasingInFileNames": true,
++    "esModuleInterop": true,
++    "isolatedModules": true,
++    "preserveSymlinks": false,
++    "useDefineForClassFields": true,
++
++    "lib": [],
++    "moduleResolution": "node",
++    "resolveJsonModule": true,
++    "types": [],
++
++    "noErrorTruncation": true,
++    "declaration": true,
++    "declarationMap": true,
++    "sourceMap": true,
++    "jsx": "preserve",
++    "module": "CommonJS",
++    "target": "ES2020"
++  },
++  "typeAcquisition": {
++    "enable": false
++  }
++}
+diff --git a/tsconfig/isomorphic.json b/tsconfig/isomorphic.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..36221a23051a2e0d075686f7b5d27b250555340b
+--- /dev/null
++++ b/tsconfig/isomorphic.json
+@@ -0,0 +1,14 @@
++{
++  "$schema": "https://json.schemastore.org/tsconfig",
++  "extends": "./base.json",
++  "compilerOptions": {
++    // Currently, there is not ideal way of developing a lib that is compatible
++    // with both node and the browser.
++    //
++    // https://github.com/microsoft/TypeScript-DOM-lib-generator/issues/1685
++    // https://github.com/microsoft/TypeScript/issues/31535
++    // https://github.com/microsoft/TypeScript/issues/41727
++    "lib": ["ES2023", "DOM", "DOM.Iterable"],
++    "types": ["node"]
++  }
++}
+diff --git a/tsconfig/node.json b/tsconfig/node.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..3e59f51fa1828279bcddd7f1b9ecfd569c590226
+--- /dev/null
++++ b/tsconfig/node.json
+@@ -0,0 +1,8 @@
++{
++  "$schema": "https://json.schemastore.org/tsconfig",
++  "extends": "./base.json",
++  "compilerOptions": {
++    "lib": ["ES2023", "ScriptHost"],
++    "types": ["node"]
++  }
++}
+diff --git a/tsconfig.build.json b/tsconfig.build.json
+index 2ef4f3343555b118c757e01cdd342e0b5c2886e6..b9bf8e9d7819024077097437881725ed3b44e69a 100644
+--- a/tsconfig.build.json
++++ b/tsconfig.build.json
+@@ -1,5 +1,5 @@
+ {
+-  "extends": "../../../tsconfig/isomorphic.json",
++  "extends": "./tsconfig/isomorphic.json",
+   "compilerOptions": {
+     "rootDir": "./src",
+     "outDir": "./dist"
+diff --git a/tsconfig.build.tsbuildinfo b/tsconfig.build.tsbuildinfo
+index 49db26168776ad810ef4f7d4e784dbb623553a64..70090da5a610022d7c04992d71df9f7d96b8da13 100644
+--- a/tsconfig.build.tsbuildinfo
++++ b/tsconfig.build.tsbuildinfo
+@@ -1 +1 @@
+-{"root":["./src/app-view-handle-resolver.ts","./src/atproto-doh-handle-resolver.ts","./src/atproto-handle-resolver.ts","./src/cached-handle-resolver.ts","./src/index.ts","./src/types.ts","./src/internal-resolvers/dns-handle-resolver.ts","./src/internal-resolvers/well-known-handler-resolver.ts"],"version":"5.6.3"}
+\ No newline at end of file
++{"root":["./src/app-view-handle-resolver.ts","./src/atproto-doh-handle-resolver.ts","./src/atproto-handle-resolver.ts","./src/cached-handle-resolver.ts","./src/index.ts","./src/types.ts","./src/internal-resolvers/dns-handle-resolver.ts","./src/internal-resolvers/well-known-handler-resolver.ts"],"version":"5.8.3"}

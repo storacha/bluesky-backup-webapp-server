@@ -1,2 +1,5 @@
 packages:
   - 'packages/*'
+
+catalog:
+  '@types/node': '^20.0.0'

@@ -1,32 +1,34 @@
+import { getCloudflareContext } from '@opennextjs/cloudflare'
 import { AgentData } from '@storacha/access/agent'
 import { Client as StorachaClient } from '@storacha/client/types'
 import type { DID } from '@ucanto/interface'
 import { ed25519 } from '@ucanto/principal'
 import { DurableObject } from 'cloudflare:workers'
 import { Agent as AtprotoAgent } from '@atproto/api'
-import { createClient as createAtprotoClient } from '../src/app/atproto/client'
+import { createClient as createAtprotoClient } from 'bluesky-backup-app-atproto-client'
 
 // const receiptsEndpoint = URL.parse('https://up.storacha.network/receipt/')
 
-if (!process.env.SERVER_IDENTITY_PRIVATE_KEY)
-  throw new Error('SERVER_IDENTITY_PRIVATE_KEY must be set')
-const SERVER_IDENTITY_PRIVATE_KEY = process.env.SERVER_IDENTITY_PRIVATE_KEY
+// if (!process.env.SERVER_IDENTITY_PRIVATE_KEY)
+//   throw new Error('SERVER_IDENTITY_PRIVATE_KEY must be set')
+// const SERVER_IDENTITY_PRIVATE_KEY = process.env.SERVER_IDENTITY_PRIVATE_KEY
 
-const SERVER_DID = 'did:web:bsky.staging.storacha.network'
+// const SERVER_DID = 'did:web:bsky.staging.storacha.network'
 
-const serverIdentity = ed25519.Signer.parse(
-  SERVER_IDENTITY_PRIVATE_KEY
-).withDID(
-  // FIXME: createStorachaClient() thinks a principal has to be a `did:key`,
-  // which is a bit silly. All DIDs have keys, and any `Signer` has its private
-  // key loaded.
-  SERVER_DID as DID<'key'>
-)
+// const serverIdentity = ed25519.Signer.parse(
+//   SERVER_IDENTITY_PRIVATE_KEY
+// ).withDID(
+//   // FIXME: createStorachaClient() thinks a principal has to be a `did:key`,
+//   // which is a bit silly. All DIDs have keys, and any `Signer` has its private
+//   // key loaded.
+//   SERVER_DID as DID<'key'>
+// )
 
 export class BackupDO extends DurableObject<CloudflareEnv> {
   private repoStatus: 'not-started' | 'in-progress' | 'failed' | 'success'
 
   constructor(ctx: DurableObjectState, env: CloudflareEnv) {
+    console.log('env', Object.keys(env))
     super(ctx, env)
     this.repoStatus = 'not-started'
   }
@@ -40,8 +42,18 @@ export class BackupDO extends DurableObject<CloudflareEnv> {
     atpDid: DID
     storachaSpaceDid: DID<'key'>
   }) {
-    return
-    const atpClient = createAtprotoClient({ account })
+    // const atprotoClientUri = process.env.NEXT_PUBLIC_BLUESKY_CLIENT_URI
+
+    // if (!atprotoClientUri) {
+    //   throw new Error('NEXT_PUBLIC_BLUESKY_CLIENT_URI must be provided')
+    // }
+
+    const atpClient = createAtprotoClient({
+      atprotoClientUri,
+      account,
+      sessionStoreKV: BLUESKY_AUTH_SESSION_STORE,
+      stateStoreKV: BLUESKY_AUTH_STATE_STORE,
+    })
     const atpSession = await atpClient.restore(atpDid)
     const atpAgent = new AtprotoAgent(atpSession)
 
@@ -97,7 +109,7 @@ export class BackupDO extends DurableObject<CloudflareEnv> {
   private async backUpRepo({
     atpAgent,
     atpDid,
-    storachaClient,
+    // storachaClient,
   }: {
     atpAgent: AtprotoAgent
     atpDid: string

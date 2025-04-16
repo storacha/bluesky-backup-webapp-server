@@ -1,11 +1,16 @@
 import { WorkerEntrypoint } from 'cloudflare:workers'
 import type { BackupDO } from './BackupDO'
 import type { DID } from '@ucanto/interface'
-import { ClickableDurableObjectStub } from '../ClickableDurableObjectStub'
+import { ClickableDurableObjectStub } from './ClickableDurableObjectStub'
 
 export { BackupDO } from './BackupDO'
 
 export default class DurableObjectsWorker extends WorkerEntrypoint<CloudflareEnv> {
+  constructor(ctx: ExecutionContext, env: CloudflareEnv) {
+    console.log('env', Object.keys(env))
+    super(ctx, env)
+  }
+
   async fetch() {
     return new Response('Hello World!')
   }

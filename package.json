@@ -5,19 +5,29 @@
   "scripts": {
     "dev": "pnpm --filter bluesky-backup-app dev",
     "build": "pnpm --recursive build",
+    "clean": "pnpm --recursive clean",
     "format": "prettier --write .",
     "lint": "pnpm --recursive lint",
-    "typecheck": "pnpm --recursive typecheck",
+    "typecheck": "tsc --build --noEmit",
     "test": "pnpm --recursive test",
     "storybook": "pnpm --filter bluesky-backup-app storybook",
     "cf:typegen": "pnpm --recursive cf:typegen"
   },
   "devDependencies": {
-    "prettier": "^3.5.3"
+    "@atproto/oauth-client-node": "^0.2.13",
+    "@cloudflare/workers-types": "^4.20250414.0",
+    "@typescript-eslint/parser": "8.24.0",
+    "eslint-config-next": "15.1.6",
+    "eslint-plugin-storybook": "0.11.4",
+    "jose": "^6.0.10",
+    "prettier": "^3.5.3",
+    "typescript": "^5.7.0"
   },
   "pnpm": {
     "patchedDependencies": {
-      "@atproto-labs/fetch-node": "patches/@atproto-labs__fetch-node.patch"
+      "@atproto-labs/fetch-node": "patches/@atproto-labs__fetch-node.patch",
+      "@atproto-labs/handle-resolver-node": "patches/@atproto-labs__handle-resolver-node.patch",
+      "@atproto-labs/handle-resolver": "patches/@atproto-labs__handle-resolver.patch"
     }
   }
 }

@@ -1,10 +1,29 @@
 {
   "name": "bluesky-backup-app-durable-objects",
   "private": true,
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
   "scripts": {
-    "cf:typegen": "wrangler types --env-interface CloudflareEnv --config wrangler.toml src/cloudflare-env.d.ts"
+    "dev": "wrangler dev",
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv --config wrangler.toml src/cloudflare-env.d.ts",
+    "build": "tsc --build",
+    "clean": "rm -rf dist"
   },
   "devDependencies": {
+    "@types/node": "catalog:",
     "wrangler": "^4.10.0"
+  },
+  "dependencies": {
+    "@atproto/api": "^0.14.16",
+    "@opennextjs/cloudflare": "^0.6.6",
+    "@storacha/access": "^1.1.1",
+    "@storacha/client": "^1.2.6",
+    "@ucanto/interface": "^10.2.0",
+    "@ucanto/principal": "^9.0.2",
+    "agent": "link:@storacha/access/agent",
+    "bluesky-backup-app-atproto-client": "workspace:^",
+    "types": "link:@storacha/client/types"
   }
 }

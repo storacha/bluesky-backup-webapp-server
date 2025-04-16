@@ -43,8 +43,6 @@ export const principalMapping = {
 } as Record<DidWeb, DidKey>
 
 const authorityPublicKey = principalMapping[IDENTITY_AUTHORITY]
-console.log(IDENTITY_AUTHORITY)
-console.log(authorityPublicKey)
 if (!authorityPublicKey)
   throw new Error(
     `could not find public key for principal identified by IDENTITY_AUTHORITY=${IDENTITY_AUTHORITY}`

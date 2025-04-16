@@ -1,0 +1,129 @@
+diff --git a/dist/atproto-handle-resolver-node.js b/dist/atproto-handle-resolver-node.js
+index 838f972c6df3844ff2caef993055abe56a4afc46..49b38297795dffdce01d98c4c4356d3fda59a1a2 100644
+--- a/dist/atproto-handle-resolver-node.js
++++ b/dist/atproto-handle-resolver-node.js
+@@ -10,7 +10,7 @@ class AtprotoHandleResolverNode extends handle_resolver_1.AtprotoHandleResolver
+             fetch: (0, fetch_node_1.safeFetchWrap)({
+                 fetch,
+                 timeout: 3000, // 3 seconds
+-                ssrfProtection: true,
++                allowPrivateIps: true,
+                 responseMaxSize: 10 * 1048, // DID are max 2048 characters, 10kb for safety
+             }),
+             resolveTxt: node_resolve_txt_factory_js_1.nodeResolveTxtDefault,
+diff --git a/dist/atproto-handle-resolver-node.js.map b/dist/atproto-handle-resolver-node.js.map
+index 213e657b5a2a8fae92ca804ac195f839c541ca1c..4dc4bf33d655db2a765361ff14c39a39b5ccc777 100644
+--- a/dist/atproto-handle-resolver-node.js.map
++++ b/dist/atproto-handle-resolver-node.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"atproto-handle-resolver-node.js","sourceRoot":"","sources":["../src/atproto-handle-resolver-node.ts"],"names":[],"mappings":";;;AAAA,yDAA+D;AAC/D,mEAGsC;AACtC,+EAGsC;AAoBtC,MAAa,yBACX,SAAQ,uCAAqB;IAG7B,YAAY,EACV,KAAK,GAAG,UAAU,CAAC,KAAK,EACxB,mBAAmB,MACiB,EAAE;QACtC,KAAK,CAAC;YACJ,KAAK,EAAE,IAAA,0BAAa,EAAC;gBACnB,KAAK;gBACL,OAAO,EAAE,IAAI,EAAE,YAAY;gBAC3B,cAAc,EAAE,IAAI;gBACpB,eAAe,EAAE,EAAE,GAAG,IAAI,EAAE,+CAA+C;aAC5E,CAAC;YACF,UAAU,EAAE,mDAAqB;YACjC,kBAAkB,EAAE,mBAAmB,EAAE,MAAM;gBAC7C,CAAC,CAAC,IAAA,mDAAqB,EAAC,mBAAmB,CAAC;gBAC5C,CAAC,CAAC,SAAS;SACd,CAAC,CAAA;IACJ,CAAC;CACF;AArBD,8DAqBC"}
+\ No newline at end of file
++{"version":3,"file":"atproto-handle-resolver-node.js","sourceRoot":"","sources":["../src/atproto-handle-resolver-node.ts"],"names":[],"mappings":";;;AAAA,yDAA+D;AAC/D,mEAGsC;AACtC,+EAGsC;AAoBtC,MAAa,yBACX,SAAQ,uCAAqB;IAG7B,YAAY,EACV,KAAK,GAAG,UAAU,CAAC,KAAK,EACxB,mBAAmB,MACiB,EAAE;QACtC,KAAK,CAAC;YACJ,KAAK,EAAE,IAAA,0BAAa,EAAC;gBACnB,KAAK;gBACL,OAAO,EAAE,IAAI,EAAE,YAAY;gBAC3B,eAAe,EAAE,IAAI;gBACrB,eAAe,EAAE,EAAE,GAAG,IAAI,EAAE,+CAA+C;aAC5E,CAAC;YACF,UAAU,EAAE,mDAAqB;YACjC,kBAAkB,EAAE,mBAAmB,EAAE,MAAM;gBAC7C,CAAC,CAAC,IAAA,mDAAqB,EAAC,mBAAmB,CAAC;gBAC5C,CAAC,CAAC,SAAS;SACd,CAAC,CAAA;IACJ,CAAC;CACF;AArBD,8DAqBC"}
+\ No newline at end of file
+diff --git a/package.json b/package.json
+index 284798f05ca05e6d8e1e6bdf3d6ad3d73d8f0d5e..66b2593eef16a16c7445a13b9ee256d790565ef5 100644
+--- a/package.json
++++ b/package.json
+@@ -34,6 +34,7 @@
+     "@atproto/did": "0.1.5"
+   },
+   "devDependencies": {
++    "@types/node": "^22.14.1",
+     "typescript": "^5.6.3"
+   },
+   "scripts": {
+diff --git a/pnpm-workspace.yaml b/pnpm-workspace.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/src/atproto-handle-resolver-node.ts b/src/atproto-handle-resolver-node.ts
+index ffe46c232758cb6f259bb0abc2d4731c3a8f806f..6bc53394aa3e13cbfe13e2e53d1de52c640a0563 100644
+--- a/src/atproto-handle-resolver-node.ts
++++ b/src/atproto-handle-resolver-node.ts
+@@ -38,7 +38,7 @@ export class AtprotoHandleResolverNode
+       fetch: safeFetchWrap({
+         fetch,
+         timeout: 3000, // 3 seconds
+-        ssrfProtection: true,
++        allowPrivateIps: true,
+         responseMaxSize: 10 * 1048, // DID are max 2048 characters, 10kb for safety
+       }),
+       resolveTxt: nodeResolveTxtDefault,
+diff --git a/tsconfig/base.json b/tsconfig/base.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..7e1739e90efec00ed2fdda81e1ed2b5fb6f9b7c3
+--- /dev/null
++++ b/tsconfig/base.json
+@@ -0,0 +1,40 @@
++{
++  "$schema": "https://json.schemastore.org/tsconfig",
++  "compilerOptions": {
++    "checkJs": true,
++
++    "strict": true,
++    "allowUnusedLabels": false,
++    "allowUnreachableCode": false,
++    "exactOptionalPropertyTypes": false,
++    "noFallthroughCasesInSwitch": false,
++    "noImplicitAny": false,
++    "noImplicitReturns": false,
++    "noUnusedLocals": true,
++    "noUnusedParameters": false,
++
++    "skipLibCheck": true,
++    "allowSyntheticDefaultImports": true,
++    "forceConsistentCasingInFileNames": true,
++    "esModuleInterop": true,
++    "isolatedModules": true,
++    "preserveSymlinks": false,
++    "useDefineForClassFields": true,
++
++    "lib": [],
++    "moduleResolution": "node",
++    "resolveJsonModule": true,
++    "types": [],
++
++    "noErrorTruncation": true,
++    "declaration": true,
++    "declarationMap": true,
++    "sourceMap": true,
++    "jsx": "preserve",
++    "module": "CommonJS",
++    "target": "ES2020"
++  },
++  "typeAcquisition": {
++    "enable": false
++  }
++}
+diff --git a/tsconfig/node.json b/tsconfig/node.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..3e59f51fa1828279bcddd7f1b9ecfd569c590226
+--- /dev/null
++++ b/tsconfig/node.json
+@@ -0,0 +1,8 @@
++{
++  "$schema": "https://json.schemastore.org/tsconfig",
++  "extends": "./base.json",
++  "compilerOptions": {
++    "lib": ["ES2023", "ScriptHost"],
++    "types": ["node"]
++  }
++}
+diff --git a/tsconfig.build.json b/tsconfig.build.json
+index b60d50d09278d01ba9a681aee5868bcd5c1b6021..4e786ae54ccac469ad81d4eb6d4f7bca8d6bd8e2 100644
+--- a/tsconfig.build.json
++++ b/tsconfig.build.json
+@@ -1,5 +1,5 @@
+ {
+-  "extends": ["../../../tsconfig/node.json"],
++  "extends": ["./tsconfig/node.json"],
+   "compilerOptions": {
+     "rootDir": "./src",
+     "outDir": "./dist"
+diff --git a/tsconfig.build.tsbuildinfo b/tsconfig.build.tsbuildinfo
+index f18ca3c4d736fd4760ce67814491d4e88c8bf309..30e6176d078c377e8aba376682a31bfb17bff122 100644
+--- a/tsconfig.build.tsbuildinfo
++++ b/tsconfig.build.tsbuildinfo
+@@ -1 +1 @@
+-{"root":["./src/atproto-handle-resolver-node.ts","./src/index.ts","./src/node-resolve-txt-factory.ts"],"version":"5.6.3"}
+\ No newline at end of file
++{"root":["./src/atproto-handle-resolver-node.ts","./src/index.ts","./src/node-resolve-txt-factory.ts"],"version":"5.8.3"}

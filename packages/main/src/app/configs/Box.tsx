@@ -1,7 +1,7 @@
 import { roundRectStyle } from '@/components/ui'
 import { styled } from 'next-yak'
 
-export const Box = styled.div`
+export const Box: React.FC<{ children: React.ReactNode }> = styled.div`
   ${roundRectStyle}
   border-color: var(--color-gray-light);
   background-color: var(--color-white);

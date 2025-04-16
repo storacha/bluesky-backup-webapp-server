@@ -4,24 +4,131 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@types/node':
+      specifier: ^20.0.0
+      version: 20.17.19
+
 patchedDependencies:
   '@atproto-labs/fetch-node':
     hash: v5hnld2nyhavyoliis6xavjvve
     path: patches/@atproto-labs__fetch-node.patch
+  '@atproto-labs/handle-resolver':
+    hash: 5xme3yxidibo6b7p7zjdjigede
+    path: patches/@atproto-labs__handle-resolver.patch
+  '@atproto-labs/handle-resolver-node':
+    hash: hfiueqfpyq6yqjpe72ebmek5eu
+    path: patches/@atproto-labs__handle-resolver-node.patch
 
 importers:
 
   .:
     devDependencies:
+      '@atproto/oauth-client-node':
+        specifier: ^0.2.13
+        version: 0.2.13
+      '@cloudflare/workers-types':
+        specifier: ^4.20250414.0
+        version: 4.20250414.0
+      '@typescript-eslint/parser':
+        specifier: 8.24.0
+        version: 8.24.0(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3)
+      eslint-config-next:
+        specifier: 15.1.6
+        version: 15.1.6(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3)
+      eslint-plugin-storybook:
+        specifier: 0.11.4
+        version: 0.11.4(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3)
+      jose:
+        specifier: ^6.0.10
+        version: 6.0.10
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
+      typescript:
+        specifier: ^5.7.0
+        version: 5.7.3
+
+  packages/atproto-client:
+    dependencies:
+      '@atproto-labs/handle-resolver':
+        specifier: ^0.1.7
+        version: 0.1.7(patch_hash=5xme3yxidibo6b7p7zjdjigede)
+      '@atproto-labs/simple-store':
+        specifier: ^0.1.2
+        version: 0.1.2
+      '@atproto/jwk':
+        specifier: ^0.1.5
+        version: 0.1.5
+      '@atproto/jwk-jose':
+        specifier: ^0.1.6
+        version: 0.1.6
+      '@atproto/jwk-webcrypto':
+        specifier: ^0.1.6
+        version: 0.1.6
+      '@atproto/oauth-client':
+        specifier: ^0.3.14
+        version: 0.3.14
+      '@atproto/oauth-client-node':
+        specifier: ^0.2.15
+        version: 0.2.15
+      '@opennextjs/cloudflare':
+        specifier: ^0.6.6
+        version: 0.6.6(wrangler@4.10.0(@cloudflare/workers-types@4.20250414.0))
+      proper-url-join:
+        specifier: ^2.1.2
+        version: 2.1.2
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: ^4.20250414.0
+        version: 4.20250414.0
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.19
+      '@types/proper-url-join':
+        specifier: ^2.1.5
+        version: 2.1.5
+      jose:
+        specifier: ^6.0.10
+        version: 6.0.10
 
   packages/durable-objects:
+    dependencies:
+      '@atproto/api':
+        specifier: ^0.14.16
+        version: 0.14.16
+      '@opennextjs/cloudflare':
+        specifier: ^0.6.6
+        version: 0.6.6(wrangler@4.10.0(@cloudflare/workers-types@4.20250414.0))
+      '@storacha/access':
+        specifier: ^1.1.1
+        version: 1.1.1
+      '@storacha/client':
+        specifier: ^1.2.6
+        version: 1.2.6(encoding@0.1.13)
+      '@ucanto/interface':
+        specifier: ^10.2.0
+        version: 10.2.0
+      '@ucanto/principal':
+        specifier: ^9.0.2
+        version: 9.0.2
+      agent:
+        specifier: link:@storacha/access/agent
+        version: link:@storacha/access/agent
+      bluesky-backup-app-atproto-client:
+        specifier: workspace:^
+        version: link:../atproto-client
+      types:
+        specifier: link:@storacha/client/types
+        version: link:@storacha/client/types
     devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.19
       wrangler:
         specifier: ^4.10.0
-        version: 4.10.0
+        version: 4.10.0(@cloudflare/workers-types@4.20250414.0)
 
   packages/main:
     dependencies:
@@ -51,7 +158,7 @@ importers:
         version: 3.4.5
       '@opennextjs/cloudflare':
         specifier: ^0.6.6
-        version: 0.6.6(wrangler@4.10.0)
+        version: 0.6.6(wrangler@4.10.0(@cloudflare/workers-types@4.20250414.0))
       '@sentry/nextjs':
         specifier: ^9.10.1
         version: 9.11.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(encoding@0.1.13)(next@15.1.6(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.98.0(esbuild@0.25.0))
@@ -84,7 +191,7 @@ importers:
         version: 9.0.2
       '@ucanto/transport':
         specifier: ^9.1.1
-        version: 9.1.1
+        version: 9.2.0
       '@ucanto/validator':
         specifier: ^9.1.0
         version: 9.1.0
@@ -174,7 +281,7 @@ importers:
         specifier: ^0.5.16
         version: 0.5.16(tailwindcss@4.0.9)
       '@types/node':
-        specifier: ^20
+        specifier: 'catalog:'
         version: 20.17.19
       '@types/proper-url-join':
         specifier: ^2.1.5
@@ -194,6 +301,12 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^3.0.8
         version: 3.0.8(@vitest/browser@3.0.8)(vitest@3.0.8)
+      bluesky-backup-app-atproto-client:
+        specifier: workspace:^
+        version: link:../atproto-client
+      bluesky-backup-app-durable-objects:
+        specifier: workspace:^
+        version: link:../durable-objects
       chromatic:
         specifier: ^11.27.0
         version: 11.27.0
@@ -236,9 +349,6 @@ importers:
       style-loader:
         specifier: ^4.0.0
         version: 4.0.0(webpack@5.98.0(esbuild@0.25.0))
-      typescript:
-        specifier: ^5
-        version: 5.7.3
       vitest:
         specifier: ^3.0.8
         version: 3.0.8(@edge-runtime/vm@3.2.0)(@types/node@20.17.19)(@vitest/browser@3.0.8)(jiti@2.4.2)(lightningcss@1.29.1)(msw@2.7.3(@types/node@20.17.19)(typescript@5.7.3))(terser@5.39.0)(yaml@2.7.1)
@@ -247,7 +357,7 @@ importers:
         version: 5.98.0(esbuild@0.25.0)
       wrangler:
         specifier: ^4.10.0
-        version: 4.10.0
+        version: 4.10.0(@cloudflare/workers-types@4.20250414.0)
 
 packages:
 
@@ -376,8 +486,8 @@ packages:
   '@atproto/api@0.14.16':
     resolution: {integrity: sha512-xzUK3KVdp1TDJJ09Di2rvS/fisVctvMHO7Er0XhYviL3V4lxGQPNT3pHwbTbbb22QP7xH/d5ghCgfdIoS5Z8/A==}
 
-  '@atproto/common-web@0.4.0':
-    resolution: {integrity: sha512-ZYL0P9myHybNgwh/hBY0HaBzqiLR1B5/ie5bJpLQAg0whRzNA28t8/nU2vh99tbsWcAF0LOD29M8++LyENJLNQ==}
+  '@atproto/common-web@0.4.1':
+    resolution: {integrity: sha512-Ghh+djHYMAUCktLKwr2IuGgtjcwSWGudp+K7+N7KBA9pDDloOXUEY8Agjc5SHSo9B1QIEFkegClU5n+apn2e0w==}
 
   '@atproto/crypto@0.4.4':
     resolution: {integrity: sha512-Yq9+crJ7WQl7sxStVpHgie5Z51R05etaK9DLWYG/7bR5T4bhdcIgF6IfklLShtZwLYdVVj+K15s0BqW9a8PSDA==}
@@ -392,11 +502,17 @@ packages:
   '@atproto/jwk-jose@0.1.5':
     resolution: {integrity: sha512-piYZ3ohKhRiGlD6/bZCV/Ed3lIi7CVd6txbofEHik22EkYWK0nWKoEriCUSTssSylwFzeOq2r31Ut16WcJoghw==}
 
+  '@atproto/jwk-jose@0.1.6':
+    resolution: {integrity: sha512-r4DGMvvmazy6CxqAcnplpUxvp6Vd8UwKxQBZRpmm1aNsVonf5qj1yeDkECTiwoe/FPbvtdamlzClB3UZc7Yb5w==}
+
   '@atproto/jwk-webcrypto@0.1.4':
     resolution: {integrity: sha512-eTio2VQj8y4wE6Ywq4QtPyHI8gabPu/UGkjAKhBoGXdxkP3KnCkl6jzhXWgFB20UwYvZVawOjbo5WE7izPsIwQ==}
 
   '@atproto/jwk-webcrypto@0.1.5':
     resolution: {integrity: sha512-xsX8cJO6rBakLz8zNKenuKIbjoTeaiMi/ETOFFYGtlMlk1grdxDOe6OGpCmUDXaOiYWu3x5K5Hc4J9ooI/4nRg==}
+
+  '@atproto/jwk-webcrypto@0.1.6':
+    resolution: {integrity: sha512-mxWHOvlg+HGohldfiaon1fNsr7iDvKrTrkV0/ZvymWRzxsDFPCon1hu8OtKLXUVgLh+IzDJT1D79I4fBSo4pog==}
 
   '@atproto/jwk@0.1.3':
     resolution: {integrity: sha512-5rBgA8Fk4fg6MfNyEQvUnwq1MRn5xZOXYj4oxLuZ549XeNp2Rm2v+psuEkICD+o6pfIoMX4Hw7UTlXDrpsKKlQ==}
@@ -404,8 +520,11 @@ packages:
   '@atproto/jwk@0.1.4':
     resolution: {integrity: sha512-dSRuEi0FbxL5ln6hEFHp5ZW01xbQH9yJi5odZaEYpcA6beZHf/bawlU12CQy/CDsbC3FxSqrBw7Q2t7mvdSBqw==}
 
-  '@atproto/lexicon@0.4.9':
-    resolution: {integrity: sha512-/tmEuHQFr51V2V7EAVJzaA40sqJ7ylAZpR962VbOsPtmcdOHvezbjVHYEMXgfb927hS+xqbVyzBTbu5w9v8prA==}
+  '@atproto/jwk@0.1.5':
+    resolution: {integrity: sha512-OzZFLhX41TOcMeanP3aZlL5bLeaUIZT15MI4aU5cwflNq/rwpGOpz3uwDjZc8ytgUjuTQ8LabSz5jMmwoTSWFg==}
+
+  '@atproto/lexicon@0.4.10':
+    resolution: {integrity: sha512-uDbP20vetBgtXPuxoyRcvOGBt2gNe1dFc9yYKcb6jWmXfseHiGTnIlORJOLBXIT2Pz15Eap4fLxAu6zFAykD5A==}
 
   '@atproto/oauth-client-browser@0.3.10':
     resolution: {integrity: sha512-tQh8HZJ95Azo3sBJbDyTFjlSLyeU5I5ZzmcPGAELuzZ5U4eGc74HYkG5BiGe5+Aov9VFftn7tz3ScuiyIa+2Ng==}
@@ -414,17 +533,27 @@ packages:
     resolution: {integrity: sha512-4p5waYW1ndf1uKOk6PTpyxcM+Q6SSzpYl6sjCMR/1KGExZmPzQ8CDoCumVSqrAgznuaTsaAqS5Ful6mOaL8jxQ==}
     engines: {node: '>=18.7.0'}
 
+  '@atproto/oauth-client-node@0.2.15':
+    resolution: {integrity: sha512-4a+YBD1+X3sUmkWQkZdSkNVSA2IzIR/Nh98PZqYH1UZiksbyMzd56hjTKpUPS43Cccy/MXHCTb0BfMDILUTwnA==}
+    engines: {node: '>=18.7.0'}
+
   '@atproto/oauth-client@0.3.10':
     resolution: {integrity: sha512-elCj9FirkUijhaY6nP2ICv1FYNTh6fW2Lr7N9j18gBHYfI9Vr77loKkF4ArgJnNZKYA+rUu8V83O71KG9UyEJg==}
 
   '@atproto/oauth-client@0.3.12':
     resolution: {integrity: sha512-tDQzq/6PNspWeHBrYGZ+LU7t7PM/+0Ealk8V2PUfncGObLz0iPDS4RbWAzy0GH1foee1qIfRdiiKiEymMGIZDw==}
 
+  '@atproto/oauth-client@0.3.14':
+    resolution: {integrity: sha512-EO+Qe/r3wc7/BJHvJZr30f+IjpcMtacqFhwQWNVGGwPs9zYElR6jzjVU/irAkGht0n076wJ2wyp9jBJiIIVfMA==}
+
   '@atproto/oauth-types@0.2.3':
     resolution: {integrity: sha512-M+0WW/alS2BfhKtwvdU3rSaLoycw6kTH1kGKeyDdmb/xN/8QjU7T6dkJe+wX4NC7F23xdKfti9DZhBpEtn+/kg==}
 
   '@atproto/oauth-types@0.2.4':
     resolution: {integrity: sha512-V2LnlXi1CSmBQWTQgDm8l4oN7xYxlftVwM7hrvYNP+Jxo3Ozfe0QLK1Wy/CH6/ZqzrBBhYvcbf4DJYTUwPA+hw==}
+
+  '@atproto/oauth-types@0.2.5':
+    resolution: {integrity: sha512-CnRNb4iLbhCv+5LaRtCSaoOg2QcQGqaatpFZbEzim/aCXenETdadrBCJo3+YyvZDHzYSy02nRVxWSm4T9e+lYw==}
 
   '@atproto/syntax@0.3.3':
     resolution: {integrity: sha512-F1LZweesNYdBbZBXVa72N/cSvchG8Q1tG4/209ZXbIuM3FwQtkgn+zgmmV4P4ORmhOeXPBNXvMBpcqiwx/gEQQ==}
@@ -434,6 +563,9 @@ packages:
 
   '@atproto/xrpc@0.6.11':
     resolution: {integrity: sha512-J2cZP8FjoDN0UkyTYBlCvKvxwBbDm4dld47u6FQK30RJy9YpSiUkdxJJ10NYqpi7JVny3M0qWQgpWJDV94+PdA==}
+
+  '@atproto/xrpc@0.6.12':
+    resolution: {integrity: sha512-Ut3iISNLujlmY9Gu8sNU+SPDJDvqlVzWddU8qUr0Yae5oD4SguaUFjjhireMGhQ3M5E0KljQgDbTmnBo1kIZ3w==}
 
   '@atproto/xrpc@0.6.9':
     resolution: {integrity: sha512-vQGA7++DYMNaHx3C7vEjT+2X6hYYLG7JNbBnDLWu0km1/1KYXgRkAz4h+FfYqg1mvzvIorHU7DAs5wevkJDDlw==}
@@ -1339,6 +1471,9 @@ packages:
     engines: {node: '>=16'}
     cpu: [x64]
     os: [win32]
+
+  '@cloudflare/workers-types@4.20250414.0':
+    resolution: {integrity: sha512-ZHl8LiyUMWiIxYqpasen8Lc75Ef+0afqL26TEd95eRIi5kgkEbjDJ7uIUnpxMoZTRI0J8Hy5YEPtt4nFXt+TpA==}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -3583,6 +3718,9 @@ packages:
   '@types/node@20.17.19':
     resolution: {integrity: sha512-LEwC7o1ifqg/6r2gn9Dns0f1rhK+fPFDoMiceTJ6kWmVk6bgXBI/9IOWfVan4WiAavK9pIVWdX0/e3J+eEUh5A==}
 
+  '@types/node@22.14.1':
+    resolution: {integrity: sha512-u0HuPQwe/dHrItgHHpmw3N2fYCR6x4ivMNbPHRkBVP4CvN+kiRrKHWk3i8tXiO/joPwXLMYvF9TTF0eqgHIuOw==}
+
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
 
@@ -3691,9 +3829,6 @@ packages:
 
   '@ucanto/principal@9.0.2':
     resolution: {integrity: sha512-RE3Rj0oz4wh4C9p2JJZB9+QLd7Fi3lCixrbHgAvEoSyTNpvz6ky8DGNtttmD5j3O94z13qdVdIoSRY6DQZXfAg==}
-
-  '@ucanto/transport@9.1.1':
-    resolution: {integrity: sha512-3CR17nEemOVaTuMZa6waWgVL4sLxSPcxYvpaNeJ6NZo1rfsqdyRXOtbVV/RcI2BtUL0Cao6JM6P9+gdghfc5ng==}
 
   '@ucanto/transport@9.2.0':
     resolution: {integrity: sha512-w/CtD5LYEpGo/CxV78IiWalW99gNRPHKZ/DoOpart5QShozvnU//PwUqyqnGimZCDIrIq4LH6x92z2L/2k5OKQ==}
@@ -5559,6 +5694,9 @@ packages:
   jose@5.9.6:
     resolution: {integrity: sha512-AMlnetc9+CV9asI19zHmrgS/WYsWUwCn2R7RzlbJWD7F9eWYUTGyBmU9o6PxngtLGOiDGPRu+Uc4fhKzbpteZQ==}
 
+  jose@6.0.10:
+    resolution: {integrity: sha512-skIAxZqcMkOrSwjJvplIPYrlXGpxTPnro2/QWTDCxAdWQrSTV5/KqspMWmi5WAx5+ULswASJiZ0a+1B/Lxt9cw==}
+
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -7214,6 +7352,9 @@ packages:
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
 
+  undici-types@6.21.0:
+    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
+
   undici@5.28.5:
     resolution: {integrity: sha512-zICwjrDrcrUE0pyyJc1I2QzBkLM8FINsgOrt6WjA+BgajVq9Nxu2PbFFXUrAggLfDXlZGZBVZYw7WNV5KiBiBA==}
     engines: {node: '>=14.0'}
@@ -7680,13 +7821,13 @@ snapshots:
     dependencies:
       '@atproto-labs/pipe': 0.1.0
 
-  '@atproto-labs/handle-resolver-node@0.1.14':
+  '@atproto-labs/handle-resolver-node@0.1.14(patch_hash=hfiueqfpyq6yqjpe72ebmek5eu)':
     dependencies:
       '@atproto-labs/fetch-node': 0.1.8(patch_hash=v5hnld2nyhavyoliis6xavjvve)
-      '@atproto-labs/handle-resolver': 0.1.7
+      '@atproto-labs/handle-resolver': 0.1.7(patch_hash=5xme3yxidibo6b7p7zjdjigede)
       '@atproto/did': 0.1.5
 
-  '@atproto-labs/handle-resolver@0.1.7':
+  '@atproto-labs/handle-resolver@0.1.7(patch_hash=5xme3yxidibo6b7p7zjdjigede)':
     dependencies:
       '@atproto-labs/simple-store': 0.1.2
       '@atproto-labs/simple-store-memory': 0.1.2
@@ -7696,13 +7837,13 @@ snapshots:
   '@atproto-labs/identity-resolver@0.1.13':
     dependencies:
       '@atproto-labs/did-resolver': 0.1.10
-      '@atproto-labs/handle-resolver': 0.1.7
+      '@atproto-labs/handle-resolver': 0.1.7(patch_hash=5xme3yxidibo6b7p7zjdjigede)
       '@atproto/syntax': 0.3.3
 
   '@atproto-labs/identity-resolver@0.1.15':
     dependencies:
       '@atproto-labs/did-resolver': 0.1.11
-      '@atproto-labs/handle-resolver': 0.1.7
+      '@atproto-labs/handle-resolver': 0.1.7(patch_hash=5xme3yxidibo6b7p7zjdjigede)
       '@atproto/syntax': 0.4.0
 
   '@atproto-labs/pipe@0.1.0': {}
@@ -7716,16 +7857,16 @@ snapshots:
 
   '@atproto/api@0.14.16':
     dependencies:
-      '@atproto/common-web': 0.4.0
-      '@atproto/lexicon': 0.4.9
+      '@atproto/common-web': 0.4.1
+      '@atproto/lexicon': 0.4.10
       '@atproto/syntax': 0.4.0
-      '@atproto/xrpc': 0.6.11
+      '@atproto/xrpc': 0.6.12
       await-lock: 2.2.2
       multiformats: 9.9.0
       tlds: 1.255.0
       zod: 3.24.2
 
-  '@atproto/common-web@0.4.0':
+  '@atproto/common-web@0.4.1':
     dependencies:
       graphemer: 1.4.0
       multiformats: 9.9.0
@@ -7752,6 +7893,11 @@ snapshots:
       '@atproto/jwk': 0.1.4
       jose: 5.9.6
 
+  '@atproto/jwk-jose@0.1.6':
+    dependencies:
+      '@atproto/jwk': 0.1.5
+      jose: 5.9.6
+
   '@atproto/jwk-webcrypto@0.1.4':
     dependencies:
       '@atproto/jwk': 0.1.3
@@ -7764,6 +7910,12 @@ snapshots:
       '@atproto/jwk-jose': 0.1.5
       zod: 3.24.2
 
+  '@atproto/jwk-webcrypto@0.1.6':
+    dependencies:
+      '@atproto/jwk': 0.1.5
+      '@atproto/jwk-jose': 0.1.6
+      zod: 3.24.2
+
   '@atproto/jwk@0.1.3':
     dependencies:
       multiformats: 9.9.0
@@ -7774,9 +7926,14 @@ snapshots:
       multiformats: 9.9.0
       zod: 3.24.2
 
-  '@atproto/lexicon@0.4.9':
+  '@atproto/jwk@0.1.5':
     dependencies:
-      '@atproto/common-web': 0.4.0
+      multiformats: 9.9.0
+      zod: 3.24.2
+
+  '@atproto/lexicon@0.4.10':
+    dependencies:
+      '@atproto/common-web': 0.4.1
       '@atproto/syntax': 0.4.0
       iso-datestring-validator: 2.2.2
       multiformats: 9.9.0
@@ -7785,7 +7942,7 @@ snapshots:
   '@atproto/oauth-client-browser@0.3.10':
     dependencies:
       '@atproto-labs/did-resolver': 0.1.10
-      '@atproto-labs/handle-resolver': 0.1.7
+      '@atproto-labs/handle-resolver': 0.1.7(patch_hash=5xme3yxidibo6b7p7zjdjigede)
       '@atproto-labs/simple-store': 0.1.2
       '@atproto/did': 0.1.5
       '@atproto/jwk': 0.1.3
@@ -7796,7 +7953,7 @@ snapshots:
   '@atproto/oauth-client-node@0.2.13':
     dependencies:
       '@atproto-labs/did-resolver': 0.1.11
-      '@atproto-labs/handle-resolver-node': 0.1.14
+      '@atproto-labs/handle-resolver-node': 0.1.14(patch_hash=hfiueqfpyq6yqjpe72ebmek5eu)
       '@atproto-labs/simple-store': 0.1.2
       '@atproto/did': 0.1.5
       '@atproto/jwk': 0.1.4
@@ -7805,11 +7962,23 @@ snapshots:
       '@atproto/oauth-client': 0.3.12
       '@atproto/oauth-types': 0.2.4
 
+  '@atproto/oauth-client-node@0.2.15':
+    dependencies:
+      '@atproto-labs/did-resolver': 0.1.11
+      '@atproto-labs/handle-resolver-node': 0.1.14(patch_hash=hfiueqfpyq6yqjpe72ebmek5eu)
+      '@atproto-labs/simple-store': 0.1.2
+      '@atproto/did': 0.1.5
+      '@atproto/jwk': 0.1.5
+      '@atproto/jwk-jose': 0.1.6
+      '@atproto/jwk-webcrypto': 0.1.6
+      '@atproto/oauth-client': 0.3.14
+      '@atproto/oauth-types': 0.2.5
+
   '@atproto/oauth-client@0.3.10':
     dependencies:
       '@atproto-labs/did-resolver': 0.1.10
       '@atproto-labs/fetch': 0.2.1
-      '@atproto-labs/handle-resolver': 0.1.7
+      '@atproto-labs/handle-resolver': 0.1.7(patch_hash=5xme3yxidibo6b7p7zjdjigede)
       '@atproto-labs/identity-resolver': 0.1.13
       '@atproto-labs/simple-store': 0.1.2
       '@atproto-labs/simple-store-memory': 0.1.2
@@ -7824,7 +7993,7 @@ snapshots:
     dependencies:
       '@atproto-labs/did-resolver': 0.1.11
       '@atproto-labs/fetch': 0.2.2
-      '@atproto-labs/handle-resolver': 0.1.7
+      '@atproto-labs/handle-resolver': 0.1.7(patch_hash=5xme3yxidibo6b7p7zjdjigede)
       '@atproto-labs/identity-resolver': 0.1.15
       '@atproto-labs/simple-store': 0.1.2
       '@atproto-labs/simple-store-memory': 0.1.2
@@ -7832,6 +8001,21 @@ snapshots:
       '@atproto/jwk': 0.1.4
       '@atproto/oauth-types': 0.2.4
       '@atproto/xrpc': 0.6.11
+      multiformats: 9.9.0
+      zod: 3.24.2
+
+  '@atproto/oauth-client@0.3.14':
+    dependencies:
+      '@atproto-labs/did-resolver': 0.1.11
+      '@atproto-labs/fetch': 0.2.2
+      '@atproto-labs/handle-resolver': 0.1.7(patch_hash=5xme3yxidibo6b7p7zjdjigede)
+      '@atproto-labs/identity-resolver': 0.1.15
+      '@atproto-labs/simple-store': 0.1.2
+      '@atproto-labs/simple-store-memory': 0.1.2
+      '@atproto/did': 0.1.5
+      '@atproto/jwk': 0.1.5
+      '@atproto/oauth-types': 0.2.5
+      '@atproto/xrpc': 0.6.12
       multiformats: 9.9.0
       zod: 3.24.2
 
@@ -7845,18 +8029,28 @@ snapshots:
       '@atproto/jwk': 0.1.4
       zod: 3.24.2
 
+  '@atproto/oauth-types@0.2.5':
+    dependencies:
+      '@atproto/jwk': 0.1.5
+      zod: 3.24.2
+
   '@atproto/syntax@0.3.3': {}
 
   '@atproto/syntax@0.4.0': {}
 
   '@atproto/xrpc@0.6.11':
     dependencies:
-      '@atproto/lexicon': 0.4.9
+      '@atproto/lexicon': 0.4.10
+      zod: 3.24.2
+
+  '@atproto/xrpc@0.6.12':
+    dependencies:
+      '@atproto/lexicon': 0.4.10
       zod: 3.24.2
 
   '@atproto/xrpc@0.6.9':
     dependencies:
-      '@atproto/lexicon': 0.4.9
+      '@atproto/lexicon': 0.4.10
       zod: 3.24.2
 
   '@aws-crypto/crc32@5.2.0':
@@ -9642,6 +9836,8 @@ snapshots:
   '@cloudflare/workerd-windows-64@1.20250409.0':
     optional: true
 
+  '@cloudflare/workers-types@4.20250414.0': {}
+
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
@@ -10305,13 +10501,13 @@ snapshots:
       - aws-crt
       - supports-color
 
-  '@opennextjs/cloudflare@0.6.6(wrangler@4.10.0)':
+  '@opennextjs/cloudflare@0.6.6(wrangler@4.10.0(@cloudflare/workers-types@4.20250414.0))':
     dependencies:
       '@dotenvx/dotenvx': 1.31.0
       '@opennextjs/aws': https://pkg.pr.new/@opennextjs/aws@802
       enquirer: 2.4.1
       glob: 11.0.1
-      wrangler: 4.10.0
+      wrangler: 4.10.0(@cloudflare/workers-types@4.20250414.0)
     transitivePeerDependencies:
       - aws-crt
       - supports-color
@@ -11508,7 +11704,7 @@ snapshots:
       '@ucanto/core': 10.3.1
       '@ucanto/interface': 10.2.0
       '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.1.1
+      '@ucanto/transport': 9.2.0
       '@ucanto/validator': 9.1.0
       bigint-mod-arith: 3.3.1
       conf: 11.0.2
@@ -11533,7 +11729,7 @@ snapshots:
       '@ucanto/core': 10.3.1
       '@ucanto/interface': 10.2.0
       '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.1.1
+      '@ucanto/transport': 9.2.0
       '@ucanto/validator': 9.1.0
       '@web3-storage/data-segment': 5.3.0
       uint8arrays: 5.1.0
@@ -11578,7 +11774,7 @@ snapshots:
       '@ucanto/client': 9.0.1
       '@ucanto/interface': 10.2.0
       '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.1.1
+      '@ucanto/transport': 9.2.0
     transitivePeerDependencies:
       - encoding
 
@@ -12168,7 +12364,7 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 22.14.1
 
   '@types/cookie@0.6.0': {}
 
@@ -12198,11 +12394,15 @@ snapshots:
 
   '@types/mysql@2.15.26':
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 22.14.1
 
   '@types/node@20.17.19':
     dependencies:
       undici-types: 6.19.8
+
+  '@types/node@22.14.1':
+    dependencies:
+      undici-types: 6.21.0
 
   '@types/parse-json@4.0.2': {}
 
@@ -12212,7 +12412,7 @@ snapshots:
 
   '@types/pg@8.6.1':
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 22.14.1
       pg-protocol: 1.8.0
       pg-types: 2.2.0
 
@@ -12247,7 +12447,7 @@ snapshots:
 
   '@types/tedious@4.0.14':
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 22.14.1
 
   '@types/tough-cookie@4.0.5': {}
 
@@ -12357,11 +12557,6 @@ snapshots:
       '@ucanto/interface': 10.2.0
       multiformats: 13.3.2
       one-webcrypto: 1.0.3
-
-  '@ucanto/transport@9.1.1':
-    dependencies:
-      '@ucanto/core': 10.3.1
-      '@ucanto/interface': 10.2.0
 
   '@ucanto/transport@9.2.0':
     dependencies:
@@ -12496,7 +12691,7 @@ snapshots:
       '@ucanto/client': 9.0.1
       '@ucanto/interface': 10.2.0
       '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.1.1
+      '@ucanto/transport': 9.2.0
       '@web3-storage/access': 20.1.2
       '@web3-storage/did-mailto': 2.1.0
       '@web3-storage/w3up-client': 17.1.2(encoding@0.1.13)
@@ -12525,7 +12720,7 @@ snapshots:
       '@ucanto/core': 10.3.1
       '@ucanto/interface': 10.2.0
       '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.1.1
+      '@ucanto/transport': 9.2.0
       '@ucanto/validator': 9.1.0
       '@web3-storage/capabilities': 18.0.1
       '@web3-storage/did-mailto': 2.1.0
@@ -12552,7 +12747,7 @@ snapshots:
       '@ucanto/core': 10.3.1
       '@ucanto/interface': 10.2.0
       '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.1.1
+      '@ucanto/transport': 9.2.0
       '@ucanto/validator': 9.1.0
       '@web3-storage/data-segment': 5.3.0
       uint8arrays: 5.1.0
@@ -12571,7 +12766,7 @@ snapshots:
       '@ucanto/client': 9.0.1
       '@ucanto/core': 10.3.1
       '@ucanto/interface': 10.2.0
-      '@ucanto/transport': 9.1.1
+      '@ucanto/transport': 9.2.0
       '@web3-storage/capabilities': 18.0.1
 
   '@web3-storage/upload-client@17.1.3(encoding@0.1.13)':
@@ -12583,7 +12778,7 @@ snapshots:
       '@ucanto/client': 9.0.1
       '@ucanto/core': 10.3.1
       '@ucanto/interface': 10.2.0
-      '@ucanto/transport': 9.1.1
+      '@ucanto/transport': 9.2.0
       '@web3-storage/blob-index': 1.0.5
       '@web3-storage/capabilities': 18.0.1
       '@web3-storage/data-segment': 5.3.0
@@ -12602,7 +12797,7 @@ snapshots:
       '@ucanto/core': 10.3.1
       '@ucanto/interface': 10.2.0
       '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.1.1
+      '@ucanto/transport': 9.2.0
       '@web3-storage/access': 20.1.2
       '@web3-storage/blob-index': 1.0.5
       '@web3-storage/capabilities': 18.0.1
@@ -14721,7 +14916,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 20.17.19
+      '@types/node': 22.14.1
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -14730,6 +14925,8 @@ snapshots:
   jiti@2.4.2: {}
 
   jose@5.9.6: {}
+
+  jose@6.0.10: {}
 
   js-tokens@4.0.0: {}
 
@@ -15554,7 +15751,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 20.17.19
+      '@types/node': 22.14.1
       long: 5.3.1
 
   proxy-addr@2.0.7:
@@ -16476,6 +16673,8 @@ snapshots:
 
   undici-types@6.19.8: {}
 
+  undici-types@6.21.0: {}
+
   undici@5.28.5:
     dependencies:
       '@fastify/busboy': 2.1.1
@@ -16782,7 +16981,7 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20250409.0
       '@cloudflare/workerd-windows-64': 1.20250409.0
 
-  wrangler@4.10.0:
+  wrangler@4.10.0(@cloudflare/workers-types@4.20250414.0):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.4.0
       '@cloudflare/unenv-preset': 2.3.1(unenv@2.0.0-rc.15)(workerd@1.20250409.0)
@@ -16793,6 +16992,7 @@ snapshots:
       unenv: 2.0.0-rc.15
       workerd: 1.20250409.0
     optionalDependencies:
+      '@cloudflare/workers-types': 4.20250414.0
       fsevents: 2.3.3
       sharp: 0.33.5
     transitivePeerDependencies:

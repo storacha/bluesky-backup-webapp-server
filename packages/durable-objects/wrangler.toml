@@ -1,7 +1,7 @@
 # IMPORTANT: After editing this file, run `pnpm cf:typegen` to regenerate the
 # types for the Cloudflare Workers runtime.
 
-main = ".durable-objects/durable-objects/index.js"
+main = "dist/index.js"
 name = "bluesky-backup-durable-objects"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]

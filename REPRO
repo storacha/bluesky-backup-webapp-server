@@ -1,0 +1,9 @@
+To reproduce:
+
+1. `pnpm build`
+2. `pnpm --filter=bluesky-backup-app cf:preview -- --port 3333`
+3. `ngrok http 3333`
+4. Log into the app.
+5. Attempt to OAuth to Bluesky/Atproto.
+
+The error will be available in the devtools provided by wrangler.
