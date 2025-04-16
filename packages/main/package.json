@@ -14,7 +14,7 @@
     "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "cf:typegen": "wrangler types --env-interface CloudflareEnv src/cloudflare-env.d.ts",
     "db:prepare:local": "wrangler d1 execute petra-bluesky-backup --local --file=./schema.sql",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "STORYBOOK_PROJECT_ROOT=\"$PWD\" storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "dependencies": {
