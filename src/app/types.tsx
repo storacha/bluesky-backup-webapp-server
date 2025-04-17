@@ -11,3 +11,12 @@ export type BackupConfigInput = {
 export type BackupConfig = BackupConfigInput & {
   id: number
 }
+
+export type Backup = {
+  id: number
+  backup_configs_id: number
+  repository_cid: string
+  blobs_cid: string
+  preferences_cid: string
+  created_at: string
+}
