@@ -1,4 +1,4 @@
-export type BackupConfigInput = {
+export interface BackupConfigInput {
   account_did: string
   name: string
   bluesky_account: string
@@ -12,11 +12,14 @@ export type BackupConfig = BackupConfigInput & {
   id: number
 }
 
-export type Backup = {
-  id: number
+export interface BackupInput {
   backup_configs_id: number
   repository_cid: string
   blobs_cid: string
   preferences_cid: string
+}
+
+export type Backup = BackupInput & {
+  id: number
   created_at: string
 }

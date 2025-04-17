@@ -1,4 +1,4 @@
-import { BackupConfig, BackupConfigInput } from "@/app/types"
+import { Backup, BackupConfig, BackupConfigInput, BackupInput } from "@/app/types"
 
 
 export interface ListResult {
@@ -35,6 +35,8 @@ function newKvNamespace (): KVNamespace {
 }
 
 interface BBDatabase {
+  addBackup: (input: BackupInput) => Promise<Backup>
+  findBackups: (backupConfigId: string) => Promise<{ results: Backup[] }>
   findBackupConfigs: (account: string) => Promise<{ results: BackupConfig[] }>
   addBackupConfig: (input: BackupConfigInput) => Promise<BackupConfig>
 }
@@ -50,7 +52,56 @@ export function getStorageContext (): StorageContext {
     authSessionStore: newKvNamespace(),
     authStateStore: newKvNamespace(),
     db: {
-      addBackupConfig: async (input) => {
+      async addBackup (input) {
+        // D1 code:
+        // const backupConfig = await DB.prepare(
+        //   /* sql */ `
+        //   INSERT INTO backups (
+        //     backup_configs_id,
+        //     repository_cid,
+        //     blobs_cid,
+        //     preferences_cid
+        //   )
+        //   VALUES(?, ?, ?, ?)
+        //   RETURNING id
+        // `
+        // )
+        //   .bind(
+        //     1,
+        //     'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551repo',
+        //     'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551blob',
+        //     'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551pref'
+        //   )
+        //   .first()
+        console.log(`TODO: implement add backup, data: ${input}`)
+        return { id: 1, created_at: new Date().toString(), ...input }
+      },
+      async findBackups (backupConfigId) {
+        console.log(`TODO: implement find backups, data: ${backupConfigId}`)
+        // D1 code:
+        // const { results } = await DB.prepare(
+        //   /* sql */ `
+        //     SELECT id,
+        //       backup_configs_id,
+        //       repository_cid,
+        //       blobs_cid,
+        //       preferences_cid,
+        //       created_at
+
+        //      FROM backups
+
+        //     WHERE backup_configs_id = ?
+
+        //     -- TODO: Fetch configs for correct account
+        //   `
+        // )
+        //   .bind(id)
+        //   .all<Backup>()
+        return {
+          results: [] as Backup[]
+        }
+      },
+      async addBackupConfig (input) {
         console.log(`TODO: implement add backup config, data: ${input}`)
         // D1 code:
         // const backupConfig = await DB.prepare(
@@ -78,9 +129,9 @@ export function getStorageContext (): StorageContext {
         //     data.get('include_preferences') === 'on' ? true : false
         //   )
         //   .first()
-        return {id: 1, ...input}
+        return { id: 1, ...input }
       },
-      findBackupConfigs: async (account: string) => {
+      async findBackupConfigs (account: string) {
         console.log(`TODO: find backup configs for ${account}`)
         // D1 code:
         // const { results } = await DB.prepare(
