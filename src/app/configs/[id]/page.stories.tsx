@@ -47,6 +47,33 @@ const meta = {
       ]
     ),
     withData(
+      ['api', '/api/backup-configs/1/backups'],
+      [
+        {
+          id: 1,
+          backup_configs_id: 1,
+          repository_cid:
+            'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551repo',
+          blobs_cid:
+            'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551blob',
+          preferences_cid:
+            'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551pref',
+          created_at: '2025-04-07 19:51:56',
+        },
+        {
+          id: 2,
+          backup_configs_id: 1,
+          repository_cid:
+            'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy552repo',
+          blobs_cid:
+            'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy552blob',
+          preferences_cid:
+            'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy552pref',
+          created_at: '2025-04-07 20:51:56',
+        },
+      ]
+    ),
+    withData(
       ['atproto-handle', 'did:plc:ro3eio7zgqosf5gnxsq6ik5m'],
       'chalametoui.bsky.social'
     ),

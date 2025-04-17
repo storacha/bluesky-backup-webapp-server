@@ -21,7 +21,8 @@ export async function GET() {
         storacha_space,
         include_repository,
         include_blobs,
-        include_preferences
+        include_preferences,
+        created_at
       
        FROM backup_configs
        WHERE account_did = ?
