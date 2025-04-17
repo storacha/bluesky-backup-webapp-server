@@ -1,17 +1,17 @@
-import { getCloudflareContext } from '@/lib/cloudflare'
+import { getStorageContext } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
 
 export async function GET() {
   const {
-    env: { BLUESKY_AUTH_SESSION_STORE },
-  } = getCloudflareContext()
+    authSessionStore,
+  } = getStorageContext()
 
   const { did: account } = await getSession()
   if (!account) {
     return new Response('Not authorized', { status: 401 })
   }
 
-  const keysResult = await BLUESKY_AUTH_SESSION_STORE.list({
+  const keysResult = await authSessionStore.list({
     prefix: `${account}!`,
   })
 
