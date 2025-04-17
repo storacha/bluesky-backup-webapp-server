@@ -36,6 +36,7 @@ const meta = {
       [
         {
           id: 1,
+          account_did: 'did:mailto:gmail.com:timothy-chalamet',
           name: 'Backup #1',
           bluesky_account: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
           storacha_space:
