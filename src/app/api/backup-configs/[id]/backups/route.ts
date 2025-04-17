@@ -1,7 +1,7 @@
 import { BackupConfig } from '@/app/types'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 
-// NEEDS UCAN AUTHORIZATION
+// NEEDS AUTHORIZATION
 
 export async function GET(
   request: Request,
