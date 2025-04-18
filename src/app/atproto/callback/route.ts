@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { Agent } from '@atproto/api'
-import { createClient } from '../client'
+import { createClient } from '@/lib/atproto'
 import { isDid } from '@atproto/oauth-client-node'
 import { getSession } from '@/lib/sessions'
 

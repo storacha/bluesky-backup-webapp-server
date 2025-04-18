@@ -38,6 +38,15 @@ importers:
       '@sentry/nextjs':
         specifier: ^9.10.1
         version: 9.11.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(encoding@0.1.13)(next@15.1.6(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.98.0(esbuild@0.25.0))
+      '@storacha/access':
+        specifier: ^1.1.1
+        version: 1.1.1
+      '@storacha/capabilities':
+        specifier: ^1.4.0
+        version: 1.4.0
+      '@storacha/client':
+        specifier: ^1.2.6
+        version: 1.2.6(encoding@0.1.13)
       '@storacha/ui-react':
         specifier: ^2.5.24
         version: 2.5.24(@types/react@18.3.18)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2358,8 +2367,8 @@ packages:
   '@storacha/capabilities@1.4.0':
     resolution: {integrity: sha512-bwJAYFUHWZV/2oeuu1JX5NhlRmaY2ClOCnz9do1V2Teaa4hg3folOvzygjX7F9xX+jLcTwtrE5oFXlqjuOhKXA==}
 
-  '@storacha/client@1.2.4':
-    resolution: {integrity: sha512-g81OIA/hecO8SpK1vxPNBcK6/1E8sxtH68aXLFdnGrXO+DKeC19g6BY7tWqSz3RxC0l3N3rKMMxijJiHyUk2xg==}
+  '@storacha/client@1.2.6':
+    resolution: {integrity: sha512-8uB5dPwVBjtY3fg4ENBjLfyTBJy9jFY9w6NTBpvMPBoc40iKgNQq7tmFE7S/FqxMIkizh1UYRq7+uf/Y+7pqdg==}
     engines: {node: '>=18'}
 
   '@storacha/did-mailto@1.0.2':
@@ -2928,6 +2937,9 @@ packages:
 
   '@ucanto/transport@9.1.1':
     resolution: {integrity: sha512-3CR17nEemOVaTuMZa6waWgVL4sLxSPcxYvpaNeJ6NZo1rfsqdyRXOtbVV/RcI2BtUL0Cao6JM6P9+gdghfc5ng==}
+
+  '@ucanto/transport@9.2.0':
+    resolution: {integrity: sha512-w/CtD5LYEpGo/CxV78IiWalW99gNRPHKZ/DoOpart5QShozvnU//PwUqyqnGimZCDIrIq4LH6x92z2L/2k5OKQ==}
 
   '@ucanto/validator@9.1.0':
     resolution: {integrity: sha512-2JnEEZYc8kTZz+qbyL7LbI/TSpBRWLOchNhaRB5DTyj38FxMFQUXIB7gQ5lZHv49uYJGx/FXKPw0268WgJdEvg==}
@@ -3838,6 +3850,10 @@ packages:
   env-paths@3.0.0:
     resolution: {integrity: sha512-dtJUTepzMW3Lm/NPxRf3wP4642UWhjL2sQxc+ym2YMj1m/H2zDNQOlezafzkHwn6sMstjHTwG6iQQsctDW/b1A==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
+  environment@1.1.0:
+    resolution: {integrity: sha512-xUtoPkMggbz0MPyPiIWr1Kp4aeWJjDZ6SMvURhimjdZgsRuDplF5/s9hcgGhyXMhs+6vpnuoiZ2kFiu3FMnS8Q==}
+    engines: {node: '>=18'}
 
   err-code@3.0.1:
     resolution: {integrity: sha512-GiaH0KJUewYok+eeY05IIgjtAe4Yltygk9Wqp1V5yVWLdhf0hYZchRjNIT9bb0mSwRcIusT3cx7PJUf3zEIfUA==}
@@ -8910,7 +8926,7 @@ snapshots:
       '@web3-storage/data-segment': 5.3.0
       uint8arrays: 5.1.0
 
-  '@storacha/client@1.2.4(encoding@0.1.13)':
+  '@storacha/client@1.2.6(encoding@0.1.13)':
     dependencies:
       '@ipld/dag-ucan': 3.4.5
       '@storacha/access': 1.1.1
@@ -8923,7 +8939,8 @@ snapshots:
       '@ucanto/core': 10.3.1
       '@ucanto/interface': 10.2.0
       '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.1.1
+      '@ucanto/transport': 9.2.0
+      environment: 1.1.0
     transitivePeerDependencies:
       - encoding
 
@@ -8936,7 +8953,7 @@ snapshots:
       '@ucanto/client': 9.0.1
       '@ucanto/core': 10.3.1
       '@ucanto/interface': 10.2.0
-      '@ucanto/transport': 9.1.1
+      '@ucanto/transport': 9.2.0
 
   '@storacha/one-webcrypto@1.0.1': {}
 
@@ -8944,7 +8961,7 @@ snapshots:
     dependencies:
       '@ipld/dag-ucan': 3.4.5
       '@storacha/access': 1.1.1
-      '@storacha/client': 1.2.4(encoding@0.1.13)
+      '@storacha/client': 1.2.6(encoding@0.1.13)
       '@storacha/did-mailto': 1.0.2
       '@ucanto/client': 9.0.1
       '@ucanto/interface': 10.2.0
@@ -8977,7 +8994,7 @@ snapshots:
       '@ucanto/client': 9.0.1
       '@ucanto/core': 10.3.1
       '@ucanto/interface': 10.2.0
-      '@ucanto/transport': 9.1.1
+      '@ucanto/transport': 9.2.0
       '@web3-storage/data-segment': 5.3.0
       ipfs-utils: 9.0.14(encoding@0.1.13)
       multiformats: 13.3.2
@@ -9732,6 +9749,11 @@ snapshots:
       one-webcrypto: 1.0.3
 
   '@ucanto/transport@9.1.1':
+    dependencies:
+      '@ucanto/core': 10.3.1
+      '@ucanto/interface': 10.2.0
+
+  '@ucanto/transport@9.2.0':
     dependencies:
       '@ucanto/core': 10.3.1
       '@ucanto/interface': 10.2.0
@@ -10867,6 +10889,8 @@ snapshots:
   env-paths@2.2.1: {}
 
   env-paths@3.0.0: {}
+
+  environment@1.1.0: {}
 
   err-code@3.0.1: {}
 

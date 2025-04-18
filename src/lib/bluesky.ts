@@ -7,18 +7,18 @@ import { hydrateSymkey, Key } from '@/contexts/keychain'
 
 const ensureTrailingSlash = (s: string) => (s.endsWith('/') ? s : s.concat('/'))
 
-export const blueskyClientUri = ensureTrailingSlash(
+export const atprotoClientUri = ensureTrailingSlash(
   process.env.NEXT_PUBLIC_BLUESKY_CLIENT_URI || 'https://localhost:3000/'
 )
 
 export const blueskyClientMetadata: OAuthClientMetadataInput = {
-  client_id: `${blueskyClientUri}bluesky-client-metadata`,
+  client_id: `${atprotoClientUri}bluesky-client-metadata`,
   client_name: 'Local Dev App',
-  client_uri: blueskyClientUri,
+  client_uri: atprotoClientUri,
   application_type: 'web',
   grant_types: ['authorization_code', 'refresh_token'],
   response_types: ['code'],
-  redirect_uris: [blueskyClientUri],
+  redirect_uris: [atprotoClientUri],
   token_endpoint_auth_method: 'none',
   scope: 'atproto transition:generic',
   dpop_bound_access_tokens: true,

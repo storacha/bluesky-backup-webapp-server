@@ -5,11 +5,18 @@ NEXT_PUBLIC_STORACHA_SERVICE_DID=did:web:staging.up.storacha.network
 NEXT_PUBLIC_STORACHA_PROVIDER=did:web:staging.up.storacha.network
 NEXT_PUBLIC_IDENTITY_AUTHORITY=did:web:staging.up.storacha.network
 
-# set to the multiformatted private key of this service, eg MgCZT5vOnYZoVAeyjnzuJIVY9J4LNtJ+f8Js0cTPuKUpFne0BVEDJjEu6quFIU8yp91/TY/+MYK8GvlKoTDnqOCovCVM=
-SERVER_IDENTITY_PRIVATE_KEY=
-NEXT_PUBLIC_SERVER_DID='did:web:bskybackups.storacha.network'
+# The identity of this service, and the private key associated with it. Note
+# that other services will need to be able to resolve this DID, so a `did:key`
+# works best in development.
+#NEXT_PUBLIC_SERVER_DID='did:web:bskybackups.storacha.network'
+#SERVER_IDENTITY_PRIVATE_KEY=[multiformatted private key]
 
-# set these to your gateway service URL and DID 
+# This one can be used in development. It's commented out here just in case
+# these lines make their way into a deployment.
+#NEXT_PUBLIC_SERVER_DID='did:key:z6Mkk89bC3JrVqKie71YEcc5M1SMVxuCgNx6zLZ8SYJsxALi'
+#SERVER_IDENTITY_PRIVATE_KEY=MgCZT5vOnYZoVAeyjnzuJIVY9J4LNtJ+f8Js0cTPuKUpFne0BVEDJjEu6quFIU8yp91/TY/+MYK8GvlKoTDnqOCovCVM=
+
+# set these to your gateway service URL and DID
 NEXT_PUBLIC_STORACHA_GATEWAY_HOSTNAME=ipfs-staging.w3s.link
 NEXT_PUBLIC_STORACHA_GATEWAY_ID=did:web:ipfs-staging.w3s.link
 

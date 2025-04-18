@@ -35,9 +35,9 @@ export const Form = ({ config }: { config?: BackupConfig }) => {
         {config ? (
           <>
             <BlueskyAccountSelect
-              name="bluesky_account"
+              name="atproto_account"
               disabled
-              value={config.bluesky_account}
+              value={config.atproto_account}
             />
             <StorachaSpaceSelect
               name="storacha_space"
@@ -47,7 +47,7 @@ export const Form = ({ config }: { config?: BackupConfig }) => {
           </>
         ) : (
           <>
-            <BlueskyAccountSelect name="bluesky_account" />
+            <BlueskyAccountSelect name="atproto_account" />
             <StorachaSpaceSelect name="storacha_space" />
           </>
         )}
