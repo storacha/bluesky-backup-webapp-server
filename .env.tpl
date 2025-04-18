@@ -33,6 +33,6 @@ SESSION_PASSWORD=changethistosomethingsecretandatleast32characterslong
 # Postgres
 PGHOST=localhost
 PGPORT=5432
-PGDATABASE=bsky-backups-dev
+PGDATABASE=bsky_backups_dev
 PGUSERNAME=admin
 PGPASSWORD=bluey
