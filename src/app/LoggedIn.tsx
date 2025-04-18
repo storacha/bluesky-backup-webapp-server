@@ -1,54 +1,43 @@
 'use client'
 
-import { useAuthenticator } from '@storacha/ui-react'
-import { Stack } from '@/components/ui'
-import { Sidebar } from './Sidebar'
-import { styled } from 'next-yak'
+import { useEffect, useState } from 'react'
 import useSWR from 'swr'
-import { useCallback, useEffect, useState } from 'react'
+import { styled } from 'next-yak'
+import { Account, Client, useAuthenticator } from '@storacha/ui-react'
+import { Stack } from '@/components/ui'
 import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
+import { Sidebar } from './Sidebar'
 
 const Outside = styled(Stack)`
   min-height: 100vh;
   align-items: stretch;
 `
 
-const useAtprotoDelegation = (): Uint8Array | undefined => {
-  const [{ client, accounts }] = useAuthenticator()
-  const account = accounts[0]
+async function createSession(client: Client, account: Account) {
+  const issuer = client.agent.issuer
 
-  const issuer = client?.agent?.issuer
+  const delegation = await atproto.delegate({
+    issuer: issuer,
+    audience: { did: () => SERVER_DID },
+    with: account.did(),
+    proofs: client.proofs([{ can: atproto.can, with: account.did() }]),
+  })
+  const result = await delegation.archive()
 
-  // Use regular SWR, not our wrapper, because we need to use an inline fetcher
-  // for access to the `issuer`, which doesn't serialize well into a key.
-  return useSWR(
-    () => [
-      'delegation',
-      // When client or account is null, the key function will fail, signalling
-      // SWR not to fetch. Thus, we use `!` here.
-      { issuer: issuer!.did(), account: account!.did() },
-    ],
-    async () => {
-      const delegation = await atproto.delegate({
-        issuer: issuer!,
-        audience: { did: () => SERVER_DID },
-        with: account!.did(),
-        proofs: client?.proofs([{ can: atproto.can, with: account!.did() }]),
-      })
-      const result = await delegation.archive()
+  if (result.error) {
+    throw result.error
+  }
+  const archivedDelegation = result.ok
 
-      if (result.error) {
-        throw result.error
-      } else {
-        return result.ok
-      }
-    }
-  ).data
+  await fetch(`/session/create/${account.did()}`, {
+    method: 'POST',
+    body: archivedDelegation,
+  })
 }
 
 export function LoggedIn() {
-  const [{ accounts, spaces }] = useAuthenticator()
+  const [{ accounts, spaces, client }] = useAuthenticator()
   const account = accounts[0]
   const {
     data: sessionDID,
@@ -64,45 +53,23 @@ export function LoggedIn() {
     }
   })
 
-  const delegation = useAtprotoDelegation()
-  const createSession = useCallback(
-    async function createSession() {
-      if (account) {
-        await fetch(`/session/create/${account.did()}`, {
-          method: 'POST',
-          body: delegation,
-        })
-        await mutate()
-      } else {
-        throw new Error('no account, could not create session')
-      }
-    },
-    [account, delegation, mutate]
-  )
-
   const [sessionCreationAttempted, setSessionCreationAttempted] =
     useState(false)
 
   useEffect(() => {
-    // if the account is loaded, the session DID is erroring and we're not
-    // currently creating a session, try to create one
-    if (!sessionCreationAttempted && account && sessionDIDError) {
+    // if the client & account are loaded, the session DID is erroring and we're
+    // not currently creating a session, try to create one
+    if (!sessionCreationAttempted && client && account && sessionDIDError) {
       ;(async () => {
         try {
-          await createSession()
+          await createSession(client, account)
           await mutate()
         } finally {
           setSessionCreationAttempted(true)
         }
       })()
     }
-  }, [
-    sessionCreationAttempted,
-    account,
-    sessionDIDError,
-    mutate,
-    createSession,
-  ])
+  }, [sessionCreationAttempted, account, sessionDIDError, mutate, client])
   if (!account) return null
   return (
     <Outside $direction="row" $gap="1rem">

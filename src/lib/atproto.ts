@@ -10,9 +10,9 @@ import urlJoin from 'proper-url-join'
 import type { SimpleStore, Value } from '@atproto-labs/simple-store'
 import { getStorageContext, KVNamespace } from '@/lib/server/db'
 
-const blueskyClientUri = process.env.NEXT_PUBLIC_BLUESKY_CLIENT_URI
+export const atprotoClientUri = process.env.NEXT_PUBLIC_BLUESKY_CLIENT_URI
 
-if (!blueskyClientUri) {
+if (!atprotoClientUri) {
   throw new Error('NEXT_PUBLIC_BLUESKY_CLIENT_URI must be provided')
 }
 
@@ -23,16 +23,12 @@ class Store<K extends string, V extends Value = Value>
     private readonly kvStore: KVNamespace,
     private readonly account: string,
     private readonly expirationTtl?: number
-  ) {
-    this.makeKey('foobar')
-  }
+  ) {}
 
   // `!` seems like a safe delimiter for the account and key, as it shouldn't be
   // in a DID.
   private makeKey(key: string) {
-    const newLocal = `${this.account}!${key}`
-    console.log('new key', newLocal)
-    return newLocal
+    return `${this.account}!${key}`
   }
 
   async set(key: K, internalState: V): Promise<void> {
@@ -57,17 +53,17 @@ export const blueskyClientMetadata = ({
   account: string
 }): OAuthClientMetadataInput => ({
   client_id: urlJoin(
-    blueskyClientUri,
+    atprotoClientUri,
     'atproto',
     'oauth-client-metadata',
     account
   ),
   client_name: 'Storacha Bluesky Backups',
-  client_uri: blueskyClientUri,
+  client_uri: atprotoClientUri,
   application_type: 'web',
   grant_types: ['authorization_code', 'refresh_token'],
   response_types: ['code'],
-  redirect_uris: [urlJoin(blueskyClientUri, 'atproto', 'callback')],
+  redirect_uris: [urlJoin(atprotoClientUri, 'atproto', 'callback')],
   token_endpoint_auth_method: 'none',
   scope: 'atproto transition:generic',
   dpop_bound_access_tokens: true,

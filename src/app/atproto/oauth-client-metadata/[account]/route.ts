@@ -1,4 +1,4 @@
-import { blueskyClientMetadata } from '../../client'
+import { blueskyClientMetadata } from '@/lib/atproto'
 
 export async function GET(
   _request: Request,
