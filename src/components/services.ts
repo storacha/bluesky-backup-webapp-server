@@ -3,17 +3,23 @@ import { connect } from '@ucanto/client'
 import { CAR, HTTP } from '@ucanto/transport'
 import * as DID from '@ipld/dag-ucan/did'
 
+const die = (name: string) => {
+  throw new Error(`Environment variable ${name} is required and not set.`)
+}
+
 export const serviceURL = new URL(
-  process.env.NEXT_PUBLIC_STORACHA_SERVICE_URL ?? 'https://up.storacha.network'
+  process.env.NEXT_PUBLIC_STORACHA_SERVICE_URL ??
+    die('NEXT_PUBLIC_STORACHA_SERVICE_URL')
 )
 
 export const servicePrincipal = DID.parse(
-  process.env.NEXT_PUBLIC_STORACHA_SERVICE_DID ?? 'did:web:web3.storage'
+  process.env.NEXT_PUBLIC_STORACHA_SERVICE_DID ??
+    die('NEXT_PUBLIC_STORACHA_SERVICE_DID')
 )
 
-export const receiptsURL = new URL(
+export const receiptsEndpoint = new URL(
   process.env.NEXT_PUBLIC_STORACHA_RECEIPTS_URL ??
-    'https://up.storacha.network/receipt/'
+    die('NEXT_PUBLIC_STORACHA_RECEIPTS_URL')
 )
 
 export const serviceConnection = connect<Service>({

@@ -1,4 +1,4 @@
-import { createClient } from '../client'
+import { createClient } from '@/lib/atproto'
 
 export async function POST(request: Request) {
   const formData = await request.formData()

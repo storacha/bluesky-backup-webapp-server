@@ -2,7 +2,11 @@
 
 import type { ReactNode } from 'react'
 import { Provider } from '@storacha/ui-react'
-import { receiptsURL, serviceConnection, servicePrincipal } from './services'
+import {
+  receiptsEndpoint,
+  serviceConnection,
+  servicePrincipal,
+} from './services'
 
 export default function StorachaProvider({
   children,
@@ -13,7 +17,7 @@ export default function StorachaProvider({
     <Provider
       connection={serviceConnection}
       servicePrincipal={servicePrincipal}
-      receiptsEndpoint={receiptsURL}
+      receiptsEndpoint={receiptsEndpoint}
     >
       <>{children}</>
     </Provider>
