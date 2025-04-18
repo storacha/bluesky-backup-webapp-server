@@ -43,6 +43,7 @@ export const WithBackupConfigs: Story = {
       [
         {
           id: 1,
+          account_did: 'did:mailto:gmail.com:timothy-chalamet',
           name: 'Backup #1',
           bluesky_account: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
           storacha_space:
@@ -53,6 +54,7 @@ export const WithBackupConfigs: Story = {
         },
         {
           id: 2,
+          account_did: 'did:mailto:gmail.com:timothy-chalamet',
           name: 'Bluesky #452',
           bluesky_account: 'did:plc:vv44vwwbr3lmbjht3p5fd7wz',
           storacha_space:
