@@ -1,29 +1,33 @@
 import { Backup, BackupConfig, BackupConfigInput, BackupInput } from "@/app/types"
+import postgres from 'postgres'
 
+// will use psql environment variables
+// https://github.com/porsager/postgres?tab=readme-ov-file#environmental-variables
+export const sql = postgres()
 
 export interface ListResult {
   keys: { name: string }[]
 }
 
 export interface KVNamespace {
-  put: (...p: unknown[]) => unknown
-  get: (g: unknown) => string
-  delete: (d: unknown) => void
+  put: (...p: unknown[]) => Promise<void>
+  get: (g: unknown) => Promise<string>
+  delete: (d: unknown) => Promise<void>
   list: (l: unknown) => Promise<ListResult>
 }
 
 function newKvNamespace (): KVNamespace {
   // TODO: needs to be implemented to match the Cloudflare KVNamespace semantics
   return {
-    put: (...args) => {
+    put: async (...args) => {
       console.log(args)
     },
-    get: (k) => {
+    get: async (k) => {
       console.log(k)
       return "{}"
     },
 
-    delete: (d) => {
+    delete: async (d) => {
       console.log(d)
     },
 
@@ -53,105 +57,83 @@ export function getStorageContext (): StorageContext {
     authStateStore: newKvNamespace(),
     db: {
       async addBackup (input) {
-        // D1 code:
-        // const backupConfig = await DB.prepare(
-        //   /* sql */ `
-        //   INSERT INTO backups (
-        //     backup_configs_id,
-        //     repository_cid,
-        //     blobs_cid,
-        //     preferences_cid
-        //   )
-        //   VALUES(?, ?, ?, ?)
-        //   RETURNING id
-        // `
-        // )
-        //   .bind(
-        //     1,
-        //     'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551repo',
-        //     'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551blob',
-        //     'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551pref'
-        //   )
-        //   .first()
-        console.log(`TODO: implement add backup, data: ${input}`)
-        return { id: 1, created_at: new Date().toString(), ...input }
+        const results = await sql<Backup[]>`
+          insert into backups (
+            backup_configs_id,
+            repository_cid,
+            blobs_cid,
+            preferences_cid
+          ) values (
+            ${input.backup_configs_id},
+            ${input.repository_cid},
+            ${input.blobs_cid},
+            ${input.preferences_cid}
+          )
+          returning *
+        `
+        if (!results[0]) {
+          throw new Error('error inserting backup')
+        }
+        return results[0]
       },
       async findBackups (backupConfigId) {
-        console.log(`TODO: implement find backups, data: ${backupConfigId}`)
-        // D1 code:
-        // const { results } = await DB.prepare(
-        //   /* sql */ `
-        //     SELECT id,
-        //       backup_configs_id,
-        //       repository_cid,
-        //       blobs_cid,
-        //       preferences_cid,
-        //       created_at
-
-        //      FROM backups
-
-        //     WHERE backup_configs_id = ?
-
-        //     -- TODO: Fetch configs for correct account
-        //   `
-        // )
-        //   .bind(id)
-        //   .all<Backup>()
+        const results = await sql<Backup[]>`
+          select
+            id,
+            backup_configs_id,
+            repository_cid,
+            blobs_cid,
+            preferences_cid,
+            created_at
+          from backups
+          where backup_configs_id = ${backupConfigId}
+          `
         return {
-          results: [] as Backup[]
+          results
         }
       },
       async addBackupConfig (input) {
-        console.log(`TODO: implement add backup config, data: ${input}`)
-        // D1 code:
-        // const backupConfig = await DB.prepare(
-        //   /* sql */ `
-        //   INSERT INTO backup_configs (
-        //     account_did,
-        //     name,
-        //     bluesky_account,
-        //     storacha_space,
-        //     include_repository,
-        //     include_blobs,
-        //     include_preferences
-        //   )
-        //   VALUES(?, ?, ?, ?, ?, ?, ?)
-        //   RETURNING id
-        // `
-        // )
-        //   .bind(
-        //     data.get('account'),
-        //     data.get('name'),
-        //     data.get('bluesky_account'),
-        //     data.get('storacha_space'),
-        //     data.get('include_repository') === 'on' ? true : false,
-        //     data.get('include_blobs') === 'on' ? true : false,
-        //     data.get('include_preferences') === 'on' ? true : false
-        //   )
-        //   .first()
-        return { id: 1, ...input }
+        const results = await sql<BackupConfig[]>`
+          INSERT INTO backup_configs (
+            account_did,
+            name,
+            bluesky_account,
+            storacha_space,
+            include_repository,
+            include_blobs,
+            include_preferences
+          ) values (
+            ${input.account_did},
+            ${input.name},
+            ${input.bluesky_account},
+            ${input.storacha_space},
+            ${input.include_repository},
+            ${input.include_blobs},
+            ${input.include_preferences}
+          )
+          returning *
+        `
+        if (!results[0]) {
+          throw new Error('error inserting backup config')
+        }
+        return results[0]
       },
       async findBackupConfigs (account: string) {
         console.log(`TODO: find backup configs for ${account}`)
-        // D1 code:
-        // const { results } = await DB.prepare(
-        //   /* sql */ `
-        //     SELECT id,
-        //       name,
-        //       bluesky_account,
-        //       storacha_space,
-        //       include_repository,
-        //       include_blobs,
-        //       include_preferences
+        const results = await sql<BackupConfig[]>`
+            SELECT id,
+              name,
+              bluesky_account,
+              storacha_space,
+              include_repository,
+              include_blobs,
+              include_preferences
 
-        //      FROM backup_configs
-        //      WHERE account_did = ?
-        //   `
-        // )
-        //   .bind(did)
-        //   .all<BackupConfig>()
+             FROM backup_configs
+             WHERE account_did = ${account}
+          `
         return {
-          results: [] as BackupConfig[]
+          results
         }
       }
     }

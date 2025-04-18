@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "pnpm lint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "db:migrate": "node ./scripts/migrate.mjs"
   },
   "dependencies": {
     "@atproto-labs/simple-store": "^0.1.2",
@@ -19,6 +20,7 @@
     "@atproto/crypto": "^0.4.4",
     "@atproto/oauth-client-browser": "^0.3.9",
     "@atproto/oauth-client-node": "^0.2.13",
+    "@dotenvx/dotenvx": "^1.40.1",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@ipld/dag-ucan": "^3.4.5",
@@ -40,6 +42,8 @@
     "multiformats": "^13.3.2",
     "next": "15.1.6",
     "next-yak": "4",
+    "postgres": "^3.4.5",
+    "postgres-shift": "^0.1.0",
     "proper-url-join": "^2.1.2",
     "react": "^18.0.0",
     "react-copy-to-clipboard": "^5.1.0",
