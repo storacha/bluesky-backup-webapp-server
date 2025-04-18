@@ -3,6 +3,7 @@
 import { useSWR } from '@/app/swr'
 import { Form } from '../Form'
 import { use } from 'react'
+import { Sidebar } from '@/app/Sidebar'
 import { Button } from '@/components/ui'
 import { createBackup } from './createBackup'
 import { useSWRConfig } from 'swr'
@@ -13,8 +14,8 @@ export default function Config({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { id } = use(params)
-
+  const { id: idParam } = use(params)
+  const id = parseInt(idParam)
   // TODO: Should we fetch individual configs? We already need the list for the
   // sidebar, and they're not heavy so far, but we should check back on this at
   // the end of the first version.
@@ -22,11 +23,12 @@ export default function Config({
   if (error) throw error
   if (!configs) return null
 
-  const config = configs.find((config) => config.id === parseInt(id))
+  const config = configs.find((config) => config.id === id)
   if (!config) return null
 
   return (
     <>
+      <Sidebar selectedConfigId={id} />
       <Form config={config} />
       <CreateBackupButton configId={config.id} />
       <Backups configId={config.id} />

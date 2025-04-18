@@ -9,4 +9,3 @@ on:
 jobs:
   test:
     uses: ./.github/workflows/test.yml
-
