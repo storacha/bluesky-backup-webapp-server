@@ -114,15 +114,16 @@ coproc {
       addr=${kv_pairs[addr]}
       url=${kv_pairs[url]}
       state="connected"
-      ;;
-    "tunnel session started")
-      state="connected"
+
       # Whenever a session connects, write the URL to .env.local. Being at the
       # end of the file, this will take precedence over any existing value.
       # In case we've just reconnected
       cleanup
       # Write the URL to .env.local
       echo "NEXT_PUBLIC_BLUESKY_CLIENT_URI=$url #ngrok" >>.env.local
+      ;;
+    "tunnel session started")
+      state="connected"
       ;;
     "session closed, starting reconnect loop")
       state="connecting"
