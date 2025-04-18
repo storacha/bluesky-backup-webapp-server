@@ -1,5 +1,9 @@
 import { Backup, BackupConfig, BackupConfigInput, BackupInput } from "@/app/types"
+import postgres from 'postgres'
 
+// will use psql environment variables
+// https://github.com/porsager/postgres?tab=readme-ov-file#environmental-variables
+export const sql = postgres()
 
 export interface ListResult {
   keys: { name: string }[]
