@@ -2,17 +2,17 @@ import {
   NodeOAuthClient,
   OAuthClientMetadataInput,
 } from '@atproto/oauth-client-node'
-import { getCloudflareContext } from '@opennextjs/cloudflare'
 import urlJoin from 'proper-url-join'
 
 // Note: This is from `@atproto-labs/`, so it's subject to breaking changes.
 // That should be okay, as we're only depending on the types, and we can adjust
 // as any updates happen.
 import type { SimpleStore, Value } from '@atproto-labs/simple-store'
+import { getStorageContext, KVNamespace } from '@/lib/server/db'
 
-const blueskyClientUri = process.env.NEXT_PUBLIC_BLUESKY_CLIENT_URI
+export const atprotoClientUri = process.env.NEXT_PUBLIC_BLUESKY_CLIENT_URI
 
-if (!blueskyClientUri) {
+if (!atprotoClientUri) {
   throw new Error('NEXT_PUBLIC_BLUESKY_CLIENT_URI must be provided')
 }
 
@@ -23,16 +23,12 @@ class Store<K extends string, V extends Value = Value>
     private readonly kvStore: KVNamespace,
     private readonly account: string,
     private readonly expirationTtl?: number
-  ) {
-    this.makeKey('foobar')
-  }
+  ) {}
 
   // `!` seems like a safe delimiter for the account and key, as it shouldn't be
   // in a DID.
   private makeKey(key: string) {
-    const newLocal = `${this.account}!${key}`
-    console.log('new key', newLocal)
-    return newLocal
+    return `${this.account}!${key}`
   }
 
   async set(key: K, internalState: V): Promise<void> {
@@ -57,17 +53,17 @@ export const blueskyClientMetadata = ({
   account: string
 }): OAuthClientMetadataInput => ({
   client_id: urlJoin(
-    blueskyClientUri,
+    atprotoClientUri,
     'atproto',
     'oauth-client-metadata',
     account
   ),
   client_name: 'Storacha Bluesky Backups',
-  client_uri: blueskyClientUri,
+  client_uri: atprotoClientUri,
   application_type: 'web',
   grant_types: ['authorization_code', 'refresh_token'],
   response_types: ['code'],
-  redirect_uris: [urlJoin(blueskyClientUri, 'atproto', 'callback')],
+  redirect_uris: [urlJoin(atprotoClientUri, 'atproto', 'callback')],
   token_endpoint_auth_method: 'none',
   scope: 'atproto transition:generic',
   dpop_bound_access_tokens: true,
@@ -75,8 +71,8 @@ export const blueskyClientMetadata = ({
 
 export const createClient = ({ account }: { account: string }) => {
   const {
-    env: { BLUESKY_AUTH_SESSION_STORE, BLUESKY_AUTH_STATE_STORE },
-  } = getCloudflareContext()
+    authSessionStore, authStateStore
+  } = getStorageContext()
 
   const client = new NodeOAuthClient({
     clientMetadata: blueskyClientMetadata({ account }),
@@ -90,8 +86,8 @@ export const createClient = ({ account }: { account: string }) => {
     //   JoseKey.fromImportable(process.env.PRIVATE_KEY_3),
     // ]),
 
-    stateStore: new Store(BLUESKY_AUTH_STATE_STORE, account, 60 * 60),
-    sessionStore: new Store(BLUESKY_AUTH_SESSION_STORE, account),
+    stateStore: new Store(authStateStore, account, 60 * 60),
+    sessionStore: new Store(authSessionStore, account),
 
     // TODO: Can we even implement this in KV? Should we?
     // requestLock,
