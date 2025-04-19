@@ -4,6 +4,16 @@ import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
 
 initOpenNextCloudflareForDev()
 
-const nextConfig: NextConfig = {}
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        hostname: 'upload.wikimedia.org',
+        protocol: 'https',
+        pathname: '/**',
+      },
+    ],
+  },
+}
 
 export default withYak(nextConfig)

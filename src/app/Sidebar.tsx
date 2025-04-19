@@ -16,7 +16,7 @@ const SidebarOutside = styled.nav`
   width: 20rem;
   padding: 2rem;
   background-color: var(--color-gray-extra-light);
-  border-right: 1px solid var(--color-gray-medium-medium-light);
+  border-right: 1px solid var(--color-light-blue);
 `
 
 const Header = styled.header`

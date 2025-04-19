@@ -8,6 +8,7 @@ import useSWR from 'swr'
 import { useCallback, useEffect, useState } from 'react'
 import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
+import { BackupScreen } from '../components/Backup/index'
 
 const Outside = styled(Stack)`
   min-height: 100vh;
@@ -105,23 +106,24 @@ export function LoggedIn() {
   ])
   if (!account) return null
   return (
-    <Outside $direction="row" $gap="1rem">
+    <Outside $direction="row">
       <Sidebar selectedConfigId={null} />
-      <div>
-        <h1>Logged In</h1>
-        <p>You are logged in as {account.toEmail()}!</p>
-        <p>You have established a server session as {sessionDID}!</p>
-        <h2>Spaces</h2>
-        <ul>
-          {spaces.map((space) => (
-            <li key={space.did()}>
-              <p>
-                {space.name} ({space.did()})
-              </p>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* <div>
+          <h1>Logged In</h1>
+          <p>You are logged in as {account.toEmail()}!</p>
+          <p>You have established a server session as {sessionDID}!</p>
+          <h2>Spaces</h2>
+          <ul>
+            {spaces.map((space) => (
+              <li key={space.did()}>
+                <p>
+                  {space.name} ({space.did()})
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div> */}
+      <BackupScreen />
     </Outside>
   )
 }
