@@ -5,10 +5,12 @@ export const Stack = styled.div<{
   $direction?: Property.FlexDirection
   $gap?: Property.Gap
   $even?: boolean
+  $alignItems?: Property.AlignItems
 }>`
   display: flex;
   flex-direction: ${({ $direction = 'column' }) => $direction};
   gap: ${({ $gap = 0 }) => $gap};
+  align-items: ${({ $alignItems = '' }) => $alignItems};
 
   ${({ $even }) =>
     $even &&
