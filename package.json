@@ -24,7 +24,6 @@
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@ipld/dag-ucan": "^3.4.5",
-    "@opennextjs/cloudflare": "^0.6.6",
     "@phosphor-icons/react": "^2.1.7",
     "@sentry/nextjs": "^9.10.1",
     "@storacha/access": "^1.1.1",

@@ -1,7 +1,8 @@
 import Image from 'next/image'
-import { Stack } from '../ui'
+import { Stack, Text } from '../ui'
 import { styled } from 'next-yak'
 import { CaretDown, PlusCircle } from '@phosphor-icons/react'
+import { Property } from 'csstype'
 
 interface BackupProps {
   id: number
@@ -25,16 +26,17 @@ const AccountsContainer = styled.div`
   position: relative;
 `
 
-const AccountContainer = styled.div`
+const Box = styled.div<{ $height?: Property.Height; $width?: Property.Height }>`
   border: 1px dashed var(--color-gray-light);
   border-radius: 12px;
-  height: 66px;
-  width: 100%;
+  height: ${({ $height = '66px' }) => $height};
+  width: ${({ $width = '100%' }) => $width};
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 0.6rem;
   gap: 2em;
+  cursor: pointer;
 `
 
 const ConnectingLine = styled.div`
@@ -59,12 +61,6 @@ const AccountLogo = styled.div<{ $hasAccount?: boolean }>`
   }
 `
 
-const AccountActionText = styled.p`
-  color: var(--color-gray-medium);
-  font-size: 12px;
-  font-weight: 400;
-`
-
 export const Backup = ({ id, hasAccount }: BackupProps) => {
   return (
     <Container>
@@ -72,7 +68,7 @@ export const Backup = ({ id, hasAccount }: BackupProps) => {
         <Heading>backup #{id}</Heading>
         <Stack $gap="1rem">
           <AccountsContainer>
-            <AccountContainer>
+            <Box>
               <Stack $gap=".8rem" $direction="row" $alignItems="center">
                 <AccountLogo $hasAccount={hasAccount}>
                   <Image
@@ -82,12 +78,12 @@ export const Backup = ({ id, hasAccount }: BackupProps) => {
                     height={15}
                   />
                 </AccountLogo>
-                <AccountActionText>Add bluesky account</AccountActionText>
+                <Text>Add bluesky account</Text>
               </Stack>
               <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
-            </AccountContainer>
+            </Box>
             <ConnectingLine />
-            <AccountContainer>
+            <Box>
               <Stack $gap=".8rem" $direction="row" $alignItems="center">
                 <AccountLogo>
                   <Image
@@ -97,11 +93,19 @@ export const Backup = ({ id, hasAccount }: BackupProps) => {
                     height={15}
                   />
                 </AccountLogo>
-                <AccountActionText>Select space</AccountActionText>
+                <Text>Select space</Text>
               </Stack>
               <CaretDown size="16" color="var(--color-gray-1)" />
-            </AccountContainer>
+            </Box>
           </AccountsContainer>
+        </Stack>
+
+        <Stack $gap="1.25rem">
+          <Text $textTransform="capitalize">keychain</Text>
+          <Box $height="44px" $width="48%">
+            <Text $textTransform="capitalize">create keychain</Text>
+            <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
+          </Box>
         </Stack>
       </Stack>
     </Container>
