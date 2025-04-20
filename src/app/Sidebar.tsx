@@ -68,6 +68,7 @@ const AddConfig = styled(Link)`
   background-color: transparent;
   text-align: center;
   font-family: var(--font-dm-mono);
+  font-size: 0.75rem;
 `
 
 const actionButtonStyle = css`

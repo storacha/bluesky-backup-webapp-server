@@ -1,8 +1,10 @@
 import Image from 'next/image'
-import { Stack, Text } from '../ui'
+import { Button, Stack, Text } from '../ui'
 import { styled } from 'next-yak'
 import { CaretDown, PlusCircle } from '@phosphor-icons/react'
 import { Property } from 'csstype'
+import { useState } from 'react'
+import { DataBox } from './Data'
 
 interface BackupProps {
   id: number
@@ -26,8 +28,14 @@ const AccountsContainer = styled.div`
   position: relative;
 `
 
-const Box = styled.div<{ $height?: Property.Height; $width?: Property.Height }>`
-  border: 1px dashed var(--color-gray-light);
+export const Box = styled.div<{
+  $height?: Property.Height
+  $width?: Property.Height
+  $background?: Property.Background
+  $borderStyle?: Property.BorderStyle
+}>`
+  border: 1px ${({ $borderStyle = 'dashed' }) => $borderStyle}
+    var(--color-gray-light);
   border-radius: 12px;
   height: ${({ $height = '66px' }) => $height};
   width: ${({ $width = '100%' }) => $width};
@@ -37,6 +45,7 @@ const Box = styled.div<{ $height?: Property.Height; $width?: Property.Height }>`
   padding: 0 0.6rem;
   gap: 2em;
   cursor: pointer;
+  background: ${({ $background = '' }) => $background};
 `
 
 const ConnectingLine = styled.div`
@@ -61,14 +70,51 @@ const AccountLogo = styled.div<{ $hasAccount?: boolean }>`
   }
 `
 
+interface DataConfig {
+  title: string
+  description: string
+  key: string
+}
+
+const DATA_BOXES: DataConfig[] = [
+  {
+    title: 'repository',
+    description: 'Posts, Follows...',
+    key: 'repository',
+  },
+  {
+    title: 'blobs',
+    description: 'Images, Profile Picture...',
+    key: 'blobs',
+  },
+  {
+    title: 'preferences',
+    description: 'Subscriptions, Feeds...',
+    key: 'preferences',
+  },
+]
+
 export const Backup = ({ id, hasAccount }: BackupProps) => {
+  const [data, setData] = useState<Record<string, boolean>>({
+    repository: true,
+    blobs: false,
+    preferences: false,
+  })
+
+  const toggle = (name: string) => {
+    setData((prev) => ({
+      ...prev,
+      [name]: !prev?.[name],
+    }))
+  }
+
   return (
     <Container>
       <Stack $gap="2rem">
         <Heading>backup #{id}</Heading>
         <Stack $gap="1rem">
           <AccountsContainer>
-            <Box>
+            <Box $background={hasAccount ? 'var(--color-white)' : ''}>
               <Stack $gap=".8rem" $direction="row" $alignItems="center">
                 <AccountLogo $hasAccount={hasAccount}>
                   <Image
@@ -107,6 +153,31 @@ export const Backup = ({ id, hasAccount }: BackupProps) => {
             <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
           </Box>
         </Stack>
+        <Stack $gap="1.25rem">
+          <Text $textTransform="capitalize">data</Text>
+          <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
+            {DATA_BOXES.map((box) => (
+              <DataBox
+                key={box.key}
+                title={box.title}
+                description={box.description}
+                value={data[box.key] || false}
+                onToggle={() => toggle(box.key)}
+              />
+            ))}
+          </Stack>
+        </Stack>
+
+        <Button
+          $background="var(--color-dark-blue)"
+          $color="var(--color-white)"
+          $textTransform="capitalize"
+          $width="20%"
+          $fontSize="0.75rem"
+          $mt="1.4rem"
+        >
+          create backup
+        </Button>
       </Stack>
     </Container>
   )
