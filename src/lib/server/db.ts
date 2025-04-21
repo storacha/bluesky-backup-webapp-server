@@ -14,32 +14,69 @@ export interface ListResult {
   keys: { name: string }[]
 }
 
-export interface KVNamespace {
-  put: (...p: unknown[]) => Promise<void>
-  get: (g: unknown) => Promise<string>
-  delete: (d: unknown) => Promise<void>
-  list: (l: unknown) => Promise<ListResult>
+export interface KVNamespacePutOptions {
+  expirationTtl?: number
 }
 
-function newKvNamespace(): KVNamespace {
+export interface KVNamespaceListOptions {
+  limit?: number
+  prefix?: string | null
+  cursor?: string | null
+}
+export interface KVNamespace {
+  put: (key: string, value: string, options?: KVNamespacePutOptions) => Promise<void>
+  get: (key: string) => Promise<string | null>
+  delete: (key: string) => Promise<void>
+  list: (opts: KVNamespaceListOptions) => Promise<ListResult>
+}
+
+function newKvNamespace (table: string): KVNamespace {
+  const tableSql = sql(table)
   // TODO: needs to be implemented to match the Cloudflare KVNamespace semantics
   return {
-    put: async (...args) => {
-      console.log(args)
+    put: async (key, value, options = {}) => {
+      console.log('putting', key, 'to', table, 'with', options)
+      await sql`
+      insert into ${tableSql} (
+        key,
+        value,
+        expiration_ttl
+      ) values (
+        ${key},
+        ${value},
+        ${options.expirationTtl || null}
+      )
+      `
     },
-    get: async (k) => {
-      console.log(k)
-      return '{}'
+    get: async (key) => {
+      console.log('getting', key, 'from', table)
+      const results = await sql<{ value: string }[]>`
+        select value
+        from ${tableSql}
+        where key = ${key}
+      `
+      if (results[0]) {
+        return results[0].value
+      } else {
+        return null
+      }
     },
 
-    delete: async (d) => {
-      console.log(d)
+    delete: async (key) => {
+      console.log('deleting', key, 'from', table)
+      await sql`delete from ${tableSql} where key = ${key}`
+
     },
 
-    list: async (k) => {
-      console.log(k)
-      return { keys: [] }
-    },
+    list: async ({ prefix }) => {
+      console.log('listing keys with prefix', prefix, 'in', table)
+      const results = await sql<{ key: string }[]>`
+      select key
+      from ${tableSql}
+      where key like ${`${prefix}%`}
+    `
+      return { keys: results.map(r => ({ name: r.key })) }
+    }
   }
 }
 
@@ -63,12 +100,12 @@ interface StorageContext {
 
 export function getStorageContext(): StorageContext {
   return {
-    authSessionStore: newKvNamespace(),
-    authStateStore: newKvNamespace(),
+    authSessionStore: newKvNamespace('auth_sessions'),
+    authStateStore: newKvNamespace('auth_states'),
     db: {
       async addBackup(input) {
         const results = await sql<Backup[]>`
-          insert into backups ${sql(input)}}
+          insert into backups ${sql(input)}
           returning *
         `
         if (!results[0]) {
@@ -78,7 +115,7 @@ export function getStorageContext(): StorageContext {
       },
       async updateBackup(id, input) {
         const results = await sql<Backup[]>`
-          update backups set ${sql(input)}}
+          update backups set ${sql(input)}
           returning *
         `
         if (!results[0]) {
@@ -90,13 +127,13 @@ export function getStorageContext(): StorageContext {
         const results = await sql<Backup[]>`
           select
             id,
-            backup_configs_id,
+            backup_config_id,
             repository_cid,
             blobs_cid,
             preferences_cid,
             created_at
           from backups
-          where backup_configs_id = ${backupConfigId}
+          where backup_config_id = ${backupConfigId}
           `
         return {
           results,
@@ -129,7 +166,6 @@ export function getStorageContext(): StorageContext {
         return results[0]
       },
       async findBackupConfigs(account: string) {
-        console.log(`TODO: find backup configs for ${account}`)
         const results = await sql<BackupConfig[]>`
             SELECT id,
               name,

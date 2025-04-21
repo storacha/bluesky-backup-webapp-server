@@ -2,7 +2,41 @@
 
 HOT HOT HOT backups for your ATProto PDS
 
-## Local development
+## Local 
+
+### Set up `.env`
+
+First, please copy `.env.tpl` to `.env` and take a moment to review the contents and ensure they are correct for your dev plans.
+
+### Set up Postgresql
+
+On OSX you can do this with:
+
+```bash
+brew install postgresql
+```
+
+You may need to start the postgres service after installation with
+
+```bash
+brew services start postgresql
+```
+
+After setup you'll need to create your development database. Use `psql` to start a database session:
+
+```bash
+psql
+```
+
+And then in the SQL console:
+
+```sql
+create database bsky_backups_dev;
+create role admin with login password 'bluey';
+grant all privileges on database bsky_backups_dev to admin;
+```
+
+These names and credentials match the examples in `.env.tpl` and should be customized for your setup.
 
 ### Set up `ngrok`
 
