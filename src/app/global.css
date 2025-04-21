@@ -8,4 +8,15 @@
   --color-gray-light: #e4e5eb;
   --color-gray-extra-light: #fdfdfd;
   --color-white: #ffffff;
+  --color-dark-blue: #0176ce;
+  --color-dark-red: #e91315;
+  --color-dark-yellow: #ffc83f;
+  --color-light-blue: #bde0ff;
+  /* couple more shades of gray */
+  --color-gray: #e2e2e2;
+  --color-gray-1: #c3c4c9;
+
+  /* relative colors (alpha channel mod) */
+  --color-light-blue-10: rgb(from var(--color-light-blue) r g b / 0.1);
+  --color-light-blue-30: rgb(from var(--color-light-blue) r g b / 0.3);
 }

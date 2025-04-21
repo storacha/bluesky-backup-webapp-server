@@ -8,6 +8,7 @@ import { Stack } from '@/components/ui'
 import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
 import { Sidebar } from './Sidebar'
+// import { BackupScreen } from '../components/Backup/index'
 
 const Outside = styled(Stack)`
   min-height: 100vh;
@@ -72,7 +73,7 @@ export function LoggedIn() {
   }, [sessionCreationAttempted, account, sessionDIDError, mutate, client])
   if (!account) return null
   return (
-    <Outside $direction="row" $gap="1rem">
+    <Outside $direction="row">
       <Sidebar selectedConfigId={null} />
       <div>
         <h1>Logged In</h1>
@@ -89,6 +90,8 @@ export function LoggedIn() {
           ))}
         </ul>
       </div>
+      {/* you can uncomment this if you want to see the UI. but i guess that's what storybook is for */}
+      {/* <BackupScreen /> */}
     </Outside>
   )
 }
