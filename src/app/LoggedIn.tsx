@@ -7,7 +7,6 @@ import { Account, Client, useAuthenticator } from '@storacha/ui-react'
 import { Stack } from '@/components/ui'
 import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
-import { BackupScreen } from '../components/Backup/index'
 import { Sidebar } from './Sidebar'
 
 const Outside = styled(Stack)`
@@ -75,22 +74,23 @@ export function LoggedIn() {
   return (
     <Outside $direction="row">
       <Sidebar selectedConfigId={null} />
-      {/* <div>
-          <h1>Logged In</h1>
-          <p>You are logged in as {account.toEmail()}!</p>
-          <p>You have established a server session as {sessionDID}!</p>
-          <h2>Spaces</h2>
-          <ul>
-            {spaces.map((space) => (
-              <li key={space.did()}>
-                <p>
-                  {space.name} ({space.did()})
-                </p>
-              </li>
-            ))}
-          </ul>
-        </div> */}
-      <BackupScreen />
+      <div>
+        <h1>Logged In</h1>
+        <p>You are logged in as {account.toEmail()}!</p>
+        <p>You have established a server session as {sessionDID}!</p>
+        <h2>Spaces</h2>
+        <ul>
+          {spaces.map((space) => (
+            <li key={space.did()}>
+              <p>
+                {space.name} ({space.did()})
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {/* you have this uncomment if you want to see the UI. but i guess that's what storybook is for */}
+      {/* <BackupScreen /> */}
     </Outside>
   )
 }
