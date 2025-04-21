@@ -121,8 +121,9 @@ const doBackup = async (
       repository_status: 'success',
       repository_cid: repoRoot.toString(),
     })
-  } catch (e) {
-    console.error('Error while creating backup', e)
+  } catch (e: unknown) {
+    // @ts-expect-error e.cause doesn't typecheck
+    console.error('Error while creating backup', e, e.cause)
     await db.updateBackup(backupId, { repository_status: 'failed' })
   }
 }

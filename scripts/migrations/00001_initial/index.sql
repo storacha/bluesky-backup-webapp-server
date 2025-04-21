@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS backup_configs CASCADE;
 CREATE TABLE IF NOT EXISTS backup_configs (
-  id INTEGER PRIMARY KEY,
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   account_did TEXT NOT NULL,
   name TEXT NOT NULL,
   atproto_account TEXT NOT NULL CHECK (atproto_account LIKE 'did:%'),
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS backup_configs (
 
 DROP TABLE IF EXISTS backups CASCADE;
 CREATE TABLE IF NOT EXISTS backups (
-  id INTEGER PRIMARY KEY,
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   backup_config_id INTEGER NOT NULL,
   repository_status TEXT DEFAULT 'not-started' CHECK (
     repository_status IN (

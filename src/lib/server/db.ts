@@ -75,7 +75,6 @@ function newKvNamespace (table: string): KVNamespace {
       from ${tableSql}
       where key like ${`${prefix}%`}
     `
-      console.log({ keys: results.map(r => ({ name: r.key })) })
       return { keys: results.map(r => ({ name: r.key })) }
     }
   }
@@ -106,7 +105,7 @@ export function getStorageContext(): StorageContext {
     db: {
       async addBackup(input) {
         const results = await sql<Backup[]>`
-          insert into backups ${sql(input)}}
+          insert into backups ${sql(input)}
           returning *
         `
         if (!results[0]) {
@@ -116,7 +115,7 @@ export function getStorageContext(): StorageContext {
       },
       async updateBackup(id, input) {
         const results = await sql<Backup[]>`
-          update backups set ${sql(input)}}
+          update backups set ${sql(input)}
           returning *
         `
         if (!results[0]) {
@@ -128,13 +127,13 @@ export function getStorageContext(): StorageContext {
         const results = await sql<Backup[]>`
           select
             id,
-            backup_configs_id,
+            backup_config_id,
             repository_cid,
             blobs_cid,
             preferences_cid,
             created_at
           from backups
-          where backup_configs_id = ${backupConfigId}
+          where backup_config_id = ${backupConfigId}
           `
         return {
           results,
@@ -167,7 +166,6 @@ export function getStorageContext(): StorageContext {
         return results[0]
       },
       async findBackupConfigs(account: string) {
-        console.log(`TODO: find backup configs for ${account}`)
         const results = await sql<BackupConfig[]>`
             SELECT id,
               name,
