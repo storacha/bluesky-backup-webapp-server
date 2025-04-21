@@ -8,6 +8,7 @@ import { Stack } from '@/components/ui'
 import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
 import { Sidebar } from './Sidebar'
+// import { BackupScreen } from '../components/Backup/index'
 
 const Outside = styled(Stack)`
   min-height: 100vh;
@@ -89,7 +90,7 @@ export function LoggedIn() {
           ))}
         </ul>
       </div>
-      {/* you have this uncomment if you want to see the UI. but i guess that's what storybook is for */}
+      {/* you can uncomment this if you want to see the UI. but i guess that's what storybook is for */}
       {/* <BackupScreen /> */}
     </Outside>
   )

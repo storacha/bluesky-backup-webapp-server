@@ -55,7 +55,7 @@ const ConnectingLine = styled.div`
   margin: 0;
 `
 
-const AccountLogo = styled.div<{ $hasAccount?: boolean }>`
+const AccountLogo = styled.div<{ $hasAccount?: boolean, $type: "original" | "grayscale" }>`
   height: 42px;
   width: 42px;
   border-radius: 8px;
@@ -64,8 +64,8 @@ const AccountLogo = styled.div<{ $hasAccount?: boolean }>`
   align-items: center;
   border: 1px solid var(--color-gray);
   & img {
-    filter: ${({ $hasAccount }) =>
-      $hasAccount ? 'grayscale(0)' : 'grayscale(1)'};
+    filter: ${({ $hasAccount, $type }) =>
+      $hasAccount && $type === 'original' ? 'grayscale(0)' : 'grayscale(1)'};
     opacity: ${({ $hasAccount }) => ($hasAccount ? '1' : '.5')};
   }
 `
@@ -116,12 +116,12 @@ export const Backup = ({ id, hasAccount }: BackupProps) => {
           <AccountsContainer>
             <Box $background={hasAccount ? 'var(--color-white)' : ''}>
               <Stack $gap=".8rem" $direction="row" $alignItems="center">
-                <AccountLogo $hasAccount={hasAccount}>
+                <AccountLogo $type='original' $hasAccount={hasAccount}>
                   <Image
-                    src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Bluesky_Logo.svg"
+                    src="/bluesky.png"
                     alt="Bluesky Logo"
-                    width={15}
-                    height={15}
+                    width={25}
+                    height={25}
                   />
                 </AccountLogo>
                 <Text>Add bluesky account</Text>
@@ -131,12 +131,12 @@ export const Backup = ({ id, hasAccount }: BackupProps) => {
             <ConnectingLine />
             <Box>
               <Stack $gap=".8rem" $direction="row" $alignItems="center">
-                <AccountLogo>
+                <AccountLogo $type='grayscale' $hasAccount={hasAccount}>
                   <Image
-                    src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Bluesky_Logo.svg"
-                    alt="Bluesky Logo"
-                    width={15}
-                    height={15}
+                    src="/storacha-red.png"
+                    alt="Storacha Logo"
+                    width={18}
+                    height={18}
                   />
                 </AccountLogo>
                 <Text>Select space</Text>
@@ -167,7 +167,6 @@ export const Backup = ({ id, hasAccount }: BackupProps) => {
             ))}
           </Stack>
         </Stack>
-
         <Button
           $background="var(--color-dark-blue)"
           $color="var(--color-white)"
