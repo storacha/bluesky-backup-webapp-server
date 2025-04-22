@@ -37,12 +37,12 @@ export const Form = ({ config }: { config?: BackupConfig }) => {
             <BlueskyAccountSelect
               name="atproto_account"
               disabled
-              value={config.atproto_account}
+              value={config.atprotoAccount}
             />
             <StorachaSpaceSelect
               name="storacha_space"
               disabled
-              value={config.storacha_space}
+              value={config.storachaSpace}
             />
           </>
         ) : (
@@ -60,19 +60,19 @@ export const Form = ({ config }: { config?: BackupConfig }) => {
               label="Repository"
               name="include_repository"
               disabled
-              checked={config.include_repository}
+              checked={config.includeRepository}
             />
             <Checkbox
               label="Blobs"
               name="include_blobs"
               disabled
-              checked={config.include_blobs}
+              checked={config.includeBlobs}
             />
             <Checkbox
               label="Preferences"
               name="include_preferences"
               disabled
-              checked={config.include_preferences}
+              checked={config.includePreferences}
             />
           </>
         ) : (
