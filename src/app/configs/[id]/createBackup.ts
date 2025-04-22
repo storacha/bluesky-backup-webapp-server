@@ -84,16 +84,23 @@ export const createBackup = async ({
   })
   storachaClient.addProof(delegation)
 
-  void doBackup(backup.id, db, atpAgent, storachaClient)
+  void doBackup(backup.id, db, atpAgent, storachaClient, {
+    backupConfigId: backupConfig.id,
+  })
 
   return backup
+}
+
+interface BackupOptions {
+  backupConfigId?: number
 }
 
 const doBackup = async (
   backupId: number,
   db: BBDatabase,
   atpAgent: AtprotoAgent,
-  storachaClient: StorachaClient
+  storachaClient: StorachaClient,
+  options: BackupOptions = {}
 ) => {
   try {
     await db.updateBackup(backupId, { repository_status: 'in-progress' })
@@ -121,6 +128,35 @@ const doBackup = async (
       repository_status: 'success',
       repository_cid: repoRoot.toString(),
     })
+
+    let blobsRes
+    do {
+      blobsRes = await atpAgent.com.atproto.sync.listBlobs({
+        did: atpAgent.did,
+        cursor: blobsRes?.data.cursor,
+      })
+      // TODO handle blobsRes.success == false
+      for (const cid of blobsRes.data.cids) {
+        const blobRes = await atpAgent.com.atproto.sync.getBlob({
+          did: atpAgent.did,
+          cid,
+        })
+        // TODO handle blobRes.success == false
+
+        const uploadCid = await storachaClient.uploadFile(
+          new Blob([blobRes.data])
+        )
+        // TODO: figure out how to fail if cid and uploadCid don't match
+        console.log(
+          `Uploaded blob with CID ${cid} and got ${uploadCid} from Storacha - these should be the same`
+        )
+        await db.addBlob({
+          cid,
+          backup_id: backupId,
+          backup_config_id: options.backupConfigId ?? null,
+        })
+      }
+    } while (blobsRes.data.cursor)
   } catch (e: unknown) {
     // @ts-expect-error e.cause doesn't typecheck
     console.error('Error while creating backup', e, e.cause)

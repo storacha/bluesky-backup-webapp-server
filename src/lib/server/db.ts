@@ -1,4 +1,6 @@
 import {
+  ATBlob,
+  ATBlobInput,
   Backup,
   BackupConfig,
   BackupConfigInput,
@@ -24,28 +26,37 @@ export interface KVNamespaceListOptions {
   cursor?: string | null
 }
 export interface KVNamespace {
-  put: (key: string, value: string, options?: KVNamespacePutOptions) => Promise<void>
+  put: (
+    key: string,
+    value: string,
+    options?: KVNamespacePutOptions
+  ) => Promise<void>
   get: (key: string) => Promise<string | null>
   delete: (key: string) => Promise<void>
   list: (opts: KVNamespaceListOptions) => Promise<ListResult>
 }
 
-function newKvNamespace (table: string): KVNamespace {
+function newKvNamespace(table: string): KVNamespace {
   const tableSql = sql(table)
-  // TODO: needs to be implemented to match the Cloudflare KVNamespace semantics
   return {
     put: async (key, value, options = {}) => {
       console.log('putting', key, 'to', table, 'with', options)
+      const ttl = options.expirationTtl ?? null
       await sql`
       insert into ${tableSql} (
         key,
         value,
         expiration_ttl
-      ) values (
+      ) 
+      values (
         ${key},
         ${value},
-        ${options.expirationTtl || null}
-      )
+        ${ttl}
+      ) 
+      on conflict (key)
+      do update set 
+        value = ${value}, 
+        expiration_ttl = ${ttl}
       `
     },
     get: async (key) => {
@@ -65,7 +76,6 @@ function newKvNamespace (table: string): KVNamespace {
     delete: async (key) => {
       console.log('deleting', key, 'from', table)
       await sql`delete from ${tableSql} where key = ${key}`
-
     },
 
     list: async ({ prefix }) => {
@@ -75,8 +85,8 @@ function newKvNamespace (table: string): KVNamespace {
       from ${tableSql}
       where key like ${`${prefix}%`}
     `
-      return { keys: results.map(r => ({ name: r.key })) }
-    }
+      return { keys: results.map((r) => ({ name: r.key })) }
+    },
   }
 }
 
@@ -90,6 +100,10 @@ export interface BBDatabase {
     account: string
   ) => Promise<{ result: BackupConfig | undefined }>
   addBackupConfig: (input: BackupConfigInput) => Promise<BackupConfig>
+  addBlob: (input: ATBlobInput) => Promise<ATBlob>
+  findBlobsForBackupConfig: (
+    backupConfigId: string
+  ) => Promise<{ results: ATBlob[] }>
 }
 
 interface StorageContext {
@@ -103,6 +117,33 @@ export function getStorageContext(): StorageContext {
     authSessionStore: newKvNamespace('auth_sessions'),
     authStateStore: newKvNamespace('auth_states'),
     db: {
+      async addBlob(input) {
+        console.log('inserting', input)
+        const results = await sql<ATBlob[]>`
+        insert into blobs ${sql(input)}
+        returning *
+      `
+        if (!results[0]) {
+          throw new Error('error inserting blob')
+        }
+        return results[0]
+      },
+
+      async findBlobsForBackupConfig(backupConfigId) {
+        const results = await sql<ATBlob[]>`
+          select
+            cid,
+            backup_config_id,
+            backup_id,
+            created_at
+          from blobs
+          where backup_config_id = ${backupConfigId}
+          `
+        return {
+          results,
+        }
+      },
+
       async addBackup(input) {
         const results = await sql<Backup[]>`
           insert into backups ${sql(input)}
@@ -129,7 +170,6 @@ export function getStorageContext(): StorageContext {
             id,
             backup_config_id,
             repository_cid,
-            blobs_cid,
             preferences_cid,
             created_at
           from backups

@@ -28,7 +28,6 @@ export type Backup = {
   repository_status: BackupStatus
   repository_cid: string | null
   blobs_status: BackupStatus
-  blobs_cid: string | null
   preferences_status: BackupStatus
   preferences_cid: string | null
   created_at: string
@@ -40,7 +39,15 @@ export type BackupInput = Input<
   | 'repository_status'
   | 'repository_cid'
   | 'blobs_status'
-  | 'blobs_cid'
   | 'preferences_status'
   | 'preferences_cid'
 >
+
+export interface ATBlob {
+  cid: string
+  backup_id: number
+  backup_config_id: number | null
+  created_at: string
+}
+
+export type ATBlobInput = Input<ATBlob, 'created_at'>
