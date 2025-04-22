@@ -43,25 +43,25 @@ export const WithBackupConfigs: Story = {
       [
         {
           id: 1,
-          account_did: 'did:mailto:gmail.com:timothy-chalamet',
+          accountDid: 'did:mailto:gmail.com:timothy-chalamet',
           name: 'Backup #1',
-          atproto_account: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
-          storacha_space:
+          atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
+          storachaSpace:
             'did:key:zMw6cW3gpcPQzNkdfprbTZZh2MajkgZ3MdbqgUsqmksvBPiz',
-          include_repository: true,
-          include_blobs: true,
-          include_preferences: false,
+          includeRepository: true,
+          includeBlobs: true,
+          includePreferences: false,
         },
         {
           id: 2,
-          account_did: 'did:mailto:gmail.com:timothy-chalamet',
+          accountDid: 'did:mailto:gmail.com:timothy-chalamet',
           name: 'Bluesky #452',
-          atproto_account: 'did:plc:vv44vwwbr3lmbjht3p5fd7wz',
-          storacha_space:
+          atprotoAccount: 'did:plc:vv44vwwbr3lmbjht3p5fd7wz',
+          storachaSpace:
             'did:key:zMwdHTDrZWDPyrEA2GLc3nnBTXcAn6RN3Lexio45ULK56BXA',
-          include_repository: false,
-          include_blobs: false,
-          include_preferences: true,
+          includeRepository: false,
+          includeBlobs: false,
+          includePreferences: true,
         },
       ]
     ),

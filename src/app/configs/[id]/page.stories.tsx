@@ -36,14 +36,14 @@ const meta = {
       [
         {
           id: 1,
-          account_did: 'did:mailto:gmail.com:timothy-chalamet',
+          accountDid: 'did:mailto:gmail.com:timothy-chalamet',
           name: 'Backup #1',
-          atproto_account: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
-          storacha_space:
+          atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
+          storachaSpace:
             'did:key:zMw6cW3gpcPQzNkdfprbTZZh2MajkgZ3MdbqgUsqmksvBPiz',
-          include_repository: true,
-          include_blobs: true,
-          include_preferences: false,
+          includeRepository: true,
+          includeBlobs: true,
+          includePreferences: false,
         },
       ]
     ),
@@ -52,25 +52,23 @@ const meta = {
       [
         {
           id: 1,
-          backup_config_id: 1,
-          repository_status: 'success',
-          repository_cid:
+          backupConfigId: 1,
+          repositoryStatus: 'success',
+          repositoryCid:
             'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551repo',
-          blobs_status: 'in-progress',
-          preferences_status: 'not-started',
-          preferences_cid: null,
-          created_at: '2025-04-07 19:51:56',
+          blobsStatus: 'in-progress',
+          preferencesStatus: 'not-started',
+          createdAt: '2025-04-07 19:51:56',
         },
         {
           id: 2,
-          backup_config_id: 1,
-          repository_status: 'not-started',
-          repository_cid: null,
-          blobs_status: 'in-progress',
-          preferences_status: 'success',
-          preferences_cid:
+          backupConfigId: 1,
+          repositoryStatus: 'not-started',
+          blobsStatus: 'in-progress',
+          preferencesStatus: 'success',
+          preferencesCid:
             'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy552pref',
-          created_at: '2025-04-07 20:51:56',
+          createdAt: '2025-04-07 20:51:56',
         },
       ]
     ),
