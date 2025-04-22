@@ -103,12 +103,19 @@ const CreateBackupButton = ({
 }
 
 const Backups = ({ configId }: { configId: number }) => {
-  const { data: backups, error } = useSWR([
+  const { data: backups, error: backupsError } = useSWR([
     'api',
     `/api/backup-configs/${configId}/backups`,
   ])
-  if (error) throw error
+
+  const { data: blobs, error: blobsError } = useSWR([
+    'api',
+    `/api/backup-configs/${configId}/blobs`,
+  ])
+
+  if (backupsError) throw backupsError
   if (!backups) return null
+  if (blobsError) throw backupsError
 
   return (
     <div>
@@ -132,7 +139,7 @@ const Backups = ({ configId }: { configId: number }) => {
               </td>
               <td>
                 {backup.blobs_status} <br />
-                {backup.blobs_cid ? backup.blobs_cid : '—'}
+                {blobs?.filter((b) => b.backup_id === backup.id).length ?? 0}
               </td>
               <td>
                 {backup.preferences_status} <br />

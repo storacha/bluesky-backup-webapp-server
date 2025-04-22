@@ -57,7 +57,6 @@ const meta = {
           repository_cid:
             'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551repo',
           blobs_status: 'in-progress',
-          blobs_cid: null,
           preferences_status: 'not-started',
           preferences_cid: null,
           created_at: '2025-04-07 19:51:56',
@@ -68,7 +67,6 @@ const meta = {
           repository_status: 'not-started',
           repository_cid: null,
           blobs_status: 'in-progress',
-          blobs_cid: null,
           preferences_status: 'success',
           preferences_cid:
             'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy552pref',

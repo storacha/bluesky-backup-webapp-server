@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS backups (
       'success'
     )
   ),
-  blobs_cid TEXT,
   preferences_status TEXT DEFAULT 'not-started' CHECK (
     preferences_status IN (
       'not-started',
@@ -44,6 +43,16 @@ CREATE TABLE IF NOT EXISTS backups (
   preferences_cid TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   FOREIGN KEY (backup_config_id) REFERENCES backup_configs(id)
+);
+
+DROP TABLE IF EXISTS blobs CASCADE;
+CREATE TABLE IF NOT EXISTS blobs (
+  cid TEXT,
+  backup_config_id INTEGER,
+  FOREIGN KEY (backup_config_id) REFERENCES backup_configs(id),
+  backup_id INTEGER NOT NULL,
+  FOREIGN KEY (backup_id) REFERENCES backups(id),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 DROP TABLE IF EXISTS auth_sessions;
