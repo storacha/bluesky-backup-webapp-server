@@ -37,7 +37,7 @@ export const createBackup = async ({
     return new Response('Not authorized', { status: 401 })
   }
 
-  const backup = await db.addBackup({ backup_config_id: backupConfig.id })
+  const backup = await db.addBackup({ backupConfigId: backupConfig.id })
 
   if (!backup) {
     throw new Error('Failed to create backup config')
@@ -46,7 +46,7 @@ export const createBackup = async ({
   const atpClient = createAtprotoClient({
     account,
   })
-  const atpSession = await atpClient.restore(backupConfig.atproto_account)
+  const atpSession = await atpClient.restore(backupConfig.atprotoAccount)
   const atpAgent = new AtprotoAgent(atpSession)
 
   // Create AgentData manually because we don't want to use a store.
@@ -62,7 +62,7 @@ export const createBackup = async ({
       description: 'Bluesky Backups Service',
     },
     spaces: new Map(),
-    currentSpace: backupConfig.storacha_space,
+    currentSpace: backupConfig.storachaSpace,
   })
 
   const storachaClient = new StorachaClient(agentData, {
@@ -103,7 +103,7 @@ const doBackup = async (
   options: BackupOptions = {}
 ) => {
   try {
-    await db.updateBackup(backupId, { repository_status: 'in-progress' })
+    await db.updateBackup(backupId, { repositoryStatus: 'in-progress' })
 
     if (!atpAgent.did) {
       throw new Error('No DID found in atproto agent')
@@ -125,8 +125,8 @@ const doBackup = async (
       shardSize: 1024 * 1024 * 1024 * 4,
     })
     await db.updateBackup(backupId, {
-      repository_status: 'success',
-      repository_cid: repoRoot.toString(),
+      repositoryStatus: 'success',
+      repositoryCid: repoRoot.toString(),
     })
 
     let blobsRes
@@ -152,14 +152,14 @@ const doBackup = async (
         )
         await db.addBlob({
           cid,
-          backup_id: backupId,
-          backup_config_id: options.backupConfigId ?? null,
+          backupId: backupId,
+          backupConfigId: options.backupConfigId,
         })
       }
     } while (blobsRes.data.cursor)
   } catch (e: unknown) {
     // @ts-expect-error e.cause doesn't typecheck
     console.error('Error while creating backup', e, e.cause)
-    await db.updateBackup(backupId, { repository_status: 'failed' })
+    await db.updateBackup(backupId, { repositoryStatus: 'failed' })
   }
 }

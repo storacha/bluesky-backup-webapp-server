@@ -10,7 +10,12 @@ import postgres from 'postgres'
 
 // will use psql environment variables
 // https://github.com/porsager/postgres?tab=readme-ov-file#environmental-variables
-export const sql = postgres()
+export const sql = postgres({
+  transform: {
+    ...postgres.camel,
+    undefined: null
+  }
+})
 
 export interface ListResult {
   keys: { name: string }[]
@@ -36,7 +41,7 @@ export interface KVNamespace {
   list: (opts: KVNamespaceListOptions) => Promise<ListResult>
 }
 
-function newKvNamespace(table: string): KVNamespace {
+function newKvNamespace (table: string): KVNamespace {
   const tableSql = sql(table)
   return {
     put: async (key, value, options = {}) => {
@@ -112,12 +117,12 @@ interface StorageContext {
   db: BBDatabase
 }
 
-export function getStorageContext(): StorageContext {
+export function getStorageContext (): StorageContext {
   return {
     authSessionStore: newKvNamespace('auth_sessions'),
     authStateStore: newKvNamespace('auth_states'),
     db: {
-      async addBlob(input) {
+      async addBlob (input) {
         console.log('inserting', input)
         const results = await sql<ATBlob[]>`
         insert into blobs ${sql(input)}
@@ -129,7 +134,7 @@ export function getStorageContext(): StorageContext {
         return results[0]
       },
 
-      async findBlobsForBackupConfig(backupConfigId) {
+      async findBlobsForBackupConfig (backupConfigId) {
         const results = await sql<ATBlob[]>`
           select
             cid,
@@ -144,7 +149,7 @@ export function getStorageContext(): StorageContext {
         }
       },
 
-      async addBackup(input) {
+      async addBackup (input) {
         const results = await sql<Backup[]>`
           insert into backups ${sql(input)}
           returning *
@@ -154,7 +159,7 @@ export function getStorageContext(): StorageContext {
         }
         return results[0]
       },
-      async updateBackup(id, input) {
+      async updateBackup (id, input) {
         const results = await sql<Backup[]>`
           update backups set ${sql(input)}
           returning *
@@ -164,7 +169,7 @@ export function getStorageContext(): StorageContext {
         }
         return results[0]
       },
-      async findBackups(backupConfigId) {
+      async findBackups (backupConfigId) {
         const results = await sql<Backup[]>`
           select
             id,
@@ -179,7 +184,7 @@ export function getStorageContext(): StorageContext {
           results,
         }
       },
-      async addBackupConfig(input) {
+      async addBackupConfig (input) {
         const results = await sql<BackupConfig[]>`
           INSERT INTO backup_configs (
             account_did,
@@ -190,13 +195,13 @@ export function getStorageContext(): StorageContext {
             include_blobs,
             include_preferences
           ) values (
-            ${input.account_did},
+            ${input.accountDid},
             ${input.name},
-            ${input.atproto_account},
-            ${input.storacha_space},
-            ${input.include_repository},
-            ${input.include_blobs},
-            ${input.include_preferences}
+            ${input.atprotoAccount},
+            ${input.storachaSpace},
+            ${input.includeRepository},
+            ${input.includeBlobs},
+            ${input.includePreferences}
           )
           returning *
         `
@@ -205,7 +210,7 @@ export function getStorageContext(): StorageContext {
         }
         return results[0]
       },
-      async findBackupConfigs(account: string) {
+      async findBackupConfigs (account: string) {
         const results = await sql<BackupConfig[]>`
             SELECT id,
               name,
@@ -222,7 +227,7 @@ export function getStorageContext(): StorageContext {
           results,
         }
       },
-      async findBackupConfig(configId: number, account: string) {
+      async findBackupConfig (configId: number, account: string) {
         const [result] = await sql<BackupConfig[]>`
             SELECT id,
               name,

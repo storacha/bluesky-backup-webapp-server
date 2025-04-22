@@ -94,7 +94,7 @@ const CreateBackupButton = ({
   }
 
   const handleClick = async () => {
-    const delegationData = await delegate(client, config.storacha_space)
+    const delegationData = await delegate(client, config.storachaSpace)
     await createBackup({ configId: config.id, delegationData })
     mutateBackups()
   }
@@ -132,18 +132,18 @@ const Backups = ({ configId }: { configId: number }) => {
         <tbody>
           {backups.map((backup) => (
             <tr key={backup.id}>
-              <td>{backup.created_at}</td>
+              <td>{backup.createdAt}</td>
               <td>
-                {backup.repository_status} <br />
-                {backup.repository_cid ? backup.repository_cid : '—'}
+                {backup.repositoryStatus} <br />
+                {backup.repositoryCid ? backup.repositoryCid : '—'}
               </td>
               <td>
-                {backup.blobs_status} <br />
-                {blobs?.filter((b) => b.backup_id === backup.id).length ?? 0}
+                {backup.blobsStatus} <br />
+                {blobs?.filter((b) => b.backupId === backup.id).length ?? 0}
               </td>
               <td>
-                {backup.preferences_status} <br />
-                {backup.preferences_cid ? backup.preferences_cid : '—'}
+                {backup.preferencesStatus} <br />
+                {backup.preferencesCid ? backup.preferencesCid : '—'}
               </td>
             </tr>
           ))}
