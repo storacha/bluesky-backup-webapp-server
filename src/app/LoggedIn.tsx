@@ -8,14 +8,14 @@ import { Stack } from '@/components/ui'
 import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
 import { Sidebar } from './Sidebar'
-// import { BackupScreen } from '../components/Backup/index'
+import { BackupScreen } from '../components/Backup/index'
 
 const Outside = styled(Stack)`
   min-height: 100vh;
   align-items: stretch;
 `
 
-async function createSession(client: Client, account: Account) {
+async function createSession (client: Client, account: Account) {
   const issuer = client.agent.issuer
 
   const delegation = await atproto.delegate({
@@ -37,11 +37,10 @@ async function createSession(client: Client, account: Account) {
   })
 }
 
-export function LoggedIn() {
-  const [{ accounts, spaces, client }] = useAuthenticator()
+export function LoggedIn () {
+  const [{ accounts, client }] = useAuthenticator()
   const account = accounts[0]
   const {
-    data: sessionDID,
     error: sessionDIDError,
     mutate,
   } = useSWR<string>('/session/did', async (url: string) => {
@@ -61,7 +60,7 @@ export function LoggedIn() {
     // if the client & account are loaded, the session DID is erroring and we're
     // not currently creating a session, try to create one
     if (!sessionCreationAttempted && client && account && sessionDIDError) {
-      ;(async () => {
+      ; (async () => {
         try {
           await createSession(client, account)
           await mutate()
@@ -75,23 +74,7 @@ export function LoggedIn() {
   return (
     <Outside $direction="row">
       <Sidebar selectedConfigId={null} />
-      <div>
-        <h1>Logged In</h1>
-        <p>You are logged in as {account.toEmail()}!</p>
-        <p>You have established a server session as {sessionDID}!</p>
-        <h2>Spaces</h2>
-        <ul>
-          {spaces.map((space) => (
-            <li key={space.did()}>
-              <p>
-                {space.name} ({space.did()})
-              </p>
-            </li>
-          ))}
-        </ul>
-      </div>
-      {/* you can uncomment this if you want to see the UI. but i guess that's what storybook is for */}
-      {/* <BackupScreen /> */}
+      <BackupScreen />
     </Outside>
   )
 }

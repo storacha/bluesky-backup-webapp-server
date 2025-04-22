@@ -1,6 +1,7 @@
 import { styled } from 'next-yak'
 
 interface SwitchProps {
+  name: string
   value: boolean
   onClick: (value: boolean) => void
 }
@@ -33,13 +34,15 @@ const SwitchNob = styled.div<{ $value: boolean }>`
     $value ? SWITCH_WIDTH - NOB_DIAMETER - SWITCH_OFFSET : SWITCH_OFFSET}px;
 `
 
-export const Switch = ({ value, onClick }: SwitchProps) => {
+export const Switch = ({ name, value, onClick }: SwitchProps) => {
   return (
     <SwitchContainer $value={value} onClick={() => onClick(!value)}>
       <SwitchNob $value={value} />
       <input
         type="checkbox"
-        value={value ? 1 : 0}
+        name={name}
+        value={value ? 'on' : 'off'}
+        checked={value}
         style={{ display: 'none' }}
         onChange={(e) => onClick(e.target.checked)}
       />
