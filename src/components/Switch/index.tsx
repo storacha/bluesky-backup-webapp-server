@@ -8,7 +8,6 @@ interface SwitchProps {
   value: boolean
   onClick: (value: boolean) => void
   label?: string
-  name?: string
   isDisabled?: boolean
   children?: React.ReactNode
 }
