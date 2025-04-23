@@ -1,13 +1,13 @@
 'use client'
 
 import { Sidebar } from '@/app/Sidebar'
-import { Form } from '../Form'
+import { BackupScreen } from '@/components/Backup/index'
 
 export default function NewConfig() {
   return (
     <>
       <Sidebar selectedConfigId={null} />
-      <Form />
+      <BackupScreen />
     </>
   )
 }

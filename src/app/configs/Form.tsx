@@ -2,20 +2,18 @@
 
 import { useId } from 'react'
 import { css, styled } from 'next-yak'
-import { useAuthenticator } from '@storacha/ui-react'
 import { Stack } from '@/components/ui'
 import { Button } from '@/components/ui'
-import { BlueskyAccountSelect } from './BlueskyAccountSelect'
-import { StorachaSpaceSelect } from './StorachaSpaceSelect'
+import { BlueskyAccountSelect } from '../../components/Backup/BlueskyAccountSelect'
+import { StorachaSpaceSelect } from '../../components/Backup/StorachaSpaceSelect'
 import { action } from './new/action'
 import { Box } from './Box'
 import { BackupConfig } from '../types'
+import { useStorachaAccount } from '../hooks'
 
 // TODO: Deal with unauthenticated
 export const Form = ({ config }: { config?: BackupConfig }) => {
-  const [{ accounts }] = useAuthenticator()
-  const account = accounts[0]
-
+  const account = useStorachaAccount()
   if (!account) return null
 
   return (
