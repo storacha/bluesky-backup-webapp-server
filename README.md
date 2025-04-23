@@ -28,6 +28,12 @@ After setup you'll need to create your development database. Use `psql` to start
 psql
 ```
 
+If this is your first time setting up postgres on your machine. There's a chance the command above fails when you run it. If that happens, try the one below instead:
+
+```bash
+psql postgres
+```
+
 And then in the SQL console:
 
 ```sql
