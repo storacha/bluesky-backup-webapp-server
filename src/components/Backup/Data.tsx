@@ -4,6 +4,7 @@ import { Box } from './Backup'
 
 interface DataBoxProps {
   title: string
+  name: string
   description: string
   value: boolean
   onToggle: () => void
@@ -12,6 +13,7 @@ interface DataBoxProps {
 
 export const DataBox = ({
   title,
+  name,
   description,
   value,
   onToggle,
@@ -25,7 +27,7 @@ export const DataBox = ({
         </Text>
         <Text>{description}</Text>
       </Stack>
-      <Switch value={value} onClick={onToggle} />
+      <Switch name={name} value={value} onClick={onToggle} />
     </Box>
   )
 }

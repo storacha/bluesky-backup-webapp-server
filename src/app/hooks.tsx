@@ -8,6 +8,7 @@ import {
 } from '@w3ui/react'
 import useSWR, { SWRResponse } from 'swr'
 import { logAndCaptureError } from './sentry'
+import { useAuthenticator } from '@storacha/ui-react'
 
 /**
  * calculate the cache key for a plan's account
@@ -46,4 +47,9 @@ export const usePlan = (account: Account | undefined) => {
   }
 
   return result as UsePlanResult
+}
+export function useStorachaAccount () {
+  const [{ accounts }] = useAuthenticator()
+  const account = accounts[0]
+  return account
 }
