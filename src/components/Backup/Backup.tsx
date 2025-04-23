@@ -1,16 +1,17 @@
 import { Button, Stack, Text } from '../ui'
 import { styled } from 'next-yak'
 import { Property } from 'csstype'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DataBox } from './Data'
 import { BackupConfig } from '@/app/types'
 import { action } from '@/app/configs/new/action'
 import { Account } from '@storacha/ui-react'
 import { BlueskyAccountSelect } from '@/components/Backup/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/Backup/StorachaSpaceSelect'
+import { CreateBackupButton } from '@/app/configs/[id]/CreateBackupButton'
+import { mutate } from 'swr'
 
 interface BackupProps {
-  id?: number
   account?: Account
   config?: BackupConfig
 }
@@ -23,6 +24,13 @@ export const Heading = styled.h2`
   font-weight: 700;
   color: #000;
   font-size: 1.125rem;
+  text-transform: capitalize;
+`
+
+export const SubHeading = styled.h3`
+  font-weight: 600;
+  color: var(--color-gray-medium);
+  font-size: 0.75rem;
   text-transform: capitalize;
 `
 
@@ -102,12 +110,21 @@ const DATA_BOXES: DataConfig[] = [
   // },
 ]
 
-export const Backup = ({ id, account }: BackupProps) => {
+export const Backup = ({ account, config }: BackupProps) => {
   const [data, setData] = useState<Record<string, boolean>>({
     repository: true,
     blobs: false,
     preferences: false,
   })
+  useEffect(() => {
+    if (config) {
+      setData({
+        repository: config.includeRepository,
+        blobs: config.includeBlobs,
+        preferences: config.includePreferences
+      })
+    }
+  }, [config])
 
   const toggle = (name: string) => {
     setData((prev) => ({
@@ -121,17 +138,19 @@ export const Backup = ({ id, account }: BackupProps) => {
       <form action={action}>
         {account && <input type="hidden" name="account" value={account.did()} />}
         <Stack $gap="2rem">
-          {id ? (
-            <Heading>Backup #{id}</Heading>
+          {config ? (
+            <Heading>Backup #{config.id}</Heading>
           ) : (
             <Heading>New Backup</Heading>
           )
           }
           <Stack $gap="1rem">
             <AccountsContainer>
-              <BlueskyAccountSelect name="atproto_account" />
+              <BlueskyAccountSelect name="atproto_account"
+                {...config && { disabled: true, value: config.atprotoAccount }} />
               <ConnectingLine />
-              <StorachaSpaceSelect name="storacha_space" />
+              <StorachaSpaceSelect name="storacha_space"
+                {...config && { disabled: true, value: config.storachaSpace }} />
             </AccountsContainer>
           </Stack>
 
@@ -153,22 +172,26 @@ export const Backup = ({ id, account }: BackupProps) => {
                   title={box.title}
                   description={box.description}
                   value={data[box.key] || false}
-                  onToggle={() => toggle(box.key)}
+                  onToggle={() => !config && toggle(box.key)}
                 />
               ))}
             </Stack>
           </Stack>
-          <Button
-            type="submit"
-            $background="var(--color-dark-blue)"
-            $color="var(--color-white)"
-            $textTransform="capitalize"
-            $width="20%"
-            $fontSize="0.75rem"
-            $mt="1.4rem"
-          >
-            create backup
-          </Button>
+          {config ? (
+            <CreateBackupButton config={config} mutateBackups={() => mutate(['api', '/api/backup-configs'])}/>
+          ) : (
+            <Button
+              type="submit"
+              $background="var(--color-dark-blue)"
+              $color="var(--color-white)"
+              $textTransform="capitalize"
+              $width="20%"
+              $fontSize="0.75rem"
+              $mt="1.4rem"
+            >
+              create backup
+            </Button>
+          )}
         </Stack>
       </form>
     </Container>

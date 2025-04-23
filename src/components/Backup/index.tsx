@@ -3,6 +3,7 @@ import { Backup } from "./Backup"
 import { BackupRestore } from "./Restore"
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels"
 import { useStorachaAccount } from "@/app/hooks"
+import { BackupConfig } from "@/app/types"
 
 const BackupContainer = styled.div`
   display: flex;
@@ -28,14 +29,14 @@ const ResizeHandleInner = styled.div`
   }
 `
 
-export const BackupScreen = () => {
+export const BackupScreen = ({ config }: { config?: BackupConfig }) => {
 
   const account = useStorachaAccount()
   return (
     <BackupContainer>
       <PanelGroup autoSaveId="backup-restore-layout" direction="horizontal">
         <Panel defaultSize={60} minSize={45}>
-          <Backup account={account} />
+          <Backup account={account} config={config}/>
         </Panel>
         <PanelResizeHandle>
           <ResizeHandleOuter>
@@ -43,7 +44,7 @@ export const BackupScreen = () => {
           </ResizeHandleOuter>
         </PanelResizeHandle>
         <Panel defaultSize={40} minSize={40}>
-          <BackupRestore />
+          <BackupRestore config={config} />
         </Panel>
       </PanelGroup>
     </BackupContainer>
