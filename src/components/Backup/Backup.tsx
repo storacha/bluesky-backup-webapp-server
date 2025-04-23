@@ -185,7 +185,7 @@ export const Backup = ({ account, config }: BackupProps) => {
               $background="var(--color-dark-blue)"
               $color="var(--color-white)"
               $textTransform="capitalize"
-              $width="20%"
+              $width="fit-content"
               $fontSize="0.75rem"
               $mt="1.4rem"
             >

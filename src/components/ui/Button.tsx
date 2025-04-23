@@ -34,6 +34,7 @@ export const Button = styled.button<Partial<BtnProps>>`
   margin: ${({ $my = '', $mx = '' }) => `${$my} ${$mx}`};
   margin-top: ${({ $mt = '' }) => $mt};
   height: ${({ $height = '' }) => $height};
+  cursor: pointer;
 
   &:active {
     background-color: var(--color-gray-medium);

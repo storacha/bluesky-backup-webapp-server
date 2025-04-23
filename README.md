@@ -2,7 +2,7 @@
 
 HOT HOT HOT backups for your ATProto PDS
 
-## Local 
+## Local
 
 ### Set up `.env`
 
