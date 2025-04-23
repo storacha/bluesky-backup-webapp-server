@@ -3,7 +3,11 @@
 import { useSWR } from '@/app/swr'
 import { useAuthenticator } from '@storacha/ui-react'
 import { useRef, ChangeEventHandler } from 'react'
-import { LocationSelect } from './LocationSelect'
+import { LocationSelect } from '../../app/configs/LocationSelect'
+import { AccountLogo, Box } from './Backup'
+import { Stack } from '../ui'
+import Image from 'next/image'
+import { PlusCircle } from '@phosphor-icons/react'
 
 const LOG_INTO_BLUESKY_VALUE = '-'
 
@@ -35,23 +39,38 @@ export const BlueskyAccountSelect = (
     }
   }
 
+  const selectElement = useRef<HTMLSelectElement>(null)
+  const hasValue = Boolean(selectElement.current?.value)
   return (
-    <LocationSelect label="Bluesky" {...props} onChange={changeHandler}>
-      {props.disabled
-        ? props.value && <BlueskyOption did={props.value} />
-        : atprotoAccounts && (
-            <>
-              {atprotoAccounts.map((account) => (
-                <BlueskyOption key={account} did={account} />
-              ))}
-              {atprotoAccounts.length === 0 && <option value="-"></option>}
-              <hr />
-              <option value={LOG_INTO_BLUESKY_VALUE}>
-                Connect a Bluesky account…
-              </option>
-            </>
-          )}
-    </LocationSelect>
+    <Box $background={hasValue ? 'var(--color-white)' : ''}>
+      <Stack $gap=".8rem" $direction="row" $alignItems="center">
+        <AccountLogo $type='original' $hasAccount={hasValue}>
+          <Image
+            src="/bluesky.png"
+            alt="Bluesky Logo"
+            width={25}
+            height={25}
+          />
+        </AccountLogo>
+        <LocationSelect label="Bluesky Account" {...props} onChange={changeHandler} ref={selectElement}>
+          {props.disabled
+            ? props.value && <BlueskyOption did={props.value} />
+            : atprotoAccounts && (
+              <>
+                {atprotoAccounts.map((account) => (
+                  <BlueskyOption key={account} did={account} />
+                ))}
+                {atprotoAccounts.length === 0 && <option value="-"></option>}
+                <hr />
+                <option value={LOG_INTO_BLUESKY_VALUE}>
+                  Connect a Bluesky account…
+                </option>
+              </>
+            )}
+        </LocationSelect>
+      </Stack>
+      <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
+    </Box>
   )
 }
 

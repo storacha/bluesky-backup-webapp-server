@@ -97,10 +97,10 @@ export function Sidebar({
     <SidebarOutside>
       <Stack>
         <Header>Storacha</Header>
-        <Heading>Backup Schedules</Heading>
+        <Heading>Backups</Heading>
         <Stack $gap="1rem">
           <Configs selectedConfigId={selectedConfigId} />
-          <AddConfig href="/configs/new">Add backup schedule…</AddConfig>
+          <AddConfig href="/configs/new">Add backup…</AddConfig>
         </Stack>
       </Stack>
       <Stack $gap="1rem">
