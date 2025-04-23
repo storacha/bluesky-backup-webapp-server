@@ -32,12 +32,12 @@ export const createSnapshot = async ({
   }
   const delegation = delegationResult.ok
 
-  const { result: backup } = await db.findBackup(backupId, account)
+  const { result: backup } = await db.findBackup(backupId)
   if (!backup) {
     return new Response('Not authorized', { status: 401 })
   }
 
-  const snapshot = await db.addSnapshot({ backupId: backup.id })
+  const snapshot = await db.addSnapshot({ backupId: backup.id, atprotoAccount: backup.atprotoAccount })
 
   if (!snapshot) {
     throw new Error('Failed to create snapshot')

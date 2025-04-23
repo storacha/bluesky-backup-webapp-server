@@ -28,6 +28,7 @@ export type SnapshotStatus =
 
 export type Snapshot = {
   id: number
+  atprotoAccount: Did
   backupId: number
   repositoryStatus: SnapshotStatus
   repositoryCid?: string
@@ -49,6 +50,7 @@ export type SnapshotInput = Input<
 
 export interface ATBlob {
   cid: string
+  contentType: string
   snapshotId: number
   backupId?: number
   createdAt: string

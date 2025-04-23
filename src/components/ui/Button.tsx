@@ -1,5 +1,6 @@
 import { Property } from 'csstype'
 import { styled } from 'next-yak'
+import { ReactNode } from 'react'
 
 export interface BtnProps {
   $color: Property.Color
@@ -19,6 +20,10 @@ export interface BtnProps {
   $py: `${Property.PaddingTop} ${Property.PaddingBottom}`
   $my: `${Property.MarginTop} ${Property.MarginBottom}`
   $pt: `${Property.PaddingTop}`
+  isLoading?: boolean
+  hideLoadingText?: boolean
+  variant?: string
+  leftIcon?: ReactNode
 }
 
 export const Button = styled.button<Partial<BtnProps>>`

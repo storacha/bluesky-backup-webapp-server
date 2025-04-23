@@ -98,15 +98,18 @@ function newKvNamespace(table: string): KVNamespace {
 export interface BBDatabase {
   addSnapshot: (input: SnapshotInput) => Promise<Snapshot>
   updateSnapshot: (id: number, input: Partial<Snapshot>) => Promise<Snapshot>
-  findSnapshots: (backupId: string) => Promise<{ results: Snapshot[] }>
+  findSnapshots: (backupId: number) => Promise<{ results: Snapshot[] }>
+  findSnapshot: (id: number) => Promise<{ result: Snapshot | undefined }>
   findBackups: (account: string) => Promise<{ results: Backup[] }>
-  findBackup: (
-    id: number,
-    account: string
-  ) => Promise<{ result: Backup | undefined }>
+  findBackup: (id: number) => Promise<{ result: Backup | undefined }>
   addBackup: (input: BackupInput) => Promise<Backup>
   addBlob: (input: ATBlobInput) => Promise<ATBlob>
-  findBlobsForBackup: (backupId: string) => Promise<{ results: ATBlob[] }>
+  findBlobsForBackup: (
+    id: string
+  ) => Promise<{ results: ATBlob[] }>
+  findBlobsForSnapshot: (
+    id: string
+  ) => Promise<{ results: ATBlob[] }>
 }
 
 interface StorageContext {
@@ -132,7 +135,7 @@ export function getStorageContext(): StorageContext {
         return results[0]
       },
 
-      async findBlobsForBackup(backupId) {
+      async findBlobsForBackup (id) {
         const results = await sql<ATBlob[]>`
           select
             cid,
@@ -140,14 +143,47 @@ export function getStorageContext(): StorageContext {
             snapshot_id,
             created_at
           from blobs
-          where backup_id = ${backupId}
+          where backup_id = ${id}
           `
         return {
           results,
         }
       },
 
-      async addSnapshot(input) {
+      async findBlobsForSnapshot (id) {
+        const results = await sql<ATBlob[]>`
+          select
+            cid,
+            backup_id,
+            snapshot_id,
+            created_at
+          from blobs
+          where snapshot_id = ${id}
+          `
+        return {
+          results,
+        }
+      },
+      async findSnapshot (id: number) {
+        const [result] = await sql<Snapshot[]>`
+            SELECT id,
+              atproto_account,
+              backup_id,
+              repository_status,
+              repository_cid,
+              blobs_status,
+              preferences_status,
+              preferences_cid,
+              created_at
+             FROM snapshots
+             WHERE id = ${id}
+          `
+
+        return {
+          result,
+        }
+      },
+      async addSnapshot (input) {
         const results = await sql<Snapshot[]>`
           insert into snapshots ${sql(input)}
           returning *
@@ -226,7 +262,7 @@ export function getStorageContext(): StorageContext {
           results,
         }
       },
-      async findBackup(backupId: number, account: string) {
+      async findBackup (id: number) {
         const [result] = await sql<Backup[]>`
             SELECT id,
               name,
@@ -237,8 +273,7 @@ export function getStorageContext(): StorageContext {
               include_preferences
 
              FROM backups
-             WHERE id = ${backupId}
-               AND account_did = ${account}
+             WHERE id = ${id}
           `
 
         return {

@@ -6,6 +6,7 @@ import useSWR from 'swr'
 import { formatDate, shortenDID } from '@/lib/ui'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { useState } from 'react'
+import RestoreDialog from '../RestoreUI'
 
 const RestoreContainer = styled(Container)`
   height: 100vh;
@@ -112,46 +113,60 @@ export const BackupRestore = ({ backup }: BackupRestoreProps) => {
   )
 }
 
+enum SnapshotDetailState {
+  DEFAULT,
+  RESTORE_ALL
+}
+
 function SnapshotDetail ({ snapshot }: { snapshot: Snapshot }) {
-  return (
-    <Stack $direction='row' $alignItems='center' $justifyContent='between'>
-      <Stack $direction='column' $alignItems='flex-start'>
-        <h3>Snapshot {snapshot.id}</h3>
-        <h3>{formatDate(snapshot.createdAt)}</h3>
-      </Stack>
-      <Stack $direction='column' $alignItems='flex-start'>
-        <Box>
-          <Stack $direction='row'>
-            Repository
+  const [state, setState] = useState<SnapshotDetailState>(SnapshotDetailState.DEFAULT)
+  switch (state) {
+    case SnapshotDetailState.DEFAULT:
+      return (
+        <Stack $direction='row' $alignItems='center' $justifyContent='between'>
+          <Stack $direction='column' $alignItems='flex-start'>
+            <h3>Snapshot {snapshot.id}</h3>
+            <h3>{formatDate(snapshot.createdAt)}</h3>
           </Stack>
-          <Stack $direction='row'>
-            <Button>View</Button>
-            <Button>Restore</Button>
+          <Stack $direction='column' $alignItems='flex-start'>
+            <Box>
+              <Stack $direction='row'>
+                Repository
+              </Stack>
+              <Stack $direction='row'>
+                <Button>View</Button>
+                <Button>Restore</Button>
+              </Stack>
+            </Box>
+            <Box>
+              <Stack $direction='row'>
+                Blobs
+              </Stack>
+              <Stack $direction='row'>
+                <Button>View</Button>
+                <Button>Restore</Button>
+              </Stack>
+            </Box>
+            <Box>
+              <Stack $direction='row'>
+                Preferences
+              </Stack>
+              <Stack $direction='row'>
+                <Button>View</Button>
+                <Button>Restore</Button>
+              </Stack>
+            </Box>
+            <Stack $direction='row'>
+              <Button>View all</Button>
+              <Button onClick={() => { setState(SnapshotDetailState.RESTORE_ALL) }}>Restore all</Button>
+            </Stack>
           </Stack>
-        </Box>
-        <Box>
-          <Stack $direction='row'>
-            Blobs
-          </Stack>
-          <Stack $direction='row'>
-            <Button>View</Button>
-            <Button>Restore</Button>
-          </Stack>
-        </Box>
-        <Box>
-          <Stack $direction='row'>
-            Preferences
-          </Stack>
-          <Stack $direction='row'>
-            <Button>View</Button>
-            <Button>Restore</Button>
-          </Stack>
-        </Box>
-        <Stack $direction='row'>
-          <Button>View all</Button>
-          <Button>Restore all</Button>
         </Stack>
-      </Stack>
-    </Stack>
-  )
+      )
+
+      case SnapshotDetailState.RESTORE_ALL:
+        return (
+          <RestoreDialog snapshotId={snapshot.id}/>
+        )
+  }
 }
