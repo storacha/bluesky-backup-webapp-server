@@ -1,4 +1,4 @@
-import { Button, Modal, Stack, Text } from '../ui'
+import { Button, Stack, Text } from '../ui'
 import { styled } from 'next-yak'
 import { Property } from 'csstype'
 import { ReactNode, useEffect, useState } from 'react'
@@ -10,8 +10,6 @@ import { BlueskyAccountSelect } from '@/components/Backup/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/Backup/StorachaSpaceSelect'
 import { CreateSnapshotButton } from '@/app/configs/[id]/CreateSnapshotButton'
 import { mutate } from 'swr'
-import { PlusCircle } from '@phosphor-icons/react/dist/ssr'
-import { useDisclosure } from '@/hooks/use-disclosure'
 
 interface BackupProps {
   account?: Account
