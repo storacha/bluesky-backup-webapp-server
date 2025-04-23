@@ -8,11 +8,11 @@ import { BlueskyAccountSelect } from '../../components/Backup/BlueskyAccountSele
 import { StorachaSpaceSelect } from '../../components/Backup/StorachaSpaceSelect'
 import { action } from './new/action'
 import { Box } from './Box'
-import { BackupConfig } from '../types'
+import { Backup } from '../types'
 import { useStorachaAccount } from '../hooks'
 
 // TODO: Deal with unauthenticated
-export const Form = ({ config }: { config?: BackupConfig }) => {
+export const Form = ({ config }: { config?: Backup }) => {
   const account = useStorachaAccount()
   if (!account) return null
 

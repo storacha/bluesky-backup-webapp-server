@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation'
 export const action = async (data: FormData) => {
   const { db } = getStorageContext()
 
-  const backupConfig = await db.addBackupConfig({
+  const backup = await db.addBackup({
     // TODO: remove typecasts and do real typechecking and error handling here
     accountDid: data.get('account') as string,
     name: (data.get('name') as string) || 'New Config',
@@ -19,5 +19,5 @@ export const action = async (data: FormData) => {
       data.get('include_preferences') === 'on' ? true : false,
   })
 
-  redirect(`/configs/${backupConfig.id}`) // Redirect to the new config page
+  redirect(`/configs/${backup.id}`) // Redirect to the new config page
 }

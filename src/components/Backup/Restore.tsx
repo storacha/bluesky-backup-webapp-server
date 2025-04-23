@@ -1,7 +1,7 @@
 import { styled } from 'next-yak'
 import { Box, Container, Heading, SubHeading } from './Backup'
 import { ButtonLink, Center, Stack, Text } from '../ui'
-import { Snapshot, BackupConfig } from '@/app/types'
+import { Snapshot, Backup } from '@/app/types'
 import useSWR from 'swr'
 import { formatDate, shortenDID } from '@/lib/ui'
 
@@ -34,13 +34,13 @@ font-size: 0.75rem;
 `
 
 export interface BackupRestoreProps {
-  config?: BackupConfig
+  config?: Backup
 }
 
 export const BackupRestore = ({ config }: BackupRestoreProps) => {
   const { data: snapshots } = useSWR<Snapshot[]>(config && [
     'api',
-    `/api/backup-configs/${config.id}/backups`,
+    `/api/backups/${config.id}/snapshots`,
   ])
 
   return (

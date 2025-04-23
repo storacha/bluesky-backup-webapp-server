@@ -18,7 +18,7 @@ export default function Config({
   const {
     data: configs,
     error,
-  } = useSWR(['api', '/api/backup-configs'])
+  } = useSWR(['api', '/api/backups'])
   if (error) throw error
   if (!configs) return null
 

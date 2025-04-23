@@ -1,15 +1,15 @@
 'use client';
-import { BackupConfig } from '@/app/types';
+import { Backup } from '@/app/types';
 import { Button } from '@/components/ui';
 import { useAuthenticator } from '@storacha/ui-react';
-import { createBackup } from './createBackup';
+import { createSnapshot } from './createSnapshot';
 import { delegate } from './delegate';
 
 
-export const CreateBackupButton = ({
+export const CreateSnapshotButton = ({
   config, mutateBackups,
 }: {
-  config: BackupConfig;
+  config: Backup;
   mutateBackups: () => void;
 }) => {
   const [{ accounts, client }] = useAuthenticator();
@@ -20,7 +20,7 @@ export const CreateBackupButton = ({
 
   const handleClick = async () => {
     const delegationData = await delegate(client, config.storachaSpace);
-    await createBackup({ configId: config.id, delegationData });
+    await createSnapshot({ configId: config.id, delegationData });
     mutateBackups();
   };
 

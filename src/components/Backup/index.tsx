@@ -1,9 +1,9 @@
 import { styled } from "next-yak"
-import { Backup } from "./Backup"
+import { BackupDetail } from "./Backup"
 import { BackupRestore } from "./Restore"
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels"
 import { useStorachaAccount } from "@/app/hooks"
-import { BackupConfig } from "@/app/types"
+import { Backup } from "@/app/types"
 
 const BackupContainer = styled.div`
   display: flex;
@@ -29,14 +29,14 @@ const ResizeHandleInner = styled.div`
   }
 `
 
-export const BackupScreen = ({ config }: { config?: BackupConfig }) => {
+export const BackupScreen = ({ config }: { config?: Backup }) => {
 
   const account = useStorachaAccount()
   return (
     <BackupContainer>
       <PanelGroup autoSaveId="backup-restore-layout" direction="horizontal">
         <Panel defaultSize={60} minSize={45}>
-          <Backup account={account} config={config}/>
+          <BackupDetail account={account} backup={config}/>
         </Panel>
         <PanelResizeHandle>
           <ResizeHandleOuter>

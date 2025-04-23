@@ -11,7 +11,7 @@ import { getSession } from '@/lib/sessions'
 import { serverIdentity } from '@/lib/server/auth'
 import { receiptsEndpoint, serviceConnection } from '@/components/services'
 
-export const createBackup = async ({
+export const createSnapshot = async ({
   configId,
   delegationData,
 }: {
@@ -32,21 +32,21 @@ export const createBackup = async ({
   }
   const delegation = delegationResult.ok
 
-  const { result: backupConfig } = await db.findBackupConfig(configId, account)
-  if (!backupConfig) {
+  const { result: backup } = await db.findBackup(configId, account)
+  if (!backup) {
     return new Response('Not authorized', { status: 401 })
   }
 
-  const backup = await db.addSnapshot({ backupConfigId: backupConfig.id })
+  const snapshot = await db.addSnapshot({ backupId: backup.id })
 
-  if (!backup) {
-    throw new Error('Failed to create backup config')
+  if (!snapshot) {
+    throw new Error('Failed to create snapshot')
   }
 
   const atpClient = createAtprotoClient({
     account,
   })
-  const atpSession = await atpClient.restore(backupConfig.atprotoAccount)
+  const atpSession = await atpClient.restore(backup.atprotoAccount)
   const atpAgent = new AtprotoAgent(atpSession)
 
   // Create AgentData manually because we don't want to use a store.
@@ -62,7 +62,7 @@ export const createBackup = async ({
       description: 'Bluesky Backups Service',
     },
     spaces: new Map(),
-    currentSpace: backupConfig.storachaSpace,
+    currentSpace: backup.storachaSpace,
   })
 
   const storachaClient = new StorachaClient(agentData, {
@@ -84,18 +84,18 @@ export const createBackup = async ({
   })
   storachaClient.addProof(delegation)
 
-  void doBackup(backup.id, db, atpAgent, storachaClient, {
-    backupConfigId: backupConfig.id,
+  void doSnapshot(backup.id, db, atpAgent, storachaClient, {
+    backupId: backup.id,
   })
 
   return backup
 }
 
 interface BackupOptions {
-  backupConfigId?: number
+  backupId?: number
 }
 
-const doBackup = async (
+const doSnapshot = async (
   snapshotId: number,
   db: BBDatabase,
   atpAgent: AtprotoAgent,
@@ -153,7 +153,7 @@ const doBackup = async (
         await db.addBlob({
           cid,
           snapshotId: snapshotId,
-          backupConfigId: options.backupConfigId,
+          backupId: options.backupId,
         })
       }
     } while (blobsRes.data.cursor)

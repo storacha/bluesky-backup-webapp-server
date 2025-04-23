@@ -113,7 +113,7 @@ export function Sidebar({
 }
 
 function Configs({ selectedConfigId }: { selectedConfigId: number | null }) {
-  const { data } = useSWR(['api', '/api/backup-configs'])
+  const { data } = useSWR(['api', '/api/backups'])
 
   if (!data) return <Loader />
 

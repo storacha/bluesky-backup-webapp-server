@@ -1,6 +1,6 @@
 import { Did } from '@atproto/oauth-client-node'
 
-export type BackupConfig = {
+export type Backup = {
   id: number
   accountDid: string
   name: string
@@ -18,13 +18,13 @@ type Input<
 > = Omit<Omit<T, NoInput>, OptionalInput> &
   Partial<Omit<Pick<T, OptionalInput>, NoInput>>
 
-export type BackupConfigInput = Input<BackupConfig, 'id'>
+export type BackupInput = Input<Backup, 'id'>
 
 export type SnapshotStatus = 'not-started' | 'in-progress' | 'failed' | 'success'
 
 export type Snapshot = {
   id: number
-  backupConfigId: number
+  backupId: number
   repositoryStatus: SnapshotStatus
   repositoryCid?: string
   blobsStatus: SnapshotStatus
@@ -46,7 +46,7 @@ export type SnapshotInput = Input<
 export interface ATBlob {
   cid: string
   snapshotId: number
-  backupConfigId?: number
+  backupId?: number
   createdAt: string
 }
 
