@@ -19,5 +19,5 @@ export const action = async (data: FormData) => {
       data.get('include_preferences') === 'on' ? true : false,
   })
 
-  redirect(`/configs/${backup.id}`) // Redirect to the new config page
+  redirect(`/backups/${backup.id}`) // Redirect to the new config page
 }

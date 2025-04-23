@@ -100,7 +100,7 @@ export function Sidebar({
         <Heading>Backups</Heading>
         <Stack $gap="1rem">
           <Configs selectedConfigId={selectedConfigId} />
-          <AddConfig href="/configs/new">Add backup…</AddConfig>
+          <AddConfig href="/backups/new">Add backup…</AddConfig>
         </Stack>
       </Stack>
       <Stack $gap="1rem">
@@ -120,7 +120,7 @@ function Configs({ selectedConfigId }: { selectedConfigId: number | null }) {
   return (
     <ConfigList>
       {data.map(({ id, name }) => (
-        <Link key={id} href={`/configs/${id}`}>
+        <Link key={id} href={`/backups/${id}`}>
           <ConfigItem $selected={id === selectedConfigId}>{name}</ConfigItem>
         </Link>
       ))}

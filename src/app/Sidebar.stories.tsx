@@ -20,9 +20,9 @@ const meta = {
     withFullViewportHeight,
     withData(['api', '/api/backups'], []),
     withLinks({
-      '/configs/new': ['Pages/∕configs∕new'],
-      '/configs/1': ['Pages/∕configs∕[id]'],
-      '/configs/2': ['Pages/∕configs∕[id]'],
+      '/backups/new': ['Pages/∕backups∕new'],
+      '/backups/1': ['Pages/∕backups∕[id]'],
+      '/backups/2': ['Pages/∕backups∕[id]'],
     }),
   ],
   args: {

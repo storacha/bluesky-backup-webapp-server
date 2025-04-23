@@ -2,7 +2,7 @@
 
 import { shortenDID } from '@/lib/ui'
 import { useAuthenticator } from '@storacha/ui-react'
-import { LocationSelect } from '../../app/configs/LocationSelect'
+import { LocationSelect } from '../../app/backups/LocationSelect'
 import { AccountLogo, Box } from './Backup'
 import { Stack } from '../ui'
 import Image from 'next/image'

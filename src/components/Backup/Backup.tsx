@@ -4,11 +4,11 @@ import { Property } from 'csstype'
 import { ReactNode, useEffect, useState } from 'react'
 import { DataBox } from './Data'
 import { Backup } from '@/app/types'
-import { action } from '@/app/configs/new/action'
+import { action } from '@/app/backups/new/action'
 import { Account } from '@storacha/ui-react'
 import { BlueskyAccountSelect } from '@/components/Backup/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/Backup/StorachaSpaceSelect'
-import { CreateSnapshotButton } from '@/app/configs/[id]/CreateSnapshotButton'
+import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
 import { mutate } from 'swr'
 
 interface BackupProps {
