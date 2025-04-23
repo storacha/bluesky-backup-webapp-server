@@ -1,10 +1,10 @@
 import {
   ATBlob,
   ATBlobInput,
-  Backup,
+  Snapshot,
   BackupConfig,
   BackupConfigInput,
-  BackupInput,
+  SnapshotInput,
 } from '@/app/types'
 import postgres from 'postgres'
 
@@ -96,9 +96,9 @@ function newKvNamespace (table: string): KVNamespace {
 }
 
 export interface BBDatabase {
-  addBackup: (input: BackupInput) => Promise<Backup>
-  updateBackup: (id: number, input: Partial<Backup>) => Promise<Backup>
-  findBackups: (backupConfigId: string) => Promise<{ results: Backup[] }>
+  addSnapshot: (input: SnapshotInput) => Promise<Snapshot>
+  updateSnapshot: (id: number, input: Partial<Snapshot>) => Promise<Snapshot>
+  findSnapshots: (backupConfigId: string) => Promise<{ results: Snapshot[] }>
   findBackupConfigs: (account: string) => Promise<{ results: BackupConfig[] }>
   findBackupConfig: (
     id: number,
@@ -139,7 +139,7 @@ export function getStorageContext (): StorageContext {
           select
             cid,
             backup_config_id,
-            backup_id,
+            snapshot_id,
             created_at
           from blobs
           where backup_config_id = ${backupConfigId}
@@ -149,9 +149,9 @@ export function getStorageContext (): StorageContext {
         }
       },
 
-      async addBackup (input) {
-        const results = await sql<Backup[]>`
-          insert into backups ${sql(input)}
+      async addSnapshot (input) {
+        const results = await sql<Snapshot[]>`
+          insert into snapshots ${sql(input)}
           returning *
         `
         if (!results[0]) {
@@ -159,25 +159,25 @@ export function getStorageContext (): StorageContext {
         }
         return results[0]
       },
-      async updateBackup (id, input) {
-        const results = await sql<Backup[]>`
-          update backups set ${sql(input)}
+      async updateSnapshot (id, input) {
+        const results = await sql<Snapshot[]>`
+          update snapshots set ${sql(input)}
           returning *
         `
         if (!results[0]) {
-          throw new Error('error inserting backup')
+          throw new Error('error inserting snapshot')
         }
         return results[0]
       },
-      async findBackups (backupConfigId) {
-        const results = await sql<Backup[]>`
+      async findSnapshots (backupConfigId) {
+        const results = await sql<Snapshot[]>`
           select
             id,
             backup_config_id,
             repository_cid,
             preferences_cid,
             created_at
-          from backups
+          from snapshots
           where backup_config_id = ${backupConfigId}
           `
         return {

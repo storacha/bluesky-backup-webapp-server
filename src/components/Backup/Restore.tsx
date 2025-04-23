@@ -1,7 +1,7 @@
 import { styled } from 'next-yak'
 import { Box, Container, Heading, SubHeading } from './Backup'
 import { ButtonLink, Center, Stack, Text } from '../ui'
-import { Backup, BackupConfig } from '@/app/types'
+import { Snapshot, BackupConfig } from '@/app/types'
 import useSWR from 'swr'
 import { formatDate, shortenDID } from '@/lib/ui'
 
@@ -12,7 +12,7 @@ const RestoreContainer = styled(Container)`
 
 const Instruction = styled(Text)``
 
-const Snapshot = styled(Stack)`
+const SnapshotContainer = styled(Stack)`
 margin-top: 4rem;
 `
 
@@ -38,7 +38,7 @@ export interface BackupRestoreProps {
 }
 
 export const BackupRestore = ({ config }: BackupRestoreProps) => {
-  const { data: snapshots } = useSWR<Backup[]>(config && [
+  const { data: snapshots } = useSWR<Snapshot[]>(config && [
     'api',
     `/api/backup-configs/${config.id}/backups`,
   ])
@@ -57,7 +57,7 @@ export const BackupRestore = ({ config }: BackupRestoreProps) => {
               </DetailValue>
             </Stack>
           </Details>
-          <Snapshot $gap='1rem'>
+          <SnapshotContainer $gap='1rem'>
             <SubHeading>Snapshots</SubHeading>
             {snapshots?.map(snapshot => (
               <SnapshotSummary key={snapshot.id} $background='var(--color-white)'>
@@ -79,7 +79,7 @@ export const BackupRestore = ({ config }: BackupRestoreProps) => {
                 </Stack>
               </SnapshotSummary>
             ))}
-          </Snapshot>
+          </SnapshotContainer>
         </>
       ) : (
         <Center $height="90vh">

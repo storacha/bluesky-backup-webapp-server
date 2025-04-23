@@ -37,7 +37,7 @@ export const createBackup = async ({
     return new Response('Not authorized', { status: 401 })
   }
 
-  const backup = await db.addBackup({ backupConfigId: backupConfig.id })
+  const backup = await db.addSnapshot({ backupConfigId: backupConfig.id })
 
   if (!backup) {
     throw new Error('Failed to create backup config')
@@ -96,14 +96,14 @@ interface BackupOptions {
 }
 
 const doBackup = async (
-  backupId: number,
+  snapshotId: number,
   db: BBDatabase,
   atpAgent: AtprotoAgent,
   storachaClient: StorachaClient,
   options: BackupOptions = {}
 ) => {
   try {
-    await db.updateBackup(backupId, { repositoryStatus: 'in-progress' })
+    await db.updateSnapshot(snapshotId, { repositoryStatus: 'in-progress' })
 
     if (!atpAgent.did) {
       throw new Error('No DID found in atproto agent')
@@ -124,7 +124,7 @@ const doBackup = async (
       // set shard size to 4 GiB - the maximum shard size
       shardSize: 1024 * 1024 * 1024 * 4,
     })
-    await db.updateBackup(backupId, {
+    await db.updateSnapshot(snapshotId, {
       repositoryStatus: 'success',
       repositoryCid: repoRoot.toString(),
     })
@@ -152,7 +152,7 @@ const doBackup = async (
         )
         await db.addBlob({
           cid,
-          backupId: backupId,
+          snapshotId: snapshotId,
           backupConfigId: options.backupConfigId,
         })
       }
@@ -160,6 +160,6 @@ const doBackup = async (
   } catch (e: unknown) {
     // @ts-expect-error e.cause doesn't typecheck
     console.error('Error while creating backup', e, e.cause)
-    await db.updateBackup(backupId, { repositoryStatus: 'failed' })
+    await db.updateSnapshot(snapshotId, { repositoryStatus: 'failed' })
   }
 }

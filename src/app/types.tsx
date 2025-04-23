@@ -20,21 +20,21 @@ type Input<
 
 export type BackupConfigInput = Input<BackupConfig, 'id'>
 
-export type BackupStatus = 'not-started' | 'in-progress' | 'failed' | 'success'
+export type SnapshotStatus = 'not-started' | 'in-progress' | 'failed' | 'success'
 
-export type Backup = {
+export type Snapshot = {
   id: number
   backupConfigId: number
-  repositoryStatus: BackupStatus
+  repositoryStatus: SnapshotStatus
   repositoryCid?: string
-  blobsStatus: BackupStatus
-  preferencesStatus: BackupStatus
+  blobsStatus: SnapshotStatus
+  preferencesStatus: SnapshotStatus
   preferencesCid?: string
   createdAt: string
 }
 
-export type BackupInput = Input<
-  Backup,
+export type SnapshotInput = Input<
+  Snapshot,
   'id' | 'createdAt',
   | 'repositoryStatus'
   | 'repositoryCid'
@@ -45,7 +45,7 @@ export type BackupInput = Input<
 
 export interface ATBlob {
   cid: string
-  backupId: number
+  snapshotId: number
   backupConfigId?: number
   createdAt: string
 }
