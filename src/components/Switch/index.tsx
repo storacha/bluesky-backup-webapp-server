@@ -10,7 +10,6 @@ interface SwitchProps {
   label?: string
   isDisabled?: boolean
   children?: React.ReactNode
-  name?: string
 }
 
 interface AriaSwitchProps extends Omit<SwitchProps, 'value' | 'onClick'> {
