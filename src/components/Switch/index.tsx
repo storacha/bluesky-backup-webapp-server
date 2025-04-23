@@ -4,7 +4,6 @@ import { useSwitch, useFocusRing, VisuallyHidden } from 'react-aria'
 import { useToggleState } from 'react-stately'
 
 interface SwitchProps {
-  name: string
   value: boolean
   onClick: (value: boolean) => void
   label?: string

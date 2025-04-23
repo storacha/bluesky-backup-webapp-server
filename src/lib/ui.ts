@@ -23,6 +23,10 @@ export function shorten(
   return `${text.slice(0, front)}…${text.slice(-back)}`
 }
 
+export function formatDate(date: string){
+  return new Date(date).toLocaleString()
+}
+
 export function filesize(bytes: number) {
   if (bytes < B / 2) return `${bytes}B` // avoid 0.0KB
   if (bytes < MB / 2) return `${(bytes / 1024).toFixed(1)}KB` // avoid 0.0MB

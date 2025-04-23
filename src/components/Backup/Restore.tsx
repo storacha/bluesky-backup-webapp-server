@@ -1,8 +1,9 @@
 import { styled } from 'next-yak'
 import { Box, Container, Heading, SubHeading } from './Backup'
-import { Button, Center, Stack, Text } from '../ui'
+import { ButtonLink, Center, Stack, Text } from '../ui'
 import { Backup, BackupConfig } from '@/app/types'
 import useSWR from 'swr'
+import { formatDate, shortenDID } from '@/lib/ui'
 
 const RestoreContainer = styled(Container)`
   height: 100vh;
@@ -52,7 +53,7 @@ export const BackupRestore = ({ config }: BackupRestoreProps) => {
             <Stack $direction='row' $alignItems='center' $gap='1rem'>
               <DetailName>Account DID</DetailName>
               <DetailValue>
-                {config.atprotoAccount}
+                {shortenDID(config.atprotoAccount)}
               </DetailValue>
             </Stack>
           </Details>
@@ -60,12 +61,21 @@ export const BackupRestore = ({ config }: BackupRestoreProps) => {
             <SubHeading>Snapshots</SubHeading>
             {snapshots?.map(snapshot => (
               <SnapshotSummary key={snapshot.id} $background='var(--color-white)'>
-                <Stack $direction='row'>
-                  <Stack $direction='column'>
+                <Stack $direction='row' $alignItems='center' $justifyContent='space-between' $width='100%'>
+                  <Stack $direction='column' $alignItems='flex-start'>
                     <h3>Snapshot {snapshot.id}</h3>
-                    <h3>{snapshot.createdAt}</h3>
+                    <h3>{formatDate(snapshot.createdAt)}</h3>
                   </Stack>
-                  <Button>View</Button>
+                  <ButtonLink
+                        $background="var(--color-white)"
+                        $color="var(--color-black)"
+                        $textTransform="capitalize"
+                        $width="fit-content"
+                        $fontSize="0.75rem"
+                   href={`/snapshots/${snapshot.id}`}
+                   >
+                    View
+                  </ButtonLink>
                 </Stack>
               </SnapshotSummary>
             ))}
