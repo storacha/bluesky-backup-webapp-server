@@ -9,7 +9,7 @@ export async function GET(
   const { id } = await params
   const { db } = getStorageContext()
 
-  const { results } = await db.findSnapshots(parseInt(id))
+  const { result } = await db.findSnapshot(parseInt(id))
 
-  return Response.json(results)
+  return Response.json(result)
 }
