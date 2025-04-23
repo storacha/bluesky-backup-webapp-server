@@ -73,6 +73,15 @@ export interface ModalProps extends AriaDialogProps {
   size?: ModalSize
 }
 
+/**
+ * A modal component with the native `<dialog />` element.
+ * @param {string} title - A title for the modal. This is optional and is not not rendered if nothing is provided.
+ * @param {boolean} isOpen - State value to check if the modal is open. defaults to `false`, and is required.
+ * @param {func} onClose - callback handle that you can pass to the modal component. it closes the modal
+ * @param {boolean} hasCloseBtn - this prop is used to render a close button in the modal. if it isnot provided, the modal can be closed by pressing teh 'escape` key or clicking the overlay
+ * @param {string} size - controls the size of the modal. it accepts any of these values: "xs", "sm", "md", "lg", "xl", or "full"
+ * @see [learn more](https://github.com/storacha/bluesky-backup-webapp-server/components.md)
+ */
 export const Modal = ({
   title,
   isOpen,
