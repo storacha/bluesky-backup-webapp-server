@@ -1,9 +1,11 @@
 import { styled } from 'next-yak'
 import { Box, Container, Heading, SubHeading } from './Backup'
-import { ButtonLink, Center, Stack, Text } from '../ui'
+import { Button, Center, Modal, Stack, Text } from '../ui'
 import { Snapshot, Backup } from '@/app/types'
 import useSWR from 'swr'
 import { formatDate, shortenDID } from '@/lib/ui'
+import { useDisclosure } from '@/hooks/use-disclosure'
+import { useState } from 'react'
 
 const RestoreContainer = styled(Container)`
   height: 100vh;
@@ -38,10 +40,13 @@ export interface BackupRestoreProps {
 }
 
 export const BackupRestore = ({ backup }: BackupRestoreProps) => {
-  const { data: snapshots } = useSWR<Snapshot[]>(
-    backup && ['api', `/api/backups/${backup.id}/snapshots`]
-  )
+  const { data: snapshots } = useSWR<Snapshot[]>(backup && [
+    'api',
+    `/api/backups/${backup.id}/snapshots`,
+  ])
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [selectedSnapshot, setSelectedSnapshot] = useState<Snapshot>()
   return (
     <RestoreContainer>
       <Heading>backup & restore</Heading>
@@ -71,20 +76,30 @@ export const BackupRestore = ({ backup }: BackupRestoreProps) => {
                     <h3>Snapshot {snapshot.id}</h3>
                     <h3>{formatDate(snapshot.createdAt)}</h3>
                   </Stack>
-                  <ButtonLink
+                  <Button
                     $background="var(--color-white)"
                     $color="var(--color-black)"
                     $textTransform="capitalize"
                     $width="fit-content"
                     $fontSize="0.75rem"
-                    href={`/snapshots/${snapshot.id}`}
+                    onClick={() => {
+                      setSelectedSnapshot(snapshot);
+                      onOpen();
+                    }}
                   >
                     View
-                  </ButtonLink>
+                  </Button>
                 </Stack>
               </SnapshotSummary>
             ))}
           </SnapshotContainer>
+          {selectedSnapshot && (
+            <Modal isOpen={isOpen} onClose={onClose}>
+              <Box $height='80%' $width='80%'>
+                <SnapshotDetail snapshot={selectedSnapshot} />
+              </Box>
+            </Modal>
+          )}
         </>
       ) : (
         <Center $height="90vh">
@@ -94,5 +109,49 @@ export const BackupRestore = ({ backup }: BackupRestoreProps) => {
         </Center>
       )}
     </RestoreContainer>
+  )
+}
+
+function SnapshotDetail ({ snapshot }: { snapshot: Snapshot }) {
+  return (
+    <Stack $direction='row' $alignItems='center' $justifyContent='between'>
+      <Stack $direction='column' $alignItems='flex-start'>
+        <h3>Snapshot {snapshot.id}</h3>
+        <h3>{formatDate(snapshot.createdAt)}</h3>
+      </Stack>
+      <Stack $direction='column' $alignItems='flex-start'>
+        <Box>
+          <Stack $direction='row'>
+            Repository
+          </Stack>
+          <Stack $direction='row'>
+            <Button>View</Button>
+            <Button>Restore</Button>
+          </Stack>
+        </Box>
+        <Box>
+          <Stack $direction='row'>
+            Blobs
+          </Stack>
+          <Stack $direction='row'>
+            <Button>View</Button>
+            <Button>Restore</Button>
+          </Stack>
+        </Box>
+        <Box>
+          <Stack $direction='row'>
+            Preferences
+          </Stack>
+          <Stack $direction='row'>
+            <Button>View</Button>
+            <Button>Restore</Button>
+          </Stack>
+        </Box>
+        <Stack $direction='row'>
+          <Button>View all</Button>
+          <Button>Restore all</Button>
+        </Stack>
+      </Stack>
+    </Stack>
   )
 }
