@@ -88,8 +88,8 @@ export const BackupRestore = ({ config }: BackupRestoreProps) => {
             ))}
           </SnapshotContainer>
           {selectedSnapshot && (
-            <Modal isOpen={isOpen} onClose={onClose}>
-              <Box $height='80%' $width='80%'>
+            <Modal isOpen={isOpen} onClose={onClose} size="xl">
+              <Box $height='100%'>
                 <SnapshotDetail snapshot={selectedSnapshot} />
               </Box>
             </Modal>
