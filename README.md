@@ -54,3 +54,27 @@ These names and credentials match the examples in `.env.tpl` and should be custo
 ### Storybook
 
 For many types of UI development you don't need a running app. Simply run `pnpm storybook` and visit `http://localhost:6006` to see our Storybook.
+
+## Deployment
+
+Deployment is handled via terrform using a Makefile.
+
+Prerequisites:
+- Install and properly configured `aws` cli tool
+- Install OpenTofu (OpenTofu is a fork of Terraform that retains a full open source license -- please use OpenTofu when deploying Storacha services in order to avoid licensing issues).
+
+```terminal
+brew update
+brew install opentofu
+tofu -u version
+```
+- Install Docker (DockerDesktop for Mac for example)
+
+To setup a deployment you can use for remote testing, do the following:
+1. Copy `.env.terraform.tpl` to `.env.terraform`
+2. Fill out the missing variables in `.env.terraform` (put your name in for TF_WORKSPACE for dev purposes)
+3. Run `make apply` -- the first time you run this, it will take a LONG time to deploy everything - also you'll have to confirm deploying various things a few times along the way
+3. If all is well, there's still a "blue-green" deployment to finish, so you'll want to `make wait-deploy` to wait for that to complete
+4. Lastly, run `make db-migrate` to run migrations on the remote database
+
+Your environment should be deployed at `~your-name~.bsky.storage`
