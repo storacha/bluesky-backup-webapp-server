@@ -3,4 +3,4 @@ export * from './Button'
 export * from './Stack'
 export * from './center'
 export * from './text'
-export * from "./modal"
+export * from './modal'

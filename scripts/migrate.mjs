@@ -56,8 +56,8 @@ shift({
         console.log('Migrating', migration_id, name);
     },
 })
-    .then(() => console.log('All good'))
-    .catch((err) => {
-        console.error('Failed', err);
-        process.exit(1);
-    });
+  .then(() => console.log('All good'))
+  .catch((err) => {
+    console.error('Failed', err)
+    process.exit(1)
+  })

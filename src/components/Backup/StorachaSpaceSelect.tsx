@@ -2,7 +2,7 @@
 
 import { shortenDID } from '@/lib/ui'
 import { useAuthenticator } from '@storacha/ui-react'
-import { LocationSelect } from '../../app/configs/LocationSelect'
+import { LocationSelect } from '../../app/backups/LocationSelect'
 import { AccountLogo, Box } from './Backup'
 import { Stack } from '../ui'
 import Image from 'next/image'
@@ -20,7 +20,7 @@ export const StorachaSpaceSelect = (
   return (
     <Box $background={hasValue ? 'var(--color-white)' : ''}>
       <Stack $gap=".8rem" $direction="row" $alignItems="center">
-        <AccountLogo $type='original' $hasAccount={hasValue}>
+        <AccountLogo $type="original" $hasAccount={hasValue}>
           <Image
             src="/storacha-red.png"
             alt="Storacha Logo"

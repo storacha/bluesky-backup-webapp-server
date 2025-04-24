@@ -10,13 +10,13 @@ A modal component with the native `<dialog />` element. You can provide the `isO
 
 # Modal Props
 
-| Prop | Type | Description | Default |
-|------|------|-------------|---------|
-| `title` | string | A title for the modal. Not rendered if nothing is provided. | `undefined` |
-| `isOpen` | boolean | State value to check if the modal is open. Required. | `false` |
-| `onClose` | function | Callback handler that closes the modal. | Required |
-| `hasCloseBtn` | boolean | Controls whether to render a close button in the modal. If not provided, the modal can still be closed by pressing the 'Escape' key or clicking the overlay. | `undefined` |
-| `size` | string | Controls the size of the modal. Accepts values: "xs", "sm", "md", "lg", "xl", or "full". | `"md"` |
+| Prop          | Type     | Description                                                                                                                                                  | Default     |
+| ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
+| `title`       | string   | A title for the modal. Not rendered if nothing is provided.                                                                                                  | `undefined` |
+| `isOpen`      | boolean  | State value to check if the modal is open. Required.                                                                                                         | `false`     |
+| `onClose`     | function | Callback handler that closes the modal.                                                                                                                      | Required    |
+| `hasCloseBtn` | boolean  | Controls whether to render a close button in the modal. If not provided, the modal can still be closed by pressing the 'Escape' key or clicking the overlay. | `undefined` |
+| `size`        | string   | Controls the size of the modal. Accepts values: "xs", "sm", "md", "lg", "xl", or "full".                                                                     | `"md"`      |
 
 #### Example
 

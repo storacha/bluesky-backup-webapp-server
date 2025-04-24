@@ -9,7 +9,7 @@ export async function GET(
   const { id } = await params
   const { db } = getStorageContext()
 
-  const { results } = await db.findBlobsForBackupConfig(id)
+  const { results } = await db.findBlobsForBackup(id)
 
   return Response.json(results)
 }

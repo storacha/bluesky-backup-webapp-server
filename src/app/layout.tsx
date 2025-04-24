@@ -5,8 +5,8 @@ import { SWRConfigProvider } from './swr'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Bb",
-  description: 'Backup & Restore your Bluesky Account'
+  title: 'Bb',
+  description: 'Backup & Restore your Bluesky Account',
 }
 
 export default function RootLayout({
