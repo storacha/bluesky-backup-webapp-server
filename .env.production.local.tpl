@@ -1,4 +1,5 @@
 <%
+# Don't mess with this file -- it will auto compile to env.production.local
 if [ "$TF_WORKSPACE" != "prod" ]; then
   UPLOAD_PREFIX="staging."
   GATEWAY_PREFIX="-staging"
