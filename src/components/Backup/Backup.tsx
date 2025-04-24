@@ -1,4 +1,4 @@
-import { Button, Modal, Stack, Text } from '../ui'
+import { Modal, Stack, Text } from '../ui'
 import { styled } from 'next-yak'
 import { Property } from 'csstype'
 import { ReactNode, useEffect, useState } from 'react'
@@ -9,7 +9,6 @@ import { Account } from '@storacha/ui-react'
 import { BlueskyAccountSelect } from '@/components/Backup/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/Backup/StorachaSpaceSelect'
 import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
-import { mutate } from 'swr'
 import { PlusCircle } from '@phosphor-icons/react'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { useUiComponentStore } from '@/store/ui'
@@ -216,10 +215,7 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
               ))}
             </Stack>
           </Stack>
-          <CreateSnapshotButton
-            backup={backup}
-            mutateBackups={() => mutate(['api', '/api/backups'])}
-          />
+          <CreateSnapshotButton backup={backup} />
         </Stack>
       </BackupContainer>
 
