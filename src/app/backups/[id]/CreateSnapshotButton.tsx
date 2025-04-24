@@ -1,21 +1,17 @@
 'use client'
 
 import { Backup } from '@/app/types'
-import { Button } from '@/components/ui'
 import { useAuthenticator } from '@storacha/ui-react'
 import { createSnapshot } from './createSnapshot'
 import { delegate } from './delegate'
 import { useSWRMutation } from '@/app/swr'
+import { CreateButton } from '@/components/ui/CreateButton'
 
-export const CreateSnapshotButton = ({
-  backup,
-}: {
-  backup: Backup | undefined
-}) => {
+export const CreateSnapshotButton = ({ backup }: { backup: Backup }) => {
   const [{ accounts, client }] = useAuthenticator()
   const account = accounts[0]
 
-  const enabled = backup && client
+  const enabled = client && backup
 
   const { trigger } = useSWRMutation(
     enabled && ['api', `/api/backups/${backup.id}/snapshots`],
@@ -33,24 +29,15 @@ export const CreateSnapshotButton = ({
   }
 
   return (
-    <Button
-      $background={
-        enabled ? 'var(--color-dark-blue)' : 'var(--color-gray-medium)'
-      }
-      $color="var(--color-white)"
-      $textTransform="capitalize"
-      $width="fit-content"
-      $fontSize="0.75rem"
-      $mt="1.4rem"
+    <CreateButton
       onClick={
         enabled &&
         (() => {
           trigger()
         })
       }
-      disabled={!enabled}
     >
       create snapshot
-    </Button>
+    </CreateButton>
   )
 }

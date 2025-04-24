@@ -12,6 +12,7 @@ import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
 import { PlusCircle } from '@phosphor-icons/react'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { useUiComponentStore } from '@/store/ui'
+import { CreateButton } from '@/components/ui/CreateButton'
 
 interface BackupProps {
   account?: Account
@@ -215,7 +216,11 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
               ))}
             </Stack>
           </Stack>
-          <CreateSnapshotButton backup={backup} />
+          {backup ? (
+            <CreateSnapshotButton backup={backup} />
+          ) : (
+            <CreateButton type="submit">create backup</CreateButton>
+          )}
         </Stack>
       </BackupContainer>
 
