@@ -67,7 +67,7 @@ const ModalComponentWithUiState = () => {
 }
 ```
 
-Please ensure you include the specific ui component value in the `UiComponents` type [here](https://github.com/bluesky-backup/webapp-server/blob/main/src/store/ui.ts#L6)
+Please ensure you include the specific ui component value in the `UiComponents` type [here](https://github.com/storacha/bluesky-backup-webapp-server/blob/main/src/store/ui.ts#L6)
 
 ```ts
 export type UiComponents = 'snapshots' | 'account' | 'keychain' | ''
