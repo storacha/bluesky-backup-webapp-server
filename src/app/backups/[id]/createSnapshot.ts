@@ -152,6 +152,7 @@ const doSnapshot = async (
         )
         await db.addBlob({
           cid,
+          contentType: blobRes.headers['content-type'],
           snapshotId: snapshotId,
           backupId: options.backupId,
         })

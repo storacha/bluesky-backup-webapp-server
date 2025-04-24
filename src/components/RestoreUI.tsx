@@ -121,7 +121,7 @@ interface Repo {
 
 interface Blob {
   cid: string
-  contentType: string
+  contentType?: string
   encryptedWith?: string
 }
 
@@ -420,7 +420,6 @@ export function RestoreDialogView ({
   sourceSession,
   sinkSession,
   loginToSource,
-  loginToSink,
   createAccount,
   restoreRepo,
   restoreBlobs,
