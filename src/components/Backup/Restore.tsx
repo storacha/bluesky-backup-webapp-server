@@ -6,7 +6,7 @@ import useSWR from 'swr'
 import { formatDate, shortenDID } from '@/lib/ui'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { useState } from 'react'
-import RestoreDialog from '../RestoreUI'
+import RestoreDialog from '../Restore'
 
 const RestoreContainer = styled(Container)`
   height: 100vh;

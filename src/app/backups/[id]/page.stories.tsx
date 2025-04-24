@@ -53,6 +53,7 @@ const meta = {
         {
           id: 1,
           backupId: 1,
+          atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
           repositoryStatus: 'success',
           repositoryCid:
             'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551repo',
@@ -63,6 +64,7 @@ const meta = {
         {
           id: 2,
           backupId: 1,
+          atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
           repositoryStatus: 'not-started',
           blobsStatus: 'in-progress',
           preferencesStatus: 'success',

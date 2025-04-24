@@ -50,7 +50,7 @@ export type SnapshotInput = Input<
 
 export interface ATBlob {
   cid: string
-  contentType: string
+  contentType?: string
   snapshotId: number
   backupId?: number
   createdAt: string
