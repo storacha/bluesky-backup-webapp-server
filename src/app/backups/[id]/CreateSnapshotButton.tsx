@@ -18,7 +18,7 @@ export const CreateSnapshotButton = ({
   const enabled = backup && client
 
   const { trigger } = useSWRMutation(
-    enabled && ['api', '/api/backups'],
+    enabled && ['api', `/api/backups/${backup.id}/snapshots`],
     async () => {
       // SWR guarantees this won't actually happen.
       if (!enabled)
