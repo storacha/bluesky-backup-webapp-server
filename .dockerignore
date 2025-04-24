@@ -30,6 +30,7 @@ yarn-error.log*
 
 # env files
 .env.tpl
+.env.local
 .env.production.local.tpl
 .env.terraform.tpl
 .env.terraform
