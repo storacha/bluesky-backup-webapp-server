@@ -83,7 +83,7 @@ export const AccountLogo = styled.div<{
   border: 1px solid var(--color-gray);
   & img {
     filter: ${({ $hasAccount, $type }) =>
-    $hasAccount && $type === 'original' ? 'grayscale(0)' : 'grayscale(1)'};
+      $hasAccount && $type === 'original' ? 'grayscale(0)' : 'grayscale(1)'};
     opacity: ${({ $hasAccount }) => ($hasAccount ? '1' : '.5')};
   }
 `
@@ -116,7 +116,7 @@ const DATA_BOXES: DataConfig[] = [
   // },
 ]
 
-function BackupContainer ({
+function BackupContainer({
   children,
   backup,
 }: {

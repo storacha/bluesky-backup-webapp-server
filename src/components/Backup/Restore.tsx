@@ -41,10 +41,9 @@ export interface BackupRestoreProps {
 }
 
 export const BackupRestore = ({ backup }: BackupRestoreProps) => {
-  const { data: snapshots } = useSWR<Snapshot[]>(backup && [
-    'api',
-    `/api/backups/${backup.id}/snapshots`,
-  ])
+  const { data: snapshots } = useSWR<Snapshot[]>(
+    backup && ['api', `/api/backups/${backup.id}/snapshots`]
+  )
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [selectedSnapshot, setSelectedSnapshot] = useState<Snapshot>()
@@ -84,8 +83,8 @@ export const BackupRestore = ({ backup }: BackupRestoreProps) => {
                     $width="fit-content"
                     $fontSize="0.75rem"
                     onClick={() => {
-                      setSelectedSnapshot(snapshot);
-                      onOpen();
+                      setSelectedSnapshot(snapshot)
+                      onOpen()
                     }}
                   >
                     View
@@ -96,7 +95,7 @@ export const BackupRestore = ({ backup }: BackupRestoreProps) => {
           </SnapshotContainer>
           {selectedSnapshot && (
             <Modal isOpen={isOpen} onClose={onClose} size="xl">
-              <Box $height='100%'>
+              <Box $height="100%">
                 <SnapshotDetail snapshot={selectedSnapshot} />
               </Box>
             </Modal>
@@ -115,58 +114,58 @@ export const BackupRestore = ({ backup }: BackupRestoreProps) => {
 
 enum SnapshotDetailState {
   DEFAULT,
-  RESTORE_ALL
+  RESTORE_ALL,
 }
 
-function SnapshotDetail ({ snapshot }: { snapshot: Snapshot }) {
-  const [state, setState] = useState<SnapshotDetailState>(SnapshotDetailState.DEFAULT)
+function SnapshotDetail({ snapshot }: { snapshot: Snapshot }) {
+  const [state, setState] = useState<SnapshotDetailState>(
+    SnapshotDetailState.DEFAULT
+  )
   switch (state) {
     case SnapshotDetailState.DEFAULT:
       return (
-        <Stack $direction='row' $alignItems='center' $justifyContent='between'>
-          <Stack $direction='column' $alignItems='flex-start'>
+        <Stack $direction="row" $alignItems="center" $justifyContent="between">
+          <Stack $direction="column" $alignItems="flex-start">
             <h3>Snapshot {snapshot.id}</h3>
             <h3>{formatDate(snapshot.createdAt)}</h3>
           </Stack>
-          <Stack $direction='column' $alignItems='flex-start'>
+          <Stack $direction="column" $alignItems="flex-start">
             <Box>
-              <Stack $direction='row'>
-                Repository
-              </Stack>
-              <Stack $direction='row'>
+              <Stack $direction="row">Repository</Stack>
+              <Stack $direction="row">
                 <Button>View</Button>
                 <Button>Restore</Button>
               </Stack>
             </Box>
             <Box>
-              <Stack $direction='row'>
-                Blobs
-              </Stack>
-              <Stack $direction='row'>
+              <Stack $direction="row">Blobs</Stack>
+              <Stack $direction="row">
                 <Button>View</Button>
                 <Button>Restore</Button>
               </Stack>
             </Box>
             <Box>
-              <Stack $direction='row'>
-                Preferences
-              </Stack>
-              <Stack $direction='row'>
+              <Stack $direction="row">Preferences</Stack>
+              <Stack $direction="row">
                 <Button>View</Button>
                 <Button>Restore</Button>
               </Stack>
             </Box>
-            <Stack $direction='row'>
+            <Stack $direction="row">
               <Button>View all</Button>
-              <Button onClick={() => { setState(SnapshotDetailState.RESTORE_ALL) }}>Restore all</Button>
+              <Button
+                onClick={() => {
+                  setState(SnapshotDetailState.RESTORE_ALL)
+                }}
+              >
+                Restore all
+              </Button>
             </Stack>
           </Stack>
         </Stack>
       )
 
-      case SnapshotDetailState.RESTORE_ALL:
-        return (
-          <RestoreDialog snapshotId={snapshot.id}/>
-        )
+    case SnapshotDetailState.RESTORE_ALL:
+      return <RestoreDialog snapshotId={snapshot.id} />
   }
 }

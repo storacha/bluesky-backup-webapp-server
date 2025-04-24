@@ -104,12 +104,8 @@ export interface BBDatabase {
   findBackup: (id: number) => Promise<{ result: Backup | undefined }>
   addBackup: (input: BackupInput) => Promise<Backup>
   addBlob: (input: ATBlobInput) => Promise<ATBlob>
-  findBlobsForBackup: (
-    id: string
-  ) => Promise<{ results: ATBlob[] }>
-  findBlobsForSnapshot: (
-    id: string
-  ) => Promise<{ results: ATBlob[] }>
+  findBlobsForBackup: (id: string) => Promise<{ results: ATBlob[] }>
+  findBlobsForSnapshot: (id: string) => Promise<{ results: ATBlob[] }>
 }
 
 interface StorageContext {
@@ -135,7 +131,7 @@ export function getStorageContext(): StorageContext {
         return results[0]
       },
 
-      async findBlobsForBackup (id) {
+      async findBlobsForBackup(id) {
         const results = await sql<ATBlob[]>`
           select
             cid,
@@ -150,7 +146,7 @@ export function getStorageContext(): StorageContext {
         }
       },
 
-      async findBlobsForSnapshot (id) {
+      async findBlobsForSnapshot(id) {
         const results = await sql<ATBlob[]>`
           select
             cid,
@@ -164,7 +160,7 @@ export function getStorageContext(): StorageContext {
           results,
         }
       },
-      async findSnapshot (id: number) {
+      async findSnapshot(id: number) {
         const [result] = await sql<Snapshot[]>`
             SELECT id,
               atproto_account,
@@ -183,7 +179,7 @@ export function getStorageContext(): StorageContext {
           result,
         }
       },
-      async addSnapshot (input) {
+      async addSnapshot(input) {
         const results = await sql<Snapshot[]>`
           insert into snapshots ${sql(input)}
           returning *
@@ -262,7 +258,7 @@ export function getStorageContext(): StorageContext {
           results,
         }
       },
-      async findBackup (id: number) {
+      async findBackup(id: number) {
         const [result] = await sql<Backup[]>`
             SELECT id,
               name,
