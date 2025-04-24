@@ -3,10 +3,10 @@
 import { Sidebar } from '@/app/Sidebar'
 import { BackupScreen } from '@/components/Backup/index'
 
-export default function NewConfig() {
+export default function NewBackup() {
   return (
     <>
-      <Sidebar selectedConfigId={null} />
+      <Sidebar selectedBackupId={null} />
       <BackupScreen />
     </>
   )

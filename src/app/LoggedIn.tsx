@@ -73,7 +73,7 @@ export function LoggedIn() {
   if (!account) return null
   return (
     <Outside $direction="row">
-      <Sidebar selectedConfigId={null} />
+      <Sidebar selectedBackupId={null} />
       <BackupScreen />
     </Outside>
   )

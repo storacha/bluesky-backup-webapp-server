@@ -6,7 +6,7 @@ import { Account, Space } from '@storacha/ui-react'
 
 const meta = {
   // Uses division slash (∕) instead of regular slash (/) in the title.
-  title: '∕configs∕new',
+  title: '∕backups∕new',
   component: Page,
   parameters: {
     layout: 'fullscreen',
@@ -49,4 +49,4 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
-Default.storyName = '∕configs∕new'
+Default.storyName = '∕backups∕new'

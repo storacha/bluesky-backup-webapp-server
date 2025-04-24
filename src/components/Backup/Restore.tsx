@@ -34,24 +34,24 @@ const SnapshotSummary = styled(Box)`
 `
 
 export interface BackupRestoreProps {
-  config?: Backup
+  backup?: Backup
 }
 
-export const BackupRestore = ({ config }: BackupRestoreProps) => {
+export const BackupRestore = ({ backup }: BackupRestoreProps) => {
   const { data: snapshots } = useSWR<Snapshot[]>(
-    config && ['api', `/api/backups/${config.id}/snapshots`]
+    backup && ['api', `/api/backups/${backup.id}/snapshots`]
   )
 
   return (
     <RestoreContainer>
       <Heading>backup & restore</Heading>
-      {config ? (
+      {backup ? (
         <>
           <Details $gap="1rem">
             <SubHeading>Details</SubHeading>
             <Stack $direction="row" $alignItems="center" $gap="1rem">
               <DetailName>Account DID</DetailName>
-              <DetailValue>{shortenDID(config.atprotoAccount)}</DetailValue>
+              <DetailValue>{shortenDID(backup.atprotoAccount)}</DetailValue>
             </Stack>
           </Details>
           <SnapshotContainer $gap="1rem">

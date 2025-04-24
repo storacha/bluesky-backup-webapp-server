@@ -200,7 +200,7 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
         </Stack>
         {backup ? (
           <CreateSnapshotButton
-            config={backup}
+            backup={backup}
             mutateBackups={() => mutate(['api', '/api/backups'])}
           />
         ) : (

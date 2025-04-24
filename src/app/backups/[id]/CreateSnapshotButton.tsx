@@ -6,10 +6,10 @@ import { createSnapshot } from './createSnapshot'
 import { delegate } from './delegate'
 
 export const CreateSnapshotButton = ({
-  config,
+  backup,
   mutateBackups,
 }: {
-  config: Backup
+  backup: Backup
   mutateBackups: () => void
 }) => {
   const [{ accounts, client }] = useAuthenticator()
@@ -19,8 +19,8 @@ export const CreateSnapshotButton = ({
   }
 
   const handleClick = async () => {
-    const delegationData = await delegate(client, config.storachaSpace)
-    await createSnapshot({ configId: config.id, delegationData })
+    const delegationData = await delegate(client, backup.storachaSpace)
+    await createSnapshot({ backupId: backup.id, delegationData })
     mutateBackups()
   }
 

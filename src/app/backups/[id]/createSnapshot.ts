@@ -12,10 +12,10 @@ import { serverIdentity } from '@/lib/server/auth'
 import { receiptsEndpoint, serviceConnection } from '@/components/services'
 
 export const createSnapshot = async ({
-  configId,
+  backupId,
   delegationData,
 }: {
-  configId: number
+  backupId: number
   delegationData: Uint8Array
 }) => {
   const { db } = getStorageContext()
@@ -32,7 +32,7 @@ export const createSnapshot = async ({
   }
   const delegation = delegationResult.ok
 
-  const { result: backup } = await db.findBackup(configId, account)
+  const { result: backup } = await db.findBackup(backupId, account)
   if (!backup) {
     return new Response('Not authorized', { status: 401 })
   }

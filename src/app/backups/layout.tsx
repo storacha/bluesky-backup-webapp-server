@@ -7,7 +7,7 @@ const Outside = styled(Stack)`
   align-items: stretch;
 `
 
-export default function ConfigLayout({
+export default function BackupLayout({
   children,
 }: Readonly<{
   children: React.ReactNode

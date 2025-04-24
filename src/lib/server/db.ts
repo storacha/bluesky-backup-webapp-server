@@ -205,7 +205,7 @@ export function getStorageContext(): StorageContext {
           returning *
         `
         if (!results[0]) {
-          throw new Error('error inserting backup config')
+          throw new Error('error inserting backup')
         }
         return results[0]
       },
@@ -226,7 +226,7 @@ export function getStorageContext(): StorageContext {
           results,
         }
       },
-      async findBackup(configId: number, account: string) {
+      async findBackup(backupId: number, account: string) {
         const [result] = await sql<Backup[]>`
             SELECT id,
               name,
@@ -237,7 +237,7 @@ export function getStorageContext(): StorageContext {
               include_preferences
 
              FROM backups
-             WHERE id = ${configId}
+             WHERE id = ${backupId}
                AND account_did = ${account}
           `
 
