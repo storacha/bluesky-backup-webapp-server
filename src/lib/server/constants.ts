@@ -1,8 +1,7 @@
-
-let cachedConstants : {
-  SERVER_IDENTITY_PRIVATE_KEY: string 
-  SESSION_PASSWORD: string 
-  SESSION_COOKIE_NAME : string
+let cachedConstants: {
+  SERVER_IDENTITY_PRIVATE_KEY: string
+  SESSION_PASSWORD: string
+  SESSION_COOKIE_NAME: string
 }
 
 export const getConstants = () => {
@@ -11,8 +10,7 @@ export const getConstants = () => {
   }
   if (!process.env.SERVER_IDENTITY_PRIVATE_KEY)
     throw new Error('SERVER_IDENTITY_PRIVATE_KEY must be set')
-  const SERVER_IDENTITY_PRIVATE_KEY =
-    process.env.SERVER_IDENTITY_PRIVATE_KEY
+  const SERVER_IDENTITY_PRIVATE_KEY = process.env.SERVER_IDENTITY_PRIVATE_KEY
 
   if (!process.env.SESSION_PASSWORD)
     throw new Error('SESSION_PASSWORD must be set')
@@ -27,7 +25,9 @@ export const getConstants = () => {
     )
   }
   cachedConstants = {
-    SERVER_IDENTITY_PRIVATE_KEY, SESSION_PASSWORD, SESSION_COOKIE_NAME
+    SERVER_IDENTITY_PRIVATE_KEY,
+    SESSION_PASSWORD,
+    SESSION_COOKIE_NAME,
   }
   return cachedConstants
 }

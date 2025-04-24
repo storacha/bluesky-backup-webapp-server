@@ -13,43 +13,50 @@ import { Signer } from '@aws-sdk/rds-signer'
 // https://github.com/porsager/postgres?tab=readme-ov-file#environmental-variables
 
 const {
-    PGHOST,
-    PGPORT,
-    PGDATABASE,
-    PGUSERNAME,
-    PGPASSWORD,
-    PG_RDS_IAM_AUTH,
-    PGSSLMODE
-} = process.env;
+  PGHOST,
+  PGPORT,
+  PGDATABASE,
+  PGUSERNAME,
+  PGPASSWORD,
+  PG_RDS_IAM_AUTH,
+  PGSSLMODE,
+} = process.env
 
-const isValidSSLValue = (sslstring: string) : sslstring is 'require' | 'allow' | 'prefer' | 'verify-full' => ['require', 'allow', 'prefer', 'verify-full'].includes(sslstring)
-const validSSLValue = (sslstring: string|undefined) => {
-  return sslstring ? isValidSSLValue(sslstring) ? sslstring : undefined : undefined
+const isValidSSLValue = (
+  sslstring: string
+): sslstring is 'require' | 'allow' | 'prefer' | 'verify-full' =>
+  ['require', 'allow', 'prefer', 'verify-full'].includes(sslstring)
+const validSSLValue = (sslstring: string | undefined) => {
+  return sslstring
+    ? isValidSSLValue(sslstring)
+      ? sslstring
+      : undefined
+    : undefined
 }
 
 export const sql = postgres({
-    host: PGHOST,
-    port: Number(PGPORT),
-    database: PGDATABASE,
-    user: PGUSERNAME,
-    password: PG_RDS_IAM_AUTH ? async () => {
-      const signer = new Signer({
-        hostname: PGHOST || '',
-        port: parseInt(PGPORT || ''),
-        username: PGUSERNAME || '',
-      })
-      const token = await signer.getAuthToken()
-      return token
-    } : PGPASSWORD,
-    ssl: validSSLValue(PGSSLMODE),
-    idle_timeout: 1,
-    transform: {
-      ...postgres.camel,
-      undefined: null
-    }
-});
-
-
+  host: PGHOST,
+  port: Number(PGPORT),
+  database: PGDATABASE,
+  user: PGUSERNAME,
+  password: PG_RDS_IAM_AUTH
+    ? async () => {
+        const signer = new Signer({
+          hostname: PGHOST || '',
+          port: parseInt(PGPORT || ''),
+          username: PGUSERNAME || '',
+        })
+        const token = await signer.getAuthToken()
+        return token
+      }
+    : PGPASSWORD,
+  ssl: validSSLValue(PGSSLMODE),
+  idle_timeout: 1,
+  transform: {
+    ...postgres.camel,
+    undefined: null,
+  },
+})
 
 export interface ListResult {
   keys: { name: string }[]

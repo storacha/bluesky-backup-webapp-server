@@ -14,7 +14,7 @@ import {
 } from '@/lib/constants'
 import { getConstants } from '@/lib/server/constants'
 
-let cachedServerIdentity : ed25519.Signer.Signer
+let cachedServerIdentity: ed25519.Signer.Signer
 
 export const getServerIdentity = () => {
   if (cachedServerIdentity) {
@@ -34,7 +34,7 @@ export const getServerIdentity = () => {
  * web DID resolution with caching should be implemented when we have a chance
  */
 
-let cachedPrincipalMapping : Record<DidWeb, DidKey>
+let cachedPrincipalMapping: Record<DidWeb, DidKey>
 export const getPrincipalMapping = () => {
   if (cachedPrincipalMapping) {
     return cachedPrincipalMapping
@@ -59,7 +59,7 @@ export const getPrincipalMapping = () => {
   return cachedPrincipalMapping
 }
 
-let cachedAuthority : ed25519.Signer.Verifier
+let cachedAuthority: ed25519.Signer.Verifier
 export const getAuthority = () => {
   if (cachedAuthority) {
     return cachedAuthority
@@ -70,7 +70,8 @@ export const getAuthority = () => {
     throw new Error(
       `could not find public key for principal identified by IDENTITY_AUTHORITY=${IDENTITY_AUTHORITY}`
     )
-  cachedAuthority = ed25519.Verifier.parse(authorityPublicKey).withDID(IDENTITY_AUTHORITY)
+  cachedAuthority =
+    ed25519.Verifier.parse(authorityPublicKey).withDID(IDENTITY_AUTHORITY)
   return cachedAuthority
 }
 
