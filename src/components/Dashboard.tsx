@@ -11,7 +11,7 @@ import BackupUI from '@/components/BackupUI'
 import { useBackupsContext } from '@/contexts/backups'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Backups } from '@/components/Backups'
-import { usePlan } from '@/app/hooks'
+import { usePlan } from '@/hooks/use-plan'
 import StripePricingTable from '@/components/StripePricingTable'
 import Image from 'next/image'
 

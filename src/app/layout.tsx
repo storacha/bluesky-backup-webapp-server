@@ -3,6 +3,7 @@ import { dmMono, dmSans, epilogue } from './globalStyle'
 import { Authenticator } from './authentication'
 import { SWRConfigProvider } from './swr'
 import { Metadata } from 'next'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 export const metadata: Metadata = {
   title: 'Bb',
@@ -22,7 +23,9 @@ export default function RootLayout({
           className={`${dmSans.className} ${dmSans.variable} ${dmMono.variable} ${epilogue.variable}`}
         >
           <body>
-            <Authenticator as="div">{children}</Authenticator>
+            <NuqsAdapter>
+              <Authenticator as="div">{children}</Authenticator>
+            </NuqsAdapter>
           </body>
         </html>
       </SWRConfigProvider>

@@ -7,8 +7,8 @@ import {
   Result,
 } from '@w3ui/react'
 import useSWR, { SWRResponse } from 'swr'
-import { logAndCaptureError } from './sentry'
 import { useAuthenticator } from '@storacha/ui-react'
+import { logAndCaptureError } from '@/app/sentry'
 
 /**
  * calculate the cache key for a plan's account

@@ -1,4 +1,4 @@
-import { Button, Stack, Text } from '../ui'
+import { Button, Modal, Stack, Text } from '../ui'
 import { styled } from 'next-yak'
 import { Property } from 'csstype'
 import { ReactNode, useEffect, useState } from 'react'
@@ -10,6 +10,9 @@ import { BlueskyAccountSelect } from '@/components/Backup/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/Backup/StorachaSpaceSelect'
 import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
 import { mutate } from 'swr'
+import { PlusCircle } from '@phosphor-icons/react'
+import { useDisclosure } from '@/hooks/use-disclosure'
+import { useUiComponentStore } from '@/store/ui'
 
 interface BackupProps {
   account?: Account
@@ -80,7 +83,7 @@ export const AccountLogo = styled.div<{
   border: 1px solid var(--color-gray);
   & img {
     filter: ${({ $hasAccount, $type }) =>
-      $hasAccount && $type === 'original' ? 'grayscale(0)' : 'grayscale(1)'};
+    $hasAccount && $type === 'original' ? 'grayscale(0)' : 'grayscale(1)'};
     opacity: ${({ $hasAccount }) => ($hasAccount ? '1' : '.5')};
   }
 `
@@ -113,7 +116,7 @@ const DATA_BOXES: DataConfig[] = [
   // },
 ]
 
-function BackupContainer({
+function BackupContainer ({
   children,
   backup,
 }: {
@@ -130,6 +133,8 @@ function BackupContainer({
 }
 
 export const BackupDetail = ({ account, backup }: BackupProps) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { updateUiStore } = useUiComponentStore()
   const [data, setData] = useState<Record<string, boolean>>({
     repository: true,
     blobs: false,
@@ -152,51 +157,83 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
     }))
   }
 
-  return (
-    <BackupContainer backup={backup}>
-      {account && <input type="hidden" name="account" value={account.did()} />}
-      <Stack $gap="2rem">
-        {backup ? (
-          <Heading>Backup #{backup.id}</Heading>
-        ) : (
-          <Heading>New Backup</Heading>
-        )}
-        <Stack $gap="1rem">
-          <AccountsContainer>
-            <BlueskyAccountSelect
-              name="atproto_account"
-              {...(backup && { disabled: true, value: backup.atprotoAccount })}
-            />
-            <ConnectingLine />
-            <StorachaSpaceSelect
-              name="storacha_space"
-              {...(backup && { disabled: true, value: backup.storachaSpace })}
-            />
-          </AccountsContainer>
-        </Stack>
+  const openModal = () => {
+    onOpen()
+    updateUiStore({
+      ui: 'keychain',
+    })
+  }
 
-        {/* <Stack $gap="1.25rem">
+  return (
+    <>
+      <BackupContainer backup={backup}>
+        {account && (
+          <input type="hidden" name="account" value={account.did()} />
+        )}
+        <Stack $gap="2rem">
+          {backup ? (
+            <Heading>Backup #{backup.id}</Heading>
+          ) : (
+            <Heading>New Backup</Heading>
+          )}
+          <Stack $gap="1rem">
+            <AccountsContainer>
+              <BlueskyAccountSelect
+                name="atproto_account"
+                {...(backup && {
+                  disabled: true,
+                  value: backup.atprotoAccount,
+                })}
+              />
+              <ConnectingLine />
+              <StorachaSpaceSelect
+                name="storacha_space"
+                {...(backup && { disabled: true, value: backup.storachaSpace })}
+              />
+            </AccountsContainer>
+          </Stack>
+
+          <Stack $gap="1.25rem" onClick={openModal}>
             <Text $textTransform="capitalize">keychain</Text>
             <Box $height="44px" $width="48%">
               <Text $textTransform="capitalize">create keychain</Text>
               <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
             </Box>
-          </Stack> */}
-
-        <Stack $gap="1.25rem">
-          <Text $textTransform="capitalize">data</Text>
-          <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
-            {DATA_BOXES.map((box) => (
-              <DataBox
-                key={box.key}
-                name={box.name}
-                title={box.title}
-                description={box.description}
-                value={data[box.key] || false}
-                onToggle={() => !backup && toggle(box.key)}
-              />
-            ))}
           </Stack>
+
+          <Stack $gap="1.25rem">
+            <Text $textTransform="capitalize">data</Text>
+            <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
+              {DATA_BOXES.map((box) => (
+                <DataBox
+                  key={box.key}
+                  name={box.name}
+                  title={box.title}
+                  description={box.description}
+                  value={data[box.key] || false}
+                  onToggle={() => !backup && toggle(box.key)}
+                />
+              ))}
+            </Stack>
+          </Stack>
+          {backup ? (
+            <CreateSnapshotButton
+              backup={backup}
+              mutateBackups={() => mutate(['api', '/api/backups'])}
+            />
+          ) : (
+            <Button
+              type="submit"
+              $background="var(--color-dark-blue)"
+              $color="var(--color-white)"
+              $textTransform="capitalize"
+              $width="fit-content"
+              $fontSize="0.75rem"
+              $mt="1.4rem"
+            >
+              create backup
+            </Button>
+          )}
         </Stack>
         {backup ? (
           <CreateSnapshotButton
@@ -216,7 +253,18 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
             create backup
           </Button>
         )}
-      </Stack>
-    </BackupContainer>
+      </BackupContainer>
+
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="UI store persistence!"
+        hasCloseBtn
+      >
+        <Box $borderStyle="none">
+          <Text>Testing the ui store thingy!</Text>
+        </Box>
+      </Modal>
+    </>
   )
 }
