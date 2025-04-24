@@ -36,7 +36,10 @@ export const createSnapshot = async ({
     return new Response('Not authorized', { status: 401 })
   }
 
-  const snapshot = await db.addSnapshot({ backupId: backup.id, atprotoAccount: backup.atprotoAccount })
+  const snapshot = await db.addSnapshot({
+    backupId: backup.id,
+    atprotoAccount: backup.atprotoAccount,
+  })
 
   if (!snapshot) {
     throw new Error('Failed to create snapshot')

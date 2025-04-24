@@ -112,7 +112,6 @@ export function Sidebar({
   )
 }
 
-
 function Backups({ selectedBackupId }: { selectedBackupId: number | null }) {
   const { data } = useSWR(['api', '/api/backups'])
 

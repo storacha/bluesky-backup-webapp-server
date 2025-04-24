@@ -45,15 +45,13 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 }
 const Input = (props: InputProps) => {
   const { label, ...rest } = props
-  return (
-    label ? (
-      <label>
-        <div>{label}</div>
-        <InputElement {...rest} />
-      </label>
-    ) : (
+  return label ? (
+    <label>
+      <div>{label}</div>
       <InputElement {...rest} />
-    )
+    </label>
+  ) : (
+    <InputElement {...rest} />
   )
 }
 
@@ -96,7 +94,7 @@ interface AtprotoCreateAccountFormProps {
   defaultServer?: string
 }
 
-export async function oauthToPds (pdsUrl: string, handle: string) {
+export async function oauthToPds(pdsUrl: string, handle: string) {
   const bskyAuthClient = new BrowserOAuthClient({
     clientMetadata: blueskyClientMetadata,
     handleResolver: pdsUrl,
@@ -153,26 +151,27 @@ interface RestoreDialogViewProps {
   isPlcRestoreSetup?: boolean
 }
 
-export default function RestoreDialog ({ snapshotId }: { snapshotId: number }) {
+export default function RestoreDialog({ snapshotId }: { snapshotId: number }) {
   const { keys } = useKeychainContext()
   const { data: snapshot } = useSWR<Snapshot>([
     'api',
     `/api/snapshots/${snapshotId}`,
   ])
-  const repo: Repo | undefined = snapshot?.repositoryCid ? ({
-    cid: snapshot.repositoryCid,
-    accountDid: snapshot.atprotoAccount,
-    createdAt: new Date(snapshot.createdAt)
-  }) : (
-    undefined
-  )
+  const repo: Repo | undefined = snapshot?.repositoryCid
+    ? {
+        cid: snapshot.repositoryCid,
+        accountDid: snapshot.atprotoAccount,
+        createdAt: new Date(snapshot.createdAt),
+      }
+    : undefined
   const { data: atBlobs } = useSWR<ATBlob[]>([
     'api',
     `/api/snapshots/${snapshotId}/blobs`,
   ])
-  const blobs: Blob[] = atBlobs?.map(atBlob => ({
-    ...atBlob,
-  })) ?? []
+  const blobs: Blob[] =
+    atBlobs?.map((atBlob) => ({
+      ...atBlob,
+    })) ?? []
   const prefsDoc = useLiveQuery(() =>
     db.prefsDocs.where('backupId').equals(snapshotId).first()
   )
@@ -266,7 +265,7 @@ export default function RestoreDialog ({ snapshotId }: { snapshotId: number }) {
     }
   }
 
-  async function sendPlcRestoreAuthorizationEmail () {
+  async function sendPlcRestoreAuthorizationEmail() {
     if (sourceAgent) {
       await sourceAgent.com.atproto.identity.requestPlcOperationSignature()
       setPlcRestoreAuthorizationEmailSent(true)
@@ -277,7 +276,7 @@ export default function RestoreDialog ({ snapshotId }: { snapshotId: number }) {
     }
   }
 
-  async function setupPlcRestore (plcToken: string) {
+  async function setupPlcRestore(plcToken: string) {
     if (sourceAgent && sinkAgent) {
       const recoveryKey = await Secp256k1Keypair.create({ exportable: true })
 
@@ -299,7 +298,7 @@ export default function RestoreDialog ({ snapshotId }: { snapshotId: number }) {
     }
   }
 
-  async function restoreRepo () {
+  async function restoreRepo() {
     if (repo && sinkAgent) {
       setIsRestoringRepo(true)
       console.log('restoring repo', repo.cid)
@@ -316,7 +315,7 @@ export default function RestoreDialog ({ snapshotId }: { snapshotId: number }) {
     }
   }
 
-  async function restoreBlobs () {
+  async function restoreBlobs() {
     if (blobs && sinkAgent) {
       setIsRestoringBlobs(true)
       for (const blob of blobs) {
@@ -335,7 +334,7 @@ export default function RestoreDialog ({ snapshotId }: { snapshotId: number }) {
     }
   }
 
-  async function loadCid (
+  async function loadCid(
     cid: string,
     encryptedWith?: string
   ): Promise<ArrayBuffer> {
@@ -352,7 +351,7 @@ export default function RestoreDialog ({ snapshotId }: { snapshotId: number }) {
     }
   }
 
-  async function restorePrefsDoc () {
+  async function restorePrefsDoc() {
     if (prefsDoc && sinkAgent) {
       setIsRestoringPrefsDoc(true)
       const prefs = JSON.parse(
@@ -368,7 +367,7 @@ export default function RestoreDialog ({ snapshotId }: { snapshotId: number }) {
     }
   }
 
-  async function transferIdentity () {
+  async function transferIdentity() {
     if (sourceAgent && sinkAgent && plcOp) {
       setIsTransferringIdentity(true)
       await sinkAgent.com.atproto.identity.submitPlcOperation({
@@ -416,7 +415,7 @@ export default function RestoreDialog ({ snapshotId }: { snapshotId: number }) {
   )
 }
 
-export function RestoreDialogView ({
+export function RestoreDialogView({
   sourceSession,
   sinkSession,
   loginToSource,
@@ -444,7 +443,7 @@ export function RestoreDialogView ({
   const [showTransferAuthorization, setShowTransferAuthorization] =
     useState(false)
   return (
-    <Box $height='100%'>
+    <Box $height="100%">
       {sourceSession ? (
         sinkSession ? (
           <div className="flex flex-col items-center">
@@ -464,14 +463,14 @@ export function RestoreDialogView ({
             <div className="flex flex-col items-center">
               <div className="prose-sm text-center mb-4">
                 <p>
-                  Great 🎉 ! You can use the buttons below to <b>pull</b>{' '}
-                  your data out of Storacha 🐔 and load it into your{' '}
-                  <b>new</b> Personal Data Server 🖥️.
+                  Great 🎉 ! You can use the buttons below to <b>pull</b> your
+                  data out of Storacha 🐔 and load it into your <b>new</b>{' '}
+                  Personal Data Server 🖥️.
                 </p>
                 <p>
                   If your backup is <b>encrypted</b> 🔏 you&apos;ll need to
-                  ensure the decryption key 🔑 is available. Use the key
-                  icon above 👆 to <b>import</b> your private key if needed.
+                  ensure the decryption key 🔑 is available. Use the key icon
+                  above 👆 to <b>import</b> your private key if needed.
                 </p>
               </div>
               <div className="flex flex-col items-start">
@@ -507,9 +506,7 @@ export function RestoreDialogView ({
                       className="flex flex-col bg-white border rounded p-2"
                     >
                       <div>Account: {repo?.accountDid}</div>
-                      <div>
-                        Created At: {repo?.createdAt.toDateString()}
-                      </div>
+                      <div>Created At: {repo?.createdAt.toDateString()}</div>
                     </PopoverPanel>
                   </Popover>
                   {isRestoringRepo ? (
@@ -526,9 +523,7 @@ export function RestoreDialogView ({
                       disabled={isRestoringRepo}
                       variant="outline"
                       className="rounded-full w-8 h-8"
-                      leftIcon={
-                        <ArrowRightCircleIcon className="w-6 h-6" />
-                      }
+                      leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
                     />
                   )}
                   <div
@@ -561,9 +556,7 @@ export function RestoreDialogView ({
                       disabled={isRestoringBlobs}
                       variant="outline"
                       className="rounded-full w-8 h-8"
-                      leftIcon={
-                        <ArrowRightCircleIcon className="w-6 h-6" />
-                      }
+                      leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
                     />
                   )}
                   <div
@@ -607,9 +600,7 @@ export function RestoreDialogView ({
                       disabled={isRestoringPrefsDoc}
                       variant="outline"
                       className="rounded-full w-8 h-8"
-                      leftIcon={
-                        <ArrowRightCircleIcon className="w-6 h-6" />
-                      }
+                      leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
                     />
                   )}
                   <div
@@ -622,14 +613,14 @@ export function RestoreDialogView ({
               <div className="flex flex-col items-center">
                 <div className="prose-sm text-center mt-16">
                   <p>
-                    You&apos;re locked in 🔐. All that&apos;s left is to
-                    send a confirmation ✅ code to your email.
+                    You&apos;re locked in 🔐. All that&apos;s left is to send a
+                    confirmation ✅ code to your email.
                   </p>
                   <p>
-                    Be careful ⛔️ ! If you&apos;re transferring your
-                    identity away from the Bluesky 🦋 PDS you can&apos;t
-                    currently go back! You may lose access to your DMs 💅
-                    there if you do this.
+                    Be careful ⛔️ ! If you&apos;re transferring your identity
+                    away from the Bluesky 🦋 PDS you can&apos;t currently go
+                    back! You may lose access to your DMs 💅 there if you do
+                    this.
                   </p>
                 </div>
                 <div className="flex flex-col items-start">
@@ -688,8 +679,8 @@ export function RestoreDialogView ({
                               className="flex flex-col bg-white border rounded p-2"
                             >
                               <h5 className="w-56 m-auto text-center text-xs font-bold uppercase">
-                                Identity Transfer is not currently
-                                reversible, please use caution!
+                                Identity Transfer is not currently reversible,
+                                please use caution!
                               </h5>
                             </PopoverPanel>
                           </Popover>
@@ -730,9 +721,7 @@ export function RestoreDialogView ({
                         disabled={isTransferringIdentity}
                         variant="outline"
                         className="rounded-full w-8 h-8"
-                        leftIcon={
-                          <ArrowRightCircleIcon className="w-6 h-6" />
-                        }
+                        leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
                       />
                     )}
 
@@ -748,7 +737,9 @@ export function RestoreDialogView ({
           </div>
         ) : (
           <div className="my-4 flex flex-col items-center ">
-            <h3 className="font-bold mb-2">Create a new Bluesky account to restore to:</h3>
+            <h3 className="font-bold mb-2">
+              Create a new Bluesky account to restore to:
+            </h3>
             <div className="w-96">
               <AtprotoCreateAccountForm
                 createAccount={createAccount}
@@ -762,8 +753,8 @@ export function RestoreDialogView ({
           <div className="prose-sm text-center mb-4">
             <p>
               If you&apos;d like to transfer your identity 🪪 to a new{' '}
-              <b>Personal Data Store</b> you can initiate that here by
-              logging in 🪵 to your existing account.
+              <b>Personal Data Store</b> you can initiate that here by logging
+              in 🪵 to your existing account.
             </p>
           </div>
           <h3 className="font-bold mb-2">
@@ -786,7 +777,7 @@ const AtprotoLoginFormElement = styled.form`
   flex-direction: column;
 `
 
-function AtprotoLoginForm ({ login, defaultServer }: AtprotoLoginFormProps) {
+function AtprotoLoginForm({ login, defaultServer }: AtprotoLoginFormProps) {
   const { register, handleSubmit, reset } = useForm<LoginForm>()
   const onSubmit = handleSubmit(async (data) => {
     await login(data.handle, data.password, {
@@ -813,14 +804,12 @@ function AtprotoLoginForm ({ login, defaultServer }: AtprotoLoginFormProps) {
         autoComplete="off"
         {...register('password')}
       />
-      <Button type="submit">
-        Log In
-      </Button>
+      <Button type="submit">Log In</Button>
     </AtprotoLoginFormElement>
   )
 }
 
-function PlcTokenForm ({
+function PlcTokenForm({
   setPlcToken,
 }: {
   setPlcToken: (token: string) => void
@@ -844,7 +833,7 @@ function PlcTokenForm ({
   )
 }
 
-function AtprotoCreateAccountForm ({
+function AtprotoCreateAccountForm({
   createAccount,
   defaultServer,
 }: AtprotoCreateAccountFormProps) {
