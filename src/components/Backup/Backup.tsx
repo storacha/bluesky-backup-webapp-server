@@ -113,18 +113,19 @@ const DATA_BOXES: DataConfig[] = [
   // },
 ]
 
-function BackupContainer ({ children, backup }: { children: ReactNode, backup?: Backup }) {
+function BackupContainer({
+  children,
+  backup,
+}: {
+  children: ReactNode
+  backup?: Backup
+}) {
   return backup ? (
-    <Container>
-      {children}
-    </Container>
+    <Container>{children}</Container>
   ) : (
     <Container>
-      <form action={action}>
-        {children}
-      </form>
+      <form action={action}>{children}</form>
     </Container>
-
   )
 }
 
@@ -139,7 +140,7 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
       setData({
         repository: backup.includeRepository,
         blobs: backup.includeBlobs,
-        preferences: backup.includePreferences
+        preferences: backup.includePreferences,
       })
     }
   }, [backup])
@@ -159,15 +160,18 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
           <Heading>Backup #{backup.id}</Heading>
         ) : (
           <Heading>New Backup</Heading>
-        )
-        }
+        )}
         <Stack $gap="1rem">
           <AccountsContainer>
-            <BlueskyAccountSelect name="atproto_account"
-              {...backup && { disabled: true, value: backup.atprotoAccount }} />
+            <BlueskyAccountSelect
+              name="atproto_account"
+              {...(backup && { disabled: true, value: backup.atprotoAccount })}
+            />
             <ConnectingLine />
-            <StorachaSpaceSelect name="storacha_space"
-              {...backup && { disabled: true, value: backup.storachaSpace }} />
+            <StorachaSpaceSelect
+              name="storacha_space"
+              {...(backup && { disabled: true, value: backup.storachaSpace })}
+            />
           </AccountsContainer>
         </Stack>
 
@@ -195,7 +199,10 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
           </Stack>
         </Stack>
         {backup ? (
-          <CreateSnapshotButton config={backup} mutateBackups={() => mutate(['api', '/api/backups'])} />
+          <CreateSnapshotButton
+            config={backup}
+            mutateBackups={() => mutate(['api', '/api/backups'])}
+          />
         ) : (
           <Button
             type="submit"

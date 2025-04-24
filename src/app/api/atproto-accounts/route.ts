@@ -2,9 +2,7 @@ import { getStorageContext } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
 
 export async function GET() {
-  const {
-    authSessionStore,
-  } = getStorageContext()
+  const { authSessionStore } = getStorageContext()
 
   const { did: account } = await getSession()
   if (!account) {

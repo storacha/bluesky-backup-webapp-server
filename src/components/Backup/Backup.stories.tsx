@@ -1,14 +1,14 @@
-import type {Meta, StoryObj} from "@storybook/react"
-import { BackupScreen } from "."
+import type { Meta, StoryObj } from '@storybook/react'
+import { BackupScreen } from '.'
 
 const meta: Meta<typeof BackupScreen> = {
-  title: "Components/BackupScreen",
+  title: 'Components/BackupScreen',
   component: BackupScreen,
-  tags: ["autodocs"]
+  tags: ['autodocs'],
 }
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Default:Story = {}
-Default.storyName = "Backup Screen"
+export const Default: Story = {}
+Default.storyName = 'Backup Screen'

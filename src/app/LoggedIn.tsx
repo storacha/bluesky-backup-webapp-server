@@ -15,7 +15,7 @@ const Outside = styled(Stack)`
   align-items: stretch;
 `
 
-async function createSession (client: Client, account: Account) {
+async function createSession(client: Client, account: Account) {
   const issuer = client.agent.issuer
 
   const delegation = await atproto.delegate({
@@ -37,21 +37,21 @@ async function createSession (client: Client, account: Account) {
   })
 }
 
-export function LoggedIn () {
+export function LoggedIn() {
   const [{ accounts, client }] = useAuthenticator()
   const account = accounts[0]
-  const {
-    error: sessionDIDError,
-    mutate,
-  } = useSWR<string>('/session/did', async (url: string) => {
-    const response = await fetch(url)
-    const body = await response.text()
-    if (response.status == 200) {
-      return body
-    } else {
-      throw new Error(body)
+  const { error: sessionDIDError, mutate } = useSWR<string>(
+    '/session/did',
+    async (url: string) => {
+      const response = await fetch(url)
+      const body = await response.text()
+      if (response.status == 200) {
+        return body
+      } else {
+        throw new Error(body)
+      }
     }
-  })
+  )
 
   const [sessionCreationAttempted, setSessionCreationAttempted] =
     useState(false)
@@ -60,7 +60,7 @@ export function LoggedIn () {
     // if the client & account are loaded, the session DID is erroring and we're
     // not currently creating a session, try to create one
     if (!sessionCreationAttempted && client && account && sessionDIDError) {
-      ; (async () => {
+      ;(async () => {
         try {
           await createSession(client, account)
           await mutate()

@@ -15,10 +15,7 @@ export default function Config({
   // TODO: Should we fetch individual configs? We already need the list for the
   // sidebar, and they're not heavy so far, but we should check back on this at
   // the end of the first version.
-  const {
-    data: configs,
-    error,
-  } = useSWR(['api', '/api/backups'])
+  const { data: configs, error } = useSWR(['api', '/api/backups'])
   if (error) throw error
   if (!configs) return null
 
@@ -28,9 +25,7 @@ export default function Config({
   return (
     <>
       <Sidebar selectedConfigId={id} />
-      <BackupScreen config={config}/>
+      <BackupScreen config={config} />
     </>
   )
 }
-
-

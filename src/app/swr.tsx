@@ -13,10 +13,7 @@ type Fetchable =
       ['api', `/api/backups/${string}/snapshots`, Record<string, string>?],
       Snapshot[],
     ]
-  | [
-      ['api', `/api/backups/${string}/blobs`, Record<string, string>?],
-      ATBlob[],
-    ]
+  | [['api', `/api/backups/${string}/blobs`, Record<string, string>?], ATBlob[]]
   | [['api', '/api/atproto-accounts', Record<string, string>?], string[]]
   | [['atproto-handle', string], string]
 

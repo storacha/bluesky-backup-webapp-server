@@ -13,8 +13,8 @@ import postgres from 'postgres'
 export const sql = postgres({
   transform: {
     ...postgres.camel,
-    undefined: null
-  }
+    undefined: null,
+  },
 })
 
 export interface ListResult {
@@ -41,7 +41,7 @@ export interface KVNamespace {
   list: (opts: KVNamespaceListOptions) => Promise<ListResult>
 }
 
-function newKvNamespace (table: string): KVNamespace {
+function newKvNamespace(table: string): KVNamespace {
   const tableSql = sql(table)
   return {
     put: async (key, value, options = {}) => {
@@ -106,9 +106,7 @@ export interface BBDatabase {
   ) => Promise<{ result: Backup | undefined }>
   addBackup: (input: BackupInput) => Promise<Backup>
   addBlob: (input: ATBlobInput) => Promise<ATBlob>
-  findBlobsForBackup: (
-    backupId: string
-  ) => Promise<{ results: ATBlob[] }>
+  findBlobsForBackup: (backupId: string) => Promise<{ results: ATBlob[] }>
 }
 
 interface StorageContext {
@@ -117,12 +115,12 @@ interface StorageContext {
   db: BBDatabase
 }
 
-export function getStorageContext (): StorageContext {
+export function getStorageContext(): StorageContext {
   return {
     authSessionStore: newKvNamespace('auth_sessions'),
     authStateStore: newKvNamespace('auth_states'),
     db: {
-      async addBlob (input) {
+      async addBlob(input) {
         console.log('inserting', input)
         const results = await sql<ATBlob[]>`
         insert into blobs ${sql(input)}
@@ -134,7 +132,7 @@ export function getStorageContext (): StorageContext {
         return results[0]
       },
 
-      async findBlobsForBackup (backupId) {
+      async findBlobsForBackup(backupId) {
         const results = await sql<ATBlob[]>`
           select
             cid,
@@ -149,7 +147,7 @@ export function getStorageContext (): StorageContext {
         }
       },
 
-      async addSnapshot (input) {
+      async addSnapshot(input) {
         const results = await sql<Snapshot[]>`
           insert into snapshots ${sql(input)}
           returning *
@@ -159,7 +157,7 @@ export function getStorageContext (): StorageContext {
         }
         return results[0]
       },
-      async updateSnapshot (id, input) {
+      async updateSnapshot(id, input) {
         const results = await sql<Snapshot[]>`
           update snapshots set ${sql(input)}
           where id = ${id}
@@ -170,7 +168,7 @@ export function getStorageContext (): StorageContext {
         }
         return results[0]
       },
-      async findSnapshots (backupId) {
+      async findSnapshots(backupId) {
         const results = await sql<Snapshot[]>`
           select
             id,
@@ -185,7 +183,7 @@ export function getStorageContext (): StorageContext {
           results,
         }
       },
-      async addBackup (input) {
+      async addBackup(input) {
         const results = await sql<Backup[]>`
           INSERT INTO backups (
             account_did,
@@ -211,7 +209,7 @@ export function getStorageContext (): StorageContext {
         }
         return results[0]
       },
-      async findBackups (account: string) {
+      async findBackups(account: string) {
         const results = await sql<Backup[]>`
             SELECT id,
               name,
@@ -228,7 +226,7 @@ export function getStorageContext (): StorageContext {
           results,
         }
       },
-      async findBackup (configId: number, account: string) {
+      async findBackup(configId: number, account: string) {
         const [result] = await sql<Backup[]>`
             SELECT id,
               name,
