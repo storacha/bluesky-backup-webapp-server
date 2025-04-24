@@ -1,10 +1,10 @@
 import {
   ATBlob,
   ATBlobInput,
+  Snapshot,
   Backup,
-  BackupConfig,
-  BackupConfigInput,
   BackupInput,
+  SnapshotInput,
 } from '@/app/types'
 import postgres from 'postgres'
 
@@ -13,8 +13,8 @@ import postgres from 'postgres'
 export const sql = postgres({
   transform: {
     ...postgres.camel,
-    undefined: null
-  }
+    undefined: null,
+  },
 })
 
 export interface ListResult {
@@ -41,7 +41,7 @@ export interface KVNamespace {
   list: (opts: KVNamespaceListOptions) => Promise<ListResult>
 }
 
-function newKvNamespace (table: string): KVNamespace {
+function newKvNamespace(table: string): KVNamespace {
   const tableSql = sql(table)
   return {
     put: async (key, value, options = {}) => {
@@ -96,19 +96,17 @@ function newKvNamespace (table: string): KVNamespace {
 }
 
 export interface BBDatabase {
-  addBackup: (input: BackupInput) => Promise<Backup>
-  updateBackup: (id: number, input: Partial<Backup>) => Promise<Backup>
-  findBackups: (backupConfigId: string) => Promise<{ results: Backup[] }>
-  findBackupConfigs: (account: string) => Promise<{ results: BackupConfig[] }>
-  findBackupConfig: (
+  addSnapshot: (input: SnapshotInput) => Promise<Snapshot>
+  updateSnapshot: (id: number, input: Partial<Snapshot>) => Promise<Snapshot>
+  findSnapshots: (backupId: string) => Promise<{ results: Snapshot[] }>
+  findBackups: (account: string) => Promise<{ results: Backup[] }>
+  findBackup: (
     id: number,
     account: string
-  ) => Promise<{ result: BackupConfig | undefined }>
-  addBackupConfig: (input: BackupConfigInput) => Promise<BackupConfig>
+  ) => Promise<{ result: Backup | undefined }>
+  addBackup: (input: BackupInput) => Promise<Backup>
   addBlob: (input: ATBlobInput) => Promise<ATBlob>
-  findBlobsForBackupConfig: (
-    backupConfigId: string
-  ) => Promise<{ results: ATBlob[] }>
+  findBlobsForBackup: (backupId: string) => Promise<{ results: ATBlob[] }>
 }
 
 interface StorageContext {
@@ -117,12 +115,12 @@ interface StorageContext {
   db: BBDatabase
 }
 
-export function getStorageContext (): StorageContext {
+export function getStorageContext(): StorageContext {
   return {
     authSessionStore: newKvNamespace('auth_sessions'),
     authStateStore: newKvNamespace('auth_states'),
     db: {
-      async addBlob (input) {
+      async addBlob(input) {
         console.log('inserting', input)
         const results = await sql<ATBlob[]>`
         insert into blobs ${sql(input)}
@@ -134,24 +132,24 @@ export function getStorageContext (): StorageContext {
         return results[0]
       },
 
-      async findBlobsForBackupConfig (backupConfigId) {
+      async findBlobsForBackup(backupId) {
         const results = await sql<ATBlob[]>`
           select
             cid,
-            backup_config_id,
             backup_id,
+            snapshot_id,
             created_at
           from blobs
-          where backup_config_id = ${backupConfigId}
+          where backup_id = ${backupId}
           `
         return {
           results,
         }
       },
 
-      async addBackup (input) {
-        const results = await sql<Backup[]>`
-          insert into backups ${sql(input)}
+      async addSnapshot(input) {
+        const results = await sql<Snapshot[]>`
+          insert into snapshots ${sql(input)}
           returning *
         `
         if (!results[0]) {
@@ -159,34 +157,35 @@ export function getStorageContext (): StorageContext {
         }
         return results[0]
       },
-      async updateBackup (id, input) {
-        const results = await sql<Backup[]>`
-          update backups set ${sql(input)}
+      async updateSnapshot(id, input) {
+        const results = await sql<Snapshot[]>`
+          update snapshots set ${sql(input)}
+          where id = ${id}
           returning *
         `
         if (!results[0]) {
-          throw new Error('error inserting backup')
+          throw new Error('error inserting snapshot')
         }
         return results[0]
       },
-      async findBackups (backupConfigId) {
-        const results = await sql<Backup[]>`
+      async findSnapshots(backupId) {
+        const results = await sql<Snapshot[]>`
           select
             id,
-            backup_config_id,
+            backup_id,
             repository_cid,
             preferences_cid,
             created_at
-          from backups
-          where backup_config_id = ${backupConfigId}
+          from snapshots
+          where backup_id = ${backupId}
           `
         return {
           results,
         }
       },
-      async addBackupConfig (input) {
-        const results = await sql<BackupConfig[]>`
-          INSERT INTO backup_configs (
+      async addBackup(input) {
+        const results = await sql<Backup[]>`
+          INSERT INTO backups (
             account_did,
             name,
             atproto_account,
@@ -206,12 +205,12 @@ export function getStorageContext (): StorageContext {
           returning *
         `
         if (!results[0]) {
-          throw new Error('error inserting backup config')
+          throw new Error('error inserting backup')
         }
         return results[0]
       },
-      async findBackupConfigs (account: string) {
-        const results = await sql<BackupConfig[]>`
+      async findBackups(account: string) {
+        const results = await sql<Backup[]>`
             SELECT id,
               name,
               atproto_account,
@@ -220,15 +219,15 @@ export function getStorageContext (): StorageContext {
               include_blobs,
               include_preferences
 
-             FROM backup_configs
+             FROM backups
              WHERE account_did = ${account}
           `
         return {
           results,
         }
       },
-      async findBackupConfig (configId: number, account: string) {
-        const [result] = await sql<BackupConfig[]>`
+      async findBackup(backupId: number, account: string) {
+        const [result] = await sql<Backup[]>`
             SELECT id,
               name,
               atproto_account,
@@ -237,8 +236,8 @@ export function getStorageContext (): StorageContext {
               include_blobs,
               include_preferences
 
-             FROM backup_configs
-             WHERE id = ${configId}
+             FROM backups
+             WHERE id = ${backupId}
                AND account_did = ${account}
           `
 

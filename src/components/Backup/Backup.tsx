@@ -1,21 +1,19 @@
-import { Button, Modal, Stack, Text } from '../ui'
+import { Button, Stack, Text } from '../ui'
 import { styled } from 'next-yak'
 import { Property } from 'csstype'
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { DataBox } from './Data'
-import { BackupConfig } from '@/app/types'
-import { action } from '@/app/configs/new/action'
+import { Backup } from '@/app/types'
+import { action } from '@/app/backups/new/action'
 import { Account } from '@storacha/ui-react'
 import { BlueskyAccountSelect } from '@/components/Backup/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/Backup/StorachaSpaceSelect'
-import { CreateBackupButton } from '@/app/configs/[id]/CreateBackupButton'
+import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
 import { mutate } from 'swr'
-import { PlusCircle } from '@phosphor-icons/react/dist/ssr'
-import { useDisclosure } from '@/hooks/use-disclosure'
 
 interface BackupProps {
   account?: Account
-  config?: BackupConfig
+  backup?: Backup
 }
 
 export const Container = styled.div`
@@ -115,22 +113,37 @@ const DATA_BOXES: DataConfig[] = [
   // },
 ]
 
-export const Backup = ({ account, config }: BackupProps) => {
-  const { isOpen, onClose, onOpen } = useDisclosure()
+function BackupContainer({
+  children,
+  backup,
+}: {
+  children: ReactNode
+  backup?: Backup
+}) {
+  return backup ? (
+    <Container>{children}</Container>
+  ) : (
+    <Container>
+      <form action={action}>{children}</form>
+    </Container>
+  )
+}
+
+export const BackupDetail = ({ account, backup }: BackupProps) => {
   const [data, setData] = useState<Record<string, boolean>>({
     repository: true,
     blobs: false,
     preferences: false,
   })
   useEffect(() => {
-    if (config) {
+    if (backup) {
       setData({
-        repository: config.includeRepository,
-        blobs: config.includeBlobs,
-        preferences: config.includePreferences,
+        repository: backup.includeRepository,
+        blobs: backup.includeBlobs,
+        preferences: backup.includePreferences,
       })
     }
-  }, [config])
+  }, [backup])
 
   const toggle = (name: string) => {
     setData((prev) => ({
@@ -140,96 +153,70 @@ export const Backup = ({ account, config }: BackupProps) => {
   }
 
   return (
-    <>
-      <Container>
-        <form action={action}>
-          {account && (
-            <input type="hidden" name="account" value={account.did()} />
-          )}
-          <Stack $gap="2rem">
-            {config ? (
-              <Heading>Backup #{config.id}</Heading>
-            ) : (
-              <Heading>New Backup</Heading>
-            )}
-            <Stack $gap="1rem">
-              <AccountsContainer>
-                <BlueskyAccountSelect
-                  name="atproto_account"
-                  {...(config && {
-                    disabled: true,
-                    value: config.atprotoAccount,
-                  })}
-                />
-                <ConnectingLine />
-                <StorachaSpaceSelect
-                  name="storacha_space"
-                  {...(config && {
-                    disabled: true,
-                    value: config.storachaSpace,
-                  })}
-                />
-              </AccountsContainer>
-            </Stack>
+    <BackupContainer backup={backup}>
+      {account && <input type="hidden" name="account" value={account.did()} />}
+      <Stack $gap="2rem">
+        {backup ? (
+          <Heading>Backup #{backup.id}</Heading>
+        ) : (
+          <Heading>New Backup</Heading>
+        )}
+        <Stack $gap="1rem">
+          <AccountsContainer>
+            <BlueskyAccountSelect
+              name="atproto_account"
+              {...(backup && { disabled: true, value: backup.atprotoAccount })}
+            />
+            <ConnectingLine />
+            <StorachaSpaceSelect
+              name="storacha_space"
+              {...(backup && { disabled: true, value: backup.storachaSpace })}
+            />
+          </AccountsContainer>
+        </Stack>
 
-            <Stack $gap="1.25rem" onClick={onOpen}>
-              <Text $textTransform="capitalize">keychain</Text>
-              <Box $height="44px" $width="48%">
-                <Text $textTransform="capitalize">create keychain</Text>
-                <PlusCircle
-                  weight="fill"
-                  size="16"
-                  color="var(--color-gray-1)"
-                />
-              </Box>
-            </Stack>
+        {/* <Stack $gap="1.25rem">
+            <Text $textTransform="capitalize">keychain</Text>
+            <Box $height="44px" $width="48%">
+              <Text $textTransform="capitalize">create keychain</Text>
+              <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
+            </Box>
+          </Stack> */}
 
-            <Stack $gap="1.25rem">
-              <Text $textTransform="capitalize">data</Text>
-              <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
-                {DATA_BOXES.map((box) => (
-                  <DataBox
-                    key={box.key}
-                    name={box.name}
-                    title={box.title}
-                    description={box.description}
-                    value={data[box.key] || false}
-                    onToggle={() => !config && toggle(box.key)}
-                  />
-                ))}
-              </Stack>
-            </Stack>
-            {config ? (
-              <CreateBackupButton
-                config={config}
-                mutateBackups={() => mutate(['api', '/api/backup-configs'])}
+        <Stack $gap="1.25rem">
+          <Text $textTransform="capitalize">data</Text>
+          <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
+            {DATA_BOXES.map((box) => (
+              <DataBox
+                key={box.key}
+                name={box.name}
+                title={box.title}
+                description={box.description}
+                value={data[box.key] || false}
+                onToggle={() => !backup && toggle(box.key)}
               />
-            ) : (
-              <Button
-                type="submit"
-                $background="var(--color-dark-blue)"
-                $color="var(--color-white)"
-                $textTransform="capitalize"
-                $width="fit-content"
-                $fontSize="0.75rem"
-                $mt="1.4rem"
-              >
-                create backup
-              </Button>
-            )}
+            ))}
           </Stack>
-        </form>
-      </Container>
-
-      <Modal
-        title="Add Keychain"
-        isOpen={isOpen}
-        onClose={onClose}
-        size="lg"
-        hasCloseBtn
-      >
-        <Box $borderStyle="none">Modal content goes here</Box>
-      </Modal>
-    </>
+        </Stack>
+        {backup ? (
+          <CreateSnapshotButton
+            backup={backup}
+            mutateBackups={() => mutate(['api', '/api/backups'])}
+          />
+        ) : (
+          <Button
+            type="submit"
+            $background="var(--color-dark-blue)"
+            $color="var(--color-white)"
+            $textTransform="capitalize"
+            $width="fit-content"
+            $fontSize="0.75rem"
+            $mt="1.4rem"
+          >
+            create backup
+          </Button>
+        )}
+      </Stack>
+    </BackupContainer>
   )
 }

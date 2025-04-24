@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS backup_configs CASCADE;
-CREATE TABLE IF NOT EXISTS backup_configs (
+DROP TABLE IF EXISTS backups CASCADE;
+CREATE TABLE IF NOT EXISTS backups (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   account_did TEXT NOT NULL,
   name TEXT NOT NULL,
@@ -11,10 +11,10 @@ CREATE TABLE IF NOT EXISTS backup_configs (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-DROP TABLE IF EXISTS backups CASCADE;
-CREATE TABLE IF NOT EXISTS backups (
+DROP TABLE IF EXISTS snapshots CASCADE;
+CREATE TABLE IF NOT EXISTS snapshots (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  backup_config_id INTEGER NOT NULL,
+  backup_id INTEGER NOT NULL,
   repository_status TEXT DEFAULT 'not-started' CHECK (
     repository_status IN (
       'not-started',
@@ -42,16 +42,16 @@ CREATE TABLE IF NOT EXISTS backups (
   ),
   preferences_cid TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  FOREIGN KEY (backup_config_id) REFERENCES backup_configs(id)
+  FOREIGN KEY (backup_id) REFERENCES backups(id)
 );
 
 DROP TABLE IF EXISTS blobs CASCADE;
 CREATE TABLE IF NOT EXISTS blobs (
   cid TEXT,
-  backup_config_id INTEGER,
-  FOREIGN KEY (backup_config_id) REFERENCES backup_configs(id),
-  backup_id INTEGER NOT NULL,
+  backup_id INTEGER,
   FOREIGN KEY (backup_id) REFERENCES backups(id),
+  snapshot_id INTEGER NOT NULL,
+  FOREIGN KEY (snapshot_id) REFERENCES snapshots(id),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 

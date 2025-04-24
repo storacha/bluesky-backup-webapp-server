@@ -23,7 +23,7 @@ export function shorten(
   return `${text.slice(0, front)}…${text.slice(-back)}`
 }
 
-export function formatDate(date: string){
+export function formatDate(date: string) {
   return new Date(date).toLocaleString()
 }
 

@@ -11,11 +11,11 @@ import { getSession } from '@/lib/sessions'
 import { serverIdentity } from '@/lib/server/auth'
 import { receiptsEndpoint, serviceConnection } from '@/components/services'
 
-export const createBackup = async ({
-  configId,
+export const createSnapshot = async ({
+  backupId,
   delegationData,
 }: {
-  configId: number
+  backupId: number
   delegationData: Uint8Array
 }) => {
   const { db } = getStorageContext()
@@ -32,21 +32,21 @@ export const createBackup = async ({
   }
   const delegation = delegationResult.ok
 
-  const { result: backupConfig } = await db.findBackupConfig(configId, account)
-  if (!backupConfig) {
+  const { result: backup } = await db.findBackup(backupId, account)
+  if (!backup) {
     return new Response('Not authorized', { status: 401 })
   }
 
-  const backup = await db.addBackup({ backupConfigId: backupConfig.id })
+  const snapshot = await db.addSnapshot({ backupId: backup.id })
 
-  if (!backup) {
-    throw new Error('Failed to create backup config')
+  if (!snapshot) {
+    throw new Error('Failed to create snapshot')
   }
 
   const atpClient = createAtprotoClient({
     account,
   })
-  const atpSession = await atpClient.restore(backupConfig.atprotoAccount)
+  const atpSession = await atpClient.restore(backup.atprotoAccount)
   const atpAgent = new AtprotoAgent(atpSession)
 
   // Create AgentData manually because we don't want to use a store.
@@ -62,7 +62,7 @@ export const createBackup = async ({
       description: 'Bluesky Backups Service',
     },
     spaces: new Map(),
-    currentSpace: backupConfig.storachaSpace,
+    currentSpace: backup.storachaSpace,
   })
 
   const storachaClient = new StorachaClient(agentData, {
@@ -84,26 +84,26 @@ export const createBackup = async ({
   })
   storachaClient.addProof(delegation)
 
-  void doBackup(backup.id, db, atpAgent, storachaClient, {
-    backupConfigId: backupConfig.id,
+  void doSnapshot(backup.id, db, atpAgent, storachaClient, {
+    backupId: backup.id,
   })
 
   return backup
 }
 
 interface BackupOptions {
-  backupConfigId?: number
+  backupId?: number
 }
 
-const doBackup = async (
-  backupId: number,
+const doSnapshot = async (
+  snapshotId: number,
   db: BBDatabase,
   atpAgent: AtprotoAgent,
   storachaClient: StorachaClient,
   options: BackupOptions = {}
 ) => {
   try {
-    await db.updateBackup(backupId, { repositoryStatus: 'in-progress' })
+    await db.updateSnapshot(snapshotId, { repositoryStatus: 'in-progress' })
 
     if (!atpAgent.did) {
       throw new Error('No DID found in atproto agent')
@@ -124,7 +124,7 @@ const doBackup = async (
       // set shard size to 4 GiB - the maximum shard size
       shardSize: 1024 * 1024 * 1024 * 4,
     })
-    await db.updateBackup(backupId, {
+    await db.updateSnapshot(snapshotId, {
       repositoryStatus: 'success',
       repositoryCid: repoRoot.toString(),
     })
@@ -152,14 +152,14 @@ const doBackup = async (
         )
         await db.addBlob({
           cid,
-          backupId: backupId,
-          backupConfigId: options.backupConfigId,
+          snapshotId: snapshotId,
+          backupId: options.backupId,
         })
       }
     } while (blobsRes.data.cursor)
   } catch (e: unknown) {
     // @ts-expect-error e.cause doesn't typecheck
     console.error('Error while creating backup', e, e.cause)
-    await db.updateBackup(backupId, { repositoryStatus: 'failed' })
+    await db.updateSnapshot(snapshotId, { repositoryStatus: 'failed' })
   }
 }

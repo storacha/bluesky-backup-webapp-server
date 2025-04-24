@@ -33,7 +33,7 @@ export function Backups({ className = '' }: { className?: string }) {
               <TableRow key={backup.id}>
                 <TableCell>
                   <a
-                    href={`/backups/${backup.id}`}
+                    href={`/snapshots/${backup.id}`}
                     className="text-[var(--color-bluesky-blue)] hover:underline"
                   >
                     {backup.id}
@@ -41,14 +41,14 @@ export function Backups({ className = '' }: { className?: string }) {
                 </TableCell>
                 <TableCell>
                   <a
-                    href={`/backups/${backup.id}`}
+                    href={`/snapshots/${backup.id}`}
                     className="font-mono text-sm"
                   >
                     {shortenDID(backup.accountDid)}
                   </a>
                 </TableCell>
                 <TableCell>
-                  <a href={`/backups/${backup.id}`}>
+                  <a href={`/snapshots/${backup.id}`}>
                     {backup.createdAt.toDateString()}
                   </a>
                 </TableCell>

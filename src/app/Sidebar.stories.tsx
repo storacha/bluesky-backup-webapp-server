@@ -18,15 +18,15 @@ const meta = {
   },
   decorators: [
     withFullViewportHeight,
-    withData(['api', '/api/backup-configs'], []),
+    withData(['api', '/api/backups'], []),
     withLinks({
-      '/configs/new': ['Pages/∕configs∕new'],
-      '/configs/1': ['Pages/∕configs∕[id]'],
-      '/configs/2': ['Pages/∕configs∕[id]'],
+      '/backups/new': ['Pages/∕backups∕new'],
+      '/backups/1': ['Pages/∕backups∕[id]'],
+      '/backups/2': ['Pages/∕backups∕[id]'],
     }),
   ],
   args: {
-    selectedConfigId: null,
+    selectedBackupId: null,
   },
 } satisfies Meta<typeof Sidebar>
 
@@ -34,12 +34,12 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-export const NoBackupConfigs: Story = {}
+export const NoBackups: Story = {}
 
-export const WithBackupConfigs: Story = {
+export const WithBackups: Story = {
   decorators: [
     withData(
-      ['api', '/api/backup-configs'],
+      ['api', '/api/backups'],
       [
         {
           id: 1,
@@ -67,13 +67,13 @@ export const WithBackupConfigs: Story = {
     ),
   ],
   args: {
-    selectedConfigId: 1,
+    selectedBackupId: 1,
   },
 }
 
-export const WhileBackupConfigsLoading: Story = {
-  decorators: [withData(['api', '/api/backup-configs'], new Promise(() => {}))],
+export const WhileBackupsLoading: Story = {
+  decorators: [withData(['api', '/api/backups'], new Promise(() => {}))],
   args: {
-    selectedConfigId: 1,
+    selectedBackupId: 1,
   },
 }

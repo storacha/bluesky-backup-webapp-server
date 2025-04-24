@@ -10,7 +10,7 @@ export async function GET() {
     return new Response('Not authorized', { status: 401 })
   }
 
-  const { results } = await db.findBackupConfigs(did)
+  const { results } = await db.findBackups(did)
 
   return Response.json(results)
 }
