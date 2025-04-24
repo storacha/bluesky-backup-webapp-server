@@ -31,7 +31,6 @@ export const createSnapshot = async ({
     return new Response('Invalid UCAN', { status: 400 })
   }
   const delegation = delegationResult.ok
-
   const { result: backup } = await db.findBackup(backupId)
   if (!backup) {
     return new Response('Not authorized', { status: 401 })

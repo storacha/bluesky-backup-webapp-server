@@ -52,15 +52,15 @@ function newKvNamespace(table: string): KVNamespace {
         key,
         value,
         expiration_ttl
-      ) 
+      )
       values (
         ${key},
         ${value},
         ${ttl}
-      ) 
+      )
       on conflict (key)
-      do update set 
-        value = ${value}, 
+      do update set
+        value = ${value},
         expiration_ttl = ${ttl}
       `
     },
