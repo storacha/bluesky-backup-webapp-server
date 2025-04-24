@@ -216,24 +216,10 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
               ))}
             </Stack>
           </Stack>
-          {backup ? (
-            <CreateSnapshotButton
-              backup={backup}
-              mutateBackups={() => mutate(['api', '/api/backups'])}
-            />
-          ) : (
-            <Button
-              type="submit"
-              $background="var(--color-dark-blue)"
-              $color="var(--color-white)"
-              $textTransform="capitalize"
-              $width="fit-content"
-              $fontSize="0.75rem"
-              $mt="1.4rem"
-            >
-              create backup
-            </Button>
-          )}
+          <CreateSnapshotButton
+            backup={backup}
+            mutateBackups={() => mutate(['api', '/api/backups'])}
+          />
         </Stack>
       </BackupContainer>
 

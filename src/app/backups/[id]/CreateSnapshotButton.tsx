@@ -10,7 +10,7 @@ export const CreateSnapshotButton = ({
   backup,
   mutateBackups,
 }: {
-  backup: Backup
+  backup: Backup | undefined
   mutateBackups: () => void
 }) => {
   const [{ accounts, client }] = useAuthenticator()
@@ -19,21 +19,26 @@ export const CreateSnapshotButton = ({
     return null
   }
 
-  const handleClick = async () => {
-    const delegationData = await delegate(client, backup.storachaSpace)
-    await createSnapshot({ backupId: backup.id, delegationData })
-    mutateBackups()
-  }
+  const handleClick =
+    backup &&
+    (async () => {
+      const delegationData = await delegate(client, backup.storachaSpace)
+      await createSnapshot({ backupId: backup.id, delegationData })
+      mutateBackups()
+    })
 
   return (
     <Button
-      $background="var(--color-dark-blue)"
+      $background={
+        handleClick ? 'var(--color-dark-blue)' : 'var(--color-gray-medium)'
+      }
       $color="var(--color-white)"
       $textTransform="capitalize"
       $width="fit-content"
       $fontSize="0.75rem"
       $mt="1.4rem"
       onClick={handleClick}
+      disabled={!handleClick}
     >
       create snapshot
     </Button>
