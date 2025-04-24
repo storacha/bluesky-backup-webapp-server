@@ -32,22 +32,22 @@ const Heading = styled.h2`
   color: var(--color-gray-medium);
 `
 
-const ConfigList = styled.ul`
+const BackupList = styled.ul`
   /* display: flex;
   flex-direction: column;
   gap: 1rem; */
   display: contents;
 `
 
-const configItemLikeStyle = css`
+const backupItemLikeStyle = css`
   ${roundRectStyle}
   background-color: var(--color-white);
   /* TK: Correct box-shadow */
   box-shadow: 0px 0px 20px -5px var(--color-gray-light);
 `
 
-const ConfigItem = styled.li<{ $selected?: boolean }>`
-  ${configItemLikeStyle}
+const BackupItem = styled.li<{ $selected?: boolean }>`
+  ${backupItemLikeStyle}
 
   ${({ $selected }) =>
     $selected &&
@@ -58,8 +58,8 @@ const ConfigItem = styled.li<{ $selected?: boolean }>`
     `}
 `
 
-const AddConfig = styled(Link)`
-  ${configItemLikeStyle}
+const AddBackup = styled(Link)`
+  ${backupItemLikeStyle}
 
   box-shadow: none;
   border-color: var(--color-gray-light);
@@ -72,7 +72,7 @@ const AddConfig = styled(Link)`
 `
 
 const actionButtonStyle = css`
-  ${configItemLikeStyle}
+  ${backupItemLikeStyle}
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -89,9 +89,9 @@ const LogOutButton = styled(BaseLogOutButton)`
 `
 
 export function Sidebar({
-  selectedConfigId,
+  selectedBackupId,
 }: {
-  selectedConfigId: number | null
+  selectedBackupId: number | null
 }) {
   return (
     <SidebarOutside>
@@ -99,8 +99,8 @@ export function Sidebar({
         <Header>Storacha</Header>
         <Heading>Backups</Heading>
         <Stack $gap="1rem">
-          <Configs selectedConfigId={selectedConfigId} />
-          <AddConfig href="/backups/new">Add backup…</AddConfig>
+          <Backups selectedBackupId={selectedBackupId} />
+          <AddBackup href="/backups/new">Add backup…</AddBackup>
         </Stack>
       </Stack>
       <Stack $gap="1rem">
@@ -112,18 +112,19 @@ export function Sidebar({
   )
 }
 
-function Configs({ selectedConfigId }: { selectedConfigId: number | null }) {
+
+function Backups({ selectedBackupId }: { selectedBackupId: number | null }) {
   const { data } = useSWR(['api', '/api/backups'])
 
   if (!data) return <Loader />
 
   return (
-    <ConfigList>
+    <BackupList>
       {data.map(({ id, name }) => (
         <Link key={id} href={`/backups/${id}`}>
-          <ConfigItem $selected={id === selectedConfigId}>{name}</ConfigItem>
+          <BackupItem $selected={id === selectedBackupId}>{name}</BackupItem>
         </Link>
       ))}
-    </ConfigList>
+    </BackupList>
   )
 }

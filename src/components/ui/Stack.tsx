@@ -8,11 +8,11 @@ export const Stack = styled.div<{
   $even?: boolean
   $alignItems?: Property.AlignItems
   $wrap?: Property.FlexWrap
-  $width?: Property.Width  
+  $width?: Property.Width
 }>`
   display: flex;
   flex-direction: ${({ $direction = 'column' }) => $direction};
-  justify-content: ${({$justifyContent = 'flex-start'}) => $justifyContent};
+  justify-content: ${({ $justifyContent = 'flex-start' }) => $justifyContent};
   gap: ${({ $gap = 0 }) => $gap};
   align-items: ${({ $alignItems = '' }) => $alignItems};
   flex-wrap: ${({ $wrap = '' }) => $wrap};

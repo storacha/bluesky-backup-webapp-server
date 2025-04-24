@@ -70,9 +70,7 @@ export const blueskyClientMetadata = ({
 })
 
 export const createClient = ({ account }: { account: string }) => {
-  const {
-    authSessionStore, authStateStore
-  } = getStorageContext()
+  const { authSessionStore, authStateStore } = getStorageContext()
 
   const client = new NodeOAuthClient({
     clientMetadata: blueskyClientMetadata({ account }),

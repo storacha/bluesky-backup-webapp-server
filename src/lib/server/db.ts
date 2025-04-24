@@ -13,8 +13,8 @@ import postgres from 'postgres'
 export const sql = postgres({
   transform: {
     ...postgres.camel,
-    undefined: null
-  }
+    undefined: null,
+  },
 })
 
 export interface ListResult {
@@ -41,7 +41,7 @@ export interface KVNamespace {
   list: (opts: KVNamespaceListOptions) => Promise<ListResult>
 }
 
-function newKvNamespace (table: string): KVNamespace {
+function newKvNamespace(table: string): KVNamespace {
   const tableSql = sql(table)
   return {
     put: async (key, value, options = {}) => {
@@ -52,15 +52,15 @@ function newKvNamespace (table: string): KVNamespace {
         key,
         value,
         expiration_ttl
-      ) 
+      )
       values (
         ${key},
         ${value},
         ${ttl}
-      ) 
+      )
       on conflict (key)
-      do update set 
-        value = ${value}, 
+      do update set
+        value = ${value},
         expiration_ttl = ${ttl}
       `
     },
@@ -118,12 +118,12 @@ interface StorageContext {
   db: BBDatabase
 }
 
-export function getStorageContext (): StorageContext {
+export function getStorageContext(): StorageContext {
   return {
     authSessionStore: newKvNamespace('auth_sessions'),
     authStateStore: newKvNamespace('auth_states'),
     db: {
-      async addBlob (input) {
+      async addBlob(input) {
         console.log('inserting', input)
         const results = await sql<ATBlob[]>`
         insert into blobs ${sql(input)}
@@ -193,7 +193,7 @@ export function getStorageContext (): StorageContext {
         }
         return results[0]
       },
-      async updateSnapshot (id, input) {
+      async updateSnapshot(id, input) {
         const results = await sql<Snapshot[]>`
           update snapshots set ${sql(input)}
           where id = ${id}
@@ -241,7 +241,7 @@ export function getStorageContext (): StorageContext {
           returning *
         `
         if (!results[0]) {
-          throw new Error('error inserting backup config')
+          throw new Error('error inserting backup')
         }
         return results[0]
       },

@@ -26,7 +26,7 @@ const meta = {
     }),
   ],
   args: {
-    selectedConfigId: null,
+    selectedBackupId: null,
   },
 } satisfies Meta<typeof Sidebar>
 
@@ -67,13 +67,13 @@ export const WithBackups: Story = {
     ),
   ],
   args: {
-    selectedConfigId: 1,
+    selectedBackupId: 1,
   },
 }
 
 export const WhileBackupsLoading: Story = {
   decorators: [withData(['api', '/api/backups'], new Promise(() => {}))],
   args: {
-    selectedConfigId: 1,
+    selectedBackupId: 1,
   },
 }

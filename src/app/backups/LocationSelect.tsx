@@ -23,7 +23,7 @@ export const LocationSelect = ({
   const id = useId()
 
   return (
-    <Stack $alignItems='start'>
+    <Stack $alignItems="start">
       <Label htmlFor={id}>{label}</Label>
       <Select id={id} {...selectProps} />
     </Stack>

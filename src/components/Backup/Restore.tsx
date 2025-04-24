@@ -16,58 +16,63 @@ const RestoreContainer = styled(Container)`
 const Instruction = styled(Text)``
 
 const SnapshotContainer = styled(Stack)`
-margin-top: 4rem;
+  margin-top: 4rem;
 `
 
 const Details = styled(Stack)`
-margin-top: 4rem;
+  margin-top: 4rem;
 `
 
 const DetailName = styled(SubHeading)`
-color: black;
+  color: black;
 `
 
 const DetailValue = styled.div`
-font-family: var(--font-dm-mono);
-font-size: 0.75rem;
+  font-family: var(--font-dm-mono);
+  font-size: 0.75rem;
 `
 
 const SnapshotSummary = styled(Box)`
-font-size: 0.75rem;
+  font-size: 0.75rem;
 `
 
 export interface BackupRestoreProps {
-  config?: Backup
+  backup?: Backup
 }
 
-export const BackupRestore = ({ config }: BackupRestoreProps) => {
-  const { data: snapshots } = useSWR<Snapshot[]>(config && [
-    'api',
-    `/api/backups/${config.id}/snapshots`,
-  ])
+export const BackupRestore = ({ backup }: BackupRestoreProps) => {
+  const { data: snapshots } = useSWR<Snapshot[]>(
+    backup && ['api', `/api/backups/${backup.id}/snapshots`]
+  )
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [selectedSnapshot, setSelectedSnapshot] = useState<Snapshot>()
   return (
     <RestoreContainer>
       <Heading>backup & restore</Heading>
-      {config ? (
+      {backup ? (
         <>
-          <Details $gap='1rem'>
+          <Details $gap="1rem">
             <SubHeading>Details</SubHeading>
-            <Stack $direction='row' $alignItems='center' $gap='1rem'>
+            <Stack $direction="row" $alignItems="center" $gap="1rem">
               <DetailName>Account DID</DetailName>
-              <DetailValue>
-                {shortenDID(config.atprotoAccount)}
-              </DetailValue>
+              <DetailValue>{shortenDID(backup.atprotoAccount)}</DetailValue>
             </Stack>
           </Details>
-          <SnapshotContainer $gap='1rem'>
+          <SnapshotContainer $gap="1rem">
             <SubHeading>Snapshots</SubHeading>
-            {snapshots?.map(snapshot => (
-              <SnapshotSummary key={snapshot.id} $background='var(--color-white)'>
-                <Stack $direction='row' $alignItems='center' $justifyContent='space-between' $width='100%'>
-                  <Stack $direction='column' $alignItems='flex-start'>
+            {snapshots?.map((snapshot) => (
+              <SnapshotSummary
+                key={snapshot.id}
+                $background="var(--color-white)"
+              >
+                <Stack
+                  $direction="row"
+                  $alignItems="center"
+                  $justifyContent="space-between"
+                  $width="100%"
+                >
+                  <Stack $direction="column" $alignItems="flex-start">
                     <h3>Snapshot {snapshot.id}</h3>
                     <h3>{formatDate(snapshot.createdAt)}</h3>
                   </Stack>
@@ -78,8 +83,8 @@ export const BackupRestore = ({ config }: BackupRestoreProps) => {
                     $width="fit-content"
                     $fontSize="0.75rem"
                     onClick={() => {
-                      setSelectedSnapshot(snapshot);
-                      onOpen();
+                      setSelectedSnapshot(snapshot)
+                      onOpen()
                     }}
                   >
                     View
@@ -90,7 +95,7 @@ export const BackupRestore = ({ config }: BackupRestoreProps) => {
           </SnapshotContainer>
           {selectedSnapshot && (
             <Modal isOpen={isOpen} onClose={onClose} size="xl">
-              <Box $height='100%'>
+              <Box $height="100%">
                 <SnapshotDetail snapshot={selectedSnapshot} />
               </Box>
             </Modal>
@@ -109,58 +114,58 @@ export const BackupRestore = ({ config }: BackupRestoreProps) => {
 
 enum SnapshotDetailState {
   DEFAULT,
-  RESTORE_ALL
+  RESTORE_ALL,
 }
 
-function SnapshotDetail ({ snapshot }: { snapshot: Snapshot }) {
-  const [state, setState] = useState<SnapshotDetailState>(SnapshotDetailState.DEFAULT)
+function SnapshotDetail({ snapshot }: { snapshot: Snapshot }) {
+  const [state, setState] = useState<SnapshotDetailState>(
+    SnapshotDetailState.DEFAULT
+  )
   switch (state) {
     case SnapshotDetailState.DEFAULT:
       return (
-        <Stack $direction='row' $alignItems='center' $justifyContent='between'>
-          <Stack $direction='column' $alignItems='flex-start'>
+        <Stack $direction="row" $alignItems="center" $justifyContent="between">
+          <Stack $direction="column" $alignItems="flex-start">
             <h3>Snapshot {snapshot.id}</h3>
             <h3>{formatDate(snapshot.createdAt)}</h3>
           </Stack>
-          <Stack $direction='column' $alignItems='flex-start'>
+          <Stack $direction="column" $alignItems="flex-start">
             <Box>
-              <Stack $direction='row'>
-                Repository
-              </Stack>
-              <Stack $direction='row'>
+              <Stack $direction="row">Repository</Stack>
+              <Stack $direction="row">
                 <Button>View</Button>
                 <Button>Restore</Button>
               </Stack>
             </Box>
             <Box>
-              <Stack $direction='row'>
-                Blobs
-              </Stack>
-              <Stack $direction='row'>
+              <Stack $direction="row">Blobs</Stack>
+              <Stack $direction="row">
                 <Button>View</Button>
                 <Button>Restore</Button>
               </Stack>
             </Box>
             <Box>
-              <Stack $direction='row'>
-                Preferences
-              </Stack>
-              <Stack $direction='row'>
+              <Stack $direction="row">Preferences</Stack>
+              <Stack $direction="row">
                 <Button>View</Button>
                 <Button>Restore</Button>
               </Stack>
             </Box>
-            <Stack $direction='row'>
+            <Stack $direction="row">
               <Button>View all</Button>
-              <Button onClick={() => { setState(SnapshotDetailState.RESTORE_ALL) }}>Restore all</Button>
+              <Button
+                onClick={() => {
+                  setState(SnapshotDetailState.RESTORE_ALL)
+                }}
+              >
+                Restore all
+              </Button>
             </Stack>
           </Stack>
         </Stack>
       )
 
-      case SnapshotDetailState.RESTORE_ALL:
-        return (
-          <RestoreDialog snapshotId={snapshot.id}/>
-        )
+    case SnapshotDetailState.RESTORE_ALL:
+      return <RestoreDialog snapshotId={snapshot.id} />
   }
 }

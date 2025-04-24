@@ -20,7 +20,7 @@ export const StorachaSpaceSelect = (
   return (
     <Box $background={hasValue ? 'var(--color-white)' : ''}>
       <Stack $gap=".8rem" $direction="row" $alignItems="center">
-        <AccountLogo $type='original' $hasAccount={hasValue}>
+        <AccountLogo $type="original" $hasAccount={hasValue}>
           <Image
             src="/storacha-red.png"
             alt="Storacha Logo"

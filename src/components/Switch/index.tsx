@@ -5,7 +5,7 @@ import { useToggleState } from 'react-stately'
 
 interface SwitchProps {
   value: boolean
-  name: string;
+  name: string
   onClick: (value: boolean) => void
   label?: string
   isDisabled?: boolean

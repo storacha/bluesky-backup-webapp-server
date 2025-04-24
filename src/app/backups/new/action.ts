@@ -10,14 +10,13 @@ export const action = async (data: FormData) => {
   const backup = await db.addBackup({
     // TODO: remove typecasts and do real typechecking and error handling here
     accountDid: data.get('account') as string,
-    name: (data.get('name') as string) || 'New Config',
+    name: (data.get('name') as string) || 'New Backup',
     atprotoAccount: data.get('atproto_account') as Did,
     storachaSpace: data.get('storacha_space') as Did<'key'>,
     includeRepository: data.get('include_repository') === 'on' ? true : false,
     includeBlobs: data.get('include_blobs') === 'on' ? true : false,
-    includePreferences:
-      data.get('include_preferences') === 'on' ? true : false,
+    includePreferences: data.get('include_preferences') === 'on' ? true : false,
   })
 
-  redirect(`/backups/${backup.id}`) // Redirect to the new config page
+  redirect(`/backups/${backup.id}`) // Redirect to the new backup page
 }

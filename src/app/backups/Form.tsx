@@ -9,10 +9,10 @@ import { StorachaSpaceSelect } from '../../components/Backup/StorachaSpaceSelect
 import { action } from './new/action'
 import { Box } from './Box'
 import { Backup } from '../types'
-import { useStorachaAccount } from '../hooks'
+import { useStorachaAccount } from '@/hooks/use-plan'
 
 // TODO: Deal with unauthenticated
-export const Form = ({ config }: { config?: Backup }) => {
+export const Form = ({ backup }: { backup?: Backup }) => {
   const account = useStorachaAccount()
   if (!account) return null
 
@@ -20,27 +20,27 @@ export const Form = ({ config }: { config?: Backup }) => {
     <form action={action}>
       <h1>
         {/* TODO: Provide a better default name */}
-        {config ? (
-          config.name
+        {backup ? (
+          backup.name
         ) : (
-          <input type="text" name="name" defaultValue="New Config" />
+          <input type="text" name="name" defaultValue="New Backup" />
         )}
       </h1>
       {/* We may not need to send the account as a form field once we have real auth. */}
       <input type="hidden" name="account" value={account.did()} />
       <h2>Accounts</h2>
       <Grid>
-        {config ? (
+        {backup ? (
           <>
             <BlueskyAccountSelect
               name="atproto_account"
               disabled
-              value={config.atprotoAccount}
+              value={backup.atprotoAccount}
             />
             <StorachaSpaceSelect
               name="storacha_space"
               disabled
-              value={config.storachaSpace}
+              value={backup.storachaSpace}
             />
           </>
         ) : (
@@ -52,25 +52,25 @@ export const Form = ({ config }: { config?: Backup }) => {
       </Grid>
       <h2>Data</h2>
       <Grid>
-        {config ? (
+        {backup ? (
           <>
             <Checkbox
               label="Repository"
               name="include_repository"
               disabled
-              checked={config.includeRepository}
+              checked={backup.includeRepository}
             />
             <Checkbox
               label="Blobs"
               name="include_blobs"
               disabled
-              checked={config.includeBlobs}
+              checked={backup.includeBlobs}
             />
             <Checkbox
               label="Preferences"
               name="include_preferences"
               disabled
-              checked={config.includePreferences}
+              checked={backup.includePreferences}
             />
           </>
         ) : (
@@ -89,7 +89,7 @@ export const Form = ({ config }: { config?: Backup }) => {
           </>
         )}
       </Grid>
-      {!config && <Button type="submit">Create Config</Button>}
+      {!backup && <Button type="submit">Create Backup</Button>}
     </form>
   )
 }

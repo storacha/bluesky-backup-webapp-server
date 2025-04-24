@@ -48,7 +48,7 @@ export const usePlan = (account: Account | undefined) => {
 
   return result as UsePlanResult
 }
-export function useStorachaAccount () {
+export function useStorachaAccount() {
   const [{ accounts }] = useAuthenticator()
   const account = accounts[0]
   return account
