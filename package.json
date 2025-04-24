@@ -47,6 +47,7 @@
     "multiformats": "^13.3.2",
     "next": "15.1.6",
     "next-yak": "^4.1.1",
+    "nuqs": "^2.4.3",
     "postgres": "^3.4.5",
     "postgres-shift": "^0.1.0",
     "proper-url-join": "^2.1.2",

@@ -1,4 +1,5 @@
 'use client'
+
 import { Backup } from '@/app/types'
 import { Button } from '@/components/ui'
 import { useAuthenticator } from '@storacha/ui-react'

@@ -2,7 +2,7 @@ import { styled } from 'next-yak'
 import { BackupDetail } from './Backup'
 import { BackupRestore } from './Restore'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
-import { useStorachaAccount } from '@/app/hooks'
+import { useStorachaAccount } from '@/hooks/use-plan'
 import { Backup } from '@/app/types'
 
 const BackupContainer = styled.div`

@@ -9,7 +9,7 @@ import { StorachaSpaceSelect } from '../../components/Backup/StorachaSpaceSelect
 import { action } from './new/action'
 import { Box } from './Box'
 import { Backup } from '../types'
-import { useStorachaAccount } from '../hooks'
+import { useStorachaAccount } from '@/hooks/use-plan'
 
 // TODO: Deal with unauthenticated
 export const Form = ({ backup }: { backup?: Backup }) => {
