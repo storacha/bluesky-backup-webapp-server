@@ -12,11 +12,20 @@ import {
   DidWeb,
   DidKey,
 } from '@/lib/constants'
-import { SERVER_IDENTITY_PRIVATE_KEY } from '@/lib/server/constants'
+import { getConstants } from '@/lib/server/constants'
 
-export const serverIdentity = ed25519.Signer.parse(
-  SERVER_IDENTITY_PRIVATE_KEY
-).withDID(SERVER_DID)
+let cachedServerIdentity: ed25519.Signer.Signer
+
+export const getServerIdentity = () => {
+  if (cachedServerIdentity) {
+    return cachedServerIdentity
+  }
+  const envConstants = getConstants()
+  cachedServerIdentity = ed25519.Signer.parse(
+    envConstants.SERVER_IDENTITY_PRIVATE_KEY
+  ).withDID(SERVER_DID)
+  return cachedServerIdentity
+}
 
 /**
  * Mapping of known WebDIDs to their corresponding DIDKeys for Production and Staging environments.
@@ -25,36 +34,52 @@ export const serverIdentity = ed25519.Signer.parse(
  * web DID resolution with caching should be implemented when we have a chance
  */
 
-export const principalMapping = {
-  // Production
-  'did:web:up.storacha.network': PRODUCTION_UPLOAD_SERVICE_PUBLIC_KEY,
-  'did:web:web3.storage': PRODUCTION_UPLOAD_SERVICE_PUBLIC_KEY, // legacy
-  'did:web:w3s.link':
-    'did:key:z6Mkha3NLZ38QiZXsUHKRHecoumtha3LnbYEL21kXYBFXvo5',
+let cachedPrincipalMapping: Record<DidWeb, DidKey>
+export const getPrincipalMapping = () => {
+  if (cachedPrincipalMapping) {
+    return cachedPrincipalMapping
+  }
+  const serverIdentity = getServerIdentity()
+  cachedPrincipalMapping = {
+    // Production
+    'did:web:up.storacha.network': PRODUCTION_UPLOAD_SERVICE_PUBLIC_KEY,
+    'did:web:web3.storage': PRODUCTION_UPLOAD_SERVICE_PUBLIC_KEY, // legacy
+    'did:web:w3s.link':
+      'did:key:z6Mkha3NLZ38QiZXsUHKRHecoumtha3LnbYEL21kXYBFXvo5',
 
-  // Staging
-  'did:web:staging.up.storacha.network': STAGING_UPLOAD_SERVICE_PUBLIC_KEY,
-  'did:web:staging.web3.storage': STAGING_UPLOAD_SERVICE_PUBLIC_KEY, // legacy
-  'did:web:staging.w3s.link':
-    'did:key:z6MkqK1d4thaCEXSGZ6EchJw3tDPhQriwynWDuR55ayATMNf',
+    // Staging
+    'did:web:staging.up.storacha.network': STAGING_UPLOAD_SERVICE_PUBLIC_KEY,
+    'did:web:staging.web3.storage': STAGING_UPLOAD_SERVICE_PUBLIC_KEY, // legacy
+    'did:web:staging.w3s.link':
+      'did:key:z6MkqK1d4thaCEXSGZ6EchJw3tDPhQriwynWDuR55ayATMNf',
 
-  // Service
-  [serverIdentity.did()]: serverIdentity.toDIDKey(),
-} as Record<DidWeb, DidKey>
+    // Service
+    [serverIdentity.did()]: serverIdentity.toDIDKey(),
+  } as Record<DidWeb, DidKey>
+  return cachedPrincipalMapping
+}
 
-const authorityPublicKey = principalMapping[IDENTITY_AUTHORITY]
-if (!authorityPublicKey)
-  throw new Error(
-    `could not find public key for principal identified by IDENTITY_AUTHORITY=${IDENTITY_AUTHORITY}`
-  )
-
-export const authority =
-  ed25519.Verifier.parse(authorityPublicKey).withDID(IDENTITY_AUTHORITY)
+let cachedAuthority: ed25519.Signer.Verifier
+export const getAuthority = () => {
+  if (cachedAuthority) {
+    return cachedAuthority
+  }
+  const principalMapping = getPrincipalMapping()
+  const authorityPublicKey = principalMapping[IDENTITY_AUTHORITY]
+  if (!authorityPublicKey)
+    throw new Error(
+      `could not find public key for principal identified by IDENTITY_AUTHORITY=${IDENTITY_AUTHORITY}`
+    )
+  cachedAuthority =
+    ed25519.Verifier.parse(authorityPublicKey).withDID(IDENTITY_AUTHORITY)
+  return cachedAuthority
+}
 
 export const authorize = async (
   account: `did:${string}:${string}`,
   proof: DelegationType<Capabilities>
 ) => {
+  const serverIdentity = getServerIdentity()
   const invocation = await atproto
     .invoke({
       issuer: serverIdentity,
@@ -65,6 +90,7 @@ export const authorize = async (
     .delegate()
 
   // Validate the invocation.
+  const authority = getAuthority()
   const accessResult = await access(invocation, {
     capability: atproto,
     authority: authority,
@@ -74,7 +100,7 @@ export const authorize = async (
     resolveDIDKey: async (did: `did:${string}:${string}`) => {
       if (Schema.did({ method: 'web' }).is(did)) {
         const didweb = did as `did:web:${string}`
-        const principal = principalMapping[didweb]
+        const principal = getPrincipalMapping()[didweb]
         if (principal) {
           return ok(principal)
         }

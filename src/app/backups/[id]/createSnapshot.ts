@@ -8,7 +8,7 @@ import { Delegation } from '@ucanto/core'
 import { BBDatabase, getStorageContext } from '@/lib/server/db'
 import { createClient as createAtprotoClient } from '@/lib/atproto'
 import { getSession } from '@/lib/sessions'
-import { serverIdentity } from '@/lib/server/auth'
+import { getServerIdentity } from '@/lib/server/auth'
 import { receiptsEndpoint, serviceConnection } from '@/components/services'
 
 export const createSnapshot = async ({
@@ -56,7 +56,7 @@ export const createSnapshot = async ({
     // FIXME: The Storacha client thinks a principal has to be a `did:key`,
     // which is a bit silly. All DIDs have keys, and any `Signer` by
     // definition has its private key loaded and can sign.
-    principal: serverIdentity as unknown as Signer<DID<'key'>>,
+    principal: getServerIdentity() as unknown as Signer<DID<'key'>>,
     delegations: new Map(),
     meta: {
       name: 'bluesky-backups',
