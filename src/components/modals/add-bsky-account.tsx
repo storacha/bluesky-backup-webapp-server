@@ -3,7 +3,7 @@ import { Box } from '../Backup/Backup'
 import { Button, InputField, Modal, ModalProps, Stack, Text } from '../ui'
 import { ChangeEvent, useState } from 'react'
 
-export const AddBskyccountModal = ({
+export const AddBskyAccountModal = ({
   isOpen,
   onClose,
 }: Pick<ModalProps, 'isOpen' | 'onClose'>) => {

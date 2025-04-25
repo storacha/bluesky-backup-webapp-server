@@ -1,6 +1,6 @@
 // all the known CSS properties so we don't have to always duplicate
 // them when we make components accepting custom props with yak
-import { Property } from "csstype"
+import { Property } from 'csstype'
 
 export type StyleProps = {
   $color?: Property.Color
@@ -11,7 +11,7 @@ export type StyleProps = {
   $letterSpacing?: Property.LetterSpacing
   $wordSpacing?: Property.WordSpacing
   $textTransform?: Property.TextTransform
-  $padding: Property.Padding;
+  $padding: Property.Padding
   $borderStyle: Property.BorderStyle
   $height: Property.Height
   $background: Property.Background

@@ -9,7 +9,7 @@ import { Stack } from '../ui'
 import Image from 'next/image'
 import { PlusCircle } from '@phosphor-icons/react'
 import { useDisclosure } from '@/hooks/use-disclosure'
-import { AddBskyccountModal } from '../modals'
+import { AddBskyAccountModal } from '../modals'
 
 const LOG_INTO_BLUESKY_VALUE = '-'
 
@@ -90,7 +90,7 @@ export const BlueskyAccountSelect = (
         />
       </Box>
 
-      <AddBskyccountModal isOpen={isOpen} onClose={onClose} />
+      <AddBskyAccountModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

@@ -20,6 +20,7 @@ const InputWrapper = styled.input<{ $hasIcon?: boolean } & Partial<StyleProps>>`
   height: ${({ $height = '48px' }) => $height};
   width: ${({ $width = '100%' }) => $width};
   border-radius: 0.75rem;
+  font-size: 0.75rem;
   border: ${({ $border = '1px solid var(--color-gray-light)' }) => $border};
   padding-left: ${({ $hasIcon }) => ($hasIcon ? '2.5rem' : '0.75rem')};
 
@@ -47,7 +48,7 @@ export const InputField = ({
   onChange,
   placeholder,
 }: InputProps) => {
-  const hasIcon = !!icon;
+  const hasIcon = !!icon
 
   return (
     <Field $hasIcon={hasIcon}>
