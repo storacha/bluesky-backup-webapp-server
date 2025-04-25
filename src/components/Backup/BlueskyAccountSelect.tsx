@@ -9,7 +9,6 @@ import { Stack } from '../ui'
 import Image from 'next/image'
 import { PlusCircle } from '@phosphor-icons/react'
 import { useDisclosure } from '@/hooks/use-disclosure'
-import { useUiComponentStore } from '@/store/ui'
 import { AddBskyccountModal } from '../modals'
 
 const LOG_INTO_BLUESKY_VALUE = '-'
@@ -20,8 +19,9 @@ export const BlueskyAccountSelect = (
     'onChange' | 'label'
   > & { value?: string }
 ) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const { updateUiStore } = useUiComponentStore()
+  const { isOpen, onOpen, onClose } = useDisclosure({
+    component: 'bsky-account',
+  })
   const [{ accounts }] = useAuthenticator()
   const account = accounts[0]
 
@@ -30,16 +30,6 @@ export const BlueskyAccountSelect = (
     // options.
     props.disabled ? null : account && ['api', '/api/atproto-accounts']
   )
-
-  const addBskyAccount = () => {
-    onOpen()
-    updateUiStore({ ui: 'bsky-account' })
-  }
-
-  const closeModal = () => {
-    onClose()
-    updateUiStore({ ui: '' })
-  }
 
   // If we select LOG_INTO_BLUESKY_VALUE, don't tell `onChange` about it, just
   // set the value back to the previous value, and open the OAuth window.
@@ -58,10 +48,7 @@ export const BlueskyAccountSelect = (
   const hasValue = Boolean(selectElement.current?.value)
   return (
     <>
-      <Box
-        $background={hasValue ? 'var(--color-white)' : ''}
-        onClick={addBskyAccount}
-      >
+      <Box $background={hasValue ? 'var(--color-white)' : ''} onClick={onOpen}>
         <Stack $gap=".8rem" $direction="row" $alignItems="center">
           <AccountLogo $type="original" $hasAccount={hasValue}>
             <Image
@@ -99,11 +86,11 @@ export const BlueskyAccountSelect = (
           weight="fill"
           size="16"
           color="var(--color-gray-1)"
-          onClick={addBskyAccount}
+          onClick={onOpen}
         />
       </Box>
 
-      <AddBskyccountModal isOpen={isOpen} onClose={closeModal} />
+      <AddBskyccountModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

@@ -84,3 +84,5 @@ useEffect(() => {
   }
 }, [store.ui])
 ```
+
+> **NOTE**: Whenever you want state kept in the URL you should pass the `component` prop in the hook like so: `useDisclosure({ component: 'bsky-account' })` and fallback to an empty object if you dont want to keep the state `useDisclosure({})`

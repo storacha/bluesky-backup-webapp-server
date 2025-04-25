@@ -26,6 +26,7 @@ const InputWrapper = styled.input<{ $hasIcon?: boolean } & Partial<StyleProps>>`
   &::placeholder {
     color: var(--color-gray);
     font-size: 0.75rem;
+    font-weight: 400;
   }
 `
 
