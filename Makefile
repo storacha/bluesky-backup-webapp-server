@@ -110,7 +110,7 @@ plan-shared: deploy/shared/.terraform
 .PHONY: plan-app
 
 plan-app: deploy/app/.terraform .tfworkspace eval_image_tag
-	tofu -chdir=deploy/app plan -var="image_tag=$(IMAGE_TAG)"
+	tofu -chdir=deploy/app plan -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]'
 
 .PHONY: plan
 
