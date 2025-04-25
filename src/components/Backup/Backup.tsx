@@ -8,10 +8,10 @@ import { Account } from '@storacha/ui-react'
 import { BlueskyAccountSelect } from '@/components/Backup/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/Backup/StorachaSpaceSelect'
 import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
-import { mutate } from 'swr'
 import { PlusCircle } from '@phosphor-icons/react'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { useUiComponentStore } from '@/store/ui'
+import { CreateButton } from '@/components/ui/CreateButton'
 
 interface BackupProps {
   account?: Account
@@ -211,22 +211,9 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
             </Stack>
           </Stack>
           {backup ? (
-            <CreateSnapshotButton
-              backup={backup}
-              mutateBackups={() => mutate(['api', '/api/backups'])}
-            />
+            <CreateSnapshotButton backup={backup} />
           ) : (
-            <Button
-              type="submit"
-              $background="var(--color-dark-blue)"
-              $color="var(--color-white)"
-              $textTransform="capitalize"
-              $width="fit-content"
-              $fontSize="0.75rem"
-              $mt="1.4rem"
-            >
-              create backup
-            </Button>
+            <CreateButton type="submit">create backup</CreateButton>
           )}
         </Stack>
       </BackupContainer>

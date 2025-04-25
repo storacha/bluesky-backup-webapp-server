@@ -1,41 +1,43 @@
 'use client'
 
 import { Backup } from '@/app/types'
-import { Button } from '@/components/ui'
 import { useAuthenticator } from '@storacha/ui-react'
 import { createSnapshot } from './createSnapshot'
 import { delegate } from './delegate'
+import { useSWRMutation } from '@/app/swr'
+import { CreateButton } from '@/components/ui/CreateButton'
 
-export const CreateSnapshotButton = ({
-  backup,
-  mutateBackups,
-}: {
-  backup: Backup
-  mutateBackups: () => void
-}) => {
+export const CreateSnapshotButton = ({ backup }: { backup: Backup }) => {
   const [{ accounts, client }] = useAuthenticator()
   const account = accounts[0]
+
+  const enabled = client && backup
+
+  const { trigger } = useSWRMutation(
+    enabled && ['api', `/api/backups/${backup.id}/snapshots`],
+    async () => {
+      // SWR guarantees this won't actually happen.
+      if (!enabled)
+        throw new Error('Mutation ran but key should have been null')
+      const delegationData = await delegate(client, backup.storachaSpace)
+      await createSnapshot({ backupId: backup.id, delegationData })
+    }
+  )
+
   if (!account || !client) {
     return null
   }
 
-  const handleClick = async () => {
-    const delegationData = await delegate(client, backup.storachaSpace)
-    await createSnapshot({ backupId: backup.id, delegationData })
-    mutateBackups()
-  }
-
   return (
-    <Button
-      $background="var(--color-dark-blue)"
-      $color="var(--color-white)"
-      $textTransform="capitalize"
-      $width="fit-content"
-      $fontSize="0.75rem"
-      $mt="1.4rem"
-      onClick={handleClick}
+    <CreateButton
+      onClick={
+        enabled &&
+        (() => {
+          trigger()
+        })
+      }
     >
       create snapshot
-    </Button>
+    </CreateButton>
   )
 }
