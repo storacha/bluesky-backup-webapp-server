@@ -8,11 +8,6 @@ on:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  id-token: write # This is required for requesting the JWT
-  contents: read # This is required for actions/checkout
-
-
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -30,6 +25,9 @@ jobs:
 
   # apply staging on pushes to main, plan otherwise
   staging:
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
     uses: ./.github/workflows/terraform.yml
     with:
       env: staging
@@ -43,6 +41,9 @@ jobs:
 
   # apply prod on successful release, plan otherwise
   production:
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
     needs: release
     uses: ./.github/workflows/terraform.yml
     with:
