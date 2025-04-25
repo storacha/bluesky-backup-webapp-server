@@ -10,4 +10,11 @@ jobs:
       - uses: ./.github/actions/pnpm
       - run: pnpm lint
       - run: pnpm test
+      - name: create .env from .env.tpl
+        run: |
+          cp .env.tpl .env
+          echo "NEXT_PUBLIC_SERVER_DID='did:key:z6Mkk89bC3JrVqKie71YEcc5M1SMVxuCgNx6zLZ8SYJsxALi'" >> .env
+          echo "SERVER_IDENTITY_PRIVATE_KEY=MgCZT5vOnYZoVAeyjnzuJIVY9J4LNtJ+f8Js0cTPuKUpFne0BVEDJjEu6quFIU8yp91/TY/+MYK8GvlKoTDnqOCovCVM=" >> .env
+      - run: pnpm build
+
 
