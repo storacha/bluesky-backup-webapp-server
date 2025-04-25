@@ -35,7 +35,7 @@ module "shared" {
   source = "github.com/storacha/storoku//shared"
   create_db = true
   app = var.app
-  zone_id = var.cloudflare_zone_id
+  zone_id = ""
   domain_base = var.domain_base
   setup_cloudflare = false
 }
