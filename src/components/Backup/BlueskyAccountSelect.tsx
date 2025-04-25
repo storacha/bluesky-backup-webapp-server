@@ -8,6 +8,9 @@ import { AccountLogo, Box } from './Backup'
 import { Stack } from '../ui'
 import Image from 'next/image'
 import { PlusCircle } from '@phosphor-icons/react'
+import { useDisclosure } from '@/hooks/use-disclosure'
+import { useUiComponentStore } from '@/store/ui'
+import { AddBskyccountModal } from '../modals'
 
 const LOG_INTO_BLUESKY_VALUE = '-'
 
@@ -17,6 +20,8 @@ export const BlueskyAccountSelect = (
     'onChange' | 'label'
   > & { value?: string }
 ) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { updateUiStore } = useUiComponentStore()
   const [{ accounts }] = useAuthenticator()
   const account = accounts[0]
 
@@ -25,6 +30,16 @@ export const BlueskyAccountSelect = (
     // options.
     props.disabled ? null : account && ['api', '/api/atproto-accounts']
   )
+
+  const addBskyAccount = () => {
+    onOpen()
+    updateUiStore({ ui: 'bsky-account' })
+  }
+
+  const closeModal = () => {
+    onClose()
+    updateUiStore({ ui: '' })
+  }
 
   // If we select LOG_INTO_BLUESKY_VALUE, don't tell `onChange` about it, just
   // set the value back to the previous value, and open the OAuth window.
@@ -42,35 +57,54 @@ export const BlueskyAccountSelect = (
   const selectElement = useRef<HTMLSelectElement>(null)
   const hasValue = Boolean(selectElement.current?.value)
   return (
-    <Box $background={hasValue ? 'var(--color-white)' : ''}>
-      <Stack $gap=".8rem" $direction="row" $alignItems="center">
-        <AccountLogo $type="original" $hasAccount={hasValue}>
-          <Image src="/bluesky.png" alt="Bluesky Logo" width={25} height={25} />
-        </AccountLogo>
-        <LocationSelect
-          label="Bluesky Account"
-          {...props}
-          onChange={changeHandler}
-          ref={selectElement}
-        >
-          {props.disabled
-            ? props.value && <BlueskyOption did={props.value} />
-            : atprotoAccounts && (
-                <>
-                  {atprotoAccounts.map((account) => (
-                    <BlueskyOption key={account} did={account} />
-                  ))}
-                  {atprotoAccounts.length === 0 && <option value="-"></option>}
-                  <hr />
-                  <option value={LOG_INTO_BLUESKY_VALUE}>
-                    Connect a Bluesky account…
-                  </option>
-                </>
-              )}
-        </LocationSelect>
-      </Stack>
-      <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
-    </Box>
+    <>
+      <Box
+        $background={hasValue ? 'var(--color-white)' : ''}
+        onClick={addBskyAccount}
+      >
+        <Stack $gap=".8rem" $direction="row" $alignItems="center">
+          <AccountLogo $type="original" $hasAccount={hasValue}>
+            <Image
+              src="/bluesky.png"
+              alt="Bluesky Logo"
+              width={25}
+              height={25}
+            />
+          </AccountLogo>
+          <LocationSelect
+            label="Bluesky Account"
+            {...props}
+            onChange={changeHandler}
+            ref={selectElement}
+          >
+            {props.disabled
+              ? props.value && <BlueskyOption did={props.value} />
+              : atprotoAccounts && (
+                  <>
+                    {atprotoAccounts.map((account) => (
+                      <BlueskyOption key={account} did={account} />
+                    ))}
+                    {atprotoAccounts.length === 0 && (
+                      <option value="-"></option>
+                    )}
+                    <hr />
+                    <option value={LOG_INTO_BLUESKY_VALUE}>
+                      Connect a Bluesky account…
+                    </option>
+                  </>
+                )}
+          </LocationSelect>
+        </Stack>
+        <PlusCircle
+          weight="fill"
+          size="16"
+          color="var(--color-gray-1)"
+          onClick={addBskyAccount}
+        />
+      </Box>
+
+      <AddBskyccountModal isOpen={isOpen} onClose={closeModal} />
+    </>
   )
 }
 

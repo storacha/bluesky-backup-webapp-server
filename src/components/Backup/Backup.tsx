@@ -1,6 +1,5 @@
-import { Button, Modal, Stack, Text } from '../ui'
+import { Button, Modal, Stack, StyleProps, Text } from '../ui'
 import { styled } from 'next-yak'
-import { Property } from 'csstype'
 import { ReactNode, useEffect, useState } from 'react'
 import { DataBox } from './Data'
 import { Backup } from '@/app/types'
@@ -43,12 +42,7 @@ const AccountsContainer = styled.div`
   position: relative;
 `
 
-export const Box = styled.div<{
-  $height?: Property.Height
-  $width?: Property.Height
-  $background?: Property.Background
-  $borderStyle?: Property.BorderStyle
-}>`
+export const Box = styled.div<Partial<StyleProps>>`
   border: 1px ${({ $borderStyle = 'dashed' }) => $borderStyle}
     var(--color-gray-light);
   border-radius: 12px;
@@ -57,7 +51,7 @@ export const Box = styled.div<{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 0.6rem;
+  padding: ${({ $padding = '0 0.6rem' }) => $padding};
   gap: 2em;
   cursor: pointer;
   background: ${({ $background = '' }) => $background};

@@ -71,6 +71,7 @@ export interface ModalProps extends AriaDialogProps {
   onClose: () => void
   hasCloseBtn?: boolean
   size?: ModalSize
+  background?: string
 }
 
 /**
@@ -88,6 +89,7 @@ export const Modal = ({
   onClose,
   hasCloseBtn,
   children,
+  background,
   size = 'sm',
   ...props
 }: ModalProps) => {
@@ -134,6 +136,7 @@ export const Modal = ({
       onClick={handleBackdropClick}
       $size={size}
       style={dialogStyle}
+      $background={background}
       {...dialogProps}
     >
       {title && <ModalTitle {...titleProps}>{title}</ModalTitle>}
