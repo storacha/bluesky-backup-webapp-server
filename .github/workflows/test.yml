@@ -12,6 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/pnpm
+      - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm test
       - name: create .env from .env.tpl
