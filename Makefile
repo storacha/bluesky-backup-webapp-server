@@ -31,6 +31,8 @@ eval_env_file: .env.production.local
 docker-login:
 	aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $(ECR_URI)
 
+.env.terraform:
+
 .env.production.local: .env.terraform .env.production.local.tpl
 	./scripts/esh -o .env.production.local .env.production.local.tpl 
 

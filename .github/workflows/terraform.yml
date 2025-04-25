@@ -56,7 +56,6 @@ jobs:
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/terraform-ci
 
       - uses: opentofu/setup-opentofu@v1
-      - uses: ./.github/actions/pnpm
 
       - name: Tofu Init
         run: |
@@ -65,7 +64,7 @@ jobs:
 
       - name: Build + Push Docker ECR
         run: |
-          make deploy-push
+          make docker-push
 
       - name: Terraform Plan
         if: ${{ !inputs.apply }}
