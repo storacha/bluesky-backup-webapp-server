@@ -2,7 +2,9 @@ ifneq (,$(wildcard ./.env.terraform))
 	include .env.terraform
 	export
 else
-  $(error You haven't setup your .env file. Please refer to the readme)
+	ifneq ($(DEPLOY_ENV), "ci")
+  	$(error You haven't setup your .env file. Please refer to the readme)
+	endif
 endif
 
 ECR_URI=$(TF_VAR_allowed_account_id).dkr.ecr.us-west-2.amazonaws.com
@@ -112,6 +114,12 @@ plan-app: deploy/app/.terraform .tfworkspace eval_image_tag
 
 plan: plan-shared plan-app
 
+ifeq ($(DEPLOY_ENV), "ci")
+APPLY_ARGS=-input=false --auto-approve
+else
+APPLY_ARGS=""
+endif
+
 .PHONY: apply-shared
 
 apply-shared: deploy/shared/.terraform
@@ -120,7 +128,7 @@ apply-shared: deploy/shared/.terraform
 .PHONY: apply-app
 
 apply-app: deploy/app/.terraform .tfworkspace docker-push eval_image_tag eval_env_file
-	tofu -chdir=deploy/app apply -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]'
+	tofu -chdir=deploy/app apply -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]' $(APPLY_ARGS)
 
 .PHONY: apply
 
@@ -133,7 +141,7 @@ console-shared: deploy/shared/.terraform
 
 .PHONY: console-app
 console: deploy/app/.terraform .tfworkspace eval_image_tag eval_env_file
-	tofu -chdir=deploy/app console -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]'
+	tofu -chdir=deploy/app console -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]' $(APPLY_ARGS)
 
 .PHONY: wait-deploy
 wait-deploy:
