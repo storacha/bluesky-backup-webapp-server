@@ -37,6 +37,8 @@ env:
   TF_VAR_app: bluesky
   TF_VAR_domain_base: bsky.storage
   TF_VAR_allowed_account_id: ${{ secrets.aws-account-id }}
+  DEPLOY_ENV: ci
+
 permissions:
   id-token: write # This is required for requesting the JWT
   contents: read # This is required for actions/checkout
@@ -58,6 +60,7 @@ jobs:
 
       - name: Tofu Init
         run: |
+          touch .tfworkspace
           make init
 
       - name: Build + Push Docker ECR
@@ -72,7 +75,7 @@ jobs:
       - name: Terraform Apply
         if: ${{ inputs.apply }}
         run: |
-          make auto-apply
+          make apply
       
       - name: Run DB migrations
         if: ${{ inputs.apply }}

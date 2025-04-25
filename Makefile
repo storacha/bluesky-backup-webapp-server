@@ -2,7 +2,7 @@ ifneq (,$(wildcard ./.env.terraform))
 	include .env.terraform
 	export
 else
-	ifneq ($(DEPLOY_ENV), "ci")
+	ifneq ($(DEPLOY_ENV), ci)
   	$(error You haven't setup your .env file. Please refer to the readme)
 	endif
 endif
@@ -114,7 +114,7 @@ plan-app: deploy/app/.terraform .tfworkspace eval_image_tag
 
 plan: plan-shared plan-app
 
-ifeq ($(DEPLOY_ENV), "ci")
+ifeq ($(DEPLOY_ENV), ci)
 APPLY_ARGS=-input=false --auto-approve
 else
 APPLY_ARGS=""
