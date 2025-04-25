@@ -9,7 +9,7 @@ import { useCallback, useState } from 'react'
 export type DisclosureParams = {
   component?: UiComponents
 }
-export const useDisclosure = (params: DisclosureParams) => {
+export const useDisclosure = (params: DisclosureParams = {}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const { updateUiStore } = useUiComponentStore()
 

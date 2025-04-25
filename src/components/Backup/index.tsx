@@ -46,7 +46,9 @@ export const BackupScreen = ({ backup }: { backup?: Backup }) => {
           </ResizeHandleOuter>
         </PanelResizeHandle>
         <Panel defaultSize={40} minSize={40}>
-          <BackupRestore backup={backup} />
+          <Suspense>
+            <BackupRestore backup={backup} />
+          </Suspense>
         </Panel>
       </PanelGroup>
     </BackupContainer>
