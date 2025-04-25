@@ -34,7 +34,7 @@ jobs:
     with:
       env: staging
       workspace: staging
-      did: did:web:staging.indexer.storacha.network
+      did: did:key:z6MkgreArduD9dWr6LCdJ7cEja5LhqtPjfKyH81FcBcUKkwd
       apply: ${{ github.event_name != 'pull_request' }}
     secrets:
       aws-account-id: ${{ secrets.STAGING_AWS_ACCOUNT_ID }}
@@ -48,7 +48,7 @@ jobs:
     with:
       env: production
       workspace: prod
-      did: did:web:indexer.storacha.network
+      did: did:key:z6MkiZcHogabH7KUgwt7U2tohC5rUexG5k5iVtWK39c6nUL7
       apply: ${{ needs.release.outputs.release_created }}
     secrets:
       aws-account-id: ${{ secrets.PROD_AWS_ACCOUNT_ID }}
