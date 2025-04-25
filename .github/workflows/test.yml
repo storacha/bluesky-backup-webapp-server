@@ -14,6 +14,7 @@ jobs:
       - uses: ./.github/actions/pnpm
       - run: pnpm format:check
       - run: pnpm lint
+      - run: pnpm knip
       - run: pnpm test
       - name: create .env from .env.tpl
         run: |
