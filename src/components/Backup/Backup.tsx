@@ -1,3 +1,5 @@
+'use client'
+
 import { Modal, Stack, StyleProps, Text } from '../ui'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
@@ -48,11 +50,11 @@ export const Box = styled.div<Partial<StyleProps>>`
   border-radius: 12px;
   height: ${({ $height = '66px' }) => $height};
   width: ${({ $width = '100%' }) => $width};
-  display: flex;
+  display: ${({ $display = '' }) => $display};
   justify-content: space-between;
   align-items: center;
   padding: ${({ $padding = '0 0.6rem' }) => $padding};
-  gap: 2em;
+  gap: ${({ $gap = 0 }) => $gap};
   cursor: pointer;
   background: ${({ $background = '' }) => $background};
 `
@@ -189,7 +191,7 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
 
           <Stack $gap="1.25rem" onClick={openModal}>
             <Text $textTransform="capitalize">keychain</Text>
-            <Box $height="44px" $width="48%">
+            <Box $height="44px" $width="48%" $display='flex'>
               <Text $textTransform="capitalize">create keychain</Text>
               <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
             </Box>

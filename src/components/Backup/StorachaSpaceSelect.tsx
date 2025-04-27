@@ -18,7 +18,11 @@ export const StorachaSpaceSelect = (
   const selectElement = useRef<HTMLSelectElement>(null)
   const hasValue = Boolean(selectElement.current?.value)
   return (
-    <Box $background={hasValue ? 'var(--color-white)' : ''}>
+    <Box
+      $background={hasValue ? 'var(--color-white)' : ''}
+      $width="fit-content"
+      $display="flex"
+    >
       <Stack $gap=".8rem" $direction="row" $alignItems="center">
         <AccountLogo $type="original" $hasAccount={hasValue}>
           <Image

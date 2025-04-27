@@ -23,6 +23,7 @@ export const AddBskyAccountModal = ({
       <Stack $direction="row" $gap="3rem">
         <Stack $gap="1rem" $width="30%">
           <Box
+            $display="flex"
             $borderStyle="solid"
             $height="40px"
             $width="40px"
