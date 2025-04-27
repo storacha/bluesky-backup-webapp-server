@@ -44,9 +44,13 @@ const AccountsContainer = styled.div`
   position: relative;
 `
 
-export const Box = styled.div<Partial<StyleProps>>`
-  border: 1px ${({ $borderStyle = 'dashed' }) => $borderStyle}
-    var(--color-gray-light);
+export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
+  border: ${({ $borderWidth = '1px', $isFocused }) =>
+      $isFocused ? '2px' : $borderWidth}
+    ${({ $borderStyle = 'dashed', $isFocused }) =>
+      $isFocused ? 'solid' : $borderStyle}
+    ${({ $borderColor = 'var(--color-gray-light)', $isFocused }) =>
+      $isFocused ? 'var(--color-dark-blue)' : $borderColor};
   border-radius: 12px;
   height: ${({ $height = '66px' }) => $height};
   width: ${({ $width = '100%' }) => $width};
@@ -191,7 +195,7 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
 
           <Stack $gap="1.25rem" onClick={openModal}>
             <Text $textTransform="capitalize">keychain</Text>
-            <Box $height="44px" $width="48%" $display='flex'>
+            <Box $height="44px" $width="48%" $display="flex">
               <Text $textTransform="capitalize">create keychain</Text>
               <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
             </Box>

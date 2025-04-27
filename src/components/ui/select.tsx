@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import { ReactNode, useId } from 'react'
 import Select, { MenuPlacement, StylesConfig } from 'react-select'
 import makeAnimated from 'react-select/animated'
@@ -26,6 +26,7 @@ interface SelectFieldProps {
   customIndicator?: ReactNode
   menuPlacement?: MenuPlacement
   components?: object
+  defaultValue?: string | undefined
 }
 
 export const SelectField = ({
@@ -40,10 +41,13 @@ export const SelectField = ({
   height = '40px',
   noBorder = false,
   menuPlacement = 'bottom',
+  defaultValue,
   components: customComponents,
 }: SelectFieldProps) => {
   const instanceId = useId()
   const selectedOption = options.find((option) => option.value === value)
+
+  const defaultOption = options?.find((option) => option.value === defaultValue)
 
   const handleChange = (option: Option | null) => {
     if (onChange) {
@@ -77,6 +81,7 @@ export const SelectField = ({
       borderRadius: '0.5rem',
       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
       zIndex: 10,
+      border: '1px solid var(--color-gray-light)',
     }),
     menuList: (base) => ({
       ...base,
@@ -84,22 +89,17 @@ export const SelectField = ({
     }),
     option: (base, state) => ({
       ...base,
-      backgroundColor: state.isSelected
-        ? 'var(--color-gray-medium-light)'
-        : state.isFocused
-          ? 'var(--color-gray)'
+      background:
+        state.isSelected || state.isFocused
+          ? 'var(--color-gray-medium-light)'
           : 'var(--color-white)',
-      color: 'var(--color-gray)',
+      color: 'var(--color-black)',
+      height: '40px',
       borderRadius: '0.25rem',
       padding: '0.75rem',
       marginBottom: '0.25rem',
       cursor: 'pointer',
-      '&:last-child': {
-        marginBottom: 0,
-      },
-      '&:active': {
-        backgroundColor: 'var(--color-gray-medium-light)',
-      },
+      fontSize: '0.75rem',
     }),
     singleValue: (base) => ({
       ...base,
@@ -130,8 +130,9 @@ export const SelectField = ({
         menuPlacement={menuPlacement}
         components={{
           ...animatedComponents,
-          ...customComponents
+          ...customComponents,
         }}
+        defaultValue={defaultOption}
         styles={customStyles}
         menuPortalTarget={
           typeof document !== 'undefined' ? document.body : null

@@ -25,4 +25,6 @@ export type StyleProps = {
   $wrap: Property.FlexWrap
   $maxWidth: Property.MaxWidth
   $display: Property.Display
+  $borderWidth: Property.BorderWidth
+  $borderColor: Property.BorderColor
 }
