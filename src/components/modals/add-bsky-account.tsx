@@ -1,5 +1,5 @@
 import { ArrowLeft, At } from '@phosphor-icons/react'
-import { Box } from '../Backup/Backup'
+import { Box } from '../BackupScreen/BackupDetail'
 import { Button, InputField, Modal, ModalProps, Stack, Text } from '../ui'
 import { ChangeEvent, useState } from 'react'
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { styled } from 'next-yak'
-import { BackupDetail } from './Backup'
+import { BackupDetail } from './BackupDetail'
 import { BackupRestore } from './Restore'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 import { useStorachaAccount } from '@/hooks/use-plan'

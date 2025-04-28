@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { BackupScreen } from '.'
+import { BackupScreen } from './BackupScreen'
 
 const meta: Meta<typeof BackupScreen> = {
   title: 'Components/BackupScreen',
@@ -11,4 +11,4 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
-Default.storyName = 'Backup Screen'
+Default.storyName = 'BackupScreen'
