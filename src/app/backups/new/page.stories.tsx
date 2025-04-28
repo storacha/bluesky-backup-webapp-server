@@ -42,6 +42,33 @@ const meta = {
       ['atproto-handle', 'did:plc:vv44vwwbr3lmbjht3p5fd7wz'],
       'isupposeichal.bsky.social'
     ),
+    withData(
+      ['api', '/api/backups'],
+      [
+        {
+          id: 1,
+          accountDid: 'did:mailto:gmail.com:timothy-chalamet',
+          name: 'Backup #1',
+          atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
+          storachaSpace:
+            'did:key:zMw6cW3gpcPQzNkdfprbTZZh2MajkgZ3MdbqgUsqmksvBPiz',
+          includeRepository: true,
+          includeBlobs: true,
+          includePreferences: false,
+        },
+        {
+          id: 2,
+          accountDid: 'did:mailto:gmail.com:timothy-chalamet',
+          name: 'Bluesky #452',
+          atprotoAccount: 'did:plc:vv44vwwbr3lmbjht3p5fd7wz',
+          storachaSpace:
+            'did:key:zMwdHTDrZWDPyrEA2GLc3nnBTXcAn6RN3Lexio45ULK56BXA',
+          includeRepository: false,
+          includeBlobs: false,
+          includePreferences: true,
+        },
+      ]
+    ),
   ],
 } satisfies Meta<typeof Page>
 
