@@ -1,11 +1,65 @@
-name: Deploy Storacha
+name: Deploy
+
 on:
-  push:
-    branches:
-      - 'main'
-  pull_request:
-    branches:
-      - 'main'
+  workflow_run:
+    workflows: ["Test"]
+    types: 
+      - completed
+  workflow_dispatch:
+
 jobs:
-  test:
-    uses: ./.github/workflows/test.yml
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - run: echo 'The triggering workflow failed'
+  release:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: write
+      pull-requests: write
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Release Please
+        uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          release-type: node
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+
+  # apply staging on pushes to main, plan otherwise
+  staging:
+    if: ${{ github.event.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'failure' }}
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+    uses: ./.github/workflows/terraform.yml
+    with:
+      env: staging
+      workspace: staging
+      did: did:key:z6MkgreArduD9dWr6LCdJ7cEja5LhqtPjfKyH81FcBcUKkwd
+      apply: ${{ github.event_name != 'pull_request' }}
+    secrets:
+      aws-account-id: ${{ secrets.STAGING_AWS_ACCOUNT_ID }}
+      aws-region: ${{ secrets.STAGING_AWS_REGION }}
+      private-key: ${{ secrets.STAGING_PRIVATE_KEY }}
+
+  # apply prod on successful release, plan otherwise
+  production:
+    if: ${{ github.event.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'failure' }}
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+    needs: release
+    uses: ./.github/workflows/terraform.yml
+    with:
+      env: production
+      workspace: prod
+      did: did:key:z6MkiZcHogabH7KUgwt7U2tohC5rUexG5k5iVtWK39c6nUL7
+      apply: ${{ needs.release.outputs.release_created }}
+    secrets:
+      aws-account-id: ${{ secrets.PROD_AWS_ACCOUNT_ID }}
+      aws-region: ${{ secrets.PROD_AWS_REGION }}
+      private-key: ${{ secrets.PROD_PRIVATE_KEY }}
