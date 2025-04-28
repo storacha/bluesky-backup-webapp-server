@@ -42,6 +42,12 @@ resource "random_password" "session_password" {
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
+resource "random_password" "backup_password" {
+  length           = 32
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
 module "app" {
   source = "github.com/storacha/storoku//app"
   private_key = var.private_key
@@ -62,6 +68,7 @@ module "app" {
   create_db = true
   secrets = {
     "SESSION_PASSWORD" = random_password.session_password.result
+    "BACKUP_PASSWORD" = random_password.backup_password.result
   }
   queues = [ {
     name = "backups"
@@ -84,11 +91,44 @@ resource "aws_cloudwatch_event_rule" "hourly_backup" {
   schedule_expression = "rate(1 hour)"
 }
 
+resource "aws_iam_role" "hourly_backup" {
+ name               = "${terraform.workspace}-${var.app}-hourly-backup-role"
+ assume_role_policy = data.aws_iam_policy_document.assume_role.json
+}
+
+
+data "aws_iam_policy_document" "assume_role" {
+ statement {
+   effect  = "Allow"
+   actions = ["sts:AssumeRole"]
+
+
+   principals {
+     type        = "Service"
+     identifiers = ["events.amazonaws.com"]
+   }
+ }
+}
+resource "aws_iam_policy" "hourly_backup" {
+ name   =  "${terraform.workspace}-${var.app}-hourly-backup-policy"
+ policy = data.aws_iam_policy_document.assume_eventbridge_role.json
+}
+
+
+data "aws_iam_policy_document" "assume_eventbridge_role" {
+ statement {
+   effect  = "Allow"
+   actions = ["events:InvokeApiDestination"]
+
+
+   resources = [aws_cloudwatch_event_api_destination.hourly_backup.arn]
+ }
+}
+
 resource "aws_cloudwatch_event_target" "hourly_backup" {
   rule = aws_cloudwatch_event_rule.hourly_backup.name
   arn  = aws_cloudwatch_event_api_destination.hourly_backup.arn
-  // TODO: I think we need to specify a role_arn here
-  // role_arn = 
+  role_arn = aws_iam_role.hourly_backup.arn 
 }
 
 resource "aws_cloudwatch_event_connection" "hourly_backup" {
@@ -99,7 +139,7 @@ resource "aws_cloudwatch_event_connection" "hourly_backup" {
   auth_parameters {
     basic {
       username = "user"
-      password = "Pass1234!"
+      password = random_password.backup_password.result
     }
   }
 }
