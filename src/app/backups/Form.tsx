@@ -6,10 +6,19 @@ import { Stack } from '@/components/ui'
 import { Button } from '@/components/ui'
 import { BlueskyAccountSelect } from '../../components/Backup/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '../../components/Backup/StorachaSpaceSelect'
-import { action } from './new/action'
 import { Box } from './Box'
 import { Backup } from '../types'
 import { useStorachaAccount } from '@/hooks/use-plan'
+
+let action: typeof import('./new/action').action
+
+if (process.env.STORYBOOK) {
+  action = () => {
+    throw new Error('Server Functions are not available in Storybook')
+  }
+} else {
+  action = (await import('./new/action')).action
+}
 
 // TODO: Deal with unauthenticated
 export const Form = ({ backup }: { backup?: Backup }) => {

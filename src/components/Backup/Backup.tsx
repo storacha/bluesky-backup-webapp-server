@@ -5,7 +5,6 @@ import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
 import { DataBox } from './Data'
 import { Backup } from '@/app/types'
-import { action } from '@/app/backups/new/action'
 import { Account } from '@storacha/ui-react'
 import { BlueskyAccountSelect } from '@/components/Backup/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/Backup/StorachaSpaceSelect'
@@ -14,6 +13,16 @@ import { PlusCircle } from '@phosphor-icons/react'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { useUiComponentStore } from '@/store/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
+
+let action: typeof import('@/app/backups/new/action').action
+
+if (process.env.STORYBOOK) {
+  action = () => {
+    throw new Error('Server Functions are not available in Storybook')
+  }
+} else {
+  action = (await import('@/app/backups/new/action')).action
+}
 
 interface BackupProps {
   account?: Account
