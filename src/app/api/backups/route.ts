@@ -12,12 +12,3 @@ export async function GET() {
 
   return Response.json(results)
 }
-
-export async function POST() {
-  // const { db } = getStorageContext()
-  // TODO: verify basic auth and then figure out which backups to run
-
-  
-
-  return Response.json({})
-}

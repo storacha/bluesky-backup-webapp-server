@@ -107,7 +107,7 @@ resource "aws_cloudwatch_event_connection" "hourly_backup" {
 resource "aws_cloudwatch_event_api_destination" "hourly_backup" {
   name = "${terraform.workspace}-${var.app}-hourly-backup-endpoint"
   description = "hourly backup endpoint"
-  invocation_endpoint = "https://${local.domain_name}/api/hourly"
+  invocation_endpoint = "https://${local.domain_name}/api/backups/hourly"
   http_method = "POST"
   invocation_rate_limit_per_second = 20
   connection_arn = aws_cloudwatch_event_connection.hourly_backup.arn
