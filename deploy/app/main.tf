@@ -73,3 +73,23 @@ module "app" {
   env_files = var.env_files
   domain_base = var.domain_base
 }
+
+locals {
+    domain_base = var.domain_base != "" ? var.domain_base : "${var.app}.storacha.network"
+    domain_name = terraform.workspace == "prod" ? local.domain_base : "${terraform.workspace}.${local.domain_base}"
+}
+
+resource "aws_cloudwatch_event_rule" "cronjob" {
+  name = "${terraform.workspace}-${var.app}-cronjob-rule"
+  # TODO: fix cronjob
+  schedule_expression = "cron(* * * * *)"
+}
+
+resource "aws_cloudwatch_event_api_destination" "hourly_backup" {
+  name = "${terraform.workspace}-${var.app}-hourly-backup-endpoint"
+  description = "hourly backup endpoint"
+  invocation_endpoint = "https://${local.domain_name}/api/hourly"
+  http_method = "POST"
+  invocation_rate_limit_per_second = 20
+  connection_arn = aws_cloudwatch_event_rule.cronjob
+}
