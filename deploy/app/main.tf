@@ -79,10 +79,29 @@ locals {
     domain_name = terraform.workspace == "prod" ? local.domain_base : "${terraform.workspace}.${local.domain_base}"
 }
 
-resource "aws_cloudwatch_event_rule" "cronjob" {
-  name = "${terraform.workspace}-${var.app}-cronjob-rule"
-  # TODO: fix cronjob
-  schedule_expression = "cron(* * * * *)"
+resource "aws_cloudwatch_event_rule" "hourly_backup" {
+  name = "${terraform.workspace}-${var.app}-hourly-backup-rule"
+  schedule_expression = "rate(1 hour)"
+}
+
+resource "aws_cloudwatch_event_target" "hourly_backup" {
+  rule = aws_cloudwatch_event_rule.hourly_backup.name
+  arn  = aws_cloudwatch_event_api_destination.hourly_backup.arn
+  // TODO: I think we need to specify a role_arn here
+  // role_arn = 
+}
+
+resource "aws_cloudwatch_event_connection" "hourly_backup" {
+  name               = "${terraform.workspace}-${var.app}-hourly-backup-connection"
+  description        = "A connection description"
+  authorization_type = "BASIC"
+
+  auth_parameters {
+    basic {
+      username = "user"
+      password = "Pass1234!"
+    }
+  }
 }
 
 resource "aws_cloudwatch_event_api_destination" "hourly_backup" {
@@ -91,5 +110,5 @@ resource "aws_cloudwatch_event_api_destination" "hourly_backup" {
   invocation_endpoint = "https://${local.domain_name}/api/hourly"
   http_method = "POST"
   invocation_rate_limit_per_second = 20
-  connection_arn = aws_cloudwatch_event_rule.cronjob
+  connection_arn = aws_cloudwatch_event_connection.hourly_backup.arn
 }
