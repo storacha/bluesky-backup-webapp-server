@@ -1,8 +1,6 @@
 import { getSession } from '@/lib/sessions'
 import { getStorageContext } from '@/lib/server/db'
 
-// NEEDS AUTHORIZATION
-
 export async function GET() {
   const { db } = getStorageContext()
   const { did } = await getSession()
@@ -13,4 +11,13 @@ export async function GET() {
   const { results } = await db.findBackups(did)
 
   return Response.json(results)
+}
+
+export async function POST() {
+  // const { db } = getStorageContext()
+  // TODO: verify basic auth and then figure out which backups to run
+
+  
+
+  return Response.json({})
 }
