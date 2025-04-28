@@ -1,31 +1,24 @@
-'use client'
+'use server'
 
-import { use } from 'react'
-import { Sidebar } from '@/app/Sidebar'
-import { useSWR } from '@/app/swr'
-import { BackupScreen } from '@/components/Backup/index'
+import { backupOwnedByAccount } from '@/lib/server/auth'
+import { getStorageContext } from '@/lib/server/db'
+import { getSession } from '@/lib/sessions'
+import BackupPage from './BackupPage'
 
-export default function Backup({
+export default async function Backup ({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { id: idParam } = use(params)
+  const { id: idParam } = await params
   const id = parseInt(idParam)
-  // TODO: Should we fetch individual backups? We already need the list for the
-  // sidebar, and they're not heavy so far, but we should check back on this at
-  // the end of the first version.
-  const { data: backups, error } = useSWR(['api', '/api/backups'])
-  if (error) throw error
-  if (!backups) return null
-
-  const backup = backups.find((backup) => backup.id === id)
-  if (!backup) return null
-
+  const { db } = getStorageContext()
+  const { did: account } = await getSession()
+  console.log(id, account)
+  if (!await backupOwnedByAccount(db, id, account)) {
+    return (<div>unauthorized</div>)
+  }
   return (
-    <>
-      <Sidebar selectedBackupId={id} />
-      <BackupScreen backup={backup} />
-    </>
+    <BackupPage id={id} />
   )
 }

@@ -13,6 +13,7 @@ import {
   DidKey,
 } from '@/lib/constants'
 import { getConstants } from '@/lib/server/constants'
+import { BBDatabase } from './db'
 
 let cachedServerIdentity: ed25519.Signer.Signer
 
@@ -109,4 +110,17 @@ export const authorize = async (
     },
   })
   return accessResult
+}
+
+export async function backupOwnedByAccount (db: BBDatabase, backupId: number, account: string) {
+  const { result: backup } = await db.findBackup(backupId)
+  return (backup?.accountDid === account)
+}
+
+export async function snapshotOwnedByAccount (db: BBDatabase, snapshotId: number, account: string): Promise<boolean> {
+  // TODO: make this one database query  
+  const { result: snapshot } = await db.findSnapshot(snapshotId)
+  if (!snapshot) throw new Error('cannot determind if snapshot is owned by account')
+  const { result: backup } = await db.findBackup(snapshot.id)
+  return (backup?.accountDid === account)
 }
