@@ -18,4 +18,13 @@ export type StyleProps = {
   $width: Property.Width
   $border: Property.Border
   $position: Property.Position
+  $direction: Property.FlexDirection
+  $gap: Property.Gap
+  $justifyContent: Property.JustifyContent
+  $alignItems: Property.AlignItems
+  $wrap: Property.FlexWrap
+  $maxWidth: Property.MaxWidth
+  $display: Property.Display
+  $borderWidth: Property.BorderWidth
+  $borderColor: Property.BorderColor
 }

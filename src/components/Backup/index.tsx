@@ -1,3 +1,5 @@
+"use client"
+
 import { styled } from 'next-yak'
 import { BackupDetail } from './Backup'
 import { BackupRestore } from './Restore'
