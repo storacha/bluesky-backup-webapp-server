@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import useSWR from 'swr'
 import { styled } from 'next-yak'
 import { Account, Client, useAuthenticator } from '@storacha/ui-react'
 import { Stack } from '@/components/ui'
@@ -9,6 +8,7 @@ import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
 import { Sidebar } from './Sidebar'
 import { BackupScreen } from '../components/Backup/index'
+import { useSWR } from './swr'
 
 const Outside = styled(Stack)`
   min-height: 100vh;
@@ -40,18 +40,7 @@ async function createSession(client: Client, account: Account) {
 export function LoggedIn() {
   const [{ accounts, client }] = useAuthenticator()
   const account = accounts[0]
-  const { error: sessionDIDError, mutate } = useSWR<string>(
-    '/session/did',
-    async (url: string) => {
-      const response = await fetch(url)
-      const body = await response.text()
-      if (response.status == 200) {
-        return body
-      } else {
-        throw new Error(body)
-      }
-    }
-  )
+  const { error: sessionDIDError, mutate } = useSWR(['api', '/session/did'])
 
   const [sessionCreationAttempted, setSessionCreationAttempted] =
     useState(false)
