@@ -1,22 +1,17 @@
 name: Deploy
 
 on:
-  workflow_run:
-    workflows: ["Test"]
-    types: 
-      - completed
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  on-failure:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-    steps:
-      - run: echo 'The triggering workflow failed'
-
   release:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' )}}
+    if: ${{ github.ref == 'refs/heads/main' }}
     permissions:
       contents: write
       pull-requests: write
@@ -31,7 +26,6 @@ jobs:
 
   # apply staging on pushes to main, plan otherwise
   staging:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
@@ -48,7 +42,6 @@ jobs:
 
   # apply prod on successful release, plan otherwise
   production:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
