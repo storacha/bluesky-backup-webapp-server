@@ -1,6 +1,6 @@
 import { Stack, Text } from '../ui'
 import { Switch } from '../Switch'
-import { Box } from './Backup'
+import { Box } from './BackupDetail'
 
 interface DataBoxProps {
   title: string

@@ -8,7 +8,7 @@ import { useDisclosure } from '@/hooks/use-disclosure'
 import { AddBskyAccountModal } from '../modals'
 import { SelectField, Option } from '../ui'
 import { ControlProps, components } from 'react-select'
-import { AccountLogo, Box } from './Backup'
+import { AccountLogo, Box } from './BackupDetail'
 import Image from 'next/image'
 
 const LOG_INTO_BLUESKY_VALUE = '-connect-'

@@ -2,7 +2,7 @@ import path from 'path'
 import type { StorybookConfig } from '@storybook/nextjs'
 import loadConfig from 'next/dist/server/config'
 import { PHASE_DEVELOPMENT_SERVER } from 'next/dist/shared/lib/constants'
-import { Configuration as WebpackConfig } from 'webpack'
+import { IgnorePlugin, Configuration as WebpackConfig } from 'webpack'
 
 const config: StorybookConfig = {
   stories: [
@@ -35,8 +35,10 @@ const config: StorybookConfig = {
   // Support Next-Yak. Next-Yak's Next config adds a loader which translates its
   // CSS to CSS modules. Storybook doesn't handle CSS modules by default, so we
   // also need to add support for them.
-  webpackFinal: (webpackConfig) =>
-    applyNextWebpackConfig(supportCssModules(webpackConfig)),
+  webpackFinal: async (webpackConfig) =>
+    ignoreServerFunctionModules(
+      await applyNextWebpackConfig(supportCssModules(webpackConfig))
+    ),
 }
 export default config
 
@@ -124,4 +126,27 @@ async function applyNextWebpackConfig(webpackConfig: WebpackConfig) {
     config: nextConfig,
     webpack: webpackConfig,
   })
+}
+
+// This is a super unsophisticated way to ignore server function modules. We
+// ignore them by explicit module name and then have to conditionally import
+// them while checking `process.env.STORYBOOK`. Instead, it would be way better
+// to, say, have a plugin/loader look for `'use server'` in the module and stub
+// them automatically, maybe using the Actions addon. But for now, this'll do.
+async function ignoreServerFunctionModules(
+  webpackConfig: WebpackConfig
+): Promise<WebpackConfig> {
+  webpackConfig.plugins ||= []
+
+  webpackConfig.plugins.push(
+    new IgnorePlugin({
+      checkResource(resource) {
+        return ['./createSnapshot', '@/app/backups/new/action'].includes(
+          resource
+        )
+      },
+    })
+  )
+
+  return webpackConfig
 }

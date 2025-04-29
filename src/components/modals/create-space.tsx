@@ -8,7 +8,7 @@ import {
   Text,
 } from '../ui'
 import { SharedModalLayout } from './layout'
-import { Box } from '../Backup/Backup'
+import { Box } from '../BackupScreen/BackupDetail'
 import { useW3 } from '@w3ui/react'
 import * as StorachaSpace from '@web3-storage/w3up-client/space'
 import * as Storacha from '@web3-storage/w3up-client/account'
