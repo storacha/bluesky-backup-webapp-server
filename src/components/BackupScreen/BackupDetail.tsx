@@ -1,9 +1,11 @@
-import { Modal, Stack, StyleProps, Text } from '../ui'
+'use client'
+
+import { Button, Modal, Stack, StyleProps, Text } from '../ui'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
 import { DataBox } from './Data'
-import { Backup } from '@/app/types'
-import { Account } from '@storacha/ui-react'
+import { Backup, SpaceDid } from '@/app/types'
+import { Account, useAuthenticator } from '@storacha/ui-react'
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
 import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
@@ -13,14 +15,14 @@ import { useUiComponentStore } from '@/store/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
 import { delegate } from '@/app/backups/[id]/delegate'
 
-let action: typeof import('@/app/backups/new/action').action
+let createNewBackup: typeof import('@/app/backups/new/action').action
 
 if (process.env.STORYBOOK) {
-  action = () => {
+  createNewBackup = () => {
     throw new Error('Server Functions are not available in Storybook')
   }
 } else {
-  action = (await import('@/app/backups/new/action')).action
+  createNewBackup = (await import('@/app/backups/new/action')).action
 }
 
 interface BackupProps {
@@ -54,11 +56,11 @@ const AccountsContainer = styled.div`
 
 export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
   border: ${({ $borderWidth = '1px', $isFocused }) =>
-      $isFocused ? '2px' : $borderWidth}
+    $isFocused ? '2px' : $borderWidth}
     ${({ $borderStyle = 'dashed', $isFocused }) =>
-      $isFocused ? 'solid' : $borderStyle}
+    $isFocused ? 'solid' : $borderStyle}
     ${({ $borderColor = 'var(--color-gray-light)', $isFocused }) =>
-      $isFocused ? 'var(--color-dark-blue)' : $borderColor};
+    $isFocused ? 'var(--color-dark-blue)' : $borderColor};
   border-radius: 12px;
   height: ${({ $height = '66px' }) => $height};
   width: ${({ $width = '100%' }) => $width};
@@ -124,54 +126,39 @@ const DATA_BOXES: DataConfig[] = [
   // },
 ]
 
-function BackupContainer ({
+function NewBackupForm ({ children }: { children: ReactNode }) {
+  const [{ client }] = useAuthenticator()
+  async function generateDelegationAndCreateNewBackup (form: FormData) {
+    const space = form.get('storacha_space') as SpaceDid | undefined
+    if (client && space) {
+      await client.setCurrentSpace(space)
+      // upload the CID to Storacha so we can use it later
+      const delegationCid = await client.uploadCAR(new Blob([
+        await delegate(client, space)
+      ]))
+      form.append('delegation_cid', delegationCid.toString())
+      return createNewBackup(form)
+    } else {
+      console.error("client or space id not defined, cannot create delegation. client: ", client, "space:", space)
+      throw new Error('client or space is not defined, cannot create delegation')
+    }
+  }
+  return (
+    <Container>
+      <form action={generateDelegationAndCreateNewBackup}>{children}</form>
+    </Container>
+  )
+}
+
+function MaybeForm ({
   children,
   backup,
 }: {
   children: ReactNode
   backup?: Backup
 }) {
-  return backup ? (
-    <Container>{children}</Container>
-  ) : (
-    <Container>
-      <form action={action}>{children}</form>
-    </Container>
-  )
-}
 
-
-
-function DelegationGenerator ({ space, backup }: { space: SpaceDid, backup?: Backup }) {
-  const [{ client }] = useAuthenticator()
-
-  const [delegationCid, setDelegationCid] = useState<string>()
-  function onClick () {
-    if (client) {
-      (async () => {
-        const result = await client.uploadCAR(new Blob([
-          await delegate(client, space)
-        ]))
-        setDelegationCid(result.toString())
-      })()
-    }
-  }
-  return backup ? (
-    <Stack>
-      Using delegation {delegationCid}
-    </Stack>
-  ) : (
-    delegationCid ? (
-      <>
-        <Stack>
-          <input type="hidden" name="delegation_cid" value={delegationCid} />
-        </Stack >
-      </>
-    ) : (
-      <Button onClick={onClick}>Create Delegation</Button>
-    )
-  )
-
+  return backup ? (children) : (<NewBackupForm>{children}</NewBackupForm>)
 }
 
 export const BackupDetail = ({ account, backup }: BackupProps) => {
@@ -211,66 +198,64 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
 
   return (
     <>
-      <BackupContainer backup={backup}>
-        {account && (
-          <input type="hidden" name="account" value={account.did()} />
-        )}
-        <Stack $gap="2rem">
-          {backup ? (
-            <Heading>Backup #{backup.id}</Heading>
-          ) : (
-            <Heading>New Backup</Heading>
+      <Container>
+        <MaybeForm backup={backup}>
+          {account && (
+            <input type="hidden" name="account" value={account.did()} />
           )}
-          <Stack $gap="1rem">
-            <AccountsContainer>
-              <BlueskyAccountSelect
-                name="atproto_account"
-                {...(backup && {
-                  disabled: true,
-                  value: backup.atprotoAccount,
-                })}
-              />
-              <ConnectingLine />
-              <StorachaSpaceSelect
-                name="storacha_space"
-                {...(backup && { disabled: true, value: backup.storachaSpace })}
-              />
-            </AccountsContainer>
-          </Stack>
-
-          <Stack $gap="1.25rem" onClick={openModal}>
-            <Text $textTransform="capitalize">keychain</Text>
-            <Box $height="44px" $width="48%" $display="flex">
-              <Text $textTransform="capitalize">create keychain</Text>
-              <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
-            </Box>
-          </Stack>
-          <Stack $gap="1.25rem">
-            <DelegationGenerator />
-          </Stack>
-          <Stack $gap="1.25rem">
-            <Text $textTransform="capitalize">data</Text>
-            <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
-              {DATA_BOXES.map((box) => (
-                <DataBox
-                  key={box.key}
-                  name={box.name}
-                  title={box.title}
-                  description={box.description}
-                  value={data[box.key] || false}
-                  onToggle={() => !backup && toggle(box.key)}
+          <Stack $gap="2rem">
+            {backup ? (
+              <Heading>Backup #{backup.id}</Heading>
+            ) : (
+              <Heading>New Backup</Heading>
+            )}
+            <Stack $gap="1rem">
+              <AccountsContainer>
+                <BlueskyAccountSelect
+                  name="atproto_account"
+                  {...(backup && {
+                    disabled: true,
+                    value: backup.atprotoAccount,
+                  })}
                 />
-              ))}
+                <ConnectingLine />
+                <StorachaSpaceSelect
+                  name="storacha_space"
+                  {...(backup && { disabled: true, value: backup.storachaSpace })}
+                />
+              </AccountsContainer>
             </Stack>
-          </Stack>
-          {backup ? (
-            <CreateSnapshotButton backup={backup} />
-          ) : (
-            <CreateButton type="submit">create backup</CreateButton>
-          )}
-        </Stack>
-      </BackupContainer>
 
+            <Stack $gap="1.25rem" onClick={openModal}>
+              <Text $textTransform="capitalize">keychain</Text>
+              <Box $height="44px" $width="48%" $display="flex">
+                <Text $textTransform="capitalize">create keychain</Text>
+                <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
+              </Box>
+            </Stack>
+            <Stack $gap="1.25rem">
+              <Text $textTransform="capitalize">data</Text>
+              <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
+                {DATA_BOXES.map((box) => (
+                  <DataBox
+                    key={box.key}
+                    name={box.name}
+                    title={box.title}
+                    description={box.description}
+                    value={data[box.key] || false}
+                    onToggle={() => !backup && toggle(box.key)}
+                  />
+                ))}
+              </Stack>
+            </Stack>
+            {backup ? (
+              <CreateSnapshotButton backup={backup} />
+            ) : (
+              <CreateButton type="submit">create backup</CreateButton>
+            )}
+          </Stack>
+        </MaybeForm>
+      </Container>
       <Modal
         isOpen={isOpen}
         onClose={onClose}
