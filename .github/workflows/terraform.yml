@@ -84,7 +84,7 @@ jobs:
       - name: Wait For Deployment
         if: ${{ inputs.apply }}
         run: |
-          make wait-deployment
+          make wait-deploy
       
       
       
