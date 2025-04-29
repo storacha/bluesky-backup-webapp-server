@@ -1,10 +1,10 @@
-import { Modal, Stack, StyleProps, Text } from '../ui'
+import { Button, Modal, Stack, StyleProps, Text } from '../ui'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
 import { DataBox } from './Data'
-import { Backup } from '@/app/types'
+import { Backup, SpaceDid } from '@/app/types'
 import { action } from '@/app/backups/new/action'
-import { Account } from '@storacha/ui-react'
+import { Account, useAuthenticator } from '@storacha/ui-react'
 import { BlueskyAccountSelect } from '@/components/Backup/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/Backup/StorachaSpaceSelect'
 import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
@@ -12,6 +12,7 @@ import { PlusCircle } from '@phosphor-icons/react'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { useUiComponentStore } from '@/store/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
+import { delegate } from '@/app/backups/[id]/delegate'
 
 interface BackupProps {
   account?: Account
@@ -77,7 +78,7 @@ export const AccountLogo = styled.div<{
   border: 1px solid var(--color-gray);
   & img {
     filter: ${({ $hasAccount, $type }) =>
-      $hasAccount && $type === 'original' ? 'grayscale(0)' : 'grayscale(1)'};
+    $hasAccount && $type === 'original' ? 'grayscale(0)' : 'grayscale(1)'};
     opacity: ${({ $hasAccount }) => ($hasAccount ? '1' : '.5')};
   }
 `
@@ -110,7 +111,7 @@ const DATA_BOXES: DataConfig[] = [
   // },
 ]
 
-function BackupContainer({
+function BackupContainer ({
   children,
   backup,
 }: {
@@ -124,6 +125,40 @@ function BackupContainer({
       <form action={action}>{children}</form>
     </Container>
   )
+}
+
+
+
+function DelegationGenerator ({ space, backup }: { space: SpaceDid, backup?: Backup }) {
+  const [{ client }] = useAuthenticator()
+
+  const [delegationCid, setDelegationCid] = useState<string>()
+  function onClick () {
+    if (client) {
+      (async () => {
+        const result = await client.uploadCAR(new Blob([
+          await delegate(client, space)
+        ]))
+        setDelegationCid(result.toString())
+      })()
+    }
+  }
+  return backup ? (
+    <Stack>
+      Using delegation {delegationCid}
+    </Stack>
+  ) : (
+    delegationCid ? (
+      <>
+        <Stack>
+          <input type="hidden" name="delegation_cid" value={delegationCid} />
+        </Stack >
+      </>
+    ) : (
+      <Button onClick={onClick}>Create Delegation</Button>
+    )
+  )
+
 }
 
 export const BackupDetail = ({ account, backup }: BackupProps) => {
@@ -150,6 +185,9 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
       [name]: !prev?.[name],
     }))
   }
+
+  // TODO generate the delegation here. ideally we'd only upload it to storacha is the form submits, but I'm not sure how to do that yet
+  //const delegationCid = 
 
   const openModal = () => {
     onOpen()
@@ -194,7 +232,9 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
               <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
             </Box>
           </Stack>
-
+          <Stack $gap="1.25rem">
+            <DelegationGenerator />
+          </Stack>
           <Stack $gap="1.25rem">
             <Text $textTransform="capitalize">data</Text>
             <Stack $direction="row" $gap="1.25rem" $wrap="wrap">

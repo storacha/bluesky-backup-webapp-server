@@ -77,7 +77,7 @@ export const createSnapshot = async ({
       // (yet), so we'll leave a dummy implementation here for now.
       gateway: {
         ...serviceConnection,
-        execute() {
+        execute () {
           throw new Error('Gateway connection not implemented')
         },
       },
@@ -104,65 +104,83 @@ const doSnapshot = async (
   storachaClient: StorachaClient,
   options: BackupOptions = {}
 ) => {
-  try {
-    await db.updateSnapshot(snapshotId, { repositoryStatus: 'in-progress' })
+  if (!atpAgent.did) {
+    throw new Error('No DID found in atproto agent')
+  }
+  // if no backup id this is a "quick snapshot"
+  const quickSnapshot = !options.backupId
+  const { result: backup } = options.backupId ? await db.findBackup(options.backupId) : {}
 
-    if (!atpAgent.did) {
-      throw new Error('No DID found in atproto agent')
-    }
+  if (quickSnapshot || backup?.includeRepository) {
+    try {
 
-    // TODO: It would be much better to stream this data, but the atproto client
-    // doesn't provide a way to do that yet. It absolutely could, but right now
-    // `XrpcClient.call` always consumes the entire response into memory.
-    const repoRes = await atpAgent.com.atproto.sync.getRepo({
-      did: atpAgent.did,
-    })
+      await db.updateSnapshot(snapshotId, { repositoryStatus: 'in-progress' })
 
-    if (!repoRes.success) {
-      throw new Error('Failed to get repo')
-    }
-
-    const repoRoot = await storachaClient.uploadCAR(new Blob([repoRes.data]), {
-      // set shard size to 4 GiB - the maximum shard size
-      shardSize: 1024 * 1024 * 1024 * 4,
-    })
-    await db.updateSnapshot(snapshotId, {
-      repositoryStatus: 'success',
-      repositoryCid: repoRoot.toString(),
-    })
-
-    let blobsRes
-    do {
-      blobsRes = await atpAgent.com.atproto.sync.listBlobs({
+      // TODO: It would be much better to stream this data, but the atproto client
+      // doesn't provide a way to do that yet. It absolutely could, but right now
+      // `XrpcClient.call` always consumes the entire response into memory.
+      const repoRes = await atpAgent.com.atproto.sync.getRepo({
         did: atpAgent.did,
-        cursor: blobsRes?.data.cursor,
       })
-      // TODO handle blobsRes.success == false
-      for (const cid of blobsRes.data.cids) {
-        const blobRes = await atpAgent.com.atproto.sync.getBlob({
-          did: atpAgent.did,
-          cid,
-        })
-        // TODO handle blobRes.success == false
 
-        const uploadCid = await storachaClient.uploadFile(
-          new Blob([blobRes.data])
-        )
-        // TODO: figure out how to fail if cid and uploadCid don't match
-        console.log(
-          `Uploaded blob with CID ${cid} and got ${uploadCid} from Storacha - these should be the same`
-        )
-        await db.addBlob({
-          cid,
-          contentType: blobRes.headers['content-type'],
-          snapshotId: snapshotId,
-          backupId: options.backupId,
-        })
+      if (!repoRes.success) {
+        throw new Error('Failed to get repo')
       }
-    } while (blobsRes.data.cursor)
-  } catch (e: unknown) {
-    // @ts-expect-error e.cause doesn't typecheck
-    console.error('Error while creating backup', e, e.cause)
-    await db.updateSnapshot(snapshotId, { repositoryStatus: 'failed' })
+
+      const repoRoot = await storachaClient.uploadCAR(new Blob([repoRes.data]), {
+        // set shard size to 4 GiB - the maximum shard size
+        shardSize: 1024 * 1024 * 1024 * 4,
+      })
+      await db.updateSnapshot(snapshotId, {
+        repositoryStatus: 'success',
+        repositoryCid: repoRoot.toString(),
+      })
+    } catch (e: unknown) {
+      // @ts-expect-error e.cause doesn't typecheck
+      console.error('Error while creating backup', e, e.cause)
+      await db.updateSnapshot(snapshotId, { repositoryStatus: 'failed' })
+    }
+  }
+  if (quickSnapshot || backup?.includeBlobs) {
+    try {
+
+      await db.updateSnapshot(snapshotId, { blobsStatus: 'in-progress' })
+
+      let blobsRes
+      do {
+        blobsRes = await atpAgent.com.atproto.sync.listBlobs({
+          did: atpAgent.did,
+          cursor: blobsRes?.data.cursor,
+        })
+        // TODO handle blobsRes.success == false
+        for (const cid of blobsRes.data.cids) {
+          const blobRes = await atpAgent.com.atproto.sync.getBlob({
+            did: atpAgent.did,
+            cid,
+          })
+          // TODO handle blobRes.success == false
+
+          const uploadCid = await storachaClient.uploadFile(
+            new Blob([blobRes.data])
+          )
+          // TODO: figure out how to fail if cid and uploadCid don't match
+          console.log(
+            `Uploaded blob with CID ${cid} and got ${uploadCid} from Storacha - these should be the same`
+          )
+          await db.addBlob({
+            cid,
+            contentType: blobRes.headers['content-type'],
+            snapshotId: snapshotId,
+            backupId: options.backupId,
+          })
+        }
+      } while (blobsRes.data.cursor)
+
+      await db.updateSnapshot(snapshotId, { blobsStatus: 'success' })
+    } catch (e: unknown) {
+      // @ts-expect-error e.cause doesn't typecheck
+      console.error('Error while creating backup', e, e.cause)
+      await db.updateSnapshot(snapshotId, { blobsStatus: 'failed' })
+    }
   }
 }

@@ -14,7 +14,6 @@ export default async function Backup ({
   const id = parseInt(idParam)
   const { db } = getStorageContext()
   const { did: account } = await getSession()
-  console.log(id, account)
   if (!await backupOwnedByAccount(db, id, account)) {
     return (<div>unauthorized</div>)
   }

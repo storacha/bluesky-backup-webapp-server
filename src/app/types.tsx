@@ -1,14 +1,17 @@
 import { Did } from '@atproto/oauth-client-node'
 
+export type SpaceDid = Did<'key'>
+
 export type Backup = {
   id: number
   accountDid: string
   name: string
   atprotoAccount: Did
-  storachaSpace: Did<'key'>
+  storachaSpace: SpaceDid
   includeRepository: boolean
   includeBlobs: boolean
   includePreferences: boolean
+  delegationCid?: string | null
 }
 
 type Input<
