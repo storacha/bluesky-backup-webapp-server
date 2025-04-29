@@ -10,7 +10,7 @@
 #   scripts/start-tunnel [--url <url>]
 #
 # Starts an ngrok tunnel, and configures the app to use it while it's open. Will
-# also help you install ngrok, and prepare a `.env.local` file if you need one.
+# also help you install ngrok, and prepare a `.env` file if you need one.
 # Passes all of its arguments to `ngrok http`.
 
 # Enable associative arrays
@@ -38,9 +38,9 @@ ensure_ngrok() {
   fi
 }
 
-# Remove any existing ngrok URL from .env.local
+# Remove any existing ngrok URL from .env
 cleanup() {
-  sed -i '' '/#ngrok/d' .env.local
+  sed -i '' '/#ngrok/d' .env
 }
 
 spinners=(
@@ -115,12 +115,12 @@ coproc {
       url=${kv_pairs[url]}
       state="connected"
 
-      # Whenever a session connects, write the URL to .env.local. Being at the
+      # Whenever a session connects, write the URL to .env. Being at the
       # end of the file, this will take precedence over any existing value.
       # In case we've just reconnected
       cleanup
-      # Write the URL to .env.local
-      echo "NEXT_PUBLIC_BLUESKY_CLIENT_URI=$url #ngrok" >>.env.local
+      # Write the URL to .env
+      echo "NEXT_PUBLIC_BLUESKY_CLIENT_URI=$url #ngrok" >>.env
       ;;
     "tunnel session started")
       state="connected"
@@ -143,8 +143,8 @@ coproc {
 
 ensure_ngrok
 
-# Ensure we have a .env.local
-[[ -f .env.local ]] || cp .env.tpl .env.local
+# Ensure we have a .env
+[[ -f .env ]] || cp .env.tpl .env
 
 # Clean up anything left over
 cleanup

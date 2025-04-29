@@ -1,7 +1,7 @@
 'use client'
 
 import { Sidebar } from '@/app/Sidebar'
-import { BackupScreen } from '@/components/Backup/index'
+import { BackupScreen } from '@/components/BackupScreen/index'
 
 export default function NewBackup() {
   return (

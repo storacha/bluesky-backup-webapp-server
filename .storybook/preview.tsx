@@ -1,5 +1,6 @@
 import React from 'react'
 import type { Preview } from '@storybook/react'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { dmMono, dmSans, epilogue } from '../src/app/globalStyle'
 
 const withFonts = (Story) => (
@@ -9,6 +10,13 @@ const withFonts = (Story) => (
     <Story />
   </div>
 )
+
+const withNuqs = (Story) => (
+  <NuqsAdapter>
+    <Story />
+  </NuqsAdapter>
+)
+
 const preview: Preview = {
   parameters: {
     controls: {
@@ -17,8 +25,12 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    nextjs: {
+      // Use the (stub) App Router.
+      appDirectory: true,
+    },
   },
-  decorators: [withFonts],
+  decorators: [withFonts, withNuqs],
 }
 
 export default preview

@@ -2,10 +2,19 @@
 
 import { Backup } from '@/app/types'
 import { useAuthenticator } from '@storacha/ui-react'
-import { createSnapshot } from './createSnapshot'
 import { delegate } from './delegate'
 import { useSWRMutation } from '@/app/swr'
 import { CreateButton } from '@/components/ui/CreateButton'
+
+let createSnapshot: typeof import('./createSnapshot').createSnapshot
+
+if (process.env.STORYBOOK) {
+  createSnapshot = () => {
+    throw new Error('Server Functions are not available in Storybook')
+  }
+} else {
+  createSnapshot = (await import('./createSnapshot')).createSnapshot
+}
 
 export const CreateSnapshotButton = ({ backup }: { backup: Backup }) => {
   const [{ accounts, client }] = useAuthenticator()

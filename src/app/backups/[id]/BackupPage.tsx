@@ -2,7 +2,7 @@
 
 import { Sidebar } from '@/app/Sidebar';
 import { useSWR } from '@/app/swr';
-import { BackupScreen } from '@/components/Backup/index';
+import { BackupScreen } from '@/components/BackupScreen';
 
 export default function BackupPage ({ id }: { id: number; }) {
   // TODO: Should we fetch individual backups? We already need the list for the

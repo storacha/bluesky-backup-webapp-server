@@ -1,6 +1,6 @@
 import { Stack, Text } from '../ui'
 import { Switch } from '../Switch'
-import { Box } from './Backup'
+import { Box } from './BackupDetail'
 
 interface DataBoxProps {
   title: string
@@ -20,7 +20,7 @@ export const DataBox = ({
   width = '48%',
 }: DataBoxProps) => {
   return (
-    <Box $background="var(--color-white)" $borderStyle="solid" $width={width}>
+    <Box $display='flex' $background="var(--color-white)" $borderStyle="solid" $width={width}>
       <Stack>
         <Text $color="var(--color-black)" $textTransform="capitalize">
           {title}

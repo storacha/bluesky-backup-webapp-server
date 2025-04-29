@@ -1,5 +1,5 @@
 import { ArrowLeft, At } from '@phosphor-icons/react'
-import { Box } from '../Backup/Backup'
+import { Box } from '../BackupScreen/BackupDetail'
 import { Button, InputField, Modal, ModalProps, Stack, Text } from '../ui'
 import { ChangeEvent, useState } from 'react'
 
@@ -23,6 +23,7 @@ export const AddBskyAccountModal = ({
       <Stack $direction="row" $gap="3rem">
         <Stack $gap="1rem" $width="30%">
           <Box
+            $display="flex"
             $borderStyle="solid"
             $height="40px"
             $width="40px"

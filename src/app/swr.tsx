@@ -9,6 +9,7 @@ import { ATBlob, Snapshot, Backup } from './types'
 // This type defines what's fetchable with `useSWR`. It is a union of key/data
 // pairs. The key can match a pattern by being as wide as it needs to be.
 type Fetchable =
+  | [['api', '/session/did', Record<never, string>?], string]
   | [['api', '/api/backups', Record<string, string>?], Backup[]]
   | [
       ['api', `/api/backups/${string}/snapshots`, Record<string, string>?],

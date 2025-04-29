@@ -2,7 +2,9 @@ ifneq (,$(wildcard ./.env.terraform))
 	include .env.terraform
 	export
 else
-  $(error You haven't setup your .env file. Please refer to the readme)
+	ifneq ($(DEPLOY_ENV), ci)
+  	$(error You haven't setup your .env file. Please refer to the readme)
+	endif
 endif
 
 ECR_URI=$(TF_VAR_allowed_account_id).dkr.ecr.us-west-2.amazonaws.com
@@ -29,11 +31,13 @@ eval_env_file: .env.production.local
 docker-login:
 	aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $(ECR_URI)
 
+.env.terraform:
+
 .env.production.local: .env.terraform .env.production.local.tpl
 	./scripts/esh -o .env.production.local .env.production.local.tpl 
 
 docker-build: docker-login .env.production.local
-	docker build -t $(IMAGE_TAG_BASE)-latest .
+	docker buildx build --platform linux/arm64 -t $(IMAGE_TAG_BASE)-latest --load .
 
 format-filter ="{{ .Id }}"
 
@@ -64,7 +68,7 @@ deploy/shared/.terraform:
 	TF_WORKSPACE=default tofu -chdir=deploy/shared init -backend-config="key=storacha/$(TF_VAR_app)/shared.tfstate"
 
 .tfworkspace:
-	tofu -chdir=deploy/app workspace new $(TF_WORKSPACE)
+	tofu -chdir=deploy/app workspace new $(TF_WORKSPACE) 
 	touch .tfworkspace
 
 .PHONY: init
@@ -105,12 +109,18 @@ plan-shared: deploy/shared/.terraform
 
 .PHONY: plan-app
 
-plan-app: deploy/app/.terraform .tfworkspace eval_image_tag
-	tofu -chdir=deploy/app plan -var="image_tag=$(IMAGE_TAG)"
+plan-app: deploy/app/.terraform .tfworkspace eval_image_tag eval_env_file
+	tofu -chdir=deploy/app plan -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]'
 
 .PHONY: plan
 
 plan: plan-shared plan-app
+
+ifeq ($(DEPLOY_ENV), ci)
+APPLY_ARGS=-input=false --auto-approve
+else
+APPLY_ARGS=""
+endif
 
 .PHONY: apply-shared
 
@@ -120,7 +130,7 @@ apply-shared: deploy/shared/.terraform
 .PHONY: apply-app
 
 apply-app: deploy/app/.terraform .tfworkspace docker-push eval_image_tag eval_env_file
-	tofu -chdir=deploy/app apply -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]'
+	tofu -chdir=deploy/app apply -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]' $(APPLY_ARGS)
 
 .PHONY: apply
 
@@ -133,7 +143,7 @@ console-shared: deploy/shared/.terraform
 
 .PHONY: console-app
 console: deploy/app/.terraform .tfworkspace eval_image_tag eval_env_file
-	tofu -chdir=deploy/app console -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]'
+	tofu -chdir=deploy/app console -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]' $(APPLY_ARGS)
 
 .PHONY: wait-deploy
 wait-deploy:
@@ -146,12 +156,12 @@ db-migrate:
 	--task-definition $(TF_WORKSPACE)-$(TF_VAR_app) \
 	--count 1 \
   --launch-type FARGATE \
-	--overrides '{ \
-  	"containerOverrides": [ \
+	--overrides "{ \
+  	\"containerOverrides\": [ \
     	{ \
-			  "name": "first", \
-    		"command": ["node", "scripts/migrate/index.mjs"] \
+			  \"name\": \"first\", \
+    		\"command\": [\"node\", \"scripts/migrate/index.mjs\"] \
 			} \
 		] \
-	}' \
+	}" \
    --network-configuration '$(shell aws ecs describe-services --cluster $(TF_WORKSPACE)-$(TF_VAR_app)-cluster --service $(TF_WORKSPACE)-$(TF_VAR_app)-service --query "services[0].networkConfiguration")'
