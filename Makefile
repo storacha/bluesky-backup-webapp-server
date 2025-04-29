@@ -37,7 +37,7 @@ docker-login:
 	./scripts/esh -o .env.production.local .env.production.local.tpl 
 
 docker-build: docker-login .env.production.local
-	docker build -t $(IMAGE_TAG_BASE)-latest .
+	docker buildx build --platform linux/arm64 -t $(IMAGE_TAG_BASE)-latest --load .
 
 format-filter ="{{ .Id }}"
 
