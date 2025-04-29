@@ -48,7 +48,7 @@ export async function hydrateSymkey(key: Key) {
   }
 }
 
-export const KeychainContext = createContext<KeychainContextProps>({
+const KeychainContext = createContext<KeychainContextProps>({
   keys: [],
   setSelectedKey: () => {
     console.warn('setSelectedKeyPair is unimplemented')

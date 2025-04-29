@@ -28,7 +28,7 @@ interface LoaderProps {
   className?: string
 }
 
-export function UploadLoader({
+function UploadLoader({
   uploadProgress,
   className = '',
 }: LoaderProps): ReactNode {

@@ -11,7 +11,7 @@ export interface DropdownItem {
   disabled?: boolean
 }
 
-export interface DropdownProps {
+interface DropdownProps {
   trigger?: React.ReactNode
   items: DropdownItem[]
   className?: string

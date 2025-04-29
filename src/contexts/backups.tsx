@@ -7,7 +7,7 @@ import {
   BackupMetadataStore,
 } from '@/lib/backupMetadataStore'
 
-export type BackupsContextProps = {
+type BackupsContextProps = {
   backupsStore: BackupMetadataStore
 }
 
@@ -15,7 +15,7 @@ export const BackupsContext = createContext<BackupsContextProps>({
   backupsStore: backupMetadataStore,
 })
 
-export const BackupsProvider = ({
+const BackupsProvider = ({
   children,
 }: {
   children: ReactNode | ReactNode[]

@@ -1,9 +1,9 @@
 export type DidWeb = `did:web:${string}`
 export type DidKey = `did:key:${string}`
-export function isDidWeb(s?: string): s is DidWeb {
+function isDidWeb(s?: string): s is DidWeb {
   return Boolean(s && s.startsWith('did:web'))
 }
-export function isDidKey(s?: string): s is DidKey {
+function isDidKey(s?: string): s is DidKey {
   return Boolean(s && s.startsWith('did:key'))
 }
 

@@ -94,7 +94,7 @@ interface AtprotoCreateAccountFormProps {
   defaultServer?: string
 }
 
-export async function oauthToPds(pdsUrl: string, handle: string) {
+async function oauthToPds(pdsUrl: string, handle: string) {
   const bskyAuthClient = new BrowserOAuthClient({
     clientMetadata: blueskyClientMetadata,
     handleResolver: pdsUrl,

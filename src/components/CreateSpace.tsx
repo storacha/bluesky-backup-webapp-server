@@ -20,7 +20,7 @@ interface CreateSpaceModalProps extends Pick<CreateSpaceProps, 'account'> {
   onClose: () => void
 }
 
-export const CreateSpace = ({ account, onSuccess }: CreateSpaceProps) => {
+const CreateSpace = ({ account, onSuccess }: CreateSpaceProps) => {
   const [storacha] = useW3()
   const [spaceName, setSpaceName] = useState<string>('')
   const [state, setState] = useState<SpaceCreationState>('idle')

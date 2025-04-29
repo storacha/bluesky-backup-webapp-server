@@ -20,7 +20,7 @@ type Input<
 
 export type BackupInput = Input<Backup, 'id'>
 
-export type SnapshotStatus =
+type SnapshotStatus =
   | 'not-started'
   | 'in-progress'
   | 'failed'

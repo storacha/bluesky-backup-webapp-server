@@ -2,7 +2,7 @@ import { Property } from 'csstype'
 import { styled } from 'next-yak'
 import { ReactNode } from 'react'
 
-export interface BtnProps {
+interface BtnProps {
   $color: Property.Color
   $fontFamily: Property.FontFamily
   $fontWeight: Property.FontWeight
@@ -47,7 +47,7 @@ export const Button = styled.button<Partial<BtnProps>>`
   }
 `
 
-export const ButtonLink = styled.a<Partial<BtnProps>>`
+const ButtonLink = styled.a<Partial<BtnProps>>`
   border: ${({ $border = 'solid' }) => $border};
   font-family: ${({ $fontFamily = 'var(--font-dm-mono)' }) => $fontFamily};
   font-weight: ${({ $fontWeight = '300' }) => $fontWeight};

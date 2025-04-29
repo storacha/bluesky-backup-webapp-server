@@ -7,7 +7,7 @@ import { hydrateSymkey, Key } from '@/contexts/keychain'
 
 const ensureTrailingSlash = (s: string) => (s.endsWith('/') ? s : s.concat('/'))
 
-export const atprotoClientUri = ensureTrailingSlash(
+const atprotoClientUri = ensureTrailingSlash(
   process.env.NEXT_PUBLIC_BLUESKY_CLIENT_URI || 'https://localhost:3000/'
 )
 
@@ -24,7 +24,7 @@ export const blueskyClientMetadata: OAuthClientMetadataInput = {
   dpop_bound_access_tokens: true,
 }
 
-export interface BackupOptions {
+interface BackupOptions {
   eventTarget?: EventTarget
   encryptionKey?: Key
 }
@@ -63,7 +63,7 @@ export async function decrypt(
  * and prepended to the ArrayBuffer returned by `encrypt`, and the resulting
  * data is returned as a Blob.
  */
-export async function encrypt(key: Key, blob: Blob): Promise<Blob> {
+async function encrypt(key: Key, blob: Blob): Promise<Blob> {
   const encryptionKey = await hydrateSymkey(key)
   const iv = window.crypto.getRandomValues(new Uint8Array(12))
   return new Blob([

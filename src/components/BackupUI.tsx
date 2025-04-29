@@ -251,7 +251,7 @@ export default function BackupUI() {
   )
 }
 
-export interface BackupUIViewProps {
+interface BackupUIViewProps {
   bluesky: BskyAuthContextProps
   storacha: StorachaContext
   space?: Space

@@ -6,7 +6,7 @@ import { Loader } from './Loader'
 import Button from './Button'
 import Input from './Input'
 
-export function AuthenticationForm(): ReactNode {
+function AuthenticationForm(): ReactNode {
   const [{ submitted }] = useAuthenticator()
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-sm w-full max-w-md">
@@ -31,7 +31,7 @@ export function AuthenticationForm(): ReactNode {
   )
 }
 
-export function AuthenticationSubmitted(): ReactNode {
+function AuthenticationSubmitted(): ReactNode {
   const [{ email }] = useAuthenticator()
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-sm w-full max-w-md">
@@ -49,7 +49,7 @@ export function AuthenticationSubmitted(): ReactNode {
   )
 }
 
-export function AuthenticationEnsurer({
+function AuthenticationEnsurer({
   children,
 }: {
   children: ReactNode

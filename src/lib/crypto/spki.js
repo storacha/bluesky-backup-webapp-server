@@ -50,7 +50,7 @@ import {
  *
  * See https://github.com/ucan-wg/ts-ucan/issues/30
  */
-export const SPKI_PARAMS_ENCODED = new Uint8Array([
+const SPKI_PARAMS_ENCODED = new Uint8Array([
   48, 13, 6, 9, 42, 134, 72, 134, 247, 13, 1, 1, 1, 5, 0,
 ])
 
@@ -58,7 +58,7 @@ export const SPKI_PARAMS_ENCODED = new Uint8Array([
  * @param {API.ByteView<RSAPublicKey>} key
  * @returns {API.ByteView<SubjectPublicKeyInfo>}
  */
-export const encode = (key) =>
+const encode = (key) =>
   encodeSequence([SPKI_PARAMS_ENCODED, encodeBitString(key)])
 
 /**

@@ -6,7 +6,7 @@ import { X } from '@phosphor-icons/react'
 import { AriaDialogProps, useDialog } from 'react-aria'
 import { Property } from 'csstype'
 
-export type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
+type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
 const sizeToWidth: Record<ModalSize, Property.Width> = {
   xs: '20rem',

@@ -5,7 +5,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import React, { Fragment } from 'react'
 import Button from './Button'
 
-export interface DialogProps {
+interface DialogProps {
   isOpen: boolean
   onClose: () => void
   title?: React.ReactNode

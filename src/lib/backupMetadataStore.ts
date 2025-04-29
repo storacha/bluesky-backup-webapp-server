@@ -45,7 +45,7 @@ export interface BackupMetadataStore {
 
 type BackupMetadataStoreInitializer = (db: BackupsDB) => BackupMetadataStore
 
-export const newBackupMetadataStore: BackupMetadataStoreInitializer = (db) => ({
+const newBackupMetadataStore: BackupMetadataStoreInitializer = (db) => ({
   async addRepo(
     cid,
     backupId,

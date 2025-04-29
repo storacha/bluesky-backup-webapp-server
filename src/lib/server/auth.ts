@@ -36,7 +36,7 @@ export const getServerIdentity = () => {
  */
 
 let cachedPrincipalMapping: Record<DidWeb, DidKey>
-export const getPrincipalMapping = () => {
+const getPrincipalMapping = () => {
   if (cachedPrincipalMapping) {
     return cachedPrincipalMapping
   }
@@ -61,7 +61,7 @@ export const getPrincipalMapping = () => {
 }
 
 let cachedAuthority: ed25519.Signer.Verifier
-export const getAuthority = () => {
+const getAuthority = () => {
   if (cachedAuthority) {
     return cachedAuthority
   }

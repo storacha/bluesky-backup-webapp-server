@@ -7,7 +7,7 @@ const die = (name: string) => {
   throw new Error(`Environment variable ${name} is required and not set.`)
 }
 
-export const serviceURL = new URL(
+const serviceURL = new URL(
   process.env.NEXT_PUBLIC_STORACHA_SERVICE_URL ??
     die('NEXT_PUBLIC_STORACHA_SERVICE_URL')
 )
