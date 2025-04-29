@@ -1,28 +1,8 @@
 import { Agent } from '@atproto/api'
 import { ProfileViewDetailed } from '@atproto/api/dist/client/types/app/bsky/actor/defs'
-import { OAuthClientMetadataInput } from '@atproto/oauth-client-browser'
 import { CARLink, Client } from '@w3ui/react'
 import { BackupMetadataStore } from './backupMetadataStore'
 import { hydrateSymkey, Key } from '@/contexts/keychain'
-
-const ensureTrailingSlash = (s: string) => (s.endsWith('/') ? s : s.concat('/'))
-
-const atprotoClientUri = ensureTrailingSlash(
-  process.env.NEXT_PUBLIC_BLUESKY_CLIENT_URI || 'https://localhost:3000/'
-)
-
-export const blueskyClientMetadata: OAuthClientMetadataInput = {
-  client_id: `${atprotoClientUri}bluesky-client-metadata`,
-  client_name: 'Local Dev App',
-  client_uri: atprotoClientUri,
-  application_type: 'web',
-  grant_types: ['authorization_code', 'refresh_token'],
-  response_types: ['code'],
-  redirect_uris: [atprotoClientUri],
-  token_endpoint_auth_method: 'none',
-  scope: 'atproto transition:generic',
-  dpop_bound_access_tokens: true,
-}
 
 interface BackupOptions {
   eventTarget?: EventTarget
