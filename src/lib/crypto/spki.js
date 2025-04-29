@@ -14,9 +14,11 @@ import {
  * TODO: EXPOSE FROM @ucanto/principal OR PULL TO A SHARED LIBRARY
  */
 
-/**
- * @typedef {import('./public-key.js').RSAPublicKey} RSAPublicKey
- */
+// (Broken reference from copied code.)
+// /**
+//  * @typedef {import('./public-key.js').RSAPublicKey} RSAPublicKey
+//  */
+
 /**
  * Described in RFC 5208 Section 4.1: https://tools.ietf.org/html/rfc5280#section-4.1
  * ```
@@ -28,8 +30,10 @@ import {
  * @typedef {object} SubjectPublicKeyInfo
  * @property {API.ByteView<AlgorithmIdentifier>} algorithm
  * @property {API.ByteView<RSAPublicKey>} subjectPublicKey
- * @typedef {import('./pkcs8.js').AlgorithmIdentifier} AlgorithmIdentifier
  */
+
+// (Broken reference from copied code.)
+// * @typedef {import('./pkcs8.js').AlgorithmIdentifier} AlgorithmIdentifier
 
 /**
  * The ASN.1 DER encoded header that needs to be added to an
