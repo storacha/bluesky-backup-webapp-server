@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "test": "echo 'There are no tests yet'",
     "knip": "knip",
+    "knip:watch": "FORCE_COLOR=true ./scripts/fswatch-less knip",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "db:migrate": "node ./scripts/migrate.mjs",

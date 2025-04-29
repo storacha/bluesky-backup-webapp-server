@@ -1,0 +1,29 @@
+#!/bin/zsh
+# shellcheck disable=all
+
+# (Zsh, because Bash doesn't support coprocesses until v4, which isn't installed
+# on macOS by default.)
+
+coproc {
+  # Watch the current directory for changes, and when one happens, kill less.
+  # That will cause the loop to restart, getting new output and sending it to a
+  # new less process.
+  fswatch . | while read file; do
+    # Ignore files that are ignored by git, and the .git directory itself.
+    if [[ $file != $PWD/.git* ]] && ! git check-ignore -q "$file"; then
+      echo $file
+    fi
+  done | while read -r; do
+    less_pid=$(pgrep -P $$ "less")
+    kill "$less_pid" 2>/dev/null
+  done
+}
+
+coproc_pid=$!
+
+# Run the command into less, and loop until it exits cleanly (which should be
+# when the user quits).
+while ! "$@" 2>&1 | less --clear-screen --raw-control-chars; do :; done
+
+# Make sure the coprocess dies, too.
+kill "$coproc_pid" 2>/dev/null
