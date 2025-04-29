@@ -15,6 +15,7 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm knip
+      - run: pnpm knip --production
       - run: pnpm test
       - name: create .env from .env.tpl
         run: |

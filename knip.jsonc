@@ -19,11 +19,15 @@
     // Sentry error handling utils are worth keeping around, even if we're not
     // using them at any particular moment. Consider them an "entry" module for
     // Knip's purposes.
-    "src/app/sentry.tsx",
+    "src/app/sentry.tsx!",
 
     // Similarly, this is a copied file and we don't want to to diverge from the
     // original for now, so make it an "entry".
-    "src/lib/crypto/keys.ts",
+    "src/lib/crypto/keys.ts!",
+
+    // Consider this an "entry" because it has types that happen to only used by
+    // Storybook right now.
+    "src/app/swr.tsx!",
   ],
   "ignoreBinaries": [
     // Per README, we expect psql to be installed on the system.
