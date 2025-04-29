@@ -1,5 +1,5 @@
 name: pnpm
-description: 'Setup node & pnpm'
+description: 'Set up node & pnpm'
 
 runs:
   using: 'composite'
