@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.0.0...v1.0.1) (2025-04-29)
+
+
+### Bug Fixes
+
+* **github:** fix last merge ([2e97a35](https://github.com/storacha/bluesky-backup-webapp-server/commit/2e97a35a3f485b474c3620fb8a9a00813008c126))
+* **github:** fix last merge ([cf4904e](https://github.com/storacha/bluesky-backup-webapp-server/commit/cf4904e43752e0c985bf5cdeccdd20de0d455fee))
+* **release:** testing that release is working properly ([6f01834](https://github.com/storacha/bluesky-backup-webapp-server/commit/6f018349dfd4829b75b4de65a1d89f0c470f19b5))
+* **release:** testing that release is working properly ([c410003](https://github.com/storacha/bluesky-backup-webapp-server/commit/c410003a0cda2907f0114e4274d65875f3e1a2ce))
+
 ## 1.0.0 (2025-04-29)
 
 
