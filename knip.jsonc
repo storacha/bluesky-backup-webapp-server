@@ -2,10 +2,6 @@
   // Knip: Declutter your JavaScript & TypeScript projects
   // https://knip.dev/reference/configuration
   "$schema": "https://unpkg.com/knip@5/schema-jsonc.json",
-  "ignoreBinaries": [
-    // Per README, we expect psql to be installed on the system.
-    "psql",
-  ],
   "project": [
     // This is the default project glob. (We can't modify this without restating
     // it completely.)
@@ -13,5 +9,24 @@
     // Exclude (`!` at start of pattern) scripts from the production analysis
     // (`!` at end of pattern).
     "!scripts/**!",
+  ],
+  "entry": [
+    // These are the default entry globs. (We can't modify this without
+    // restating them completely.)
+    "{index,cli,main}.{js,cjs,mjs,jsx,ts,cts,mts,tsx}",
+    "src/{index,cli,main}.{js,cjs,mjs,jsx,ts,cts,mts,tsx}",
+
+    // Sentry error handling utils are worth keeping around, even if we're not
+    // using them at any particular moment. Consider them an "entry" module for
+    // Knip's purposes.
+    "src/app/sentry.tsx",
+
+    // Similarly, this is a copied file and we don't want to to diverge from the
+    // original for now, so make it an "entry".
+    "src/lib/crypto/keys.ts",
+  ],
+  "ignoreBinaries": [
+    // Per README, we expect psql to be installed on the system.
+    "psql",
   ],
 }
