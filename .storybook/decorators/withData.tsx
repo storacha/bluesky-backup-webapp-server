@@ -6,7 +6,7 @@ export const withData = <K extends Key>(
   key: K,
   data: Promise<FetchedData<K>> | FetchedData<K>
 ): Decorator =>
-  function WithDataDecorator(Story) {
+  function WithDataDecorator(Story, ctx) {
     return (
       <SWRConfig
         value={(parentConfig) => {
@@ -28,7 +28,7 @@ export const withData = <K extends Key>(
                 return parentConfig.fetcher(fetchedKey)
               } else {
                 const error = new Error(
-                  `No fetcher given in story for ${JSON.stringify(fetchedKey)}`
+                  `No fetcher given in story ${ctx.title} (${ctx.name}) for ${JSON.stringify(fetchedKey)}`
                 )
                 // Make sure this error is visible, even if SWR swallows it.
                 console.error(error)
