@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: show outputs
         run: |
-          echo "{{ needs.release.outputs.release_created }}"
+          echo "${{ needs.release.outputs.release_created }}"
 
   # apply staging on pushes to main, plan otherwise
   staging:
