@@ -1,0 +1,9 @@
+{
+  // Knip: Declutter your JavaScript & TypeScript projects
+  // https://knip.dev/reference/configuration
+  "$schema": "https://unpkg.com/knip@5/schema-jsonc.json",
+  "ignoreBinaries": [
+    // Per README, we expect psql to be installed on the system.
+    "psql",
+  ],
+}
