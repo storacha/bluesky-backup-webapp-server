@@ -285,6 +285,7 @@ export function getStorageContext(): StorageContext {
       async findBackups(account: string) {
         const results = await sql<Backup[]>`
             SELECT id,
+              account_did,
               name,
               atproto_account,
               storacha_space,
@@ -302,6 +303,7 @@ export function getStorageContext(): StorageContext {
       async findBackup(id: number) {
         const [result] = await sql<Backup[]>`
             SELECT id,
+              account_did,
               name,
               atproto_account,
               storacha_space,
