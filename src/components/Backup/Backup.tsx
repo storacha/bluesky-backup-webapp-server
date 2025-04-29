@@ -10,9 +10,8 @@ import { Account } from '@storacha/ui-react'
 import { BlueskyAccountSelect } from '@/components/Backup/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/Backup/StorachaSpaceSelect'
 import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
-import { PlusCircle } from '@phosphor-icons/react'
+// import { PlusCircle } from '@phosphor-icons/react'
 import { useDisclosure } from '@/hooks/use-disclosure'
-import { useUiComponentStore } from '@/store/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
 
 interface BackupProps {
@@ -133,8 +132,7 @@ function BackupContainer({
 }
 
 export const BackupDetail = ({ account, backup }: BackupProps) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const { updateUiStore } = useUiComponentStore()
+  const { isOpen, onClose } = useDisclosure()
   const [data, setData] = useState<Record<string, boolean>>({
     repository: true,
     blobs: false,
@@ -157,12 +155,12 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
     }))
   }
 
-  const openModal = () => {
-    onOpen()
-    updateUiStore({
-      ui: 'keychain',
-    })
-  }
+  // const openModal = () => {
+  //   onOpen()
+  //   updateUiStore({
+  //     ui: 'keychain',
+  //   })
+  // }
 
   return (
     <>
@@ -193,13 +191,13 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
             </AccountsContainer>
           </Stack>
 
-          <Stack $gap="1.25rem" onClick={openModal}>
+          {/* <Stack $gap="1.25rem" onClick={openModal}>
             <Text $textTransform="capitalize">keychain</Text>
             <Box $height="44px" $width="48%" $display="flex">
               <Text $textTransform="capitalize">create keychain</Text>
               <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
             </Box>
-          </Stack>
+          </Stack> */}
 
           <Stack $gap="1.25rem">
             <Text $textTransform="capitalize">data</Text>

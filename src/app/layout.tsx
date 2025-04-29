@@ -4,6 +4,7 @@ import { Authenticator } from './authentication'
 import { SWRConfigProvider } from './swr'
 import { Metadata } from 'next'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import { Toaster } from 'sonner'
 
 export const metadata: Metadata = {
   title: 'Bb',
@@ -24,7 +25,10 @@ export default function RootLayout({
         >
           <body>
             <NuqsAdapter>
-              <Authenticator as="div">{children}</Authenticator>
+              <Authenticator as="div">
+                {children}
+                <Toaster position='top-center' />
+              </Authenticator>
             </NuqsAdapter>
           </body>
         </html>

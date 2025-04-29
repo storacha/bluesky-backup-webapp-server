@@ -1,7 +1,8 @@
-import { ArrowLeft, At } from '@phosphor-icons/react'
+import { At } from '@phosphor-icons/react'
 import { Box } from '../Backup/Backup'
 import { Button, InputField, Modal, ModalProps, Stack, Text } from '../ui'
 import { ChangeEvent, useState } from 'react'
+import { SharedModalLayout } from './layout'
 
 export const AddBskyAccountModal = ({
   isOpen,
@@ -20,25 +21,7 @@ export const AddBskyAccountModal = ({
       onClose={onClose}
       background="var(--color-light-blue-100)"
     >
-      <Stack $direction="row" $gap="3rem">
-        <Stack $gap="1rem" $width="30%">
-          <Box
-            $display="flex"
-            $borderStyle="solid"
-            $height="40px"
-            $width="40px"
-            onClick={onClose}
-          >
-            <ArrowLeft color="var(--color-black)" size="20" />
-          </Box>
-          <Text
-            $fontSize="1.125rem"
-            $fontWeight="700"
-            $color="var(--color-black)"
-          >
-            Add Bluesky account
-          </Text>
-        </Stack>
+      <SharedModalLayout title="Add Bluesky account" onClose={onClose}>
         <Box
           $width="62%"
           $borderStyle="solid"
@@ -77,7 +60,7 @@ export const AddBskyAccountModal = ({
             </Stack>
           </Stack>
         </Box>
-      </Stack>
+      </SharedModalLayout>
     </Modal>
   )
 }

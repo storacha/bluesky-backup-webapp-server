@@ -7,6 +7,11 @@ import { CaretDown } from '@phosphor-icons/react'
 import { AccountLogo, Box } from './Backup'
 import Image from 'next/image'
 import { ControlProps, ValueContainerProps, components } from 'react-select'
+import { useDisclosure } from '@/hooks/use-disclosure'
+import { CreateSpaceModal } from '../modals'
+import * as Storacha from '@web3-storage/w3up-client/account'
+
+const CREATE_NEW_STORACHA_SPACE = 'ss'
 
 export const StorachaSpaceSelect = (props: {
   name: string
@@ -14,8 +19,9 @@ export const StorachaSpaceSelect = (props: {
   onChange?: (value: string) => void
   disabled?: boolean
 }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const [{ spaces, accounts }] = useAuthenticator()
-  const account = accounts[0]
+  const account = accounts?.[0]
   const [options, setOptions] = useState<Option[]>([])
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
     props.value
@@ -43,16 +49,24 @@ export const StorachaSpaceSelect = (props: {
         group: account?.toEmail(),
       }))
 
-      newOptions.push(...spaceOptions)
+      newOptions.push(...spaceOptions, {
+        label: 'Create new space',
+        value: CREATE_NEW_STORACHA_SPACE,
+      })
     }
 
     setOptions(newOptions)
   }, [spaces, account, props.disabled, props.value])
 
   const handleChange = (value: string) => {
-    setSelectedValue(value)
-    if (props.onChange) {
+    if (value === CREATE_NEW_STORACHA_SPACE) {
+      onOpen()
+      return
+    }
+
+    if (props.onChange && value !== CREATE_NEW_STORACHA_SPACE) {
       props.onChange(value)
+      setSelectedValue(value)
     }
   }
 
@@ -107,17 +121,26 @@ export const StorachaSpaceSelect = (props: {
   }
 
   return (
-    <SelectField
-      name={props.name}
-      options={options}
-      value={selectedValue}
-      onChange={handleChange}
-      disabled={props.disabled}
-      defaultValue={options?.[0]?.value}
-      components={{
-        Control: StorachaControl,
-        ValueContainer: StorachaSpaceContainer,
-      }}
-    />
+    <>
+      <SelectField
+        name={props.name}
+        options={options}
+        value={selectedValue}
+        onChange={handleChange}
+        disabled={props.disabled}
+        defaultValue={options?.[0]?.value}
+        components={{
+          Control: StorachaControl,
+          ValueContainer: StorachaSpaceContainer,
+        }}
+      />
+
+      <CreateSpaceModal
+        isOpen={isOpen}
+        onClose={onClose}
+        // @ts-expect-error i don't want to set the prop type in the modal as `Storacha.Account | undefined`
+        account={account as Storacha.Account}
+      />
+    </>
   )
 }
