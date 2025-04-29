@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import Page from './page'
+import Page from './BackupPage'
 import { withAuthContext, withData } from '@/../.storybook/decorators'
 import { Account, Space } from '@storacha/ui-react'
 
@@ -12,9 +12,7 @@ const meta = {
     layout: 'fullscreen',
   },
   args: {
-    params: Promise.resolve({
-      id: '1',
-    }),
+    id: 1,
   },
   decorators: [
     withAuthContext({
