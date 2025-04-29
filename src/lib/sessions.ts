@@ -2,9 +2,9 @@ import { getIronSession, IronSession } from 'iron-session'
 import { getConstants } from '@/lib/server/constants'
 import { cookies } from 'next/headers'
 
-type AccountDID = string
+export type AccountDID = string
 
-interface BBSession {
+export interface BBSession {
   did: AccountDID
 }
 

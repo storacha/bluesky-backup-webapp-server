@@ -29,6 +29,8 @@
     // Storybook right now.
     "src/app/swr.tsx!",
   ],
+  // It's okay to export types even if they aren't (currently) used.
+  "exclude": ["types"],
   "ignoreBinaries": [
     // Per README, we expect psql to be installed on the system.
     "psql",
