@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.2](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.0.1...v1.0.2) (2025-04-29)
+
+
+### Bug Fixes
+
+* **deploy:** use single quotes ([7e6f2f4](https://github.com/storacha/bluesky-backup-webapp-server/commit/7e6f2f489af61889e9c1bea6637afe6c9951bc12))
+* **github:** fix prod deploy step ([ab1004c](https://github.com/storacha/bluesky-backup-webapp-server/commit/ab1004c686f02412748253f40c8464e3533bf515))
+* **github:** fix prod deploy step ([cb13f9c](https://github.com/storacha/bluesky-backup-webapp-server/commit/cb13f9c251a6835ca03cf6e878e5b6f252312284))
+
 ## [1.0.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.0.0...v1.0.1) (2025-04-29)
 
 
