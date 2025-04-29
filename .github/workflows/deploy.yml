@@ -52,7 +52,7 @@ jobs:
       env: production
       workspace: prod
       did: did:key:z6MkiZcHogabH7KUgwt7U2tohC5rUexG5k5iVtWK39c6nUL7
-      apply: ${{ needs.release.outputs.release_created == "true" }}
+      apply: ${{ needs.release.outputs.release_created == 'true' }}
     secrets:
       aws-account-id: ${{ secrets.PROD_AWS_ACCOUNT_ID }}
       aws-region: ${{ secrets.PROD_AWS_REGION }}
