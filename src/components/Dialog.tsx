@@ -115,7 +115,7 @@ export default function Dialog({
 }
 
 // Convenience components for standard dialog actions
-export function DialogActions({
+function DialogActions({
   children,
   className = '',
 }: {
@@ -127,7 +127,7 @@ export function DialogActions({
   )
 }
 
-export function DialogCloseButton({
+function DialogCloseButton({
   onClick,
   children = 'Cancel',
 }: {
@@ -141,7 +141,7 @@ export function DialogCloseButton({
   )
 }
 
-export function DialogConfirmButton({
+function DialogConfirmButton({
   onClick,
   children = 'Confirm',
   isLoading = false,

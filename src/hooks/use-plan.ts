@@ -20,7 +20,7 @@ type UsePlanResult = SWRResponse<PlanGetSuccess | undefined> & {
   setPlan: (plan: DID) => Promise<Result<PlanSetSuccess, PlanSetFailure>>
 }
 
-export const usePlan = (account: Account | undefined) => {
+const usePlan = (account: Account | undefined) => {
   const result = useSWR<PlanGetSuccess | undefined>(
     account && planKey(account),
     {

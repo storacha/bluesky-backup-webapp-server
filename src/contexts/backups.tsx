@@ -10,7 +10,7 @@ type BackupsContextProps = {
   backupsStore: BackupMetadataStore
 }
 
-export const BackupsContext = createContext<BackupsContextProps>({
+const BackupsContext = createContext<BackupsContextProps>({
   backupsStore: backupMetadataStore,
 })
 

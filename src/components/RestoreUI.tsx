@@ -394,7 +394,7 @@ export default function RestoreDialog({ snapshotId }: { snapshotId: number }) {
   )
 }
 
-export function RestoreDialogView({
+function RestoreDialogView({
   sourceSession,
   sinkSession,
   loginToSource,

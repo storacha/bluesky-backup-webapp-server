@@ -26,9 +26,6 @@ importers:
       '@aws-sdk/rds-signer':
         specifier: ^3.787.0
         version: 3.787.0
-      '@dotenvx/dotenvx':
-        specifier: ^1.40.1
-        version: 1.40.1
       '@headlessui/react':
         specifier: ^2.2.0
         version: 2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -77,9 +74,6 @@ importers:
       '@w3ui/react':
         specifier: ^2.5.5
         version: 2.5.5(@types/react@18.3.18)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@web3-storage/w3up-client':
-        specifier: ^17.1.2
-        version: 17.1.2(encoding@0.1.13)
       dexie:
         specifier: ^4.0.11
         version: 4.0.11
@@ -104,9 +98,6 @@ importers:
       postgres:
         specifier: ^3.4.5
         version: 3.4.5
-      postgres-shift:
-        specifier: ^0.1.0
-        version: 0.1.0
       proper-url-join:
         specifier: ^2.1.2
         version: 2.1.2
@@ -144,6 +135,9 @@ importers:
       '@chromatic-com/storybook':
         specifier: ^3.2.5
         version: 3.2.5(react@18.3.1)(storybook@8.6.12(prettier@3.5.3))
+      '@dotenvx/dotenvx':
+        specifier: ^1.40.1
+        version: 1.40.1
       '@eslint/eslintrc':
         specifier: ^3
         version: 3.2.0
@@ -204,6 +198,9 @@ importers:
       postcss-nested:
         specifier: ^7.0.2
         version: 7.0.2(postcss@8.5.2)
+      postgres-shift:
+        specifier: ^0.1.0
+        version: 0.1.0
       prettier:
         specifier: ^3.5.3
         version: 3.5.3

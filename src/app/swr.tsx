@@ -24,9 +24,9 @@ type Fetchable =
   | [['api', '/api/atproto-accounts', Record<string, string>?], string[]]
   | [['atproto-handle', string], string]
 
-export type Key = Fetchable extends [infer T, unknown] ? T : never
+type Key = Fetchable extends [infer T, unknown] ? T : never
 
-export type FetchedData<Args extends Key> = {
+type FetchedData<Args extends Key> = {
   [Each in Fetchable as 'data']: Each extends [infer T, infer U]
     ? Args extends T
       ? U

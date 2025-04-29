@@ -64,7 +64,7 @@ const KeychainContext = createContext<KeychainContextProps>({
   },
 })
 
-export const KeychainProvider = ({
+const KeychainProvider = ({
   children,
 }: {
   children: ReactNode | ReactNode[]
