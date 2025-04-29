@@ -1,18 +1,7 @@
 'use client'
 
-import {
-  generateNewKeyPair,
-  generateNewSymkey,
-  KeyPair,
-  keyParams,
-  keysToKeypair,
-  symkeyParams,
-} from '@/lib/crypto/keys'
-import type { ReactNode } from 'react'
-import { createContext, useContext, useState } from 'react'
-import { useBackupsContext } from './backups'
-import { useLiveQuery } from 'dexie-react-hooks'
-import { useW3 } from '@w3ui/react'
+import { KeyPair, keyParams, symkeyParams } from '@/lib/crypto/keys'
+import { createContext, useContext } from 'react'
 import { KeyMeta } from '@/lib/db'
 import { cidUrl } from '@/lib/storacha'
 
@@ -63,83 +52,6 @@ const KeychainContext = createContext<KeychainContextProps>({
     throw new Error('generateKeyPair is unimplemented')
   },
 })
-
-const KeychainProvider = ({
-  children,
-}: {
-  children: ReactNode | ReactNode[]
-}) => {
-  const { backupsStore } = useBackupsContext()
-  const [selectedKey, setSelectedKey] = useState<Key>()
-  const [storacha] = useW3()
-  async function generateKeyPair() {
-    if (storacha.client) {
-      const keyPair = await generateNewKeyPair()
-      if (keyPair.publicKey) {
-        const symkey = await generateNewSymkey()
-        const cid = await storacha.client.uploadFile(
-          new Blob([
-            await crypto.subtle.encrypt(
-              keyParams,
-              keyPair.publicKey,
-              await crypto.subtle.exportKey('raw', symkey)
-            ),
-          ])
-        )
-        const newKey: Key = await backupsStore.addKey(
-          keyPair.did(),
-          cid.toString()
-        )
-        newKey.keyPair = keyPair
-        setSelectedKey(newKey)
-        return newKey
-      } else {
-        console.warn("keypair was generated without a public key, that's weird")
-      }
-    } else {
-      console.warn(
-        'could not create symmetric key, no storacha client to store it with'
-      )
-    }
-  }
-  const keys = useLiveQuery(() => backupsStore.listKeys())
-  async function importKey(key: Key, keyMaterial: string) {
-    const keys = JSON.parse(keyMaterial)
-    const privateKey = await crypto.subtle.importKey(
-      'jwk',
-      keys.privateKey,
-      keyParams,
-      true,
-      ['decrypt']
-    )
-    const publicKey = await crypto.subtle.importKey(
-      'jwk',
-      keys.publicKey,
-      keyParams,
-      true,
-      ['encrypt']
-    )
-    key.keyPair = await keysToKeypair({ publicKey, privateKey })
-    setSelectedKey(key)
-  }
-  async function forgetKey(key: Key) {
-    await backupsStore.deleteKey(key.id)
-  }
-  return (
-    <KeychainContext.Provider
-      value={{
-        keys: keys ?? [],
-        selectedKey,
-        setSelectedKey,
-        generateKeyPair,
-        importKey,
-        forgetKey,
-      }}
-    >
-      {children}
-    </KeychainContext.Provider>
-  )
-}
 
 export const useKeychainContext = () => {
   return useContext(KeychainContext)

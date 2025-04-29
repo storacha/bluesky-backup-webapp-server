@@ -12,7 +12,6 @@ export const STAGING_UPLOAD_SERVICE_PUBLIC_KEY =
 export const PRODUCTION_UPLOAD_SERVICE_PUBLIC_KEY =
   'did:key:z6MkqdncRZ1wj8zxCTDUQ8CRT8NQWd63T7mZRvZUX8B7XDFi'
 
-const REQUIRED_ATPROTO_SCOPE = 'atproto transition:generic'
 export const ATPROTO_DEFAULT_SOURCE = 'bsky.social'
 export const ATPROTO_DEFAULT_SINK = 'atproto.storacha.network'
 
