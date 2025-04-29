@@ -20,7 +20,13 @@ export const DataBox = ({
   width = '48%',
 }: DataBoxProps) => {
   return (
-    <Box $display='flex' $background="var(--color-white)" $borderStyle="solid" $width={width}>
+    <Box
+      $display="flex"
+      $justifyContent="space-between"
+      $background="var(--color-white)"
+      $borderStyle="solid"
+      $width={width}
+    >
       <Stack>
         <Text $color="var(--color-black)" $textTransform="capitalize">
           {title}

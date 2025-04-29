@@ -80,6 +80,7 @@ export const BlueskyAccountSelect = (props: {
 
   const BskyControl = (props: ControlProps<Option>) => {
     const selectedOption = props.getValue()[0]
+    const hasValue = Boolean(selectedOption?.value)
 
     return (
       <components.Control {...props}>
@@ -95,10 +96,11 @@ export const BlueskyAccountSelect = (props: {
         >
           <Box
             $gap="1rem"
-            $display='flex'
+            $display="flex"
+            $justifyContent='space-between'
             $background={props.hasValue ? 'var(--color-white)' : ''}
           >
-            <AccountLogo $type="original" $hasAccount={props.hasValue}>
+            <AccountLogo $type="original" $hasAccount={hasValue}>
               <Image
                 src={selectedOption?.icon || '/bluesky.png'}
                 alt={`${selectedOption?.label || 'Bluesky'} Logo`}
@@ -106,12 +108,8 @@ export const BlueskyAccountSelect = (props: {
                 height={25}
               />
             </AccountLogo>
-            <Stack
-              $justifyContent="space-between"
-              $direction="row"
-              $gap="1rem"
-            >
-              <Stack $gap=".6rem">
+            <Stack $justifyContent="space-between" $direction="row" $width="85%">
+              <Stack $gap=".6rem" $border="1px solid red">
                 <Text $color="var(--color-black)">Bluesky Account</Text>
                 <Text>{selectedOption?.label}</Text>
               </Stack>
@@ -124,7 +122,7 @@ export const BlueskyAccountSelect = (props: {
               ) : (
                 <CaretDown size="16" color="var(--color-gray-1)" />
               )}
-            </Stack>{' '}
+            </Stack>
           </Box>
         </div>
       </components.Control>

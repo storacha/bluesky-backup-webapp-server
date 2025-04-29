@@ -10,7 +10,6 @@ import { Account } from '@storacha/ui-react'
 import { BlueskyAccountSelect } from '@/components/Backup/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/Backup/StorachaSpaceSelect'
 import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
-// import { PlusCircle } from '@phosphor-icons/react'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { CreateButton } from '@/components/ui/CreateButton'
 
@@ -41,6 +40,21 @@ const AccountsContainer = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+  width: 100%;
+`
+
+const Wrapper = styled.div`
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+`
+
+const ConnectingLine = styled.div`
+  width: 30px;
+  height: 1px;
+  background-color: var(--color-gray-light);
+  margin: 0;
+  flex-shrink: 0;
 `
 
 export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
@@ -54,19 +68,12 @@ export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
   height: ${({ $height = '66px' }) => $height};
   width: ${({ $width = '100%' }) => $width};
   display: ${({ $display = '' }) => $display};
-  justify-content: space-between;
+  justify-content: ${({ $justifyContent = '' }) => $justifyContent};
   align-items: center;
   padding: ${({ $padding = '0 0.6rem' }) => $padding};
   gap: ${({ $gap = 0 }) => $gap};
   cursor: pointer;
   background: ${({ $background = '' }) => $background};
-`
-
-const ConnectingLine = styled.div`
-  width: 30px;
-  height: 1px;
-  background-color: var(--color-gray-light);
-  margin: 0;
 `
 
 export const AccountLogo = styled.div<{
@@ -107,12 +114,6 @@ const DATA_BOXES: DataConfig[] = [
     key: 'blobs',
     name: 'include_blobs',
   },
-  // {
-  //   title: 'preferences',
-  //   description: 'Subscriptions, Feeds...',
-  //   key: 'preferences',
-  //   name: 'include_preferences',
-  // },
 ]
 
 function BackupContainer({
@@ -155,13 +156,6 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
     }))
   }
 
-  // const openModal = () => {
-  //   onOpen()
-  //   updateUiStore({
-  //     ui: 'keychain',
-  //   })
-  // }
-
   return (
     <>
       <BackupContainer backup={backup}>
@@ -176,28 +170,27 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
           )}
           <Stack $gap="1rem">
             <AccountsContainer>
-              <BlueskyAccountSelect
-                name="atproto_account"
-                {...(backup && {
-                  disabled: true,
-                  value: backup.atprotoAccount,
-                })}
-              />
+              <Wrapper>
+                <BlueskyAccountSelect
+                  name="atproto_account"
+                  {...(backup && {
+                    disabled: true,
+                    value: backup.atprotoAccount,
+                  })}
+                />
+              </Wrapper>
               <ConnectingLine />
-              <StorachaSpaceSelect
-                name="storacha_space"
-                {...(backup && { disabled: true, value: backup.storachaSpace })}
-              />
+              <Wrapper>
+                <StorachaSpaceSelect
+                  name="storacha_space"
+                  {...(backup && {
+                    disabled: true,
+                    value: backup.storachaSpace,
+                  })}
+                />
+              </Wrapper>
             </AccountsContainer>
           </Stack>
-
-          {/* <Stack $gap="1.25rem" onClick={openModal}>
-            <Text $textTransform="capitalize">keychain</Text>
-            <Box $height="44px" $width="48%" $display="flex">
-              <Text $textTransform="capitalize">create keychain</Text>
-              <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
-            </Box>
-          </Stack> */}
 
           <Stack $gap="1.25rem">
             <Text $textTransform="capitalize">data</Text>

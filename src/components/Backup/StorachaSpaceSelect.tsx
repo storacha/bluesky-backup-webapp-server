@@ -78,8 +78,8 @@ export const StorachaSpaceSelect = (props: {
         <Box
           $gap="1rem"
           $display="flex"
+          $justifyContent='space-between'
           $background={hasValue ? 'var(--color-white)' : ''}
-          $width="fit-content"
           $isFocused={props.isFocused}
         >
           <AccountLogo $type="original" $hasAccount={hasValue}>
@@ -90,7 +90,7 @@ export const StorachaSpaceSelect = (props: {
               height={18}
             />
           </AccountLogo>
-          <Stack $justifyContent="space-between" $direction="row" $gap="1rem">
+          <Stack $justifyContent="space-between" $direction="row" $width="85%">
             <Stack $gap=".6rem">
               <Text $color="var(--color-black)">Storacha Space</Text>
               <Text>{selectedOption?.label || options?.[0]?.label}</Text>
