@@ -1,5 +1,6 @@
 import { Property } from 'csstype'
 import { styled } from 'next-yak'
+import { StyleProps } from './style'
 
 export interface TextProps {
   $color?: Property.Color
@@ -14,7 +15,7 @@ export interface TextProps {
   // perhaps in the future
 }
 
-export const Text = styled.p<TextProps>`
+export const Text = styled.p<TextProps & Partial<StyleProps>>`
   color: ${({ $color = 'var(--color-gray-medium)' }) => $color};
   font-size: ${({ $fontSize = '0.75rem' }) => $fontSize};
   text-align: ${({ $textAlign = '' }) => $textAlign};
@@ -23,4 +24,5 @@ export const Text = styled.p<TextProps>`
   word-spacing: ${({ $wordSpacing = '' }) => $wordSpacing};
   letter-spacing: ${({ $letterSpacing = '' }) => $letterSpacing};
   text-transform: ${({ $textTransform = 'none' }) => $textTransform};
+  width: ${({ $width = '' }) => $width};
 `

@@ -1,15 +1,7 @@
 import { css, styled } from 'next-yak'
-import { Property } from 'csstype'
+import { StyleProps } from './style'
 
-export const Stack = styled.div<{
-  $direction?: Property.FlexDirection
-  $gap?: Property.Gap
-  $justifyContent?: Property.JustifyContent
-  $even?: boolean
-  $alignItems?: Property.AlignItems
-  $wrap?: Property.FlexWrap
-  $width?: Property.Width
-}>`
+export const Stack = styled.div<{ $even?: boolean } & Partial<StyleProps>>`
   display: flex;
   flex-direction: ${({ $direction = 'column' }) => $direction};
   justify-content: ${({ $justifyContent = 'flex-start' }) => $justifyContent};

@@ -1,5 +1,5 @@
 import { styled } from 'next-yak'
-import { Box, Container, Heading, SubHeading } from './Backup'
+import { Box, Container, Heading, SubHeading } from './BackupDetail'
 import { Button, Center, Modal, Stack, Text } from '../ui'
 import { Snapshot, Backup } from '@/app/types'
 import useSWR from 'swr'

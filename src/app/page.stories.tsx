@@ -44,6 +44,7 @@ export const LoggedIn: Story = {
       {
         accounts: [
           {
+            did: () => 'did:mailto:gmail.com:timothy-chalamet',
             toEmail: () => 'timothy-chalamet@gmail.com',
           } as unknown as Account,
         ],

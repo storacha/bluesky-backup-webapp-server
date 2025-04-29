@@ -29,7 +29,7 @@ import Keychain from './Keychain'
 import { cidUrl } from '@/lib/storacha'
 import { ATBlob, Snapshot } from '@/app/types'
 import useSWR from 'swr'
-import { Box } from './Backup/Backup'
+import { Box } from './BackupScreen/BackupDetail'
 import { styled } from 'next-yak'
 import { roundRectStyle } from './ui'
 
