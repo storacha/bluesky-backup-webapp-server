@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Modal, Stack, StyleProps, Text } from '../ui'
+import { Modal, Stack, StyleProps, Text } from '../ui'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
 import { DataBox } from './Data'
