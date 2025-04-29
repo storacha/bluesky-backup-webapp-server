@@ -2,11 +2,6 @@
 
 import { UnknownLink } from '@w3ui/react'
 
-const B = 1024
-const MB = 1024 * B
-const GB = 1024 * MB
-const TB = 1024 * GB
-
 export function shortenCID(cid: UnknownLink | string) {
   return shorten(cid.toString(), 5, 4)
 }
@@ -25,11 +20,4 @@ export function shorten(
 
 export function formatDate(date: string) {
   return new Date(date).toLocaleString()
-}
-
-function filesize(bytes: number) {
-  if (bytes < B / 2) return `${bytes}B` // avoid 0.0KB
-  if (bytes < MB / 2) return `${(bytes / 1024).toFixed(1)}KB` // avoid 0.0MB
-  if (bytes < GB / 2) return `${(bytes / 1024 / 1024).toFixed(1)}MB` // avoid 0.0GB
-  return `${(bytes / 1024 / 1024 / 1024).toFixed(1)}GB`
 }

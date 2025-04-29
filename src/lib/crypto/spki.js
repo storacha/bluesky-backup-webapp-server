@@ -1,5 +1,4 @@
-// eslint-disable-next-line
-import * as API from '@ucanto/interface'
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   encodeSequence,
   encodeBitString,
@@ -7,6 +6,10 @@ import {
   skipSequence,
   readBitString,
 } from './asn1.js'
+
+/**
+ * @import * as API from '@ucanto/interface'
+ */
 
 /**
  * UTILITIES COPIED FROM @ucanto/principal
