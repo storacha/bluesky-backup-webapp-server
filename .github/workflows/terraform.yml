@@ -55,6 +55,9 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/terraform-ci
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
       - uses: opentofu/setup-opentofu@v1
 
       - name: Tofu Init
