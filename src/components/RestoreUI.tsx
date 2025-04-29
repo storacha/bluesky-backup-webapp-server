@@ -23,7 +23,7 @@ import {
 } from '@heroicons/react/20/solid'
 import { shortenDID } from '@/lib/ui'
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
-import { Button } from './ui/Button'
+import Button from './Button'
 import { Key, useKeychainContext } from '@/contexts/keychain'
 import Keychain from './Keychain'
 import { cidUrl } from '@/lib/storacha'
