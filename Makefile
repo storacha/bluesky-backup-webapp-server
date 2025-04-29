@@ -68,7 +68,7 @@ deploy/shared/.terraform:
 	TF_WORKSPACE=default tofu -chdir=deploy/shared init -backend-config="key=storacha/$(TF_VAR_app)/shared.tfstate"
 
 .tfworkspace:
-	tofu -chdir=deploy/app workspace new $(TF_WORKSPACE)
+	tofu -chdir=deploy/app workspace new $(TF_WORKSPACE) 
 	touch .tfworkspace
 
 .PHONY: init
@@ -156,12 +156,12 @@ db-migrate:
 	--task-definition $(TF_WORKSPACE)-$(TF_VAR_app) \
 	--count 1 \
   --launch-type FARGATE \
-	--overrides '{ \
-  	"containerOverrides": [ \
+	--overrides "{ \
+  	\"containerOverrides\": [ \
     	{ \
-			  "name": "first", \
-    		"command": ["node", "scripts/migrate/index.mjs"] \
+			  \"name\": \"first\", \
+    		\"command\": [\"node\", \"scripts/migrate/index.mjs\"] \
 			} \
 		] \
-	}' \
+	}" \
    --network-configuration '$(shell aws ecs describe-services --cluster $(TF_WORKSPACE)-$(TF_VAR_app)-cluster --service $(TF_WORKSPACE)-$(TF_VAR_app)-service --query "services[0].networkConfiguration")'
