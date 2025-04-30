@@ -5,10 +5,11 @@ import { useEffect, useState } from 'react'
 import { Stack, Text } from '../ui'
 import { CaretDown, PlusCircle } from '@phosphor-icons/react'
 import { SelectField, Option } from '../ui'
-import { ControlProps, components } from 'react-select'
+import { ControlProps, ValueContainerProps, components } from 'react-select'
 import { AccountLogo, Box } from './BackupDetail'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { shortenDID } from '@/lib/ui'
 
 const LOG_INTO_BLUESKY_VALUE = '-connect-'
 
@@ -18,9 +19,6 @@ export const BlueskyAccountSelect = (props: {
   onChange?: (value: string) => void
   disabled?: boolean
 }) => {
-  // const { isOpen, onOpen, onClose } = useDisclosure({
-  //   component: 'bsky-account',
-  // })
   const router = useRouter()
   const [{ accounts }] = useAuthenticator()
   const account = accounts[0]
@@ -48,21 +46,17 @@ export const BlueskyAccountSelect = (props: {
 
     const newOptions: Option[] = []
 
-    if (!atprotoAccounts) {
-      newOptions.push({
+    if (atprotoAccounts) {
+      const bskyAccounts = atprotoAccounts.map((account) => ({
+        value: account,
+        label: shortenDID(account),
+      }))
+
+      newOptions.push(...bskyAccounts, {
+        label: 'Connect Bluesky account',
         value: LOG_INTO_BLUESKY_VALUE,
-        label: 'Connect a Bluesky account…',
-        icon: '/bluesky.png',
       })
     }
-
-    atprotoAccounts?.forEach((account) => {
-      newOptions.push({
-        value: account,
-        label: `@${account.split('.')[0]}`,
-        icon: '/bluesky.png',
-      })
-    })
 
     setOptions(newOptions)
   }, [atprotoAccounts, props.disabled, props.value])
@@ -73,33 +67,25 @@ export const BlueskyAccountSelect = (props: {
       return
     }
 
-    setSelectedValue(value)
     if (props.onChange) {
+      setSelectedValue(value)
       props.onChange(value)
     }
   }
 
   const BskyControl = (props: ControlProps<Option>) => {
     const selectedOption = props.getValue()[0]
-    const hasValue = Boolean(selectedOption?.value)
+    const hasValue = Boolean(selectedOption?.value || options?.[0]?.label)
 
     return (
       <components.Control {...props}>
-        <div
-          style={{ width: '100%', cursor: 'pointer' }}
-          onClick={(e) => {
-            if (!atprotoAccounts) {
-              e.preventDefault()
-              e.stopPropagation()
-              router.push('/atproto/connect')
-            }
-          }}
-        >
+        <div style={{ width: '100%', cursor: 'pointer' }}>
           <Box
             $gap="1rem"
             $display="flex"
-            $justifyContent='space-between'
+            $justifyContent="space-between"
             $background={props.hasValue ? 'var(--color-white)' : ''}
+            $isFocused={props.isFocused}
           >
             <AccountLogo $type="original" $hasAccount={hasValue}>
               <Image
@@ -109,10 +95,14 @@ export const BlueskyAccountSelect = (props: {
                 height={25}
               />
             </AccountLogo>
-            <Stack $justifyContent="space-between" $direction="row" $width="85%">
+            <Stack
+              $justifyContent="space-between"
+              $direction="row"
+              $width="85%"
+            >
               <Stack $gap=".6rem">
                 <Text $color="var(--color-black)">Bluesky Account</Text>
-                <Text>{selectedOption?.label}</Text>
+                <Text>{selectedOption?.label || 'Select account'}</Text>
               </Stack>
               {!atprotoAccounts ? (
                 <PlusCircle
@@ -125,25 +115,42 @@ export const BlueskyAccountSelect = (props: {
               )}
             </Stack>
           </Box>
+          <div
+            style={{
+              position: 'absolute',
+              opacity: 0,
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            {props.children}
+          </div>
         </div>
       </components.Control>
     )
   }
 
-  return (
-    <>
-      <SelectField
-        name={props.name}
-        options={options}
-        value={selectedValue}
-        onChange={handleChange}
-        disabled={props.disabled}
-        components={{
-          Control: BskyControl,
-        }}
-      />
+  const BskyAccountsContainer = (props: ValueContainerProps<Option>) => {
+    return (
+      <components.ValueContainer {...props}>
+        <div style={{ visibility: 'hidden', height: 0, position: 'absolute' }}>
+          {props.children}
+        </div>
+      </components.ValueContainer>
+    )
+  }
 
-      {/* <AddBskyAccountModal isOpen={isOpen} onClose={onClose} /> */}
-    </>
+  return (
+    <SelectField
+      name={props.name}
+      options={options}
+      value={selectedValue}
+      onChange={handleChange}
+      disabled={props.disabled}
+      components={{
+        Control: BskyControl,
+        ValueContainer: BskyAccountsContainer,
+      }}
+    />
   )
 }

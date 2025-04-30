@@ -43,13 +43,15 @@ export const CreateSpaceModal = ({
     try {
       setState('creating-space')
       const space = await storacha.client?.createSpace(spaceName, { account })
-      if (!space) throw new Error('Failed to create space')
+      // if (!space)
 
-      const key = StorachaSpace.toMnemonic(space)
-      setRecoveryKey(key)
-      setCreatedSpace(space)
-      setSpaceCreationStep('recovery-phase')
-      toast.success(`${shorten(spaceName)} created!`)
+      if (space) {
+        const key = StorachaSpace.toMnemonic(space)
+        setRecoveryKey(key)
+        setCreatedSpace(space)
+        setSpaceCreationStep('recovery-phase')
+        toast.success(`${shorten(spaceName)} created!`)
+      }
     } catch (error) {
       console.error(error)
       toast.error(`Error ${(error as Error).message}`)
