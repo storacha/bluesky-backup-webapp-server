@@ -1,6 +1,6 @@
 'use client'
 
-import { Modal, Stack, StyleProps, Text } from '../ui'
+import { Stack, StyleProps, Text } from '../ui'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
 import { DataBox } from './Data'
@@ -9,7 +9,6 @@ import { Account } from '@storacha/ui-react'
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
 import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
-import { useDisclosure } from '@/hooks/use-disclosure'
 import { CreateButton } from '@/components/ui/CreateButton'
 
 let action: typeof import('@/app/backups/new/action').action
