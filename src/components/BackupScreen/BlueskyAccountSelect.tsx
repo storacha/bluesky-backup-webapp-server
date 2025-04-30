@@ -102,7 +102,7 @@ export const BlueskyAccountSelect = (props: {
             >
               <Stack $gap=".6rem">
                 <Text $color="var(--color-black)">Bluesky Account</Text>
-                <Text>{selectedOption?.label || 'Select account'}</Text>
+                <Text>{selectedOption?.label || options?.[0]?.label}</Text>
               </Stack>
               {!atprotoAccounts ? (
                 <PlusCircle
@@ -147,6 +147,7 @@ export const BlueskyAccountSelect = (props: {
       value={selectedValue}
       onChange={handleChange}
       disabled={props.disabled}
+      defaultValue={options?.[0]?.value}
       components={{
         Control: BskyControl,
         ValueContainer: BskyAccountsContainer,

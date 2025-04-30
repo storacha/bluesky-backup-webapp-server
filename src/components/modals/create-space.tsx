@@ -20,12 +20,14 @@ type SpaceCreationState = 'idle' | 'creating-space' | 'creating-delegation'
 
 interface CreateSpaceModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
   account: Storacha.Account
+  onSpaceCreated?: (spaceId: string) => void
 }
 
 export const CreateSpaceModal = ({
   isOpen,
   onClose,
   account,
+  onSpaceCreated,
 }: CreateSpaceModalProps) => {
   const [state, setState] = useState<SpaceCreationState>('idle')
   const [spaceName, setSpaceName] = useState<string>('')
@@ -43,7 +45,6 @@ export const CreateSpaceModal = ({
     try {
       setState('creating-space')
       const space = await storacha.client?.createSpace(spaceName, { account })
-      // if (!space)
 
       if (space) {
         const key = StorachaSpace.toMnemonic(space)
@@ -70,6 +71,11 @@ export const CreateSpaceModal = ({
         space: createdSpace.did(),
         delegations: [recovery],
       })
+
+      if (onSpaceCreated) {
+        onSpaceCreated(createdSpace.did())
+      }
+      onClose()
     } catch (error) {
       console.error(error)
       toast.error(`Error ${(error as Error).message}`)
@@ -90,14 +96,25 @@ export const CreateSpaceModal = ({
     }
   }
 
+  const handleClose = () => {
+    setSpaceName('')
+    setSpaceCreationStep('space-name')
+    setRecoveryKey('')
+    setCreatedSpace(null)
+    setHasCopiedKey(false)
+    setState('idle')
+
+    onClose()
+  }
+
   return (
     <Modal
       size="lg"
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       background="var(--color-light-blue-100)"
     >
-      <SharedModalLayout title="Create a new space" onClose={onClose}>
+      <SharedModalLayout title="Create a new space" onClose={handleClose}>
         <Box
           $width="62%"
           $height="100%"
@@ -133,7 +150,7 @@ export const CreateSpaceModal = ({
             <Stack $gap="1.2rem" $width="100%">
               <Text>
                 You need to save the following secret recovery key somewhere
-                safe! For example write it down on a piece of papaer and put it
+                safe! For example write it down on a piece of paper and put it
                 inside your favorite book.
               </Text>
               <Stack $gap="1rem">
@@ -166,7 +183,7 @@ export const CreateSpaceModal = ({
                 >
                   {state === 'creating-delegation'
                     ? 'Securing recovery...'
-                    : 'Create delegation'}
+                    : 'Create delegation & Complete'}
                 </StatefulButton>
               </Stack>
             </Stack>

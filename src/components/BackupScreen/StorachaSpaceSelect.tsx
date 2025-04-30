@@ -11,7 +11,7 @@ import { useDisclosure } from '@/hooks/use-disclosure'
 import { CreateSpaceModal } from '../modals'
 import * as Storacha from '@web3-storage/w3up-client/account'
 
-const CREATE_NEW_STORACHA_SPACE = 'ss'
+const CREATE_NEW_STORACHA_SPACE = 'create_new_space' // Changed from 'ss' to be more descriptive
 
 export const StorachaSpaceSelect = (props: {
   name: string
@@ -26,6 +26,8 @@ export const StorachaSpaceSelect = (props: {
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
     props.value
   )
+
+  const [, setLastValidSpace] = useState<string | undefined>(props.value)
 
   useEffect(() => {
     if (props.disabled && props.value) {
@@ -67,7 +69,17 @@ export const StorachaSpaceSelect = (props: {
     if (props.onChange && value !== CREATE_NEW_STORACHA_SPACE) {
       props.onChange(value)
       setSelectedValue(value)
+      setLastValidSpace(value)
     }
+  }
+
+  const handleSpaceCreated = (newSpaceId: string) => {
+    if (props.onChange) {
+      props.onChange(newSpaceId)
+      setSelectedValue(newSpaceId)
+      setLastValidSpace(newSpaceId)
+    }
+    onClose()
   }
 
   const StorachaControl = (props: ControlProps<Option>) => {
@@ -140,6 +152,7 @@ export const StorachaSpaceSelect = (props: {
         onClose={onClose}
         // @ts-expect-error i don't want to set the prop type in the modal as `Storacha.Account | undefined`
         account={account as Storacha.Account}
+        onSpaceCreated={handleSpaceCreated}
       />
     </>
   )
