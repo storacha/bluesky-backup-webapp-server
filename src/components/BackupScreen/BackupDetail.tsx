@@ -142,7 +142,6 @@ function BackupContainer({
 }
 
 export const BackupDetail = ({ account, backup }: BackupProps) => {
-  const { isOpen, onClose } = useDisclosure()
   const [data, setData] = useState<Record<string, boolean>>({
     repository: true,
     blobs: false,
@@ -223,17 +222,6 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
           )}
         </Stack>
       </BackupContainer>
-
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        title="UI store persistence!"
-        hasCloseBtn
-      >
-        <Box $borderStyle="none">
-          <Text>Testing the ui store thingy!</Text>
-        </Box>
-      </Modal>
     </>
   )
 }
