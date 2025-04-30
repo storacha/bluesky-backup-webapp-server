@@ -9,12 +9,12 @@ import {
 } from '../ui'
 import { SharedModalLayout } from './layout'
 import { Box } from '../BackupScreen/BackupDetail'
-import { useW3 } from '@w3ui/react'
-import * as StorachaSpace from '@web3-storage/w3up-client/space'
-import * as Storacha from '@web3-storage/w3up-client/account'
+import * as StorachaSpace from '@storacha/client/space'
+import * as Storacha from '@storacha/client/account'
 import { toast } from 'sonner'
 import { shorten } from '@/lib/ui'
 import { CheckCircle, Copy } from '@phosphor-icons/react'
+import * as Client from '@storacha/client'
 
 type SpaceCreationState = 'idle' | 'creating-space' | 'creating-delegation'
 
@@ -34,17 +34,17 @@ export const CreateSpaceModal = ({
   const [spaceCreationStep, setSpaceCreationStep] = useState<
     'space-name' | 'recovery-phase'
   >('space-name')
-
-  const [storacha] = useW3()
   const [recoveryKey, setRecoveryKey] = useState<string>('')
   const [createdSpace, setCreatedSpace] =
     useState<StorachaSpace.OwnedSpace | null>(null)
   const [hasCopiedKey, setHasCopiedKey] = useState<boolean>(false)
 
   const createSpace = async () => {
+    const client = await Client.create()
+
     try {
       setState('creating-space')
-      const space = await storacha.client?.createSpace(spaceName, { account })
+      const space = await client.createSpace(spaceName, { account })
 
       if (space) {
         const key = StorachaSpace.toMnemonic(space)
@@ -63,13 +63,14 @@ export const CreateSpaceModal = ({
 
   const createDelegationForSpace = async () => {
     if (!createdSpace) return
+    const client = await Client.create()
 
     try {
       setState('creating-delegation')
       const recovery = await createdSpace.createRecovery(account.did())
-      await storacha.client?.capability.access.delegate({
+      await client.capability.access.delegate({
         space: createdSpace.did(),
-        delegations: [recovery],
+        delegations: [recovery]
       })
 
       if (onSpaceCreated) {

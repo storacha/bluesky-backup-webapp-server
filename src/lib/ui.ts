@@ -10,7 +10,11 @@ export function shortenDID(did: string) {
   return shorten(did, 14, 4)
 }
 
-export function shorten(text: string, front: number = 3, back: number = 3): string {
+export function shorten(
+  text: string,
+  front: number = 3,
+  back: number = 3
+): string {
   return `${text.slice(0, front)}…${text.slice(-back)}`
 }
 

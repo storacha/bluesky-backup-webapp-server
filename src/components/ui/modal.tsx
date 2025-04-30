@@ -32,13 +32,14 @@ const Dialog = styled.dialog<{ $background?: string; $size: ModalSize }>`
   position: relative;
   border-radius: 0.75rem;
   max-width: 95vw;
-  transform: scale(0.5);
   transition: all 0.3s ease-in;
   animation: enter 0.2s ease-in forwards;
   background: ${({ $background = 'var(--color-white)' }) => $background};
 
   @keyframes enter {
-    to {
+    from {
+     transform: scale(0.5);
+    } to {
       transform: scale(1);
     }
   }

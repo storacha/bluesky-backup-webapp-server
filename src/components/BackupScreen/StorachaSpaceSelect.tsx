@@ -9,9 +9,9 @@ import Image from 'next/image'
 import { ControlProps, ValueContainerProps, components } from 'react-select'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { CreateSpaceModal } from '../modals'
-import * as Storacha from '@web3-storage/w3up-client/account'
+import * as Storacha from '@storacha/client'
 
-const CREATE_NEW_STORACHA_SPACE = 'create_new_space' // Changed from 'ss' to be more descriptive
+const CREATE_NEW_STORACHA_SPACE = 'create_new_space'
 
 export const StorachaSpaceSelect = (props: {
   name: string
