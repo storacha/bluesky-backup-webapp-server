@@ -5,7 +5,7 @@ import { useQueryStates, createParser } from 'nuqs'
 // we'll update this as time goes on
 export type UiComponents = 'snapshots' | 'bsky-account' | 'keychain' | '' // we need to fallback to an empty string union here to accommodate the default value for the parser
 
-export const uiComponentParser = createParser({
+const uiComponentParser = createParser({
   parse: (value: string) => {
     if (value) return value as UiComponents
     return null

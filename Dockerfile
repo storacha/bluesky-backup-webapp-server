@@ -37,7 +37,7 @@ RUN \
   fi
 
 RUN \
-  npx ncc build scripts/migrate.mjs -o build/scripts/migrate
+  pnpm ncc build scripts/migrate.mjs -o build/scripts/migrate
 
 
 # Production image, copy all the files and run next

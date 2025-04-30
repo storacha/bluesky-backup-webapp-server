@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * UTILITIES COPIED FROM @ucanto/principal
  *
@@ -8,20 +9,20 @@
  * ASN1 Tags as per https://luca.ntop.org/Teaching/Appunti/asn1.html
  */
 const TAG_SIZE = 1
-export const INT_TAG = 0x02
-export const BITSTRING_TAG = 0x03
-export const OCTET_STRING_TAG = 0x04
-export const NULL_TAG = 0x05
-export const OBJECT_TAG = 0x06
-export const SEQUENCE_TAG = 0x30
+const INT_TAG = 0x02
+const BITSTRING_TAG = 0x03
+const OCTET_STRING_TAG = 0x04
+const NULL_TAG = 0x05
+const OBJECT_TAG = 0x06
+const SEQUENCE_TAG = 0x30
 
-export const UNUSED_BIT_PAD = 0x00
+const UNUSED_BIT_PAD = 0x00
 
 /**
  * @param {number} length
  * @returns {Uint8Array}
  */
-export const encodeDERLength = (length) => {
+const encodeDERLength = (length) => {
   if (length <= 127) {
     return new Uint8Array([length])
   }
@@ -41,7 +42,7 @@ export const encodeDERLength = (length) => {
  * @param {number} offset
  * @returns {{number: number, consumed: number}}
  */
-export const readDERLength = (bytes, offset = 0) => {
+const readDERLength = (bytes, offset = 0) => {
   if ((bytes[offset] & 0x80) === 0) {
     return { number: bytes[offset], consumed: 1 }
   }
@@ -69,7 +70,7 @@ export const readDERLength = (bytes, offset = 0) => {
  * @param {number} position
  * @returns {number}
  */
-export const skip = (input, expectedTag, position) => {
+const skip = (input, expectedTag, position) => {
   const parsed = into(input, expectedTag, position)
   return parsed.position + parsed.length
 }
@@ -80,7 +81,7 @@ export const skip = (input, expectedTag, position) => {
  * @param {number} offset
  * @returns {{ position: number, length: number }}
  */
-export const into = (input, expectedTag, offset) => {
+const into = (input, expectedTag, offset) => {
   const actualTag = input[offset]
   /* c8 ignore next 7 */
   if (actualTag !== expectedTag) {
@@ -135,7 +136,7 @@ export const encodeBitString = (input) => {
 /**
  * @param {Uint8Array} input
  */
-export const encodeOctetString = (input) => {
+const encodeOctetString = (input) => {
   // encode input length
   const length = encodeDERLength(input.byteLength)
   // allocate a buffer of desired size
@@ -195,7 +196,7 @@ export const encodeSequence = (sequence) => {
  * @param {Uint8Array} bytes
  * @param {number} offset
  */
-export const readSequence = (bytes, offset = 0) => {
+const readSequence = (bytes, offset = 0) => {
   const { position, length } = into(bytes, SEQUENCE_TAG, offset)
 
   return new Uint8Array(bytes.buffer, bytes.byteOffset + position, length)
@@ -204,7 +205,7 @@ export const readSequence = (bytes, offset = 0) => {
 /**
  * @param {Uint8Array} input
  */
-export const encodeInt = (input) => {
+const encodeInt = (input) => {
   const extra = input.byteLength === 0 || input[0] & 0x80 ? 1 : 0
 
   // encode input length
@@ -260,7 +261,7 @@ export const skipSequence = (bytes, offset = 0) =>
  * @param {number} offset
  * @returns {number}
  */
-export const skipInt = (bytes, offset = 0) => skip(bytes, INT_TAG, offset)
+const skipInt = (bytes, offset = 0) => skip(bytes, INT_TAG, offset)
 
 /**
  * @param {Uint8Array} bytes
@@ -289,7 +290,7 @@ export const readBitString = (bytes, offset = 0) => {
  * @param {number} byteOffset
  * @returns {Uint8Array}
  */
-export const readInt = (bytes, byteOffset = 0) => {
+const readInt = (bytes, byteOffset = 0) => {
   const { position, length } = into(bytes, INT_TAG, byteOffset)
   let delta = 0
 
@@ -310,7 +311,7 @@ export const readInt = (bytes, byteOffset = 0) => {
  * @param {number} offset
  * @returns {Uint8Array}
  */
-export const readOctetString = (bytes, offset = 0) => {
+const readOctetString = (bytes, offset = 0) => {
   const { position, length } = into(bytes, OCTET_STRING_TAG, offset)
 
   return new Uint8Array(bytes.buffer, bytes.byteOffset + position, length)
@@ -322,7 +323,7 @@ export const readOctetString = (bytes, offset = 0) => {
  * @param {Uint8Array} source
  * @param {number} byteOffset
  */
-export const readSequenceWith = (readers, source, byteOffset = 0) => {
+const readSequenceWith = (readers, source, byteOffset = 0) => {
   const results = []
   const sequence = readSequence(source, byteOffset)
   let offset = 0

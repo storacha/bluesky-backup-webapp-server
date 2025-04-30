@@ -1,5 +1,4 @@
-// eslint-disable-next-line
-import * as API from '@ucanto/interface'
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   encodeSequence,
   encodeBitString,
@@ -9,14 +8,20 @@ import {
 } from './asn1.js'
 
 /**
+ * @import * as API from '@ucanto/interface'
+ */
+
+/**
  * UTILITIES COPIED FROM @ucanto/principal
  *
  * TODO: EXPOSE FROM @ucanto/principal OR PULL TO A SHARED LIBRARY
  */
 
-/**
- * @typedef {import('./public-key.js').RSAPublicKey} RSAPublicKey
- */
+// (Broken reference from copied code.)
+// /**
+//  * @typedef {import('./public-key.js').RSAPublicKey} RSAPublicKey
+//  */
+
 /**
  * Described in RFC 5208 Section 4.1: https://tools.ietf.org/html/rfc5280#section-4.1
  * ```
@@ -28,8 +33,10 @@ import {
  * @typedef {object} SubjectPublicKeyInfo
  * @property {API.ByteView<AlgorithmIdentifier>} algorithm
  * @property {API.ByteView<RSAPublicKey>} subjectPublicKey
- * @typedef {import('./pkcs8.js').AlgorithmIdentifier} AlgorithmIdentifier
  */
+
+// (Broken reference from copied code.)
+// * @typedef {import('./pkcs8.js').AlgorithmIdentifier} AlgorithmIdentifier
 
 /**
  * The ASN.1 DER encoded header that needs to be added to an
@@ -46,7 +53,7 @@ import {
  *
  * See https://github.com/ucan-wg/ts-ucan/issues/30
  */
-export const SPKI_PARAMS_ENCODED = new Uint8Array([
+const SPKI_PARAMS_ENCODED = new Uint8Array([
   48, 13, 6, 9, 42, 134, 72, 134, 247, 13, 1, 1, 1, 5, 0,
 ])
 
@@ -54,7 +61,7 @@ export const SPKI_PARAMS_ENCODED = new Uint8Array([
  * @param {API.ByteView<RSAPublicKey>} key
  * @returns {API.ByteView<SubjectPublicKeyInfo>}
  */
-export const encode = (key) =>
+const encode = (key) =>
   encodeSequence([SPKI_PARAMS_ENCODED, encodeBitString(key)])
 
 /**

@@ -3,9 +3,8 @@
 import { Dialog as HeadlessDialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import React, { Fragment } from 'react'
-import Button from './Button'
 
-export interface DialogProps {
+interface DialogProps {
   isOpen: boolean
   onClose: () => void
   title?: React.ReactNode
@@ -111,55 +110,5 @@ export default function Dialog({
         </div>
       </HeadlessDialog>
     </Transition>
-  )
-}
-
-// Convenience components for standard dialog actions
-export function DialogActions({
-  children,
-  className = '',
-}: {
-  children: React.ReactNode
-  className?: string
-}) {
-  return (
-    <div className={`mt-6 flex justify-end gap-2 ${className}`}>{children}</div>
-  )
-}
-
-export function DialogCloseButton({
-  onClick,
-  children = 'Cancel',
-}: {
-  onClick: () => void
-  children?: React.ReactNode
-}) {
-  return (
-    <Button variant="secondary" onClick={onClick}>
-      {children}
-    </Button>
-  )
-}
-
-export function DialogConfirmButton({
-  onClick,
-  children = 'Confirm',
-  isLoading = false,
-  disabled = false,
-}: {
-  onClick: () => void
-  children?: React.ReactNode
-  isLoading?: boolean
-  disabled?: boolean
-}) {
-  return (
-    <Button
-      variant="primary"
-      onClick={onClick}
-      isLoading={isLoading}
-      disabled={disabled}
-    >
-      {children}
-    </Button>
   )
 }

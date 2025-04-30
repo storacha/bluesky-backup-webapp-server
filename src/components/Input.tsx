@@ -7,7 +7,7 @@ type ElementType<T extends AsType = 'input'> = T extends 'textarea'
   ? HTMLTextAreaElement
   : HTMLInputElement
 
-export interface BaseInputProps {
+interface BaseInputProps {
   variant?: 'default' | 'outline' | 'filled'
   error?: string
   leftIcon?: React.ReactNode
@@ -18,7 +18,7 @@ export interface BaseInputProps {
   rows?: number
 }
 
-export type InputProps<T extends AsType = 'input'> = BaseInputProps &
+type InputProps<T extends AsType = 'input'> = BaseInputProps &
   (T extends 'textarea'
     ? React.TextareaHTMLAttributes<HTMLTextAreaElement>
     : React.InputHTMLAttributes<HTMLInputElement>)

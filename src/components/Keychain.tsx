@@ -174,7 +174,7 @@ type KeychainProps = KeychainContextProps & {
   className?: string
 }
 
-export function KeychainView({
+function KeychainView({
   keys = [],
   generateKeyPair,
   selectedKey,

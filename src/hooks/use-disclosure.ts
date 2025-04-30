@@ -6,7 +6,7 @@ import { useCallback, useState } from 'react'
  * @param {boolean} initialState - the initial open or close state for the modal. it is `false` by default.
  */
 
-export type DisclosureParams = {
+type DisclosureParams = {
   component?: UiComponents
 }
 export const useDisclosure = (params: DisclosureParams = {}) => {

@@ -3,7 +3,7 @@
 import { forwardRef } from 'react'
 import { ArrowPathIcon } from '@heroicons/react/24/solid'
 
-export interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
+interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
   isLoading?: boolean
   isFullWidth?: boolean

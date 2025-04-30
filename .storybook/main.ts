@@ -69,13 +69,13 @@ function supportCssModules(webpackConfig: WebpackConfig) {
           test: /\.module\.css$/,
           use: [
             {
-              loader: 'style-loader',
+              loader: require.resolve('style-loader'),
               options: {
                 esModule: false,
               },
             },
             {
-              loader: 'css-loader',
+              loader: require.resolve('css-loader'),
               options: {
                 importLoaders: 1,
                 esModule: false,
@@ -86,10 +86,10 @@ function supportCssModules(webpackConfig: WebpackConfig) {
               },
             },
             {
-              loader: 'postcss-loader',
+              loader: require.resolve('postcss-loader'),
               options: {
                 postcssOptions: {
-                  plugins: ['postcss-nested'],
+                  plugins: [require.resolve('postcss-nested')],
                 },
               },
             },

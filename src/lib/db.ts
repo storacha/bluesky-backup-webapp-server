@@ -2,13 +2,13 @@
 
 import Dexie, { type EntityTable } from 'dexie'
 
-export interface Backup {
+interface Backup {
   id: number
   accountDid: string
   createdAt: Date
 }
 
-export interface Repo {
+interface Repo {
   cid: string
   repoCid?: string
   backupId: number
@@ -25,7 +25,7 @@ export interface PrefsDoc {
   encryptedWith?: string
 }
 
-export interface Blob {
+interface Blob {
   cid: string
   backupId: number
   accountDid: string
@@ -39,7 +39,7 @@ export interface KeyMeta {
   symkeyCid?: string
 }
 
-export type BackupsDB = Dexie & {
+type BackupsDB = Dexie & {
   backups: EntityTable<Backup, 'id'>
   repos: EntityTable<Repo, 'cid'>
   prefsDocs: EntityTable<PrefsDoc, 'cid'>
