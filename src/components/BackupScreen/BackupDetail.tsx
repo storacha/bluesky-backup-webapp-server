@@ -187,9 +187,6 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
     }))
   }
 
-  // TODO generate the delegation here. ideally we'd only upload it to storacha is the form submits, but I'm not sure how to do that yet
-  //const delegationCid = 
-
   const openModal = () => {
     onOpen()
     updateUiStore({
