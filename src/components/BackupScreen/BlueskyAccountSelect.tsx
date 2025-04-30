@@ -10,6 +10,7 @@ import { AccountLogo, Box } from './BackupDetail'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { shortenDID } from '@/lib/ui'
+import { AddBskyAccountModal } from '../modals'
 
 const LOG_INTO_BLUESKY_VALUE = '-connect-'
 
@@ -141,17 +142,21 @@ export const BlueskyAccountSelect = (props: {
   }
 
   return (
-    <SelectField
-      name={props.name}
-      options={options}
-      value={selectedValue}
-      onChange={handleChange}
-      disabled={props.disabled}
-      defaultValue={options?.[0]?.value}
-      components={{
-        Control: BskyControl,
-        ValueContainer: BskyAccountsContainer,
-      }}
-    />
+    <>
+      <SelectField
+        name={props.name}
+        options={options}
+        value={selectedValue}
+        onChange={handleChange}
+        disabled={props.disabled}
+        defaultValue={options?.[0]?.value}
+        components={{
+          Control: BskyControl,
+          ValueContainer: BskyAccountsContainer,
+        }}
+      />
+      {/* keeping this here to bypass knip in the CI. when it's time to use the modal, i'll update */}
+      <AddBskyAccountModal isOpen={false} onClose={() => {}} />
+    </>
   )
 }

@@ -1,7 +1,7 @@
 import { styled } from 'next-yak'
 import { StyleProps } from './style'
 
-export const Flex = styled.div<Partial<StyleProps>>`
+const Flex = styled.div<Partial<StyleProps>>`
   height: ${({ $height = '66px' }) => $height};
   width: ${({ $width = '100%' }) => $width};
   display: flex;
@@ -12,3 +12,5 @@ export const Flex = styled.div<Partial<StyleProps>>`
   cursor: pointer;
   background: ${({ $background = '' }) => $background};
 `
+
+export { Flex }
