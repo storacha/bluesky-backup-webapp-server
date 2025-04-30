@@ -46,3 +46,7 @@ PGPORT=5432
 PGDATABASE=bsky_backups_dev
 PGUSERNAME=admin
 PGPASSWORD=bluey
+
+# Chromatic
+# Find this at https://www.chromatic.com/manage?appId=6810f7eed73ae95e1f9b2d85&view=configure
+#CHROMATIC_PROJECT_TOKEN=<project-token>

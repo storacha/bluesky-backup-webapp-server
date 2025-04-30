@@ -1,11 +1,5 @@
-import { Account, Client, Space } from '@storacha/ui-react'
+import { Client } from '@storacha/ui-react'
 import { GATEWAY_HOSTNAME } from './constants'
-
-export interface StorachaProps {
-  account?: Account
-  client?: Client
-  spaces?: Space[]
-}
 
 export function cidUrl(cid: string) {
   return `https://${cid}.${GATEWAY_HOSTNAME}`

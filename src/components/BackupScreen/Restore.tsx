@@ -36,7 +36,7 @@ const SnapshotSummary = styled(Box)`
   font-size: 0.75rem;
 `
 
-export interface BackupRestoreProps {
+interface BackupRestoreProps {
   backup?: Backup
 }
 

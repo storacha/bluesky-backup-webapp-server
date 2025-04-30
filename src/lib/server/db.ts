@@ -58,15 +58,15 @@ export const sql = postgres({
   },
 })
 
-export interface ListResult {
+interface ListResult {
   keys: { name: string }[]
 }
 
-export interface KVNamespacePutOptions {
+interface KVNamespacePutOptions {
   expirationTtl?: number
 }
 
-export interface KVNamespaceListOptions {
+interface KVNamespaceListOptions {
   limit?: number
   prefix?: string | null
   cursor?: string | null
