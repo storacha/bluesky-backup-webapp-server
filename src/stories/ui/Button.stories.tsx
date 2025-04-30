@@ -1,6 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import Button from '@/components/Button'
 import { ArrowRightIcon, ChevronDownIcon } from '@heroicons/react/24/solid'
+
+import Button from '@/components/Button'
+
+import type { Meta, StoryObj } from '@storybook/react'
 
 const meta = {
   title: 'UI/Button',

@@ -1,6 +1,7 @@
 import { getIronSession, IronSession } from 'iron-session'
-import { getConstants } from '@/lib/server/constants'
 import { cookies } from 'next/headers'
+
+import { getConstants } from '@/lib/server/constants'
 
 export type AccountDID = string
 

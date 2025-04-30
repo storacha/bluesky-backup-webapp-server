@@ -1,7 +1,7 @@
 import 'the-new-css-reset/css/reset.css'
 import './global.css'
 
-import { DM_Sans, DM_Mono, Epilogue } from 'next/font/google'
+import { DM_Mono, DM_Sans, Epilogue } from 'next/font/google'
 
 export const dmSans = DM_Sans({
   subsets: ['latin'],

@@ -1,15 +1,18 @@
 'use client'
 
-import { useSWR } from '@/app/swr'
-import { useAuthenticator } from '@storacha/ui-react'
-import { useRef, ChangeEventHandler } from 'react'
-import { LocationSelect } from '../../app/backups/LocationSelect'
-import { AccountLogo, Box } from './BackupDetail'
-import { Stack } from '../ui'
-import Image from 'next/image'
 import { PlusCircle } from '@phosphor-icons/react'
+import { useAuthenticator } from '@storacha/ui-react'
+import Image from 'next/image'
+import { ChangeEventHandler, useRef } from 'react'
+
+import { useSWR } from '@/app/swr'
 import { useDisclosure } from '@/hooks/use-disclosure'
+
+import { LocationSelect } from '../../app/backups/LocationSelect'
 import { AddBskyAccountModal } from '../modals'
+import { Stack } from '../ui'
+
+import { AccountLogo, Box } from './BackupDetail'
 
 const LOG_INTO_BLUESKY_VALUE = '-'
 

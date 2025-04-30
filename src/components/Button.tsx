@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef } from 'react'
 import { ArrowPathIcon } from '@heroicons/react/24/solid'
+import { forwardRef } from 'react'
 
 interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost'

@@ -1,9 +1,9 @@
 'use client'
-import { useState, useEffect } from 'react'
 import {
   ClipboardDocumentCheckIcon,
   ClipboardDocumentIcon,
 } from '@heroicons/react/20/solid'
+import { useEffect, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 interface CopyButtonProps {

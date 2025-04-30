@@ -1,7 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react'
 import { linkTo } from '@storybook/addon-links'
 
 import { LoggingIn } from './LoggingIn'
+
+import type { Meta, StoryObj } from '@storybook/react'
 
 const meta = {
   component: LoggingIn,

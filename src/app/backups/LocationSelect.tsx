@@ -1,6 +1,7 @@
-import { Stack } from '@/components/ui'
 import { styled } from 'next-yak'
 import { useId } from 'react'
+
+import { Stack } from '@/components/ui'
 
 const Label = styled.label`
   text-align: left;
