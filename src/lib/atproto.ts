@@ -10,7 +10,7 @@ import urlJoin from 'proper-url-join'
 import type { SimpleStore, Value } from '@atproto-labs/simple-store'
 import { getStorageContext, KVNamespace } from '@/lib/server/db'
 
-export const atprotoClientUri = process.env.NEXT_PUBLIC_BLUESKY_CLIENT_URI
+const atprotoClientUri = process.env.NEXT_PUBLIC_BLUESKY_CLIENT_URI
 
 if (!atprotoClientUri) {
   throw new Error('NEXT_PUBLIC_BLUESKY_CLIENT_URI must be provided')

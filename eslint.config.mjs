@@ -3,6 +3,8 @@
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { FlatCompat } from '@eslint/eslintrc'
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals.js'
+import nextTypescript from 'eslint-config-next/typescript.js'
 
 /** @import { Linter } from 'eslint' */
 
@@ -15,7 +17,8 @@ const compat = new FlatCompat({
 
 /** @type {Linter.Config[]} */
 const eslintConfig = [
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  ...compat.config(nextCoreWebVitals),
+  ...compat.config(nextTypescript),
 ]
 
 export default eslintConfig

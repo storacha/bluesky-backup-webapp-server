@@ -2,14 +2,9 @@
 
 import db, { PrefsDoc } from '@/lib/db'
 import { Agent, CredentialSession } from '@atproto/api'
-import { blueskyClientMetadata, decrypt } from '@/lib/bluesky'
+import { decrypt } from '@/lib/bluesky'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { OAuthSession, BrowserOAuthClient } from '@atproto/oauth-client-browser'
-import {
-  ATPROTO_DEFAULT_SINK,
-  ATPROTO_DEFAULT_SOURCE,
-  REQUIRED_ATPROTO_SCOPE,
-} from '@/lib/constants'
+import { ATPROTO_DEFAULT_SINK, ATPROTO_DEFAULT_SOURCE } from '@/lib/constants'
 import { useState, InputHTMLAttributes } from 'react'
 import { useForm } from 'react-hook-form'
 import { Secp256k1Keypair } from '@atproto/crypto'
@@ -92,22 +87,6 @@ type CreateAccountForm = LoginForm & {
 interface AtprotoCreateAccountFormProps {
   createAccount: CreateAccountFn
   defaultServer?: string
-}
-
-export async function oauthToPds(pdsUrl: string, handle: string) {
-  const bskyAuthClient = new BrowserOAuthClient({
-    clientMetadata: blueskyClientMetadata,
-    handleResolver: pdsUrl,
-  })
-  const result = await bskyAuthClient.init(true)
-  const { session } = result as {
-    session: OAuthSession
-  }
-  const agent = new Agent(session)
-  await bskyAuthClient.signIn(handle, {
-    scope: REQUIRED_ATPROTO_SCOPE,
-  })
-  return { client: bskyAuthClient, session, agent }
 }
 
 interface Repo {
@@ -415,7 +394,7 @@ export default function RestoreDialog({ snapshotId }: { snapshotId: number }) {
   )
 }
 
-export function RestoreDialogView({
+function RestoreDialogView({
   sourceSession,
   sinkSession,
   loginToSource,

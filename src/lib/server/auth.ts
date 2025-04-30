@@ -36,7 +36,7 @@ export const getServerIdentity = () => {
  */
 
 let cachedPrincipalMapping: Record<DidWeb, DidKey>
-export const getPrincipalMapping = () => {
+const getPrincipalMapping = () => {
   if (cachedPrincipalMapping) {
     return cachedPrincipalMapping
   }
@@ -61,7 +61,7 @@ export const getPrincipalMapping = () => {
 }
 
 let cachedAuthority: ed25519.Signer.Verifier
-export const getAuthority = () => {
+const getAuthority = () => {
   if (cachedAuthority) {
     return cachedAuthority
   }
@@ -112,15 +112,24 @@ export const authorize = async (
   return accessResult
 }
 
-export async function backupOwnedByAccount (db: BBDatabase, backupId: number, account: string) {
+export async function backupOwnedByAccount(
+  db: BBDatabase,
+  backupId: number,
+  account: string
+) {
   const { result: backup } = await db.findBackup(backupId)
-  return (backup?.accountDid === account)
+  return backup?.accountDid === account
 }
 
-export async function snapshotOwnedByAccount (db: BBDatabase, snapshotId: number, account: string): Promise<boolean> {
-  // TODO: make this one database query  
+export async function snapshotOwnedByAccount(
+  db: BBDatabase,
+  snapshotId: number,
+  account: string
+): Promise<boolean> {
+  // TODO: make this one database query
   const { result: snapshot } = await db.findSnapshot(snapshotId)
-  if (!snapshot) throw new Error('cannot determind if snapshot is owned by account')
+  if (!snapshot)
+    throw new Error('cannot determind if snapshot is owned by account')
   const { result: backup } = await db.findBackup(snapshot.id)
-  return (backup?.accountDid === account)
+  return backup?.accountDid === account
 }
