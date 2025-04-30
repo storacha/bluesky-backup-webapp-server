@@ -8,7 +8,6 @@ import { SelectField, Option } from '../ui'
 import { ControlProps, ValueContainerProps, components } from 'react-select'
 import { AccountLogo, Box } from './BackupDetail'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import { shortenDID } from '@/lib/ui'
 
 const LOG_INTO_BLUESKY_VALUE = '-connect-'
@@ -19,7 +18,6 @@ export const BlueskyAccountSelect = (props: {
   onChange?: (value: string) => void
   disabled?: boolean
 }) => {
-  const router = useRouter()
   const [{ accounts }] = useAuthenticator()
   const account = accounts[0]
 
@@ -52,22 +50,21 @@ export const BlueskyAccountSelect = (props: {
         label: shortenDID(account),
       }))
 
-      newOptions.push(...bskyAccounts, {
-        label: 'Connect Bluesky account',
-        value: LOG_INTO_BLUESKY_VALUE,
-      })
+      newOptions.push(...bskyAccounts)
     }
 
+    newOptions.push({
+      label: 'Connect Bluesky account',
+      value: LOG_INTO_BLUESKY_VALUE,
+    })
     setOptions(newOptions)
   }, [atprotoAccounts, props.disabled, props.value])
 
   const handleChange = (value: string) => {
     if (value === LOG_INTO_BLUESKY_VALUE) {
-      router.push('/atproto/connect')
-      return
-    }
-
-    if (props.onChange) {
+      window.open('/atproto/connect', 'atproto-connect', 'popup')
+      
+    } else if (props.onChange) {
       setSelectedValue(value)
       props.onChange(value)
     }

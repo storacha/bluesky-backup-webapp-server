@@ -14,8 +14,6 @@ export async function POST(request: Request) {
     return new Response('Missing account', { status: 400 })
   }
 
-  await setSession({ did: account })
-
   const client = createClient({ account: account })
   const url = await client.authorize(handle)
   return Response.redirect(url)
