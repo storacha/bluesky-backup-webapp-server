@@ -1,7 +1,7 @@
 'use client'
 
 import { styled } from 'next-yak'
-import { KeyboardEvent, ReactNode, useEffect, useRef } from 'react'
+import { KeyboardEvent, ReactNode, useEffect, useRef, useState } from 'react'
 import { X } from '@phosphor-icons/react'
 import { AriaDialogProps, useDialog } from 'react-aria'
 import { Property } from 'csstype'
@@ -77,6 +77,21 @@ export interface ModalProps extends AriaDialogProps {
   background?: string
 }
 
+export default function ClientOnlyPortal ({ children, selector }: { children: ReactNode, selector: string }) {
+  const ref = useRef<Element>();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const element = document.querySelector(selector);
+    if (element) {
+      ref.current = element
+      setMounted(true);
+    }
+  }, [selector]);
+
+  return (mounted && ref.current) ? createPortal(children, ref.current) : null;
+}
+
 /**
  * A modal component with the native `<dialog />` element.
  * @param {string} title - A title for the modal. This is optional and is not not rendered if nothing is provided.
@@ -132,24 +147,26 @@ export const Modal = ({
     }
   }
 
-  return createPortal(
-    <Dialog
-      ref={modalRef}
-      onKeyDown={handleKeyDown}
-      onClick={handleBackdropClick}
-      $size={size}
-      style={dialogStyle}
-      $background={background}
-      {...dialogProps}
-    >
-      {title && <ModalTitle {...titleProps}>{title}</ModalTitle>}
-      {hasCloseBtn && (
-        <ModalCloseBtn aria-label="Close modal" onClick={handleOnClose}>
-          <X size={18} color="var(--color-gray-medium)" />
-        </ModalCloseBtn>
-      )}
-      {children}
-    </Dialog>,
-    document.body
+  return (
+    <ClientOnlyPortal selector='#modal'>
+
+      <Dialog
+        ref={modalRef}
+        onKeyDown={handleKeyDown}
+        onClick={handleBackdropClick}
+        $size={size}
+        style={dialogStyle}
+        $background={background}
+        {...dialogProps}
+      >
+        {title && <ModalTitle {...titleProps}>{title}</ModalTitle>}
+        {hasCloseBtn && (
+          <ModalCloseBtn aria-label="Close modal" onClick={handleOnClose}>
+            <X size={18} color="var(--color-gray-medium)" />
+          </ModalCloseBtn>
+        )}
+        {children}
+      </Dialog>,
+    </ClientOnlyPortal>
   )
 }
