@@ -38,8 +38,9 @@ const Dialog = styled.dialog<{ $background?: string; $size: ModalSize }>`
 
   @keyframes enter {
     from {
-     transform: scale(0.5);
-    } to {
+      transform: scale(0.5);
+    }
+    to {
       transform: scale(1);
     }
   }

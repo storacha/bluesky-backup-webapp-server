@@ -70,7 +70,7 @@ export const CreateSpaceModal = ({
       const recovery = await createdSpace.createRecovery(account.did())
       await client.capability.access.delegate({
         space: createdSpace.did(),
-        delegations: [recovery]
+        delegations: [recovery],
       })
 
       if (onSpaceCreated) {
