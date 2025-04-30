@@ -171,6 +171,9 @@ importers:
       '@vercel/ncc':
         specifier: ^0.38.3
         version: 0.38.3
+      chromatic:
+        specifier: ^11.28.2
+        version: 11.28.2
       css-loader:
         specifier: ^7.1.2
         version: 7.1.2(webpack@5.98.0(esbuild@0.25.0))
@@ -3704,8 +3707,8 @@ packages:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
     engines: {node: '>= 8.10.0'}
 
-  chromatic@11.27.0:
-    resolution: {integrity: sha512-jQ2ufjS+ePpg+NtcPI9B2eOi+pAzlRd2nhd1LgNMsVCC9Bzf5t8mJtyd8v2AUuJS0LdX0QVBgkOnlNv9xviHzA==}
+  chromatic@11.28.2:
+    resolution: {integrity: sha512-aCmUPcZUs4/p9zRZdMreOoO/5JqO2DiJC3md1/vRx8dlMRcmR/YI5ZbgXZcai2absVR+6hsXZ5XiPxV2sboTuQ==}
     hasBin: true
     peerDependencies:
       '@chromatic-com/cypress': ^0.*.* || ^1.0.0
@@ -7760,7 +7763,7 @@ snapshots:
 
   '@chromatic-com/storybook@3.2.5(react@18.3.1)(storybook@8.6.12(prettier@3.5.3))':
     dependencies:
-      chromatic: 11.27.0
+      chromatic: 11.28.2
       filesize: 10.1.6
       jsonfile: 6.1.0
       react-confetti: 6.4.0(react@18.3.1)
@@ -11501,7 +11504,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  chromatic@11.27.0: {}
+  chromatic@11.28.2: {}
 
   chrome-trace-event@1.0.4: {}
 
