@@ -38,5 +38,6 @@
   "ignoreDependencies": [
     // Used in Dockerfile, which Knip can't (currently) read.
     "@vercel/ncc",
+    "chromatic",
   ],
 }
