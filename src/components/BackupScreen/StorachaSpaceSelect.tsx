@@ -1,7 +1,7 @@
 'use client'
 import { shortenDID } from '@/lib/ui'
 import { useAuthenticator } from '@storacha/ui-react'
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { Stack, Text, SelectField, Option } from '../ui'
 import { CaretDown } from '@phosphor-icons/react'
 import { AccountLogo, Box } from './BackupDetail'
@@ -11,7 +11,7 @@ import { useDisclosure } from '@/hooks/use-disclosure'
 import { CreateSpaceModal } from '../modals'
 import * as Storacha from '@storacha/client'
 
-const CREATE_NEW_STORACHA_SPACE = 'create_new_space'
+const CREATE_NEW_STORACHA_SPACE_VALUE = '-create-'
 
 export const StorachaSpaceSelect = (props: {
   name: string
@@ -22,54 +22,42 @@ export const StorachaSpaceSelect = (props: {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [{ spaces, accounts }] = useAuthenticator()
   const account = accounts?.[0]
-  const [options, setOptions] = useState<Option[]>([])
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
     props.value
   )
 
-  const [, setLastValidSpace] = useState<string | undefined>(props.value)
-
-  useEffect(() => {
+  const options = useMemo(() => {
     if (props.disabled && props.value) {
-      setOptions([
-        {
-          value: props.value,
-          label: props.value,
-          icon: '/storacha-red.png',
-        },
-      ])
-      return
+      return [
+        { value: props.value, label: props.value, icon: '/storacha-red.png' },
+      ]
     }
-
-    const newOptions: Option[] = []
+    const result: Option[] = []
 
     if (spaces) {
-      const spaceOptions = spaces.map((space) => ({
+      const storachaSpaces = spaces.map((space) => ({
         value: space.did(),
-        label: `${space.name} (${shortenDID(space.did())})`,
-        icon: '/storacha-red.png',
         group: account?.toEmail(),
+        label: `${space.name} (${shortenDID(space.did())})`,
       }))
-
-      newOptions.push(...spaceOptions, {
-        label: 'Create new space',
-        value: CREATE_NEW_STORACHA_SPACE,
-      })
+      result.push(...storachaSpaces)
     }
 
-    setOptions(newOptions)
+    result.push({
+      label: 'Create new space',
+      value: CREATE_NEW_STORACHA_SPACE_VALUE,
+    })
   }, [spaces, account, props.disabled, props.value])
 
   const handleChange = (value: string) => {
-    if (value === CREATE_NEW_STORACHA_SPACE) {
+    if (value === CREATE_NEW_STORACHA_SPACE_VALUE) {
       onOpen()
       return
     }
 
-    if (props.onChange && value !== CREATE_NEW_STORACHA_SPACE) {
+    if (props.onChange && value !== CREATE_NEW_STORACHA_SPACE_VALUE) {
       props.onChange(value)
       setSelectedValue(value)
-      setLastValidSpace(value)
     }
   }
 
@@ -77,7 +65,6 @@ export const StorachaSpaceSelect = (props: {
     if (props.onChange) {
       props.onChange(newSpaceId)
       setSelectedValue(newSpaceId)
-      setLastValidSpace(newSpaceId)
     }
     onClose()
   }
@@ -136,7 +123,7 @@ export const StorachaSpaceSelect = (props: {
     <>
       <SelectField
         name={props.name}
-        options={options}
+        options={options || []}
         value={selectedValue}
         onChange={handleChange}
         disabled={props.disabled}

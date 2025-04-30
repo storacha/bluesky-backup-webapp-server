@@ -1,7 +1,7 @@
 'use client'
 import { useSWR } from '@/app/swr'
 import { useAuthenticator } from '@storacha/ui-react'
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Stack, Text } from '../ui'
 import { CaretDown, PlusCircle } from '@phosphor-icons/react'
 import { SelectField, Option } from '../ui'
@@ -26,40 +26,32 @@ export const BlueskyAccountSelect = (props: {
     props.disabled ? null : account && ['api', '/api/atproto-accounts']
   )
 
-  const [options, setOptions] = useState<Option[]>([])
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
     props.value
   )
 
-  useEffect(() => {
+  const options = useMemo(() => {
     if (props.disabled && props.value) {
-      setOptions([
-        {
-          value: props.value,
-          label: props.value,
-          icon: '/bluesky.png',
-        },
-      ])
-      return
+      return [{ value: props.value, label: props.value, icon: '/bluesky.png' }]
     }
 
-    const newOptions: Option[] = []
+    const result: Option[] = []
 
     if (atprotoAccounts) {
       const bskyAccounts = atprotoAccounts.map((account) => ({
         value: account,
         label: shortenDID(account),
       }))
-
-      newOptions.push(...bskyAccounts)
+      result.push(...bskyAccounts)
     }
 
-    newOptions.push({
+    result.push({
       label: 'Connect Bluesky account',
       value: LOG_INTO_BLUESKY_VALUE,
     })
-    setOptions(newOptions)
-  }, [atprotoAccounts, props.disabled, props.value])
+
+    return result
+  }, [atprotoAccounts, props.value, props.disabled])
 
   const handleChange = (value: string) => {
     if (value === LOG_INTO_BLUESKY_VALUE) {
