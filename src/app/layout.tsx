@@ -27,7 +27,7 @@ export default function RootLayout({
             <NuqsAdapter>
               <Authenticator as="div">
                 {children}
-                <Toaster position='top-center' />
+                <Toaster position="top-center" />
               </Authenticator>
             </NuqsAdapter>
           </body>

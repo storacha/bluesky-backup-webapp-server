@@ -8,4 +8,4 @@ export * from './style'
 export * from './input'
 export * from './select'
 export * from './flex'
-export * from "./spinner"
+export * from './spinner'

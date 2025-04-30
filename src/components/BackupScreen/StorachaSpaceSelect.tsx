@@ -90,7 +90,7 @@ export const StorachaSpaceSelect = (props: {
         <Box
           $gap="1rem"
           $display="flex"
-          $justifyContent='space-between'
+          $justifyContent="space-between"
           $background={hasValue ? 'var(--color-white)' : ''}
           $isFocused={props.isFocused}
         >

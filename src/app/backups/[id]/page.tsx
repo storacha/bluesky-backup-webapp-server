@@ -5,7 +5,7 @@ import { getStorageContext } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
 import BackupPage from './BackupPage'
 
-export default async function Backup ({
+export default async function Backup({
   params,
 }: {
   params: Promise<{ id: string }>
@@ -15,10 +15,8 @@ export default async function Backup ({
   const { db } = getStorageContext()
   const { did: account } = await getSession()
   console.log(id, account)
-  if (!await backupOwnedByAccount(db, id, account)) {
-    return (<div>unauthorized</div>)
+  if (!(await backupOwnedByAccount(db, id, account))) {
+    return <div>unauthorized</div>
   }
-  return (
-    <BackupPage id={id} />
-  )
+  return <BackupPage id={id} />
 }
