@@ -40,8 +40,7 @@ async function createSession(client: Client, account: Account) {
 export function LoggedIn() {
   const [{ accounts, client }] = useAuthenticator()
   const account = accounts[0]
-  const { data: existingSessionDid, mutate } = useSWR(['api', '/session/did'])
-  const noSession = existingSessionDid === 'no session'
+  const { error: sessionDIDError, mutate } = useSWR(['api', '/session/did'])
 
   const [sessionCreationAttempted, setSessionCreationAttempted] =
     useState(false)
@@ -49,7 +48,7 @@ export function LoggedIn() {
   useEffect(() => {
     // if the client & account are loaded, the session DID is erroring and we're
     // not currently creating a session, try to create one
-    if (!sessionCreationAttempted && client && account && noSession) {
+    if (!sessionCreationAttempted && client && account && sessionDIDError) {
       ;(async () => {
         try {
           await createSession(client, account)
@@ -59,7 +58,7 @@ export function LoggedIn() {
         }
       })()
     }
-  }, [sessionCreationAttempted, account, noSession, mutate, client])
+  }, [sessionCreationAttempted, account, sessionDIDError, mutate, client])
   if (!account) return null
   return (
     <Outside $direction="row">
