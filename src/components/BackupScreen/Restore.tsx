@@ -81,8 +81,7 @@ export const BackupRestore = ({ backup }: BackupRestoreProps) => {
                   $width="100%"
                 >
                   <Stack $direction="column" $alignItems="flex-start">
-                    <h3>Snapshot {snapshot.id}</h3>
-                    <h3>{formatDate(snapshot.createdAt)}</h3>
+                    <h3>{formatDate(snapshot.createdAt)} Snapshot</h3>
                   </Stack>
                   <Button
                     $background="var(--color-white)"

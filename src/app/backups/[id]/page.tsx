@@ -10,8 +10,7 @@ export default async function Backup({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { id: idParam } = await params
-  const id = parseInt(idParam)
+  const { id } = await params
   const { db } = getStorageContext()
   const { did: account } = await getSession()
   if (!(await backupOwnedByAccount(db, id, account))) {

@@ -130,7 +130,7 @@ interface RestoreDialogViewProps {
   isPlcRestoreSetup?: boolean
 }
 
-export default function RestoreDialog({ snapshotId }: { snapshotId: number }) {
+export default function RestoreDialog({ snapshotId }: { snapshotId: string }) {
   const { keys } = useKeychainContext()
   const { data: snapshot } = useSWR<Snapshot>([
     'api',

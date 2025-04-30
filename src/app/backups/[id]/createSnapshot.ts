@@ -9,7 +9,7 @@ export const createSnapshot = async ({
   backupId,
   delegationData,
 }: {
-  backupId: number
+  backupId: string
   delegationData: Uint8Array
 }) => {
   const { db } = getStorageContext()

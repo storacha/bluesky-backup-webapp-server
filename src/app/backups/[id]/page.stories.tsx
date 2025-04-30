@@ -12,7 +12,7 @@ const meta = {
     layout: 'fullscreen',
   },
   args: {
-    id: 1,
+    id: 'abc',
   },
   decorators: [
     withAuthContext({
@@ -33,7 +33,7 @@ const meta = {
       ['api', '/api/backups'],
       [
         {
-          id: 1,
+          id: 'abc',
           accountDid: 'did:mailto:gmail.com:timothy-chalamet',
           name: 'Backup #1',
           atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
@@ -47,11 +47,11 @@ const meta = {
       ]
     ),
     withData(
-      ['api', '/api/backups/1/snapshots'],
+      ['api', '/api/backups/abc/snapshots'],
       [
         {
-          id: 1,
-          backupId: 1,
+          id: 'abc',
+          backupId: 'abc',
           atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
           repositoryStatus: 'success',
           repositoryCid:
@@ -61,8 +61,8 @@ const meta = {
           createdAt: '2025-04-07 19:51:56',
         },
         {
-          id: 2,
-          backupId: 1,
+          id: 'def',
+          backupId: 'abc',
           atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
           repositoryStatus: 'not-started',
           blobsStatus: 'in-progress',

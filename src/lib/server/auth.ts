@@ -114,7 +114,7 @@ export const authorize = async (
 
 export async function backupOwnedByAccount(
   db: BBDatabase,
-  backupId: number,
+  backupId: string,
   account: string
 ) {
   const { result: backup } = await db.findBackup(backupId)
@@ -123,7 +123,7 @@ export async function backupOwnedByAccount(
 
 export async function snapshotOwnedByAccount(
   db: BBDatabase,
-  snapshotId: number,
+  snapshotId: string,
   account: string
 ): Promise<boolean> {
   // TODO: make this one database query
