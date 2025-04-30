@@ -174,6 +174,9 @@ importers:
       '@vercel/ncc':
         specifier: ^0.38.3
         version: 0.38.3
+      chromatic:
+        specifier: ^11.28.2
+        version: 11.28.2
       css-loader:
         specifier: ^7.1.2
         version: 7.1.2(webpack@5.98.0(esbuild@0.25.0))

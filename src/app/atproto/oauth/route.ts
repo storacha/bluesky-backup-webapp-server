@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/atproto'
-import { setSession } from '@/lib/sessions'
 
 export async function POST(request: Request) {
   const formData = await request.formData()
