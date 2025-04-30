@@ -24,6 +24,7 @@ export default function RootLayout({
           className={`${dmSans.className} ${dmSans.variable} ${dmMono.variable} ${epilogue.variable}`}
         >
           <body>
+            <div id="modal"></div>
             <NuqsAdapter>
               <Authenticator as="div">
                 {children}
