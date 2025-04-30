@@ -51,6 +51,7 @@ export const WithBackups: Story = {
           includeRepository: true,
           includeBlobs: true,
           includePreferences: false,
+          delegationCid: null,
         },
         {
           id: 2,
@@ -62,6 +63,7 @@ export const WithBackups: Story = {
           includeRepository: false,
           includeBlobs: false,
           includePreferences: true,
+          delegationCid: null,
         },
       ]
     ),
