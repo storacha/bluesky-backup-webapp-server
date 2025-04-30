@@ -3,7 +3,7 @@ import { Box, Container, Heading, SubHeading } from './BackupDetail'
 import { Button, Center, Modal, Stack, Text } from '../ui'
 import { Snapshot, Backup } from '@/app/types'
 import useSWR from 'swr'
-import { formatDate, shortenDID } from '@/lib/ui'
+import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { useState } from 'react'
 import RestoreDialog from '../Restore'
@@ -57,6 +57,10 @@ export const BackupRestore = ({ backup }: BackupRestoreProps) => {
             <Stack $direction="row" $alignItems="center" $gap="1rem">
               <DetailName>Account DID</DetailName>
               <DetailValue>{shortenDID(backup.atprotoAccount)}</DetailValue>
+            </Stack>
+            <Stack $direction="row" $alignItems="center" $gap="1rem">
+              <DetailName>Delegation CID</DetailName>
+              <DetailValue>{backup.delegationCid ? shortenCID(backup.delegationCid) : "No delegation set"}</DetailValue>
             </Stack>
           </Details>
           <SnapshotContainer $gap="1rem">

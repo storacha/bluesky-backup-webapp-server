@@ -14,6 +14,7 @@ import { useDisclosure } from '@/hooks/use-disclosure'
 import { useUiComponentStore } from '@/store/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
 import { delegate } from '@/app/backups/[id]/delegate'
+import { uploadCAR } from '@/lib/storacha'
 
 let createNewBackup: typeof import('@/app/backups/new/action').action
 
@@ -132,8 +133,8 @@ function NewBackupForm ({ children }: { children: ReactNode }) {
     const space = form.get('storacha_space') as SpaceDid | undefined
     if (client && space) {
       await client.setCurrentSpace(space)
-      // upload the CID to Storacha so we can use it later
-      const delegationCid = await client.uploadCAR(new Blob([
+      // upload the delegation to Storacha so we can use it later
+      const delegationCid = await uploadCAR(client, new Blob([
         await delegate(client, space)
       ]))
       form.append('delegation_cid', delegationCid.toString())

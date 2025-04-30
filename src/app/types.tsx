@@ -11,7 +11,7 @@ export type Backup = {
   includeRepository: boolean
   includeBlobs: boolean
   includePreferences: boolean
-  delegationCid?: string | null
+  delegationCid: string | null
 }
 
 type Input<

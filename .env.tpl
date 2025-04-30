@@ -37,6 +37,9 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_51LO87hF6A5ufQX5viNsPTbuErzfavdrEFoBu
 SESSION_COOKIE_NAME=bsky-backups-dev
 SESSION_PASSWORD=changethistosomethingsecretandatleast32characterslong
 
+# Password for cronjob access
+BACKUP_PASSWORD=firefirefire
+
 # Postgres
 PGHOST=localhost
 PGPORT=5432
