@@ -66,10 +66,15 @@ const fetchers: Fetchers = {
     const queryString = new URLSearchParams(queryParams).toString()
     const url = queryString ? `${resource}?${queryString}` : resource
 
-    // We haven't added any validation to the API responses, so we have to
-    // assume they're correct with `any`.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return fetch(url).then((res) => res.json()) as any
+    const response = await fetch(url)
+    if (response.status == 200) {
+      // We haven't added any validation to the API responses, so we have to
+      // assume they're correct with `any`.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (await response.json()) as any
+    } else {
+      throw new Error(await response.text())
+    }
   },
 
   /**
