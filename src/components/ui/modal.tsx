@@ -77,7 +77,7 @@ export interface ModalProps extends AriaDialogProps {
   background?: string
 }
 
-export default function ClientOnlyPortal({
+function ClientOnlyPortal({
   children,
   selector,
 }: {
