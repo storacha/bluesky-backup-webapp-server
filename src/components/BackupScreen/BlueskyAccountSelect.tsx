@@ -64,7 +64,6 @@ export const BlueskyAccountSelect = (props: {
   const handleChange = (value: string) => {
     if (value === LOG_INTO_BLUESKY_VALUE) {
       window.open('/atproto/connect', 'atproto-connect', 'popup')
-      
     } else if (props.onChange) {
       setSelectedValue(value)
       props.onChange(value)
