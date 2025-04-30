@@ -1,8 +1,8 @@
 import { At } from '@phosphor-icons/react'
-import { Box } from '../BackupScreen/BackupDetail'
 import { Button, InputField, Modal, ModalProps, Stack, Text } from '../ui'
 import { ChangeEvent, useState } from 'react'
 import { SharedModalLayout } from './layout'
+import { Box } from '../BackupScreen/BackupDetail'
 
 export const AddBskyAccountModal = ({
   isOpen,
@@ -52,7 +52,7 @@ export const AddBskyAccountModal = ({
               />
               <Button
                 $background="var(--color-dark-blue)"
-                $height="fit-contnt"
+                $height="fit-content"
                 $fontSize="0.75rem"
               >
                 Login

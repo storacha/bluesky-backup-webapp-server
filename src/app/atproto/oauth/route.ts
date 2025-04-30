@@ -14,6 +14,7 @@ export async function POST(request: Request) {
   }
 
   const client = createClient({ account: account })
+  console.log("Client metadata", client.clientMetadata)
   const url = await client.authorize(handle)
   return Response.redirect(url)
 }
