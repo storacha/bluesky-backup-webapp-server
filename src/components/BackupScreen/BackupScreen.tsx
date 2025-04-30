@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { styled } from 'next-yak'
 import { BackupDetail } from './BackupDetail'

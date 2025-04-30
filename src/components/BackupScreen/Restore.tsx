@@ -60,7 +60,11 @@ export const BackupRestore = ({ backup }: BackupRestoreProps) => {
             </Stack>
             <Stack $direction="row" $alignItems="center" $gap="1rem">
               <DetailName>Delegation CID</DetailName>
-              <DetailValue>{backup.delegationCid ? shortenCID(backup.delegationCid) : "No delegation set"}</DetailValue>
+              <DetailValue>
+                {backup.delegationCid
+                  ? shortenCID(backup.delegationCid)
+                  : 'No delegation set'}
+              </DetailValue>
             </Stack>
           </Details>
           <SnapshotContainer $gap="1rem">

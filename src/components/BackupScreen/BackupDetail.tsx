@@ -57,11 +57,11 @@ const AccountsContainer = styled.div`
 
 export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
   border: ${({ $borderWidth = '1px', $isFocused }) =>
-    $isFocused ? '2px' : $borderWidth}
+      $isFocused ? '2px' : $borderWidth}
     ${({ $borderStyle = 'dashed', $isFocused }) =>
-    $isFocused ? 'solid' : $borderStyle}
+      $isFocused ? 'solid' : $borderStyle}
     ${({ $borderColor = 'var(--color-gray-light)', $isFocused }) =>
-    $isFocused ? 'var(--color-dark-blue)' : $borderColor};
+      $isFocused ? 'var(--color-dark-blue)' : $borderColor};
   border-radius: 12px;
   height: ${({ $height = '66px' }) => $height};
   width: ${({ $width = '100%' }) => $width};
@@ -94,7 +94,7 @@ export const AccountLogo = styled.div<{
   border: 1px solid var(--color-gray);
   & img {
     filter: ${({ $hasAccount, $type }) =>
-    $hasAccount && $type === 'original' ? 'grayscale(0)' : 'grayscale(1)'};
+      $hasAccount && $type === 'original' ? 'grayscale(0)' : 'grayscale(1)'};
     opacity: ${({ $hasAccount }) => ($hasAccount ? '1' : '.5')};
   }
 `
@@ -127,21 +127,29 @@ const DATA_BOXES: DataConfig[] = [
   // },
 ]
 
-function NewBackupForm ({ children }: { children: ReactNode }) {
+function NewBackupForm({ children }: { children: ReactNode }) {
   const [{ client }] = useAuthenticator()
-  async function generateDelegationAndCreateNewBackup (form: FormData) {
+  async function generateDelegationAndCreateNewBackup(form: FormData) {
     const space = form.get('storacha_space') as SpaceDid | undefined
     if (client && space) {
       await client.setCurrentSpace(space)
       // upload the delegation to Storacha so we can use it later
-      const delegationCid = await uploadCAR(client, new Blob([
-        await delegate(client, space)
-      ]))
+      const delegationCid = await uploadCAR(
+        client,
+        new Blob([await delegate(client, space)])
+      )
       form.append('delegation_cid', delegationCid.toString())
       return createNewBackup(form)
     } else {
-      console.error("client or space id not defined, cannot create delegation. client: ", client, "space:", space)
-      throw new Error('client or space is not defined, cannot create delegation')
+      console.error(
+        'client or space id not defined, cannot create delegation. client: ',
+        client,
+        'space:',
+        space
+      )
+      throw new Error(
+        'client or space is not defined, cannot create delegation'
+      )
     }
   }
   return (
@@ -151,15 +159,14 @@ function NewBackupForm ({ children }: { children: ReactNode }) {
   )
 }
 
-function MaybeForm ({
+function MaybeForm({
   children,
   backup,
 }: {
   children: ReactNode
   backup?: Backup
 }) {
-
-  return backup ? (children) : (<NewBackupForm>{children}</NewBackupForm>)
+  return backup ? children : <NewBackupForm>{children}</NewBackupForm>
 }
 
 export const BackupDetail = ({ account, backup }: BackupProps) => {
@@ -219,7 +226,10 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
                 <ConnectingLine />
                 <StorachaSpaceSelect
                   name="storacha_space"
-                  {...(backup && { disabled: true, value: backup.storachaSpace })}
+                  {...(backup && {
+                    disabled: true,
+                    value: backup.storachaSpace,
+                  })}
                 />
               </AccountsContainer>
             </Stack>
@@ -228,7 +238,11 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
               <Text $textTransform="capitalize">keychain</Text>
               <Box $height="44px" $width="48%" $display="flex">
                 <Text $textTransform="capitalize">create keychain</Text>
-                <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
+                <PlusCircle
+                  weight="fill"
+                  size="16"
+                  color="var(--color-gray-1)"
+                />
               </Box>
             </Stack>
             <Stack $gap="1.25rem">

@@ -41,14 +41,14 @@ export const sql = postgres({
   user: PGUSERNAME,
   password: PG_RDS_IAM_AUTH
     ? async () => {
-      const signer = new Signer({
-        hostname: PGHOST || '',
-        port: parseInt(PGPORT || ''),
-        username: PGUSERNAME || '',
-      })
-      const token = await signer.getAuthToken()
-      return token
-    }
+        const signer = new Signer({
+          hostname: PGHOST || '',
+          port: parseInt(PGPORT || ''),
+          username: PGUSERNAME || '',
+        })
+        const token = await signer.getAuthToken()
+        return token
+      }
     : PGPASSWORD,
   ssl: validSSLValue(PGSSLMODE),
   idle_timeout: 1,
@@ -82,7 +82,7 @@ export interface KVNamespace {
   list: (opts: KVNamespaceListOptions) => Promise<ListResult>
 }
 
-function newKvNamespace (table: string): KVNamespace {
+function newKvNamespace(table: string): KVNamespace {
   const tableSql = sql(table)
   return {
     put: async (key, value, options = {}) => {
@@ -143,7 +143,7 @@ export interface BBDatabase {
   findSnapshot: (id: number) => Promise<{ result: Snapshot | undefined }>
   findBackups: (account: string) => Promise<{ results: Backup[] }>
   findBackup: (id: number) => Promise<{ result: Backup | undefined }>
-  findScheduledBackups: () => Promise<{results: Backup[]}>
+  findScheduledBackups: () => Promise<{ results: Backup[] }>
   addBackup: (input: BackupInput) => Promise<Backup>
   addBlob: (input: ATBlobInput) => Promise<ATBlob>
   findBlobsForBackup: (id: string) => Promise<{ results: ATBlob[] }>
@@ -156,12 +156,12 @@ interface StorageContext {
   db: BBDatabase
 }
 
-export function getStorageContext (): StorageContext {
+export function getStorageContext(): StorageContext {
   return {
     authSessionStore: newKvNamespace('auth_sessions'),
     authStateStore: newKvNamespace('auth_states'),
     db: {
-      async addBlob (input) {
+      async addBlob(input) {
         console.log('inserting', input)
         const results = await sql<ATBlob[]>`
         insert into blobs ${sql(input)}
@@ -173,7 +173,7 @@ export function getStorageContext (): StorageContext {
         return results[0]
       },
 
-      async findBlobsForBackup (id) {
+      async findBlobsForBackup(id) {
         const results = await sql<ATBlob[]>`
           select
             cid,
@@ -188,7 +188,7 @@ export function getStorageContext (): StorageContext {
         }
       },
 
-      async findBlobsForSnapshot (id) {
+      async findBlobsForSnapshot(id) {
         const results = await sql<ATBlob[]>`
           select
             cid,
@@ -202,7 +202,7 @@ export function getStorageContext (): StorageContext {
           results,
         }
       },
-      async findSnapshot (id: number) {
+      async findSnapshot(id: number) {
         const [result] = await sql<Snapshot[]>`
           select *
           from snapshots
@@ -213,7 +213,7 @@ export function getStorageContext (): StorageContext {
           result,
         }
       },
-      async addSnapshot (input) {
+      async addSnapshot(input) {
         const results = await sql<Snapshot[]>`
           insert into snapshots ${sql(input)}
           returning *
@@ -223,7 +223,7 @@ export function getStorageContext (): StorageContext {
         }
         return results[0]
       },
-      async updateSnapshot (id, input) {
+      async updateSnapshot(id, input) {
         const results = await sql<Snapshot[]>`
           update snapshots set ${sql(input)}
           where id = ${id}
@@ -234,7 +234,7 @@ export function getStorageContext (): StorageContext {
         }
         return results[0]
       },
-      async findSnapshots (backupId) {
+      async findSnapshots(backupId) {
         const results = await sql<Snapshot[]>`
           select *
           from snapshots
@@ -244,7 +244,7 @@ export function getStorageContext (): StorageContext {
           results,
         }
       },
-      async addBackup (input) {
+      async addBackup(input) {
         const results = await sql<Backup[]>`
           insert into backups ${sql(input)}
           returning *
@@ -254,7 +254,7 @@ export function getStorageContext (): StorageContext {
         }
         return results[0]
       },
-      async findBackups (account: string) {
+      async findBackups(account: string) {
         const results = await sql<Backup[]>`
           select *
           from backups
@@ -264,7 +264,7 @@ export function getStorageContext (): StorageContext {
           results,
         }
       },
-      async findScheduledBackups () {
+      async findScheduledBackups() {
         const results = await sql<Backup[]>`
           select *
           from backups
@@ -274,7 +274,7 @@ export function getStorageContext (): StorageContext {
           results,
         }
       },
-      async findBackup (id: number) {
+      async findBackup(id: number) {
         const [result] = await sql<Backup[]>`
           select *
           from backups

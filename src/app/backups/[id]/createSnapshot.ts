@@ -32,6 +32,3 @@ export const createSnapshot = async ({
   await createSnapshotForBackup(db, account, backup, delegation)
   return backup
 }
-
-
-

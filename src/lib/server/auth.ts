@@ -112,25 +112,36 @@ export const authorize = async (
   return accessResult
 }
 
-export async function backupOwnedByAccount (db: BBDatabase, backupId: number, account: string) {
+export async function backupOwnedByAccount(
+  db: BBDatabase,
+  backupId: number,
+  account: string
+) {
   const { result: backup } = await db.findBackup(backupId)
-  return (backup?.accountDid === account)
+  return backup?.accountDid === account
 }
 
-export async function snapshotOwnedByAccount (db: BBDatabase, snapshotId: number, account: string): Promise<boolean> {
-  // TODO: make this one database query  
+export async function snapshotOwnedByAccount(
+  db: BBDatabase,
+  snapshotId: number,
+  account: string
+): Promise<boolean> {
+  // TODO: make this one database query
   const { result: snapshot } = await db.findSnapshot(snapshotId)
-  if (!snapshot) throw new Error('cannot determind if snapshot is owned by account')
+  if (!snapshot)
+    throw new Error('cannot determind if snapshot is owned by account')
   const { result: backup } = await db.findBackup(snapshot.id)
-  return (backup?.accountDid === account)
+  return backup?.accountDid === account
 }
 
-export function isBasicAuthed(request: Request){
+export function isBasicAuthed(request: Request) {
   const header = request.headers.get('authorization')
   if (!header) return false
 
   const encodedCreds = header.split(' ')[1]
   if (!encodedCreds) return false
-  const [username, password] = Buffer.from(encodedCreds, 'base64').toString().split(':')
-  return (username === 'user') && (password === process.env.BACKUP_PASSWORD)
+  const [username, password] = Buffer.from(encodedCreds, 'base64')
+    .toString()
+    .split(':')
+  return username === 'user' && password === process.env.BACKUP_PASSWORD
 }

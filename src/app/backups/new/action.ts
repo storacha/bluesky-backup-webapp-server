@@ -16,7 +16,7 @@ export const action = async (data: FormData) => {
     includeRepository: data.get('include_repository') === 'on' ? true : false,
     includeBlobs: data.get('include_blobs') === 'on' ? true : false,
     includePreferences: data.get('include_preferences') === 'on' ? true : false,
-    delegationCid: data.get('delegation_cid') as string
+    delegationCid: data.get('delegation_cid') as string,
   })
 
   redirect(`/backups/${backup.id}`) // Redirect to the new backup page
