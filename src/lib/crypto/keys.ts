@@ -15,7 +15,7 @@ export interface KeyPair {
   toSecret?: () => Promise<string>
 }
 
-export const tagWith = (code: number, bytes: Uint8Array) => {
+const tagWith = (code: number, bytes: Uint8Array) => {
   const offset = varint.encodingLength(code)
   const multiformat = new Uint8Array(bytes.byteLength + offset)
   varint.encodeTo(code, multiformat, 0)
@@ -38,7 +38,7 @@ export const symkeyParams = {
   length: 256,
 }
 
-export async function calculateDID(publicKey: CryptoKey) {
+async function calculateDID(publicKey: CryptoKey) {
   // Next we need to encode public key for the `did()` method. To do this we first export
   // Subject Public Key Info (SPKI) using web crypto API.
   const spki = await crypto.subtle.exportKey('spki', publicKey)
