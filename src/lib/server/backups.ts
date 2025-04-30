@@ -66,7 +66,8 @@ export const createSnapshotForBackup = async (
   })
   storachaClient.addProof(delegation)
 
-  await doSnapshot(snapshot.id, db, atpAgent, storachaClient, {
+  // kick off a process that will continue after this function returns
+  void doSnapshot(snapshot.id, db, atpAgent, storachaClient, {
     backupId: backup.id,
   })
   return snapshot
@@ -82,7 +83,7 @@ const doSnapshot = async (
   atpAgent: AtprotoAgent,
   storachaClient: StorachaClient,
   options: BackupOptions = {}
-) => {
+): Promise<void> => {
   if (!atpAgent.did) {
     throw new Error('No DID found in atproto agent')
   }

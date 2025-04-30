@@ -32,8 +32,8 @@ NEXT_PUBLIC_SENTRY_ORG=storacha-it
 NEXT_PUBLIC_SENTRY_PROJECT=bluesky-backup
 NEXT_PUBLIC_SENTRY_ENV=<%= $TF_WORKSPACE %>
 
-# Deployment URL, for Bluesky
-NEXT_PUBLIC_BLUESKY_CLIENT_URI=https://<% if [ "$TF_WORKSPACE" != "prod" ]; then %><%= "${TF_WORKSPACE}." %><% fi %>bsky.storage
+# Deployment URL, for Bluesky and scheduled backups
+NEXT_PUBLIC_APP_URI=https://<% if [ "$TF_WORKSPACE" != "prod" ]; then %><%= "${TF_WORKSPACE}." %><% fi %>bsky.storage
 
 # Stripe
 NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID=<%= $PRICING_TABLE_ID %>

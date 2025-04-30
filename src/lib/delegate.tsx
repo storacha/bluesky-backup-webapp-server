@@ -8,7 +8,19 @@ import * as Upload from '@storacha/capabilities/upload'
 import { Client } from '@storacha/client'
 import { Delegation } from '@ucanto/core'
 
-export async function delegate(client: Client, space: Did<'key'>) {
+interface DelegateOptions {
+  // number of milliseconds this delegation should be valid for
+  duration?: number
+}
+
+// default to 1 hour
+const defaultDuration = 1000 * 60 * 60
+
+export async function delegate(
+  client: Client,
+  space: Did<'key'>,
+  { duration = defaultDuration }: DelegateOptions = {}
+) {
   const issuer = client.agent.issuer
 
   const capabilities: Capabilities = [
@@ -31,7 +43,7 @@ export async function delegate(client: Client, space: Did<'key'>) {
     audience: { did: () => SERVER_DID },
     capabilities,
     proofs: client.proofs(capabilities),
-    expiration: new Date(Date.now() + 1000 * 60 * 60).getTime(), // 1 hour
+    expiration: new Date(Date.now() + duration).getTime(),
   })
 
   const result = await delegation.archive()

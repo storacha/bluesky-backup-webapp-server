@@ -26,8 +26,8 @@ NEXT_PUBLIC_SENTRY_ORG=storacha-it
 NEXT_PUBLIC_SENTRY_PROJECT=bluesky-backup
 NEXT_PUBLIC_SENTRY_ENV=development
 
-# Deployment URL, for Bluesky
-NEXT_PUBLIC_BLUESKY_CLIENT_URI=http://localhost
+# Deployment URL, for Bluesky and scheduled backups
+NEXT_PUBLIC_APP_URI=http://localhost
 
 # Stripe
 NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID=prctbl_1R1egaF6A5ufQX5vyumO9QAf

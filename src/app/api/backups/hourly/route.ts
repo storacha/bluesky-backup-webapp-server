@@ -1,29 +1,26 @@
 import { getStorageContext } from '@/lib/server/db'
 
-import { isBasicAuthed } from '@/lib/server/auth'
+import { isCronjobAuthed } from '@/lib/server/auth'
 
 export async function POST(request: Request) {
   const { db } = getStorageContext()
-  if (!isBasicAuthed(request)) {
+  if (!isCronjobAuthed(request)) {
     return new Response('Unauthorized', { status: 401 })
   }
 
   const { results: backups } = await db.findScheduledBackups()
+  // this will always be set if the basic auth check above succeeds
+  const authHeader = request.headers.get('authorization') as string
   for (const backup of backups) {
-    fetch(
-      `${process.env.NEXT_PUBLIC_BLUESKY_CLIENT_URI}/api/backups/${backup.id}/snapshots`,
+    void fetch(
+      `${process.env.NEXT_PUBLIC_APP_URI}/api/backups/${backup.id}/snapshots`,
       {
         method: 'POST',
         headers: {
-          authorization:
-            'Basic ' +
-            Buffer.from('user:' + process.env.BACKUP_PASSWORD).toString(
-              'base64'
-            ),
+          authorization: authHeader,
         },
       }
     )
-
-    return Response.json({})
   }
+  return Response.json({})
 }

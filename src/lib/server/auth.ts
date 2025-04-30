@@ -134,7 +134,7 @@ export async function snapshotOwnedByAccount(
   return backup?.accountDid === account
 }
 
-export function isBasicAuthed(request: Request) {
+export function isCronjobAuthed(request: Request) {
   const header = request.headers.get('authorization')
   if (!header) return false
 

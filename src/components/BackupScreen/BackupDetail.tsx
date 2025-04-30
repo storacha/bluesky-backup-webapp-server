@@ -13,17 +13,17 @@ import { PlusCircle } from '@phosphor-icons/react'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { useUiComponentStore } from '@/store/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
-import { delegate } from '@/app/backups/[id]/delegate'
+import { delegate } from '@/lib/delegate'
 import { uploadCAR } from '@/lib/storacha'
 
-let createNewBackup: typeof import('@/app/backups/new/action').action
+let createNewBackup: typeof import('@/app/backups/new/createNewBackup').action
 
 if (process.env.STORYBOOK) {
   createNewBackup = () => {
     throw new Error('Server Functions are not available in Storybook')
   }
 } else {
-  createNewBackup = (await import('@/app/backups/new/action')).action
+  createNewBackup = (await import('@/app/backups/new/createNewBackup')).action
 }
 
 interface BackupProps {
@@ -129,28 +129,29 @@ const DATA_BOXES: DataConfig[] = [
 
 function NewBackupForm({ children }: { children: ReactNode }) {
   const [{ client }] = useAuthenticator()
-  async function generateDelegationAndCreateNewBackup(form: FormData) {
-    const space = form.get('storacha_space') as SpaceDid | undefined
-    if (client && space) {
-      await client.setCurrentSpace(space)
-      // upload the delegation to Storacha so we can use it later
-      const delegationCid = await uploadCAR(
-        client,
-        new Blob([await delegate(client, space)])
-      )
-      form.append('delegation_cid', delegationCid.toString())
-      return createNewBackup(form)
-    } else {
-      console.error(
-        'client or space id not defined, cannot create delegation. client: ',
-        client,
-        'space:',
-        space
-      )
-      throw new Error(
-        'client or space is not defined, cannot create delegation'
-      )
+  async function generateDelegationAndCreateNewBackup(formData: FormData) {
+    const space = formData.get('storacha_space') as SpaceDid | undefined
+    if (!space) {
+      console.error('space id not defined, cannot create delegation.')
+      throw new Error('space is not defined, cannot create delegation')
     }
+    if (!client) {
+      console.error('client not defined, cannot create delegation')
+      throw new Error('client is not defined, cannot create delegation')
+    }
+    await client.setCurrentSpace(space)
+    // upload the delegation to Storacha so we can use it later
+
+    // create a delegation valid for a year of backups
+    const delegationDuration = 1000 * 60 * 60 * 24 * 365
+    const delegationCid = await uploadCAR(
+      client,
+      new Blob([
+        await delegate(client, space, { duration: delegationDuration }),
+      ])
+    )
+    formData.append('delegation_cid', delegationCid.toString())
+    return createNewBackup(formData)
   }
   return (
     <Container>

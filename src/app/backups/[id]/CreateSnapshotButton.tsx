@@ -2,7 +2,7 @@
 
 import { Backup } from '@/app/types'
 import { useAuthenticator } from '@storacha/ui-react'
-import { delegate } from './delegate'
+import { delegate } from '../../../lib/delegate'
 import { useSWRMutation } from '@/app/swr'
 import { CreateButton } from '@/components/ui/CreateButton'
 
