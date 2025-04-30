@@ -77,19 +77,25 @@ export interface ModalProps extends AriaDialogProps {
   background?: string
 }
 
-export default function ClientOnlyPortal ({ children, selector }: { children: ReactNode, selector: string }) {
-  const ref = useRef<Element>();
-  const [mounted, setMounted] = useState(false);
+export default function ClientOnlyPortal({
+  children,
+  selector,
+}: {
+  children: ReactNode
+  selector: string
+}) {
+  const ref = useRef<Element>()
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    const element = document.querySelector(selector);
+    const element = document.querySelector(selector)
     if (element) {
       ref.current = element
-      setMounted(true);
+      setMounted(true)
     }
-  }, [selector]);
+  }, [selector])
 
-  return (mounted && ref.current) ? createPortal(children, ref.current) : null;
+  return mounted && ref.current ? createPortal(children, ref.current) : null
 }
 
 /**
@@ -148,8 +154,7 @@ export const Modal = ({
   }
 
   return (
-    <ClientOnlyPortal selector='#modal'>
-
+    <ClientOnlyPortal selector="#modal">
       <Dialog
         ref={modalRef}
         onKeyDown={handleKeyDown}
@@ -166,7 +171,8 @@ export const Modal = ({
           </ModalCloseBtn>
         )}
         {children}
-      </Dialog>,
+      </Dialog>
+      ,
     </ClientOnlyPortal>
   )
 }
