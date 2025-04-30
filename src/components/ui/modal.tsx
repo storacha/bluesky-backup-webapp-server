@@ -5,6 +5,7 @@ import { KeyboardEvent, ReactNode, useEffect, useRef } from 'react'
 import { X } from '@phosphor-icons/react'
 import { AriaDialogProps, useDialog } from 'react-aria'
 import { Property } from 'csstype'
+import { createPortal } from 'react-dom'
 
 type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
@@ -131,7 +132,7 @@ export const Modal = ({
     }
   }
 
-  return (
+  return createPortal(
     <Dialog
       ref={modalRef}
       onKeyDown={handleKeyDown}
@@ -148,6 +149,7 @@ export const Modal = ({
         </ModalCloseBtn>
       )}
       {children}
-    </Dialog>
+    </Dialog>,
+    document.body
   )
 }
