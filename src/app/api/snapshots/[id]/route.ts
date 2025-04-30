@@ -11,11 +11,11 @@ export async function GET(
   const { id } = await params
   const { db } = getStorageContext()
   const { did: account } = await getSession()
-  if (!(await snapshotOwnedByAccount(db, parseInt(id), account))) {
+  if (!(await snapshotOwnedByAccount(db, id, account))) {
     return new Response('Not authorized', { status: 401 })
   }
 
-  const { result } = await db.findSnapshot(parseInt(id))
+  const { result } = await db.findSnapshot(id)
 
   return Response.json(result)
 }

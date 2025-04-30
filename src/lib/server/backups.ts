@@ -75,11 +75,11 @@ export const createSnapshotForBackup = async (
 }
 
 interface BackupOptions {
-  backupId?: number
+  backupId?: string
 }
 
 const doSnapshot = async (
-  snapshotId: number,
+  snapshotId: string,
   db: BBDatabase,
   atpAgent: AtprotoAgent,
   storachaClient: StorachaClient,

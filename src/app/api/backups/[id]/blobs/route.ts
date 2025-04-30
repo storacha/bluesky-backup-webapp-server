@@ -9,7 +9,7 @@ export async function GET(
   const { id } = await params
   const { db } = getStorageContext()
   const { did: account } = await getSession()
-  if (!(await backupOwnedByAccount(db, parseInt(id), account))) {
+  if (!(await backupOwnedByAccount(db, id, account))) {
     return new Response('Not authorized', { status: 401 })
   }
 

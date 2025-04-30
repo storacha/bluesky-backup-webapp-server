@@ -13,10 +13,10 @@ export async function GET(
   const { id } = await params
   const { db } = getStorageContext()
   const { did: account } = await getSession()
-  if (!(await backupOwnedByAccount(db, parseInt(id), account))) {
+  if (!(await backupOwnedByAccount(db, id, account))) {
     return new Response('Not authorized', { status: 401 })
   }
-  const { results } = await db.findSnapshots(parseInt(id))
+  const { results } = await db.findSnapshots(id)
 
   return Response.json(results)
 }
@@ -29,8 +29,7 @@ export async function POST(
     return new Response('Unauthorized', { status: 401 })
   }
 
-  const { id: idStr } = await params
-  const id = parseInt(idStr)
+  const { id } = await params
   const { db } = getStorageContext()
   const { result: backup } = await db.findBackup(id)
 

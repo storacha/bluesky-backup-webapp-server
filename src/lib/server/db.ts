@@ -139,11 +139,11 @@ function newKvNamespace(table: string): KVNamespace {
 
 export interface BBDatabase {
   addSnapshot: (input: SnapshotInput) => Promise<Snapshot>
-  updateSnapshot: (id: number, input: Partial<Snapshot>) => Promise<Snapshot>
-  findSnapshots: (backupId: number) => Promise<{ results: Snapshot[] }>
-  findSnapshot: (id: number) => Promise<{ result: Snapshot | undefined }>
+  updateSnapshot: (id: string, input: Partial<Snapshot>) => Promise<Snapshot>
+  findSnapshots: (backupId: string) => Promise<{ results: Snapshot[] }>
+  findSnapshot: (id: string) => Promise<{ result: Snapshot | undefined }>
   findBackups: (account: string) => Promise<{ results: Backup[] }>
-  findBackup: (id: number) => Promise<{ result: Backup | undefined }>
+  findBackup: (id: string) => Promise<{ result: Backup | undefined }>
   findScheduledBackups: () => Promise<{ results: Backup[] }>
   addBackup: (input: BackupInput) => Promise<Backup>
   addBlob: (input: ATBlobInput) => Promise<ATBlob>
@@ -203,7 +203,7 @@ export function getStorageContext(): StorageContext {
           results,
         }
       },
-      async findSnapshot(id: number) {
+      async findSnapshot(id: string) {
         const [result] = await sql<Snapshot[]>`
           select *
           from snapshots
@@ -275,7 +275,7 @@ export function getStorageContext(): StorageContext {
           results,
         }
       },
-      async findBackup(id: number) {
+      async findBackup(id: string) {
         const [result] = await sql<Backup[]>`
           select *
           from backups
