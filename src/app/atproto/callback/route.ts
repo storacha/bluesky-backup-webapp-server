@@ -6,7 +6,6 @@ import { getSession } from '@/lib/sessions'
 
 export async function GET(request: NextRequest) {
   const { did: account } = await getSession()
-  console.log('account', account)
   if (!account) {
     return new Response(`Not authorized`, {
       status: 401,
