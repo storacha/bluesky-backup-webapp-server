@@ -32,41 +32,17 @@ const Dialog = styled.dialog<{ $background?: string; $size: ModalSize }>`
   position: relative;
   border-radius: 0.75rem;
   max-width: 95vw;
+  animation: enter 0.2s ease-in forwards;
   background: ${({ $background = 'var(--color-white)' }) => $background};
-
-  &:not([open]) {
-    display: none;
-  }
-
-  &[open] {
-    transform: scale(0.5);
-    animation: enter 0.3s ease-in forwards;
-  }
-
-  @keyframes enter {
-    from {
-      transform: scale(0.5);
-      opacity: 0;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
+  transform: scale(0.65);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 
   &::backdrop {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: opacity 200ms ease;
     opacity: 0;
-    animation: fadeBackdrop 0.3s ease-in forwards;
-  }
-
-  @keyframes fadeBackdrop {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
   }
 `
 
