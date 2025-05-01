@@ -23,6 +23,7 @@ export const DataBox = ({
   return (
     <Box
       $display="flex"
+      $justifyContent="space-between"
       $background="var(--color-white)"
       $borderStyle="solid"
       $width={width}

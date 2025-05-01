@@ -1,6 +1,7 @@
 // all the known CSS properties so we don't have to always duplicate
 // them when we make components accepting custom props with yak
 import { Property } from 'csstype'
+import { ReactNode } from 'react'
 
 export type StyleProps = {
   $color?: Property.Color
@@ -27,4 +28,24 @@ export type StyleProps = {
   $display: Property.Display
   $borderWidth: Property.BorderWidth
   $borderColor: Property.BorderColor
+  $top: Property.Top
+  $left: Property.Left
+  $right: Property.Right
+  $bottom: Property.Bottom
+  $borderRadius: Property.BorderRadius
+  $fontFamily: Property.FontFamily
+}
+
+export interface BtnProps extends StyleProps {
+  $mt: Property.MarginTop
+  $mx: `${Property.MarginLeft} ${Property.MarginRight}`
+  $px: `${Property.PaddingLeft} ${Property.PaddingRight}`
+  $py: `${Property.PaddingTop} ${Property.PaddingBottom}`
+  $my: `${Property.MarginTop} ${Property.MarginBottom}`
+  $pt: `${Property.PaddingTop}`
+  $isLoading?: boolean
+  $hideLoadingText?: boolean
+  $variant?: string
+  $leftIcon?: ReactNode
+  $disabled?: boolean
 }

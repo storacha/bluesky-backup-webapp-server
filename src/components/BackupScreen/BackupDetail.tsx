@@ -1,6 +1,5 @@
 'use client'
 
-import { PlusCircle } from '@phosphor-icons/react'
 import { Account, useAuthenticator } from '@storacha/ui-react'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
@@ -10,12 +9,10 @@ import { Backup, SpaceDid } from '@/app/types'
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
 import { CreateButton } from '@/components/ui/CreateButton'
-import { useDisclosure } from '@/hooks/use-disclosure'
 import { delegate } from '@/lib/delegate'
 import { uploadCAR } from '@/lib/storacha'
-import { useUiComponentStore } from '@/store/ui'
 
-import { Modal, Stack, StyleProps, Text } from '../ui'
+import { Stack, StyleProps, Text } from '../ui'
 
 import { DataBox } from './Data'
 
@@ -56,6 +53,21 @@ const AccountsContainer = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+  width: 100%;
+`
+
+const Wrapper = styled.div`
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+`
+
+const ConnectingLine = styled.div`
+  width: 30px;
+  height: 1px;
+  background-color: var(--color-gray-light);
+  margin: 0;
+  flex-shrink: 0;
 `
 
 export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
@@ -69,19 +81,17 @@ export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
   height: ${({ $height = '66px' }) => $height};
   width: ${({ $width = '100%' }) => $width};
   display: ${({ $display = '' }) => $display};
-  justify-content: space-between;
+  justify-content: ${({ $justifyContent = '' }) => $justifyContent};
   align-items: center;
   padding: ${({ $padding = '0 0.6rem' }) => $padding};
   gap: ${({ $gap = 0 }) => $gap};
   cursor: pointer;
   background: ${({ $background = '' }) => $background};
-`
-
-const ConnectingLine = styled.div`
-  width: 30px;
-  height: 1px;
-  background-color: var(--color-gray-light);
-  margin: 0;
+  position: ${({ $position = '' }) => $position};
+  top: ${({ $top = '' }) => $top};
+  right: ${({ $right = '' }) => $right};
+  left: ${({ $left = '' }) => $left};
+  bottom: ${({ $bottom = '' }) => $bottom};
 `
 
 export const AccountLogo = styled.div<{
@@ -156,11 +166,7 @@ function NewBackupForm({ children }: { children: ReactNode }) {
     formData.append('delegation_cid', delegationCid.toString())
     return createNewBackup(formData)
   }
-  return (
-    <Container>
-      <form action={generateDelegationAndCreateNewBackup}>{children}</form>
-    </Container>
-  )
+  return <form action={generateDelegationAndCreateNewBackup}>{children}</form>
 }
 
 function MaybeForm({
@@ -174,8 +180,6 @@ function MaybeForm({
 }
 
 export const BackupDetail = ({ account, backup }: BackupProps) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const { updateUiStore } = useUiComponentStore()
   const [data, setData] = useState<Record<string, boolean>>({
     repository: true,
     blobs: false,
@@ -198,20 +202,13 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
     }))
   }
 
-  const openModal = () => {
-    onOpen()
-    updateUiStore({
-      ui: 'keychain',
-    })
-  }
-
   return (
     <>
-      <Container>
-        <MaybeForm backup={backup}>
-          {account && (
-            <input type="hidden" name="account" value={account.did()} />
-          )}
+      <MaybeForm backup={backup}>
+        {account && (
+          <input type="hidden" name="account" value={account.did()} />
+        )}
+        <Container>
           <Stack $gap="2rem">
             {backup ? (
               <Heading>{backup.name}</Heading>
@@ -220,34 +217,26 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
             )}
             <Stack $gap="1rem">
               <AccountsContainer>
-                <BlueskyAccountSelect
-                  name="atproto_account"
-                  {...(backup && {
-                    disabled: true,
-                    value: backup.atprotoAccount,
-                  })}
-                />
+                <Wrapper>
+                  <BlueskyAccountSelect
+                    name="atproto_account"
+                    {...(backup && {
+                      disabled: true,
+                      value: backup.atprotoAccount,
+                    })}
+                  />
+                </Wrapper>
                 <ConnectingLine />
-                <StorachaSpaceSelect
-                  name="storacha_space"
-                  {...(backup && {
-                    disabled: true,
-                    value: backup.storachaSpace,
-                  })}
-                />
+                <Wrapper>
+                  <StorachaSpaceSelect
+                    name="storacha_space"
+                    {...(backup && {
+                      disabled: true,
+                      value: backup.storachaSpace,
+                    })}
+                  />
+                </Wrapper>
               </AccountsContainer>
-            </Stack>
-
-            <Stack $gap="1.25rem" onClick={openModal}>
-              <Text $textTransform="capitalize">keychain</Text>
-              <Box $height="44px" $width="48%" $display="flex">
-                <Text $textTransform="capitalize">create keychain</Text>
-                <PlusCircle
-                  weight="fill"
-                  size="16"
-                  color="var(--color-gray-1)"
-                />
-              </Box>
             </Stack>
             <Stack $gap="1.25rem">
               <Text $textTransform="capitalize">data</Text>
@@ -270,18 +259,8 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
               <CreateButton type="submit">create backup</CreateButton>
             )}
           </Stack>
-        </MaybeForm>
-      </Container>
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        title="UI store persistence!"
-        hasCloseBtn
-      >
-        <Box $borderStyle="none">
-          <Text>Testing the ui store thingy!</Text>
-        </Box>
-      </Modal>
+        </Container>
+      </MaybeForm>
     </>
   )
 }

@@ -3,8 +3,9 @@
 import { X } from '@phosphor-icons/react'
 import { Property } from 'csstype'
 import { styled } from 'next-yak'
-import { KeyboardEvent, ReactNode, useEffect, useRef } from 'react'
+import { KeyboardEvent, ReactNode, useEffect, useRef, useState } from 'react'
 import { AriaDialogProps, useDialog } from 'react-aria'
+import { createPortal } from 'react-dom'
 
 type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
@@ -32,14 +33,41 @@ const Dialog = styled.dialog<{ $background?: string; $size: ModalSize }>`
   position: relative;
   border-radius: 0.75rem;
   max-width: 95vw;
-  transform: scale(0.5);
-  transition: all 0.3s ease-in;
-  animation: enter 0.2s ease-in forwards;
   background: ${({ $background = 'var(--color-white)' }) => $background};
+
+  transition: transform 0.3s;
+  transform: scale(0.65);
+  opacity: 0;
+
+  &[open] {
+    transform: scale(1);
+    opacity: 1;
+    animation: enter 0.3s forwards;
+
+    // this a very interesting finding, haha! really helpful for setting a 'third state' to
+    // key into the limitations of transitions for dialog elements.
+    @starting-style {
+      opacity: 0;
+      transform: scale(0.65);
+    }
+  }
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: opacity 200ms ease;
+    opacity: 1;
+  }
 
   @keyframes enter {
     to {
       transform: scale(1);
+    }
+  }
+
+  @keyframes leave {
+    to {
+      transform: scale(0.65);
+      opacity: 0;
     }
   }
 `
@@ -72,6 +100,27 @@ export interface ModalProps extends AriaDialogProps {
   hasCloseBtn?: boolean
   size?: ModalSize
   background?: string
+}
+
+function ClientOnlyPortal({
+  children,
+  selector,
+}: {
+  children: ReactNode
+  selector: string
+}) {
+  const ref = useRef<Element>()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    const element = document.querySelector(selector)
+    if (element) {
+      ref.current = element
+      setMounted(true)
+    }
+  }, [selector])
+
+  return mounted && ref.current ? createPortal(children, ref.current) : null
 }
 
 /**
@@ -130,22 +179,24 @@ export const Modal = ({
   }
 
   return (
-    <Dialog
-      ref={modalRef}
-      onKeyDown={handleKeyDown}
-      onClick={handleBackdropClick}
-      $size={size}
-      style={dialogStyle}
-      $background={background}
-      {...dialogProps}
-    >
-      {title && <ModalTitle {...titleProps}>{title}</ModalTitle>}
-      {hasCloseBtn && (
-        <ModalCloseBtn aria-label="Close modal" onClick={handleOnClose}>
-          <X size={18} color="var(--color-gray-medium)" />
-        </ModalCloseBtn>
-      )}
-      {children}
-    </Dialog>
+    <ClientOnlyPortal selector="#modal">
+      <Dialog
+        ref={modalRef}
+        onKeyDown={handleKeyDown}
+        onClick={handleBackdropClick}
+        $size={size}
+        style={dialogStyle}
+        $background={background}
+        {...dialogProps}
+      >
+        {title && <ModalTitle {...titleProps}>{title}</ModalTitle>}
+        {hasCloseBtn && (
+          <ModalCloseBtn aria-label="Close modal" onClick={handleOnClose}>
+            <X size={18} color="var(--color-gray-medium)" />
+          </ModalCloseBtn>
+        )}
+        {children}
+      </Dialog>
+    </ClientOnlyPortal>
   )
 }
