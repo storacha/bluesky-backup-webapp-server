@@ -1,7 +1,8 @@
 import { styled } from 'next-yak'
-import { BtnProps, StyleProps } from './style'
-import { Spinner } from './spinner'
 import { ButtonHTMLAttributes, ReactNode } from 'react'
+
+import { Spinner } from './spinner'
+import { BtnProps, StyleProps } from './style'
 
 export const Button = styled.button<Partial<BtnProps>>`
   font-family: ${({ $fontFamily = 'var(--font-dm-mono)' }) => $fontFamily};

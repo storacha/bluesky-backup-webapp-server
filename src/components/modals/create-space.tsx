@@ -1,4 +1,13 @@
+import { CheckCircle, Copy } from '@phosphor-icons/react'
+import * as Client from '@storacha/client'
+import * as Storacha from '@storacha/client/account'
+import * as StorachaSpace from '@storacha/client/space'
 import { ChangeEvent, useState } from 'react'
+import { toast } from 'sonner'
+
+import { shorten } from '@/lib/ui'
+
+import { Box } from '../BackupScreen/BackupDetail'
 import {
   InputField,
   Modal,
@@ -7,14 +16,8 @@ import {
   StatefulButton,
   Text,
 } from '../ui'
+
 import { SharedModalLayout } from './layout'
-import { Box } from '../BackupScreen/BackupDetail'
-import * as StorachaSpace from '@storacha/client/space'
-import * as Storacha from '@storacha/client/account'
-import { toast } from 'sonner'
-import { shorten } from '@/lib/ui'
-import { CheckCircle, Copy } from '@phosphor-icons/react'
-import * as Client from '@storacha/client'
 
 type SpaceCreationState = 'idle' | 'creating-space' | 'creating-delegation'
 

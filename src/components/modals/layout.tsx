@@ -1,7 +1,8 @@
-import { ReactNode } from 'react'
-import { ModalProps, Stack, Text } from '../ui'
-import { Box } from '../BackupScreen/BackupDetail'
 import { ArrowLeft } from '@phosphor-icons/react'
+import { ReactNode } from 'react'
+
+import { Box } from '../BackupScreen/BackupDetail'
+import { ModalProps, Stack, Text } from '../ui'
 
 interface SharedModalLayoutProps extends Pick<ModalProps, 'onClose'> {
   title: string

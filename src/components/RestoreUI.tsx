@@ -26,9 +26,9 @@ import { cidUrl } from '@/lib/storacha'
 import { shortenDID } from '@/lib/ui'
 
 import { Box } from './BackupScreen/BackupDetail'
+import Button from './Button'
 import Keychain from './Keychain'
 import { roundRectStyle } from './ui'
-import Button from './Button'
 
 const InputElement = styled.input`
   border: 1px solid black;
