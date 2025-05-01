@@ -4,6 +4,7 @@ import { useFocusRing, useSwitch, VisuallyHidden } from 'react-aria'
 import { useToggleState } from 'react-stately'
 
 interface SwitchProps {
+  id?: string
   value: boolean
   name: string
   onClick: (value: boolean) => void
@@ -62,7 +63,7 @@ const SwitchNob = styled.div<{ $isSelected: boolean; $isDisabled?: boolean }>`
       : SWITCH_OFFSET}px;
 `
 
-const SwitchWrapper = styled.label<{ $isDisabled?: boolean }>`
+const SwitchWrapper = styled.div<{ $isDisabled?: boolean }>`
   display: inline-flex;
   align-items: center;
   opacity: ${({ $isDisabled }) => ($isDisabled ? 0.4 : 1)};
