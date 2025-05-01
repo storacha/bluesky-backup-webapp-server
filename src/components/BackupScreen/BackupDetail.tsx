@@ -1,15 +1,18 @@
 'use client'
 
-import { Stack, StyleProps, Text } from '../ui'
+import { Account } from '@storacha/ui-react'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
-import { DataBox } from './Data'
+
+import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
 import { Backup } from '@/app/types'
-import { Account } from '@storacha/ui-react'
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
-import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
 import { CreateButton } from '@/components/ui/CreateButton'
+
+import { Stack, StyleProps, Text } from '../ui'
+
+import { DataBox } from './Data'
 
 let action: typeof import('@/app/backups/new/action').action
 

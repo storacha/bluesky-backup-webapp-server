@@ -1,13 +1,16 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { styled } from 'next-yak'
 import { Account, Client, useAuthenticator } from '@storacha/ui-react'
+import { styled } from 'next-yak'
+import { useEffect, useState } from 'react'
+
 import { Stack } from '@/components/ui'
 import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
-import { Sidebar } from './Sidebar'
+
 import { BackupScreen } from '../components/BackupScreen'
+
+import { Sidebar } from './Sidebar'
 import { useSWR } from './swr'
 
 const Outside = styled(Stack)`

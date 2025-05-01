@@ -1,7 +1,8 @@
-import type { Service } from '@storacha/ui-react'
+import * as DID from '@ipld/dag-ucan/did'
 import { connect } from '@ucanto/client'
 import { CAR, HTTP } from '@ucanto/transport'
-import * as DID from '@ipld/dag-ucan/did'
+
+import type { Service } from '@storacha/ui-react'
 
 const die = (name: string) => {
   throw new Error(`Environment variable ${name} is required and not set.`)

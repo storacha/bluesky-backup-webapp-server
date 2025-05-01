@@ -1,10 +1,12 @@
-import StorachaProvider from '@/components/StorachaProvider'
-import { dmMono, dmSans, epilogue } from './globalStyle'
-import { Authenticator } from './authentication'
-import { SWRConfigProvider } from './swr'
 import { Metadata } from 'next'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Toaster } from 'sonner'
+
+import StorachaProvider from '@/components/StorachaProvider'
+
+import { Authenticator } from './authentication'
+import { dmMono, dmSans, epilogue } from './globalStyle'
+import { SWRConfigProvider } from './swr'
 
 export const metadata: Metadata = {
   title: 'Bb',

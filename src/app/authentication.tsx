@@ -1,6 +1,7 @@
 'use client'
 
 import { useAuthenticator } from '@storacha/ui-react'
+
 import type { ReactNode } from 'react'
 
 // Re-export as a Client Component, so it can safely be used in a Server

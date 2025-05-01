@@ -1,8 +1,10 @@
 import { At } from '@phosphor-icons/react'
-import { Button, InputField, Modal, ModalProps, Stack, Text } from '../ui'
 import { ChangeEvent, useState } from 'react'
-import { SharedModalLayout } from './layout'
+
 import { Box } from '../BackupScreen/BackupDetail'
+import { Button, InputField, Modal, ModalProps, Stack, Text } from '../ui'
+
+import { SharedModalLayout } from './layout'
 
 export const AddBskyAccountModal = ({
   isOpen,

@@ -1,15 +1,18 @@
 'use client'
-import { useSWR } from '@/app/swr'
-import { useAuthenticator } from '@storacha/ui-react'
-import { useMemo, useState, useEffect } from 'react'
-import { Stack, Text } from '../ui'
+
 import { CaretDown, PlusCircle } from '@phosphor-icons/react'
-import { SelectField, Option } from '../ui'
-import { ControlProps, ValueContainerProps, components } from 'react-select'
-import { AccountLogo, Box } from './BackupDetail'
+import { useAuthenticator } from '@storacha/ui-react'
 import Image from 'next/image'
+import { useEffect, useMemo, useState } from 'react'
+import { components, ControlProps, ValueContainerProps } from 'react-select'
+
+import { useSWR } from '@/app/swr'
 import { shortenDID } from '@/lib/ui'
+
 import { AddBskyAccountModal } from '../modals'
+import { Option, SelectField, Stack, Text } from '../ui'
+
+import { AccountLogo, Box } from './BackupDetail'
 
 const LOG_INTO_BLUESKY_VALUE = '-connect-'
 

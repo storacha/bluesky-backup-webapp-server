@@ -1,4 +1,4 @@
-import { useQueryStates, createParser } from 'nuqs'
+import { createParser, useQueryStates } from 'nuqs'
 
 // we should have a union of values to expect in the url param so we can be rest-assured
 // when wrong ui values are appended in the query

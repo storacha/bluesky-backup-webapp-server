@@ -1,13 +1,8 @@
 // 'use client'
 
-import db, { PrefsDoc } from '@/lib/db'
 import { Agent, CredentialSession } from '@atproto/api'
-import { decrypt } from '@/lib/bluesky'
-import { useLiveQuery } from 'dexie-react-hooks'
-import { ATPROTO_DEFAULT_SINK, ATPROTO_DEFAULT_SOURCE } from '@/lib/constants'
-import { useState, InputHTMLAttributes } from 'react'
-import { useForm } from 'react-hook-form'
 import { Secp256k1Keypair } from '@atproto/crypto'
+import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 import {
   AdjustmentsHorizontalIcon,
   ArrowRightCircleIcon,
@@ -16,17 +11,24 @@ import {
   IdentificationIcon,
   KeyIcon,
 } from '@heroicons/react/20/solid'
-import { shortenDID } from '@/lib/ui'
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
-import Button from './Button'
-import { Key, useKeychainContext } from '@/contexts/keychain'
-import Keychain from './Keychain'
-import { cidUrl } from '@/lib/storacha'
-import { ATBlob, Snapshot } from '@/app/types'
-import useSWR from 'swr'
-import { Box } from './BackupScreen/BackupDetail'
+import { useLiveQuery } from 'dexie-react-hooks'
 import { styled } from 'next-yak'
+import { InputHTMLAttributes, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import useSWR from 'swr'
+
+import { ATBlob, Snapshot } from '@/app/types'
+import { Key, useKeychainContext } from '@/contexts/keychain'
+import { decrypt } from '@/lib/bluesky'
+import { ATPROTO_DEFAULT_SINK, ATPROTO_DEFAULT_SOURCE } from '@/lib/constants'
+import db, { PrefsDoc } from '@/lib/db'
+import { cidUrl } from '@/lib/storacha'
+import { shortenDID } from '@/lib/ui'
+
+import { Box } from './BackupScreen/BackupDetail'
+import Keychain from './Keychain'
 import { roundRectStyle } from './ui'
+import Button from './Button'
 
 const InputElement = styled.input`
   border: 1px solid black;

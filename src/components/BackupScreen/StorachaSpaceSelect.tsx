@@ -1,15 +1,17 @@
 'use client'
-import { shortenDID } from '@/lib/ui'
-import { useAuthenticator } from '@storacha/ui-react'
-import { useState, useMemo } from 'react'
-import { Stack, Text, SelectField, Option } from '../ui'
 import { CaretDown } from '@phosphor-icons/react'
-import { AccountLogo, Box } from './BackupDetail'
+import { useAuthenticator } from '@storacha/ui-react'
 import Image from 'next/image'
-import { ControlProps, ValueContainerProps, components } from 'react-select'
+import { useMemo, useState } from 'react'
+import { components, ControlProps, ValueContainerProps } from 'react-select'
+
 import { useDisclosure } from '@/hooks/use-disclosure'
+import { shortenDID } from '@/lib/ui'
+
+import { Option, SelectField, Stack, Text } from '../ui'
+
+import { AccountLogo, Box } from './BackupDetail'
 import { CreateSpaceModal } from '../modals'
-import * as Storacha from '@storacha/client'
 
 const CREATE_NEW_STORACHA_SPACE_VALUE = '-create-'
 

@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react'
 import { ArrowPathIcon } from '@heroicons/react/20/solid'
+import React, { ReactNode } from 'react'
 
 export function Loader({ className }: { className?: string }): ReactNode {
   return (

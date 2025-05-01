@@ -2,23 +2,25 @@
 
 import {
   Cog8ToothIcon,
-  PlusIcon,
-  TrashIcon,
-  KeyIcon,
   EyeIcon,
   EyeSlashIcon,
+  KeyIcon,
+  PlusIcon,
+  TrashIcon,
 } from '@heroicons/react/20/solid'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { shortenCID, shortenDID } from '@/lib/ui'
 import { KeychainContextProps, useKeychainContext } from '@/contexts/keychain'
-import type { Key, KeyImportFn } from '@/contexts/keychain'
-import CopyButton from './CopyButton'
+import { shortenCID, shortenDID } from '@/lib/ui'
+
 import Button from './Button'
-import Input from './Input'
+import CopyButton from './CopyButton'
 import Dialog from './Dialog'
+import Input from './Input'
 import { Loader } from './Loader'
+
+import type { Key, KeyImportFn } from '@/contexts/keychain'
 
 interface KeyImportFormParams {
   keyMaterial: string

@@ -1,12 +1,14 @@
 'use client'
 
 import { styled } from 'next-yak'
+import { Suspense } from 'react'
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
+
+import { Backup } from '@/app/types'
+import { useStorachaAccount } from '@/hooks/use-plan'
+
 import { BackupDetail } from './BackupDetail'
 import { BackupRestore } from './Restore'
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
-import { useStorachaAccount } from '@/hooks/use-plan'
-import { Backup } from '@/app/types'
-import { Suspense } from 'react'
 
 const BackupContainer = styled.div`
   display: flex;

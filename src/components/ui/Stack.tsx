@@ -1,4 +1,5 @@
 import { css, styled } from 'next-yak'
+
 import { StyleProps } from './style'
 
 export const Stack = styled.div<{ $even?: boolean } & Partial<StyleProps>>`

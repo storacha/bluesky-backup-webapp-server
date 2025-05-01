@@ -7,8 +7,9 @@ import urlJoin from 'proper-url-join'
 // Note: This is from `@atproto-labs/`, so it's subject to breaking changes.
 // That should be okay, as we're only depending on the types, and we can adjust
 // as any updates happen.
-import type { SimpleStore, Value } from '@atproto-labs/simple-store'
 import { getStorageContext, KVNamespace } from '@/lib/server/db'
+
+import type { SimpleStore, Value } from '@atproto-labs/simple-store'
 
 const atprotoClientUri = process.env.NEXT_PUBLIC_BLUESKY_CLIENT_URI
 
