@@ -56,6 +56,12 @@ const AccountsContainer = styled.div`
   width: 100%;
 `
 
+const Wrapper = styled.div`
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+`
+
 const ConnectingLine = styled.div`
   width: 30px;
   height: 1px;
@@ -155,11 +161,7 @@ function NewBackupForm({ children }: { children: ReactNode }) {
     formData.append('delegation_cid', delegationCid.toString())
     return createNewBackup(formData)
   }
-  return (
-    <Container>
-      <form action={generateDelegationAndCreateNewBackup}>{children}</form>
-    </Container>
-  )
+  return <form action={generateDelegationAndCreateNewBackup}>{children}</form>
 }
 
 function MaybeForm({
@@ -197,11 +199,11 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
 
   return (
     <>
-      <Container>
-        <MaybeForm backup={backup}>
-          {account && (
-            <input type="hidden" name="account" value={account.did()} />
-          )}
+      <MaybeForm backup={backup}>
+        {account && (
+          <input type="hidden" name="account" value={account.did()} />
+        )}
+        <Container>
           <Stack $gap="2rem">
             {backup ? (
               <Heading>Backup #{backup.id}</Heading>
@@ -210,21 +212,25 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
             )}
             <Stack $gap="1rem">
               <AccountsContainer>
-                <BlueskyAccountSelect
-                  name="atproto_account"
-                  {...(backup && {
-                    disabled: true,
-                    value: backup.atprotoAccount,
-                  })}
-                />
+                <Wrapper>
+                  <BlueskyAccountSelect
+                    name="atproto_account"
+                    {...(backup && {
+                      disabled: true,
+                      value: backup.atprotoAccount,
+                    })}
+                  />
+                </Wrapper>
                 <ConnectingLine />
-                <StorachaSpaceSelect
-                  name="storacha_space"
-                  {...(backup && {
-                    disabled: true,
-                    value: backup.storachaSpace,
-                  })}
-                />
+                <Wrapper>
+                  <StorachaSpaceSelect
+                    name="storacha_space"
+                    {...(backup && {
+                      disabled: true,
+                      value: backup.storachaSpace,
+                    })}
+                  />
+                </Wrapper>
               </AccountsContainer>
             </Stack>
             <Stack $gap="1.25rem">
@@ -248,8 +254,8 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
               <CreateButton type="submit">create backup</CreateButton>
             )}
           </Stack>
-        </MaybeForm>
-      </Container>
+        </Container>
+      </MaybeForm>
     </>
   )
 }
