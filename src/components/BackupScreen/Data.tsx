@@ -1,8 +1,9 @@
-import { Switch } from '../Switch'
+import { useId } from 'react'
+
 import { Stack, Text } from '../ui'
 
 import { Box } from './BackupDetail'
-import { useId } from 'react'
+import { Switch } from './Switch'
 
 interface DataBoxProps {
   title: string
