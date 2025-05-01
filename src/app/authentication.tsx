@@ -13,25 +13,24 @@ export { Authenticator } from '@storacha/ui-react'
  * {@link unauthenticated}.
  */
 export function Authenticated({
-  children,
+  loading,
   unauthenticated,
+  children,
 }: {
-  children: ReactNode
+  loading: ReactNode
   unauthenticated: ReactNode
+  children: ReactNode
 }): ReactNode {
-  const [{ accounts }] = useAuthenticator()
+  const [{ client, accounts }] = useAuthenticator()
   const authenticated = accounts.length > 0
-  if (authenticated) {
+
+  if (!client) {
+    return loading
+  } else if (authenticated) {
     return children
+  } else {
+    return unauthenticated
   }
-
-  return unauthenticated
-
-  // TK: Need to stop this, because it causes flicker when the user is logged in.
-
-  // NB: There's a moment when the client is not actually present yet. We still
-  // render the login screen to avoid flicker, betting that the client will be
-  // present by the time the user is able to actually try to log in.
 }
 
 export function LogOutButton({

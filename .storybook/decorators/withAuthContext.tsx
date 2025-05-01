@@ -4,6 +4,7 @@ import {
   AuthenticatorContext,
   AuthenticatorContextActions,
   AuthenticatorContextState,
+  Client,
 } from '@storacha/ui-react'
 
 export function withAuthContext(
@@ -19,6 +20,7 @@ export function withAuthContext(
             spaces: [],
             email: '',
             submitted: false,
+            client: {} as Client,
             ...state,
           },
           {

@@ -1,10 +1,14 @@
 import { ArrowPathIcon } from '@heroicons/react/20/solid'
-import React, { ReactNode } from 'react'
+import { keyframes, styled } from 'next-yak'
 
-export function Loader({ className }: { className?: string }): ReactNode {
-  return (
-    <ArrowPathIcon
-      className={`animate-spin ${className || 'h-12 w-12 mx-auto mt-12'}`}
-    />
-  )
-}
+const spin = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`
+
+export const Loader = styled(ArrowPathIcon)`
+  display: block;
+  animation: ${spin} 2s linear infinite;
+  width: 3rem;
+`
