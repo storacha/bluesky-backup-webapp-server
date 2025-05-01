@@ -105,7 +105,7 @@ export const CreateSpaceModal = ({
         onSpaceCreated(createdSpace.did())
         toast.success('Recovery delegation successful!')
       }
-      setSpaceCreationStep("space-name")
+      setSpaceCreationStep('space-name')
       onClose()
     } catch (error) {
       console.error(error)
@@ -191,9 +191,7 @@ export const CreateSpaceModal = ({
               </Text>
               <Stack $gap="1rem">
                 <Box $position="relative">
-                  <Text $fontWeight="500" $color="var(--color-black)">
-                    {recoveryKey}
-                  </Text>
+                  <Text $fontWeight="500">{recoveryKey}</Text>
                   <Box $position="absolute" $top="0" $right="0" $border="none">
                     {hasCopiedKey ? (
                       <CheckCircle weight="fill" size="18" color="lightgreen" />

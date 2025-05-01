@@ -117,9 +117,7 @@ export const BlueskyAccountSelect = (props: {
                     : displayOption?.label || 'Select an account'}
                 </Text>
               </Stack>
-              {isLoading ? (
-                <span>Loading...</span>
-              ) : !atprotoAccounts || atprotoAccounts.length === 0 ? (
+              {!atprotoAccounts || atprotoAccounts.length === 0 ? (
                 <PlusCircle
                   weight="fill"
                   size="16"

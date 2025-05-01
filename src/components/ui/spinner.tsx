@@ -1,4 +1,4 @@
-import { styled } from 'next-yak'
+import { keyframes, styled } from 'next-yak'
 import React from 'react'
 
 export type SpinnerSize = 'xs' | 'sm' | 'md' | 'lg'
@@ -17,6 +17,15 @@ const borderWidths = {
   lg: '4px',
 }
 
+const spin = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`
+
 const SpinnerBase = styled.div`
   display: inline-block;
   border-radius: 50%;
@@ -24,13 +33,7 @@ const SpinnerBase = styled.div`
   border-left-color: transparent;
   border-bottom-color: transparent;
   border-right-color: transparent;
-  animation: spin 0.75s linear infinite;
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
+  animation: ${spin} 0.75s linear infinite;
 `
 
 interface SpinnerProps {
