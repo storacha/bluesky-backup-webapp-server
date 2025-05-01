@@ -10,9 +10,19 @@ const sizeToPixels = {
   lg: '2rem',
 }
 
+const borderWidths = {
+  xs: '2px',
+  sm: '2px',
+  md: '3px',
+  lg: '4px',
+}
+
 const SpinnerBase = styled.div`
   display: inline-block;
   border-radius: 50%;
+  border-style: solid;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
   border-right-color: transparent;
   animation: spin 0.75s linear infinite;
 
@@ -37,7 +47,8 @@ export const Spinner: React.FC<SpinnerProps> = ({
   const spinnerStyle = {
     height: sizeToPixels[size],
     width: sizeToPixels[size],
-    border: `2px solid ${color}`,
+    borderWidth: borderWidths[size],
+    borderTopColor: color,
   }
 
   return <SpinnerBase className={className} style={spinnerStyle} />

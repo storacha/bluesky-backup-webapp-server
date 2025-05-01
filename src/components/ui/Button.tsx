@@ -25,16 +25,24 @@ export const Button = styled.button<Partial<BtnProps>>`
   transition: background-color 0.2s ease;
   border: none;
   outline: none;
-
   &:disabled {
     background-color: var(--color-gray-light);
     color: var(--color-gray-medium);
     cursor: not-allowed;
   }
-
   &:active:not(:disabled) {
     background-color: var(--color-gray-medium);
   }
+`
+
+const SpinnerWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 interface StatefulBtnProps
@@ -61,7 +69,11 @@ export const StatefulButton = ({
       <span style={{ visibility: isLoading ? 'hidden' : 'visible' }}>
         {children}
       </span>
-      {isLoading && <Spinner />}
+      {isLoading && (
+        <SpinnerWrapper>
+          <Spinner />
+        </SpinnerWrapper>
+      )}
     </Button>
   )
 }

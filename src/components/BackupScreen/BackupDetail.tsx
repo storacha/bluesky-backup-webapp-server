@@ -87,6 +87,11 @@ export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
   gap: ${({ $gap = 0 }) => $gap};
   cursor: pointer;
   background: ${({ $background = '' }) => $background};
+  position: ${({ $position = '' }) => $position};
+  top: ${({ $top = '' }) => $top};
+  right: ${({ $right = '' }) => $right};
+  left: ${({ $left = '' }) => $left};
+  bottom: ${({ $bottom = '' }) => $bottom};
 `
 
 export const AccountLogo = styled.div<{
