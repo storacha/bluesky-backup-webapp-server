@@ -49,31 +49,18 @@ const meta = {
       ]
     ),
     withData(
-      ['api', '/api/backups/1/snapshots'],
-      [
-        {
-          id: 'abc',
-          backupId: 'abc',
-          atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
-          repositoryStatus: 'success',
-          repositoryCid:
-            'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551repo',
-          blobsStatus: 'in-progress',
-          preferencesStatus: 'not-started',
-          createdAt: '2025-04-07 19:51:56',
-        },
-        {
-          id: 'def',
-          backupId: 'abc',
-          atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
-          repositoryStatus: 'not-started',
-          blobsStatus: 'in-progress',
-          preferencesStatus: 'success',
-          preferencesCid:
-            'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy552pref',
-          createdAt: '2025-04-07 20:51:56',
-        },
-      ]
+      ['api', '/api/snapshots/abc'],
+      {
+        id: 'abc',
+        backupId: 'abc',
+        atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
+        repositoryStatus: 'success',
+        repositoryCid:
+          'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551repo',
+        blobsStatus: 'in-progress',
+        preferencesStatus: 'not-started',
+        createdAt: '2025-04-07 19:51:56',
+      }
     ),
     withData(
       ['atproto-handle', 'did:plc:ro3eio7zgqosf5gnxsq6ik5m'],
@@ -86,4 +73,4 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
-Default.storyName = '∕backups∕[id]'
+Default.storyName = '/snapshots∕[id]'
