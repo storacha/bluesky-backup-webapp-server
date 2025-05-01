@@ -120,7 +120,7 @@ coproc {
       # In case we've just reconnected
       cleanup
       # Write the URL to .env
-      echo "NEXT_PUBLIC_BLUESKY_CLIENT_URI=$url #ngrok" >>.env
+      echo "NEXT_PUBLIC_APP_URI=$url #ngrok" >>.env
       ;;
     "tunnel session started")
       state="connected"
