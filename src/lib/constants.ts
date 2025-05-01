@@ -1,3 +1,5 @@
+import * as UcantoClient from '@ucanto/client'
+
 export type DidWeb = `did:web:${string}`
 export type DidKey = `did:key:${string}`
 function isDidWeb(s?: string): s is DidWeb {
@@ -40,3 +42,10 @@ if (!process.env.NEXT_PUBLIC_STORACHA_GATEWAY_HOSTNAME) {
     `NEXT_PUBLIC_STORACHA_GATEWAY_HOSTNAME not set, using default value of ${GATEWAY_HOSTNAME_DEFAULT_VALUE}`
   )
 }
+
+const toWebDID = (input?: string) =>
+  UcantoClient.Schema.DID.match({ method: 'web' }).from(input)
+
+export const GATEWAY_ID =
+  toWebDID(process.env.NEXT_PUBLIC_STORACHA_GATEWAY_ID) ??
+  toWebDID('did:web:w3s.link')

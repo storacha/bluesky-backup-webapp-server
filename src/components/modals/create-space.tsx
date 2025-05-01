@@ -2,9 +2,15 @@ import { CheckCircle, Copy } from '@phosphor-icons/react'
 import * as Client from '@storacha/client'
 import * as Storacha from '@storacha/client/account'
 import * as StorachaSpace from '@storacha/client/space'
+import { ContentServeService } from '@storacha/ui-react'
+import { useAuthenticator } from '@storacha/ui-react'
+import * as UcantoClient from '@ucanto/client'
+import { HTTP } from '@ucanto/transport'
+import * as CAR from '@ucanto/transport/car'
 import { ChangeEvent, useState } from 'react'
 import { toast } from 'sonner'
 
+import { GATEWAY_HOSTNAME, GATEWAY_ID } from '@/lib/constants'
 import { shorten } from '@/lib/ui'
 
 import { Box } from '../BackupScreen/BackupDetail'
@@ -41,26 +47,45 @@ export const CreateSpaceModal = ({
   const [createdSpace, setCreatedSpace] =
     useState<StorachaSpace.OwnedSpace | null>(null)
   const [hasCopiedKey, setHasCopiedKey] = useState<boolean>(false)
+  const [{ client }] = useAuthenticator()
 
   const createSpace = async () => {
-    const client = await Client.create()
+    if (client) {
+      try {
+        setState('creating-space')
 
-    try {
-      setState('creating-space')
-      const space = await client.createSpace(spaceName, { account })
+        /**
+         * Gateway authorization code copied from console - we should move this into a library soon.
+         */
+        const storachaGateway = UcantoClient.connect({
+          id: {
+            did: () => GATEWAY_ID,
+          },
+          codec: CAR.outbound,
+          channel: HTTP.open<ContentServeService>({
+            url: new URL(`https://${GATEWAY_HOSTNAME}`),
+          }),
+        })
 
-      if (space) {
-        const key = StorachaSpace.toMnemonic(space)
-        setRecoveryKey(key)
-        setCreatedSpace(space)
-        setSpaceCreationStep('recovery-phase')
-        toast.success(`${shorten(spaceName)} created!`)
+        const space = await client.createSpace(spaceName, {
+          authorizeGatewayServices: [storachaGateway],
+        })
+
+        if (space) {
+          const key = StorachaSpace.toMnemonic(space)
+          setRecoveryKey(key)
+          setCreatedSpace(space)
+          setSpaceCreationStep('recovery-phase')
+          toast.success(`${shorten(spaceName)} created!`)
+        }
+      } catch (error) {
+        console.error(error)
+        toast.error(`Error ${(error as Error).message}`)
+      } finally {
+        setState('idle')
       }
-    } catch (error) {
-      console.error(error)
-      toast.error(`Error ${(error as Error).message}`)
-    } finally {
-      setState('idle')
+    } else {
+      console.error('client is not defined, cannot create space')
     }
   }
 
