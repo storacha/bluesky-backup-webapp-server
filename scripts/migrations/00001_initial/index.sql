@@ -1,6 +1,11 @@
-DROP TABLE IF EXISTS backups CASCADE;
+-- DROP TABLE IF EXISTS snapshots CASCADE;
+-- DROP TABLE IF EXISTS backups CASCADE;
+-- DROP TABLE IF EXISTS blobs CASCADE;
+-- DROP TABLE IF EXISTS auth_sessions;
+-- DROP TABLE IF EXISTS auth_states;
+
 CREATE TABLE IF NOT EXISTS backups (
-  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   account_did TEXT NOT NULL,
   name TEXT NOT NULL,
   atproto_account TEXT NOT NULL CHECK (atproto_account LIKE 'did:%'),
@@ -8,14 +13,15 @@ CREATE TABLE IF NOT EXISTS backups (
   include_repository BOOLEAN NOT NULL,
   include_blobs BOOLEAN NOT NULL,
   include_preferences BOOLEAN NOT NULL,
+  delegation_cid TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-DROP TABLE IF EXISTS snapshots CASCADE;
 CREATE TABLE IF NOT EXISTS snapshots (
-  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  backup_id INTEGER NOT NULL,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  backup_id UUID NOT NULL,
   atproto_account TEXT NOT NULL CHECK (atproto_account LIKE 'did:%'),
+  repo_rev TEXT,
   repository_status TEXT DEFAULT 'not-started' CHECK (
     repository_status IN (
       'not-started',
@@ -46,18 +52,16 @@ CREATE TABLE IF NOT EXISTS snapshots (
   FOREIGN KEY (backup_id) REFERENCES backups(id)
 );
 
-DROP TABLE IF EXISTS blobs CASCADE;
 CREATE TABLE IF NOT EXISTS blobs (
-  cid TEXT,
+  cid TEXT PRIMARY KEY,
   content_type TEXT,
-  backup_id INTEGER,
+  backup_id UUID,
   FOREIGN KEY (backup_id) REFERENCES backups(id),
-  snapshot_id INTEGER NOT NULL,
+  snapshot_id UUID NOT NULL,
   FOREIGN KEY (snapshot_id) REFERENCES snapshots(id),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-DROP TABLE IF EXISTS auth_sessions;
 CREATE TABLE IF NOT EXISTS auth_sessions (
   key TEXT PRIMARY KEY,
   value TEXT,
@@ -65,7 +69,6 @@ CREATE TABLE IF NOT EXISTS auth_sessions (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-DROP TABLE IF EXISTS auth_states;
 CREATE TABLE IF NOT EXISTS auth_states (
   key TEXT PRIMARY KEY,
   value TEXT,
