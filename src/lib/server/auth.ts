@@ -134,3 +134,15 @@ export async function snapshotOwnedByAccount(
   const { result: backup } = await db.findBackup(snapshot.id)
   return backup?.accountDid === account
 }
+
+export function isCronjobAuthed(request: Request) {
+  const header = request.headers.get('authorization')
+  if (!header) return false
+
+  const encodedCreds = header.split(' ')[1]
+  if (!encodedCreds) return false
+  const [username, password] = Buffer.from(encodedCreds, 'base64')
+    .toString()
+    .split(':')
+  return username === 'user' && password === process.env.BACKUP_PASSWORD
+}

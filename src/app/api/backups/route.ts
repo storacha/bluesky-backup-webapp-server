@@ -1,8 +1,6 @@
 import { getStorageContext } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
 
-// NEEDS AUTHORIZATION
-
 export async function GET() {
   const { db } = getStorageContext()
   const { did } = await getSession()
