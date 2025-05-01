@@ -1,20 +1,23 @@
 'use client'
 
-import { Modal, Stack, StyleProps, Text } from '../ui'
+import { PlusCircle } from '@phosphor-icons/react'
+import { Account, useAuthenticator } from '@storacha/ui-react'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
-import { DataBox } from './Data'
+
+import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
 import { Backup, SpaceDid } from '@/app/types'
-import { Account, useAuthenticator } from '@storacha/ui-react'
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
-import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
-import { PlusCircle } from '@phosphor-icons/react'
+import { CreateButton } from '@/components/ui/CreateButton'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { useUiComponentStore } from '@/store/ui'
-import { CreateButton } from '@/components/ui/CreateButton'
-import { delegate } from '@/lib/delegate'
+
+import { Modal, Stack, StyleProps, Text } from '../ui'
+
+import { DataBox } from './Data'
 import { uploadCAR } from '@/lib/storacha'
+import { delegate } from '@/lib/delegate'
 
 let createNewBackup: typeof import('@/app/backups/new/createNewBackup').action
 

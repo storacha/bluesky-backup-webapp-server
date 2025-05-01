@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { Delegation } from '@ucanto/core'
 import { isDid } from '@atproto/oauth-client-node'
+import { Delegation } from '@ucanto/core'
+import { NextRequest, NextResponse } from 'next/server'
+
 import { authorize } from '@/lib/server/auth'
 import { getSession } from '@/lib/sessions'
 

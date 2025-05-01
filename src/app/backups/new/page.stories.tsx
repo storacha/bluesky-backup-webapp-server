@@ -1,8 +1,10 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import { Account, Space } from '@storacha/ui-react'
+
+import { withAuthContext, withData } from '@/../.storybook/decorators'
 
 import Page from './page'
-import { withAuthContext, withData } from '@/../.storybook/decorators'
-import { Account, Space } from '@storacha/ui-react'
+
+import type { Meta, StoryObj } from '@storybook/react'
 
 const meta = {
   // Uses division slash (∕) instead of regular slash (/) in the title.

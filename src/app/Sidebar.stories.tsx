@@ -1,7 +1,8 @@
-import type { Decorator, Meta, StoryObj } from '@storybook/react'
+import { withData, withLinks } from '../../.storybook/decorators'
 
 import { Sidebar } from './Sidebar'
-import { withData, withLinks } from '../../.storybook/decorators'
+
+import type { Decorator, Meta, StoryObj } from '@storybook/react'
 
 const withFullViewportHeight: Decorator = (Story) => (
   <div style={{ display: 'flex', height: '100vh' }}>

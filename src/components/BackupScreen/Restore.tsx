@@ -1,12 +1,15 @@
 import { styled } from 'next-yak'
-import { Box, Container, Heading, SubHeading } from './BackupDetail'
-import { Button, Center, Modal, Stack, Text } from '../ui'
-import { Snapshot, Backup } from '@/app/types'
-import useSWR from 'swr'
-import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
-import { useDisclosure } from '@/hooks/use-disclosure'
 import { useState } from 'react'
+import useSWR from 'swr'
+
+import { Backup, Snapshot } from '@/app/types'
+import { useDisclosure } from '@/hooks/use-disclosure'
+import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
+
 import RestoreDialog from '../Restore'
+import { Button, Center, Modal, Stack, Text } from '../ui'
+
+import { Box, Container, Heading, SubHeading } from './BackupDetail'
 
 const RestoreContainer = styled(Container)`
   height: 100vh;

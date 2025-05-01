@@ -1,8 +1,9 @@
 'use server'
 
-import { getStorageContext } from '@/lib/server/db'
 import { Did } from '@atproto/oauth-client-node'
 import { redirect } from 'next/navigation'
+
+import { getStorageContext } from '@/lib/server/db'
 
 export const action = async (data: FormData) => {
   const { db } = getStorageContext()

@@ -1,5 +1,4 @@
 'use client'
-import { SERVER_DID } from '@/lib/constants'
 import { Did } from '@atproto/oauth-client-node'
 import { Capabilities } from '@ipld/dag-ucan'
 import * as SpaceBlob from '@storacha/capabilities/space/blob'
@@ -7,6 +6,7 @@ import * as SpaceIndex from '@storacha/capabilities/space/index'
 import * as Upload from '@storacha/capabilities/upload'
 import { Client } from '@storacha/client'
 import { Delegation } from '@ucanto/core'
+import { SERVER_DID } from './constants'
 
 interface DelegateOptions {
   // number of milliseconds this delegation should be valid for

@@ -1,6 +1,6 @@
 import { styled } from 'next-yak'
 import { useRef } from 'react'
-import { useSwitch, useFocusRing, VisuallyHidden } from 'react-aria'
+import { useFocusRing, useSwitch, VisuallyHidden } from 'react-aria'
 import { useToggleState } from 'react-stately'
 
 interface SwitchProps {

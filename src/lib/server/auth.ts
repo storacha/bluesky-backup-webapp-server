@@ -1,18 +1,19 @@
-import { atproto } from '@/lib/capabilities'
 import { Capabilities } from '@ipld/dag-ucan'
 import { ok, Schema } from '@ucanto/core'
-
 import { Delegation as DelegationType } from '@ucanto/interface'
 import { ed25519, Verifier } from '@ucanto/principal'
 import { access, DIDResolutionError } from '@ucanto/validator'
-import { SERVER_DID, IDENTITY_AUTHORITY } from '@/lib/constants'
+
+import { atproto } from '@/lib/capabilities'
+import { IDENTITY_AUTHORITY, SERVER_DID } from '@/lib/constants'
 import {
+  DidKey,
+  DidWeb,
   PRODUCTION_UPLOAD_SERVICE_PUBLIC_KEY,
   STAGING_UPLOAD_SERVICE_PUBLIC_KEY,
-  DidWeb,
-  DidKey,
 } from '@/lib/constants'
 import { getConstants } from '@/lib/server/constants'
+
 import { BBDatabase } from './db'
 
 let cachedServerIdentity: ed25519.Signer.Signer

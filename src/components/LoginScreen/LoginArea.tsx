@@ -1,9 +1,10 @@
 'use client'
 
-import { styled } from 'next-yak'
 import { Authenticator, useAuthenticator } from '@storacha/ui-react'
-import { LoginForm } from './LoginForm'
+import { styled } from 'next-yak'
+
 import { LoggingIn } from './LoggingIn'
+import { LoginForm } from './LoginForm'
 
 const Outside = styled.div`
   border: 1px solid var(--color-gray-light);

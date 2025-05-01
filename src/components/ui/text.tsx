@@ -1,5 +1,6 @@
 import { Property } from 'csstype'
 import { styled } from 'next-yak'
+
 import { StyleProps } from './style'
 
 interface TextProps {

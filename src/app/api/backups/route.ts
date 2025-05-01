@@ -1,5 +1,5 @@
-import { getSession } from '@/lib/sessions'
 import { getStorageContext } from '@/lib/server/db'
+import { getSession } from '@/lib/sessions'
 
 export async function GET() {
   const { db } = getStorageContext()

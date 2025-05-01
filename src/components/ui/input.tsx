@@ -1,5 +1,6 @@
 import { styled } from 'next-yak'
 import { ChangeEvent, ReactNode } from 'react'
+
 import { StyleProps } from './style'
 
 interface InputProps {

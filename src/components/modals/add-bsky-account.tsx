@@ -1,7 +1,8 @@
 import { ArrowLeft, At } from '@phosphor-icons/react'
+import { ChangeEvent, useState } from 'react'
+
 import { Box } from '../BackupScreen/BackupDetail'
 import { Button, InputField, Modal, ModalProps, Stack, Text } from '../ui'
-import { ChangeEvent, useState } from 'react'
 
 export const AddBskyAccountModal = ({
   isOpen,
