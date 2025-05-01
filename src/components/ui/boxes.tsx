@@ -1,4 +1,4 @@
-import { css } from 'next-yak'
+import { css, styled } from 'next-yak'
 
 export const roundRectStyle = css`
   border-radius: 0.75rem;
@@ -6,4 +6,8 @@ export const roundRectStyle = css`
   border-width: 1px;
   border-style: solid;
   border-color: transparent;
+`
+
+export const Container = styled.div`
+  padding: 3.4rem 3.2em;
 `

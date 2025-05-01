@@ -27,3 +27,17 @@ export const Text = styled.p<TextProps & Partial<StyleProps>>`
   text-transform: ${({ $textTransform = 'none' }) => $textTransform};
   width: ${({ $width = '' }) => $width};
 `
+
+export const Heading = styled.h2`
+  font-weight: 700;
+  color: #000;
+  font-size: 1.125rem;
+  text-transform: capitalize;
+`
+
+export const SubHeading = styled.h3`
+  font-weight: 600;
+  color: var(--color-gray-medium);
+  font-size: 0.75rem;
+  text-transform: capitalize;
+`

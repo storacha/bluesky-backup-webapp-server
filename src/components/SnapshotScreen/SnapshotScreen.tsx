@@ -1,16 +1,15 @@
 'use client'
 
 import { styled } from 'next-yak'
-import { Suspense } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
-import { Backup } from '@/app/types'
-import { useStorachaAccount } from '@/hooks/use-plan'
+import { Snapshot } from '@/app/types'
 
-import { BackupDetail } from './BackupDetail'
-import Sidebar from './RightSidebar'
+import { Button, Container } from '../ui'
 
-const BackupContainer = styled.div`
+import SnapshotDetail from './SnapshotDetail'
+
+const SnapshotContainer = styled.div`
   display: flex;
   width: 100%;
   background-color: var(--color-light-blue-10);
@@ -34,15 +33,17 @@ const ResizeHandleInner = styled.div`
   }
 `
 
-export const BackupScreen = ({ backup }: { backup?: Backup }) => {
-  const account = useStorachaAccount()
+const RestoreContainer = styled(Container)`
+  height: 100vh;
+  border-left: 1px solid var(--color-light-blue);
+`
+
+export const SnapshotScreen = ({ snapshot }: { snapshot: Snapshot }) => {
   return (
-    <BackupContainer>
+    <SnapshotContainer>
       <PanelGroup autoSaveId="backup-restore-layout" direction="horizontal">
         <Panel defaultSize={60} minSize={45}>
-          <Suspense>
-            <BackupDetail account={account} backup={backup} />
-          </Suspense>
+          <SnapshotDetail snapshot={snapshot} />
         </Panel>
         <PanelResizeHandle>
           <ResizeHandleOuter>
@@ -50,11 +51,11 @@ export const BackupScreen = ({ backup }: { backup?: Backup }) => {
           </ResizeHandleOuter>
         </PanelResizeHandle>
         <Panel defaultSize={40} minSize={40}>
-          <Suspense>
-            <Sidebar backup={backup} />
-          </Suspense>
+          <RestoreContainer>
+            <Button>Restore</Button>
+          </RestoreContainer>
         </Panel>
       </PanelGroup>
-    </BackupContainer>
+    </SnapshotContainer>
   )
 }

@@ -15,7 +15,7 @@ import { delegate } from '@/lib/delegate'
 import { uploadCAR } from '@/lib/storacha'
 import { useUiComponentStore } from '@/store/ui'
 
-import { Modal, Stack, StyleProps, Text } from '../ui'
+import { Container, Heading, Modal, Stack, StyleProps, Text } from '../ui'
 
 import { DataBox } from './Data'
 
@@ -33,24 +33,6 @@ interface BackupProps {
   account?: Account
   backup?: Backup
 }
-
-export const Container = styled.div`
-  padding: 3.4rem 3.2em;
-`
-
-export const Heading = styled.h2`
-  font-weight: 700;
-  color: #000;
-  font-size: 1.125rem;
-  text-transform: capitalize;
-`
-
-export const SubHeading = styled.h3`
-  font-weight: 600;
-  color: var(--color-gray-medium);
-  font-size: 0.75rem;
-  text-transform: capitalize;
-`
 
 const AccountsContainer = styled.div`
   display: flex;

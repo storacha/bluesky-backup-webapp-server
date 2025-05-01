@@ -131,7 +131,7 @@ export async function snapshotOwnedByAccount(
   const { result: snapshot } = await db.findSnapshot(snapshotId)
   if (!snapshot)
     throw new Error('cannot determind if snapshot is owned by account')
-  const { result: backup } = await db.findBackup(snapshot.id)
+  const { result: backup } = await db.findBackup(snapshot.backupId)
   return backup?.accountDid === account
 }
 
