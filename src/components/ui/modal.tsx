@@ -41,13 +41,13 @@ const Dialog = styled.dialog<{ $background?: string; $size: ModalSize }>`
 
   &[open] {
     transform: scale(1);
-    opacity: 0;
-    // animation: enter 0.3s forwards;
+    opacity: 1;
+    animation: enter 0.3s forwards;
 
     // this a very interesting finding, haha! really helpful for setting a 'third state' to
     // key into the limitations of transitions for dialog elements.
     @starting-style {
-      opacity: 1;
+      opacity: 0;
       transform: scale(0.65);
     }
   }
@@ -55,7 +55,7 @@ const Dialog = styled.dialog<{ $background?: string; $size: ModalSize }>`
   &::backdrop {
     background-color: rgba(0, 0, 0, 0.4);
     transition: opacity 200ms ease;
-    opacity: 0;
+    opacity: 1;
   }
 
   @keyframes enter {
@@ -197,7 +197,6 @@ export const Modal = ({
         )}
         {children}
       </Dialog>
-      ,
     </ClientOnlyPortal>
   )
 }

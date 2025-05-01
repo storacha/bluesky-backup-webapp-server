@@ -28,7 +28,15 @@ export default function RootLayout({
             <NuqsAdapter>
               <Authenticator as="div">
                 {children}
-                <Toaster position="top-center" />
+                <Toaster
+                  position="top-center"
+                  toastOptions={{
+                    style: {
+                      background: 'var(--color-black)',
+                      color: 'var(--color-white)',
+                    },
+                  }}
+                />
               </Authenticator>
             </NuqsAdapter>
           </body>
