@@ -191,8 +191,17 @@ export const CreateSpaceModal = ({
               </Text>
               <Stack $gap="1rem">
                 <Box $position="relative">
-                  <Text $fontWeight="500">{recoveryKey}</Text>
-                  <Box $position="absolute" $top="0" $right="0" $border="none">
+                  <Text $fontWeight="500" $color="var(--color-black)">
+                    {recoveryKey}
+                  </Text>
+                  <Box
+                    $position="absolute"
+                    $top="2px"
+                    $right="2px"
+                    $borderStyle="solid"
+                    $width="fit-content"
+                    $height="fit-content"
+                  >
                     {hasCopiedKey ? (
                       <CheckCircle weight="fill" size="18" color="lightgreen" />
                     ) : (
