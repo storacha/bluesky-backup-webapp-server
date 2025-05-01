@@ -1,18 +1,19 @@
 'use client'
 
-import { PlusCircle } from '@phosphor-icons/react'
 import { useAuthenticator } from '@storacha/ui-react'
 import Image from 'next/image'
 import { ChangeEventHandler, useRef } from 'react'
 
 import { useSWR } from '@/app/swr'
-import { useDisclosure } from '@/hooks/use-disclosure'
 
 import { LocationSelect } from '../../app/backups/LocationSelect'
-import { AddBskyAccountModal } from '../modals'
 import { Stack } from '../ui'
 
 import { AccountLogo, Box } from './BackupDetail'
+
+// import { PlusCircle } from '@phosphor-icons/react'
+// import { useDisclosure } from '@/hooks/use-disclosure'
+// import { AddBskyAccountModal } from '../modals'
 
 const LOG_INTO_BLUESKY_VALUE = '-'
 
@@ -22,9 +23,6 @@ export const BlueskyAccountSelect = (
     'onChange' | 'label'
   > & { value?: string }
 ) => {
-  const { isOpen, onOpen, onClose } = useDisclosure({
-    component: 'bsky-account',
-  })
   const [{ accounts }] = useAuthenticator()
   const account = accounts[0]
 
@@ -85,15 +83,15 @@ export const BlueskyAccountSelect = (
                 )}
           </LocationSelect>
         </Stack>
-        <PlusCircle
+        {/* <PlusCircle
           weight="fill"
           size="16"
           color="var(--color-gray-1)"
           onClick={onOpen}
-        />
+        /> */}
       </Box>
 
-      <AddBskyAccountModal isOpen={isOpen} onClose={onClose} />
+      {/* <AddBskyAccountModal isOpen={isOpen} onClose={onClose} /> */}
     </>
   )
 }
