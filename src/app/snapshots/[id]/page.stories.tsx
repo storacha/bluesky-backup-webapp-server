@@ -48,20 +48,17 @@ const meta = {
         },
       ]
     ),
-    withData(
-      ['api', '/api/snapshots/abc'],
-      {
-        id: 'abc',
-        backupId: 'abc',
-        atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
-        repositoryStatus: 'success',
-        repositoryCid:
-          'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551repo',
-        blobsStatus: 'in-progress',
-        preferencesStatus: 'not-started',
-        createdAt: '2025-04-07 19:51:56',
-      }
-    ),
+    withData(['api', '/api/snapshots/abc'], {
+      id: 'abc',
+      backupId: 'abc',
+      atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
+      repositoryStatus: 'success',
+      repositoryCid:
+        'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551repo',
+      blobsStatus: 'in-progress',
+      preferencesStatus: 'not-started',
+      createdAt: '2025-04-07 19:51:56',
+    }),
     withData(
       ['atproto-handle', 'did:plc:ro3eio7zgqosf5gnxsq6ik5m'],
       'chalametoui.bsky.social'
