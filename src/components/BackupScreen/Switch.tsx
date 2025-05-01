@@ -1,4 +1,4 @@
-import { styled } from 'next-yak'
+import { css, styled } from 'next-yak'
 import { useRef } from 'react'
 import { useFocusRing, useSwitch, VisuallyHidden } from 'react-aria'
 import { useToggleState } from 'react-stately'
@@ -37,7 +37,11 @@ const SwitchContainer = styled.div<{
   width: ${SWITCH_WIDTH}px;
   border-radius: 11px;
   position: relative;
-  cursor: ${({ $isDisabled }) => ($isDisabled ? 'not-allowed' : 'pointer')};
+  ${({ $isDisabled }) =>
+    $isDisabled &&
+    css`
+      cursor: not-allowed;
+    `};
   transition: all 0.3s ease-in;
   outline: ${({ $isFocusVisible }) =>
     $isFocusVisible ? '2px solid var(--color-focus, #4c9aff)' : 'none'};
