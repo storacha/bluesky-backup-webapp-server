@@ -57,7 +57,7 @@ export const blueskyClientMetadata = ({
     atprotoClientUri,
     'atproto',
     'oauth-client-metadata',
-    account
+    encodeURIComponent(account)
   ),
   client_name: 'Storacha Bluesky Backups',
   client_uri: atprotoClientUri,

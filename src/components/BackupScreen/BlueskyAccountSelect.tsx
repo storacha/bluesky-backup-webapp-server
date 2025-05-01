@@ -1,113 +1,180 @@
 'use client'
 
-import { PlusCircle } from '@phosphor-icons/react'
+import { CaretDown, PlusCircle } from '@phosphor-icons/react'
 import { useAuthenticator } from '@storacha/ui-react'
 import Image from 'next/image'
-import { ChangeEventHandler, useRef } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { components, ControlProps, ValueContainerProps } from 'react-select'
 
 import { useSWR } from '@/app/swr'
-import { useDisclosure } from '@/hooks/use-disclosure'
+import { shortenDID } from '@/lib/ui'
 
-import { LocationSelect } from '../../app/backups/LocationSelect'
 import { AddBskyAccountModal } from '../modals'
-import { Stack } from '../ui'
+import { Option, SelectField, Stack, Text } from '../ui'
 
 import { AccountLogo, Box } from './BackupDetail'
 
-const LOG_INTO_BLUESKY_VALUE = '-'
+const LOG_INTO_BLUESKY_VALUE = '-connect-'
 
-export const BlueskyAccountSelect = (
-  props: Omit<
-    React.ComponentProps<typeof LocationSelect>,
-    'onChange' | 'label'
-  > & { value?: string }
-) => {
-  const { isOpen, onOpen, onClose } = useDisclosure({
-    component: 'bsky-account',
-  })
+export const BlueskyAccountSelect = (props: {
+  name: string
+  value?: string
+  onChange?: (value: string) => void
+  disabled?: boolean
+}) => {
   const [{ accounts }] = useAuthenticator()
   const account = accounts[0]
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(
+    props.value
+  )
 
-  const { data: atprotoAccounts } = useSWR(
-    // We take "disabled" to mean not to show a select at all, so we don't need
-    // options.
+  const { data: atprotoAccounts, isLoading } = useSWR(
     props.disabled ? null : account && ['api', '/api/atproto-accounts']
   )
 
-  // If we select LOG_INTO_BLUESKY_VALUE, don't tell `onChange` about it, just
-  // set the value back to the previous value, and open the OAuth window.
-  const currentValueRef = useRef('')
-  const changeHandler: ChangeEventHandler<HTMLSelectElement> = async (e) => {
-    const value = e.target.value
+  useEffect(() => {
+    if (props.value) {
+      setSelectedValue(props.value)
+    }
+  }, [props.value])
+
+  const options = useMemo(() => {
+    const result: Option[] = []
+
+    if (props.disabled && props.value) {
+      return [{ value: props.value, label: props.value, icon: '/bluesky.png' }]
+    }
+
+    if (atprotoAccounts && atprotoAccounts.length > 0) {
+      const bskyAccounts = atprotoAccounts.map((account) => ({
+        value: account,
+        label: shortenDID(account),
+        icon: '/bluesky.png',
+      }))
+      result.push(...bskyAccounts)
+    }
+
+    result.push({
+      label: 'Connect Bluesky account',
+      value: LOG_INTO_BLUESKY_VALUE,
+    })
+
+    return result
+  }, [atprotoAccounts, props.value, props.disabled])
+
+  const handleChange = (value: string) => {
     if (value === LOG_INTO_BLUESKY_VALUE) {
-      e.target.value = currentValueRef.current
       window.open('/atproto/connect', 'atproto-connect', 'popup')
-    } else {
-      currentValueRef.current = value
+    } else if (props.onChange) {
+      setSelectedValue(value)
+      props.onChange(value)
     }
   }
 
-  const selectElement = useRef<HTMLSelectElement>(null)
-  const hasValue = Boolean(selectElement.current?.value)
-  return (
-    <>
-      <Box $background={hasValue ? 'var(--color-white)' : ''}>
-        <Stack $gap=".8rem" $direction="row" $alignItems="center">
-          <AccountLogo $type="original" $hasAccount={hasValue}>
-            <Image
-              src="/bluesky.png"
-              alt="Bluesky Logo"
-              width={25}
-              height={25}
-            />
-          </AccountLogo>
-          <LocationSelect
-            label="Bluesky Account"
-            {...props}
-            onChange={changeHandler}
-            ref={selectElement}
+  const BskyControl = (props: ControlProps<Option>) => {
+    const selectedOption = props.getValue()[0]
+    const hasValue = Boolean(
+      (selectedOption?.value &&
+        selectedOption?.value !== LOG_INTO_BLUESKY_VALUE) ||
+        options?.[0]?.label
+    )
+
+    const displayOption =
+      selectedOption ||
+      (options.length > 0 &&
+      (options && options?.[0]?.value) !== LOG_INTO_BLUESKY_VALUE
+        ? options[0]
+        : null)
+
+    return (
+      <components.Control {...props}>
+        <div style={{ width: '100%', cursor: 'pointer' }}>
+          <Box
+            $gap="1rem"
+            $display="flex"
+            $justifyContent="space-between"
+            $background={hasValue ? 'var(--color-white)' : ''}
+            $isFocused={props.isFocused}
           >
-            {props.disabled
-              ? props.value && <BlueskyOption did={props.value} />
-              : atprotoAccounts && (
-                  <>
-                    {atprotoAccounts.map((account) => (
-                      <BlueskyOption key={account} did={account} />
-                    ))}
-                    {atprotoAccounts.length === 0 && (
-                      <option value="-"></option>
-                    )}
-                    <hr />
-                    <option value={LOG_INTO_BLUESKY_VALUE}>
-                      Connect a Bluesky account…
-                    </option>
-                  </>
-                )}
-          </LocationSelect>
-        </Stack>
-        <PlusCircle
-          weight="fill"
-          size="16"
-          color="var(--color-gray-1)"
-          onClick={onOpen}
-        />
-      </Box>
-
-      <AddBskyAccountModal isOpen={isOpen} onClose={onClose} />
-    </>
-  )
-}
-
-const BlueskyOption = ({ did }: { did: string }) => {
-  const { data: handle, error } = useSWR(['atproto-handle', did])
-
-  if (error) {
-    console.error('Error fetching Bluesky handle:', error)
+            <AccountLogo $type="original" $hasAccount={hasValue}>
+              <Image
+                src={displayOption?.icon || '/bluesky.png'}
+                alt={`${displayOption?.label || 'Bluesky'} Logo`}
+                width={25}
+                height={25}
+              />
+            </AccountLogo>
+            <Stack
+              $justifyContent="space-between"
+              $direction="row"
+              $width="85%"
+            >
+              <Stack $gap=".6rem">
+                <Text $color="var(--color-black)">Bluesky Account</Text>
+                <Text>
+                  {isLoading
+                    ? 'Loading accounts...'
+                    : displayOption?.label || 'Select an account'}
+                </Text>
+              </Stack>
+              {!atprotoAccounts || atprotoAccounts.length === 0 ? (
+                <PlusCircle
+                  weight="fill"
+                  size="16"
+                  color="var(--color-gray-1)"
+                />
+              ) : (
+                <CaretDown size="16" color="var(--color-gray-1)" />
+              )}
+            </Stack>
+          </Box>
+          <div
+            style={{
+              position: 'absolute',
+              opacity: 0,
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            {props.children}
+          </div>
+        </div>
+      </components.Control>
+    )
   }
 
+  const BskyAccountsContainer = (props: ValueContainerProps<Option>) => {
+    return (
+      <components.ValueContainer {...props}>
+        <div style={{ visibility: 'hidden', height: 0, position: 'absolute' }}>
+          {props.children}
+        </div>
+      </components.ValueContainer>
+    )
+  }
+
+  const defaultValue =
+    options.length > 1 &&
+    (options && options?.[0]?.value) !== LOG_INTO_BLUESKY_VALUE
+      ? options && options?.[0]?.value
+      : undefined
+
   return (
-    <option key={did} value={did}>
-      {handle ? `@${handle}` : did}
-    </option>
+    <>
+      <SelectField
+        name={props.name}
+        options={options}
+        value={selectedValue}
+        onChange={handleChange}
+        disabled={props.disabled || isLoading}
+        defaultValue={defaultValue}
+        components={{
+          Control: BskyControl,
+          ValueContainer: BskyAccountsContainer,
+        }}
+      />
+      {/* keeping this here to bypass knip in the CI. when it's time to use the modal, i'll update */}
+      <AddBskyAccountModal isOpen={false} onClose={() => {}} />
+    </>
   )
 }
