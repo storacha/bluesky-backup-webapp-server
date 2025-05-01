@@ -1,13 +1,12 @@
 'use client'
 
+import Link from 'next/link'
 import { styled } from 'next-yak'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
 import { Snapshot } from '@/app/types'
-import { useDisclosure } from '@/hooks/use-disclosure'
 
-import RestoreDialog from '../Restore'
-import { Button, Container, Modal } from '../ui'
+import { Container } from '../ui'
 
 import SnapshotDetail from './SnapshotDetail'
 
@@ -41,7 +40,6 @@ const RestoreContainer = styled(Container)`
 `
 
 export const SnapshotScreen = ({ snapshot }: { snapshot: Snapshot }) => {
-  const { isOpen, onClose } = useDisclosure()
   return (
     <SnapshotContainer>
       <PanelGroup autoSaveId="backup-restore-layout" direction="horizontal">
@@ -55,13 +53,10 @@ export const SnapshotScreen = ({ snapshot }: { snapshot: Snapshot }) => {
         </PanelResizeHandle>
         <Panel defaultSize={40} minSize={40}>
           <RestoreContainer>
-            <Button>Restore</Button>
+            <Link href={`/snapshots/${snapshot.id}/restore`}>Restore</Link>
           </RestoreContainer>
         </Panel>
       </PanelGroup>
-      <Modal isOpen={isOpen} onClose={onClose} size="xl">
-        <RestoreDialog snapshotId={snapshot.id} />
-      </Modal>
     </SnapshotContainer>
   )
 }

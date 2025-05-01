@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { styled } from 'next-yak'
 
 import { Snapshot } from '@/app/types'
@@ -37,9 +38,17 @@ export default function SnapshotDetail({ snapshot }: SnapshotDetailArgs) {
       {snapshot.repositoryCid && (
         <Stack $direction="row" $alignItems="center" $gap="1rem">
           <DetailName>Repository</DetailName>
-          <DetailValue>{shortenCID(snapshot.repositoryCid)}</DetailValue>
+          <Link href={`/snapshots/${snapshot.id}/repo`}>
+            <DetailValue>{shortenCID(snapshot.repositoryCid)}</DetailValue>
+          </Link>
         </Stack>
       )}
+      <Stack $direction="row" $alignItems="center" $gap="1rem">
+        <DetailName>Blobs</DetailName>
+        <Link href={`/snapshots/${snapshot.id}/repo`}>
+          <DetailValue>View Blobs</DetailValue>
+        </Link>
+      </Stack>
     </Details>
   )
 }
