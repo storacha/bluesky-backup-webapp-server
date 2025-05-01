@@ -115,10 +115,15 @@ export function Sidebar({
   )
 }
 
+const BackupsLoader = styled(Loader)`
+  align-self: center;
+  color: var(--color-gray-medium);
+`
+
 function Backups({ selectedBackupId }: { selectedBackupId: number | null }) {
   const { data } = useSWR(['api', '/api/backups'])
 
-  if (!data) return <Loader />
+  if (!data) return <BackupsLoader />
 
   return (
     <BackupList>
