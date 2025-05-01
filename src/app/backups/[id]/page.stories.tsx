@@ -44,6 +44,7 @@ const meta = {
           includeRepository: true,
           includeBlobs: true,
           includePreferences: false,
+          delegationCid: null,
         },
       ]
     ),

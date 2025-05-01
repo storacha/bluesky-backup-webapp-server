@@ -62,7 +62,7 @@ export const AddBskyAccountModal = ({
             </Stack>
             <Stack $gap="1rem">
               <InputField
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => handleEmail(e)}
                 placeholder="timothy-chalamet"

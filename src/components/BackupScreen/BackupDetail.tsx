@@ -1,30 +1,32 @@
 'use client'
 
 import { PlusCircle } from '@phosphor-icons/react'
-import { Account } from '@storacha/ui-react'
+import { Account, useAuthenticator } from '@storacha/ui-react'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
 
 import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
-import { Backup } from '@/app/types'
+import { Backup, SpaceDid } from '@/app/types'
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
 import { CreateButton } from '@/components/ui/CreateButton'
 import { useDisclosure } from '@/hooks/use-disclosure'
+import { delegate } from '@/lib/delegate'
+import { uploadCAR } from '@/lib/storacha'
 import { useUiComponentStore } from '@/store/ui'
 
 import { Modal, Stack, StyleProps, Text } from '../ui'
 
 import { DataBox } from './Data'
 
-let action: typeof import('@/app/backups/new/action').action
+let createNewBackup: typeof import('@/app/backups/new/createNewBackup').action
 
 if (process.env.STORYBOOK) {
-  action = () => {
+  createNewBackup = () => {
     throw new Error('Server Functions are not available in Storybook')
   }
 } else {
-  action = (await import('@/app/backups/new/action')).action
+  createNewBackup = (await import('@/app/backups/new/createNewBackup')).action
 }
 
 interface BackupProps {
@@ -128,20 +130,47 @@ const DATA_BOXES: DataConfig[] = [
   // },
 ]
 
-function BackupContainer({
+function NewBackupForm({ children }: { children: ReactNode }) {
+  const [{ client }] = useAuthenticator()
+  async function generateDelegationAndCreateNewBackup(formData: FormData) {
+    const space = formData.get('storacha_space') as SpaceDid | undefined
+    if (!space) {
+      console.error('space id not defined, cannot create delegation.')
+      throw new Error('space is not defined, cannot create delegation')
+    }
+    if (!client) {
+      console.error('client not defined, cannot create delegation')
+      throw new Error('client is not defined, cannot create delegation')
+    }
+    await client.setCurrentSpace(space)
+    // upload the delegation to Storacha so we can use it later
+
+    // create a delegation valid for a year of backups
+    const delegationDuration = 1000 * 60 * 60 * 24 * 365
+    const delegationCid = await uploadCAR(
+      client,
+      new Blob([
+        await delegate(client, space, { duration: delegationDuration }),
+      ])
+    )
+    formData.append('delegation_cid', delegationCid.toString())
+    return createNewBackup(formData)
+  }
+  return (
+    <Container>
+      <form action={generateDelegationAndCreateNewBackup}>{children}</form>
+    </Container>
+  )
+}
+
+function MaybeForm({
   children,
   backup,
 }: {
   children: ReactNode
   backup?: Backup
 }) {
-  return backup ? (
-    <Container>{children}</Container>
-  ) : (
-    <Container>
-      <form action={action}>{children}</form>
-    </Container>
-  )
+  return backup ? children : <NewBackupForm>{children}</NewBackupForm>
 }
 
 export const BackupDetail = ({ account, backup }: BackupProps) => {
@@ -178,64 +207,71 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
 
   return (
     <>
-      <BackupContainer backup={backup}>
-        {account && (
-          <input type="hidden" name="account" value={account.did()} />
-        )}
-        <Stack $gap="2rem">
-          {backup ? (
-            <Heading>Backup #{backup.id}</Heading>
-          ) : (
-            <Heading>New Backup</Heading>
+      <Container>
+        <MaybeForm backup={backup}>
+          {account && (
+            <input type="hidden" name="account" value={account.did()} />
           )}
-          <Stack $gap="1rem">
-            <AccountsContainer>
-              <BlueskyAccountSelect
-                name="atproto_account"
-                {...(backup && {
-                  disabled: true,
-                  value: backup.atprotoAccount,
-                })}
-              />
-              <ConnectingLine />
-              <StorachaSpaceSelect
-                name="storacha_space"
-                {...(backup && { disabled: true, value: backup.storachaSpace })}
-              />
-            </AccountsContainer>
-          </Stack>
-
-          <Stack $gap="1.25rem" onClick={openModal}>
-            <Text $textTransform="capitalize">keychain</Text>
-            <Box $height="44px" $width="48%" $display="flex">
-              <Text $textTransform="capitalize">create keychain</Text>
-              <PlusCircle weight="fill" size="16" color="var(--color-gray-1)" />
-            </Box>
-          </Stack>
-
-          <Stack $gap="1.25rem">
-            <Text $textTransform="capitalize">data</Text>
-            <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
-              {DATA_BOXES.map((box) => (
-                <DataBox
-                  key={box.key}
-                  name={box.name}
-                  title={box.title}
-                  description={box.description}
-                  value={data[box.key] || false}
-                  onToggle={() => !backup && toggle(box.key)}
+          <Stack $gap="2rem">
+            {backup ? (
+              <Heading>Backup #{backup.id}</Heading>
+            ) : (
+              <Heading>New Backup</Heading>
+            )}
+            <Stack $gap="1rem">
+              <AccountsContainer>
+                <BlueskyAccountSelect
+                  name="atproto_account"
+                  {...(backup && {
+                    disabled: true,
+                    value: backup.atprotoAccount,
+                  })}
                 />
-              ))}
+                <ConnectingLine />
+                <StorachaSpaceSelect
+                  name="storacha_space"
+                  {...(backup && {
+                    disabled: true,
+                    value: backup.storachaSpace,
+                  })}
+                />
+              </AccountsContainer>
             </Stack>
-          </Stack>
-          {backup ? (
-            <CreateSnapshotButton backup={backup} />
-          ) : (
-            <CreateButton type="submit">create backup</CreateButton>
-          )}
-        </Stack>
-      </BackupContainer>
 
+            <Stack $gap="1.25rem" onClick={openModal}>
+              <Text $textTransform="capitalize">keychain</Text>
+              <Box $height="44px" $width="48%" $display="flex">
+                <Text $textTransform="capitalize">create keychain</Text>
+                <PlusCircle
+                  weight="fill"
+                  size="16"
+                  color="var(--color-gray-1)"
+                />
+              </Box>
+            </Stack>
+            <Stack $gap="1.25rem">
+              <Text $textTransform="capitalize">data</Text>
+              <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
+                {DATA_BOXES.map((box) => (
+                  <DataBox
+                    key={box.key}
+                    name={box.name}
+                    title={box.title}
+                    description={box.description}
+                    value={data[box.key] || false}
+                    onToggle={() => !backup && toggle(box.key)}
+                  />
+                ))}
+              </Stack>
+            </Stack>
+            {backup ? (
+              <CreateSnapshotButton backup={backup} />
+            ) : (
+              <CreateButton type="submit">create backup</CreateButton>
+            )}
+          </Stack>
+        </MaybeForm>
+      </Container>
       <Modal
         isOpen={isOpen}
         onClose={onClose}

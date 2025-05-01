@@ -51,7 +51,7 @@ export const BlueskyAccountSelect = (
   const hasValue = Boolean(selectElement.current?.value)
   return (
     <>
-      <Box $background={hasValue ? 'var(--color-white)' : ''} onClick={onOpen}>
+      <Box $background={hasValue ? 'var(--color-white)' : ''}>
         <Stack $gap=".8rem" $direction="row" $alignItems="center">
           <AccountLogo $type="original" $hasAccount={hasValue}>
             <Image
