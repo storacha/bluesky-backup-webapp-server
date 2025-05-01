@@ -1,4 +1,5 @@
 import { Client } from '@storacha/ui-react'
+
 import { GATEWAY_HOSTNAME } from './constants'
 
 export function cidUrl(cid: string) {

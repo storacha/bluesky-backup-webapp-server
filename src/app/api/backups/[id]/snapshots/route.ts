@@ -1,9 +1,10 @@
+import { Delegation } from '@ucanto/core'
+
 import { backupOwnedByAccount, isCronjobAuthed } from '@/lib/server/auth'
 import { createSnapshotForBackup } from '@/lib/server/backups'
 import { getStorageContext } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
 import { cidUrl } from '@/lib/storacha'
-import { Delegation } from '@ucanto/core'
 
 export async function GET(
   request: Request,

@@ -11,13 +11,13 @@ import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSe
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
 import { CreateButton } from '@/components/ui/CreateButton'
 import { useDisclosure } from '@/hooks/use-disclosure'
+import { delegate } from '@/lib/delegate'
+import { uploadCAR } from '@/lib/storacha'
 import { useUiComponentStore } from '@/store/ui'
 
 import { Modal, Stack, StyleProps, Text } from '../ui'
 
 import { DataBox } from './Data'
-import { uploadCAR } from '@/lib/storacha'
-import { delegate } from '@/lib/delegate'
 
 let createNewBackup: typeof import('@/app/backups/new/createNewBackup').action
 

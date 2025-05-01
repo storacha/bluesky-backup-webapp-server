@@ -6,6 +6,7 @@ import * as SpaceIndex from '@storacha/capabilities/space/index'
 import * as Upload from '@storacha/capabilities/upload'
 import { Client } from '@storacha/client'
 import { Delegation } from '@ucanto/core'
+
 import { SERVER_DID } from './constants'
 
 interface DelegateOptions {
