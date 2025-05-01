@@ -1,5 +1,5 @@
-import { styled } from 'next-yak'
 import { Property } from 'csstype'
+import { styled } from 'next-yak'
 
 export const Center = styled.div<{ $height?: Property.Height }>`
   display: flex;

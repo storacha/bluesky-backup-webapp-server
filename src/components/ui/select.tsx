@@ -2,6 +2,7 @@
 import { ReactNode, useId } from 'react'
 import Select, { MenuPlacement, StylesConfig } from 'react-select'
 import makeAnimated from 'react-select/animated'
+
 import { Stack } from './Stack'
 
 const animatedComponents = makeAnimated()

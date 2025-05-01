@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /**
  * UTILITIES ADAPTED FROM @ucanto/principal
  *

@@ -1,5 +1,6 @@
-import { Stack } from '@/components/ui'
 import { styled } from 'next-yak'
+
+import { Stack } from '@/components/ui'
 
 const Outside = styled(Stack)`
   background-color: var(--color-gray-medium-light);

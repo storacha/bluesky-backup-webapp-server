@@ -1,10 +1,10 @@
 'use client'
 
+import { X } from '@phosphor-icons/react'
+import { Property } from 'csstype'
 import { styled } from 'next-yak'
 import { KeyboardEvent, ReactNode, useEffect, useRef } from 'react'
-import { X } from '@phosphor-icons/react'
 import { AriaDialogProps, useDialog } from 'react-aria'
-import { Property } from 'csstype'
 
 type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
 

@@ -1,5 +1,6 @@
-import { UiComponents, useUiComponentStore } from '@/store/ui'
 import { useCallback, useState } from 'react'
+
+import { UiComponents, useUiComponentStore } from '@/store/ui'
 
 /**
  * A custom hook to help us handle modal/dialog open, close, toggle states

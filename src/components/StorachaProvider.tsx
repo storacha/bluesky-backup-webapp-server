@@ -1,12 +1,14 @@
 'use client'
 
-import type { ReactNode } from 'react'
 import { Provider } from '@storacha/ui-react'
+
 import {
   receiptsEndpoint,
   serviceConnection,
   servicePrincipal,
 } from './services'
+
+import type { ReactNode } from 'react'
 
 export default function StorachaProvider({
   children,

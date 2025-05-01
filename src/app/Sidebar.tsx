@@ -1,11 +1,14 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
-import { Stack } from '@/components/ui/Stack'
-import { LogOutButton as BaseLogOutButton } from './authentication'
-import { css, styled } from 'next-yak'
-import { Loader } from '@/components/Loader'
-import { roundRectStyle } from '../components/ui'
-import { useSWR } from './swr'
 import Link from 'next/link'
+import { css, styled } from 'next-yak'
+
+import { Loader } from '@/components/Loader'
+import { Stack } from '@/components/ui/Stack'
+
+import { roundRectStyle } from '../components/ui'
+
+import { LogOutButton as BaseLogOutButton } from './authentication'
+import { useSWR } from './swr'
 
 const SidebarOutside = styled.nav`
   display: flex;

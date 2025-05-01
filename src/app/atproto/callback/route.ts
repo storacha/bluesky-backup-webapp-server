@@ -1,7 +1,8 @@
-import { NextRequest } from 'next/server'
 import { Agent } from '@atproto/api'
-import { createClient } from '@/lib/atproto'
 import { isDid } from '@atproto/oauth-client-node'
+import { NextRequest } from 'next/server'
+
+import { createClient } from '@/lib/atproto'
 import { getSession } from '@/lib/sessions'
 
 export async function GET(request: NextRequest) {

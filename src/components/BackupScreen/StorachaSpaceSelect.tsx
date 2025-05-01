@@ -1,12 +1,15 @@
 'use client'
-import { shortenDID } from '@/lib/ui'
-import { useAuthenticator } from '@storacha/ui-react'
-import { useState, useEffect } from 'react'
-import { Stack, Text, SelectField, Option } from '../ui'
 import { CaretDown } from '@phosphor-icons/react'
-import { AccountLogo, Box } from './BackupDetail'
+import { useAuthenticator } from '@storacha/ui-react'
 import Image from 'next/image'
-import { ControlProps, ValueContainerProps, components } from 'react-select'
+import { useEffect, useState } from 'react'
+import { components, ControlProps, ValueContainerProps } from 'react-select'
+
+import { shortenDID } from '@/lib/ui'
+
+import { Option, SelectField, Stack, Text } from '../ui'
+
+import { AccountLogo, Box } from './BackupDetail'
 
 export const StorachaSpaceSelect = (props: {
   name: string
