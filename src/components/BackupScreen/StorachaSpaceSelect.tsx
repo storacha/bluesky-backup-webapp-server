@@ -47,6 +47,8 @@ export const StorachaSpaceSelect = (props: {
       label: 'Create new space',
       value: CREATE_NEW_STORACHA_SPACE_VALUE,
     })
+
+    return result
   }, [spaces, account, props.disabled, props.value])
 
   const handleChange = (value: string) => {

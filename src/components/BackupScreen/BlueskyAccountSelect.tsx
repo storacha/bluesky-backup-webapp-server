@@ -1,7 +1,7 @@
 'use client'
 import { useSWR } from '@/app/swr'
 import { useAuthenticator } from '@storacha/ui-react'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { Stack, Text } from '../ui'
 import { CaretDown, PlusCircle } from '@phosphor-icons/react'
 import { SelectField, Option } from '../ui'
@@ -21,26 +21,32 @@ export const BlueskyAccountSelect = (props: {
 }) => {
   const [{ accounts }] = useAuthenticator()
   const account = accounts[0]
-
-  const { data: atprotoAccounts } = useSWR(
-    props.disabled ? null : account && ['api', '/api/atproto-accounts']
-  )
-
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
     props.value
   )
 
+  const { data: atprotoAccounts, isLoading } = useSWR(
+    props.disabled ? null : account && ['api', '/api/atproto-accounts']
+  )
+
+  useEffect(() => {
+    if (props.value) {
+      setSelectedValue(props.value)
+    }
+  }, [props.value])
+
   const options = useMemo(() => {
+    const result: Option[] = []
+
     if (props.disabled && props.value) {
       return [{ value: props.value, label: props.value, icon: '/bluesky.png' }]
     }
 
-    const result: Option[] = []
-
-    if (atprotoAccounts) {
+    if (atprotoAccounts && atprotoAccounts.length > 0) {
       const bskyAccounts = atprotoAccounts.map((account) => ({
         value: account,
         label: shortenDID(account),
+        icon: '/bluesky.png',
       }))
       result.push(...bskyAccounts)
     }
@@ -64,7 +70,18 @@ export const BlueskyAccountSelect = (props: {
 
   const BskyControl = (props: ControlProps<Option>) => {
     const selectedOption = props.getValue()[0]
-    const hasValue = Boolean(selectedOption?.value || options?.[0]?.label)
+    const hasValue = Boolean(
+      (selectedOption?.value &&
+        selectedOption?.value !== LOG_INTO_BLUESKY_VALUE) ||
+        options?.[0]?.label
+    )
+
+    const displayOption =
+      selectedOption ||
+      (options.length > 0 &&
+      (options && options?.[0]?.value) !== LOG_INTO_BLUESKY_VALUE
+        ? options[0]
+        : null)
 
     return (
       <components.Control {...props}>
@@ -73,13 +90,13 @@ export const BlueskyAccountSelect = (props: {
             $gap="1rem"
             $display="flex"
             $justifyContent="space-between"
-            $background={props.hasValue ? 'var(--color-white)' : ''}
+            $background={hasValue ? 'var(--color-white)' : ''}
             $isFocused={props.isFocused}
           >
             <AccountLogo $type="original" $hasAccount={hasValue}>
               <Image
-                src={selectedOption?.icon || '/bluesky.png'}
-                alt={`${selectedOption?.label || 'Bluesky'} Logo`}
+                src={displayOption?.icon || '/bluesky.png'}
+                alt={`${displayOption?.label || 'Bluesky'} Logo`}
                 width={25}
                 height={25}
               />
@@ -91,9 +108,15 @@ export const BlueskyAccountSelect = (props: {
             >
               <Stack $gap=".6rem">
                 <Text $color="var(--color-black)">Bluesky Account</Text>
-                <Text>{selectedOption?.label || options?.[0]?.label}</Text>
+                <Text>
+                  {isLoading
+                    ? 'Loading accounts...'
+                    : displayOption?.label || 'Select an account'}
+                </Text>
               </Stack>
-              {!atprotoAccounts ? (
+              {isLoading ? (
+                <span>Loading...</span>
+              ) : !atprotoAccounts || atprotoAccounts.length === 0 ? (
                 <PlusCircle
                   weight="fill"
                   size="16"
@@ -129,6 +152,12 @@ export const BlueskyAccountSelect = (props: {
     )
   }
 
+  const defaultValue =
+    options.length > 1 &&
+    (options && options?.[0]?.value) !== LOG_INTO_BLUESKY_VALUE
+      ? options && options?.[0]?.value
+      : undefined
+
   return (
     <>
       <SelectField
@@ -136,8 +165,8 @@ export const BlueskyAccountSelect = (props: {
         options={options}
         value={selectedValue}
         onChange={handleChange}
-        disabled={props.disabled}
-        defaultValue={options?.[0]?.value}
+        disabled={props.disabled || isLoading}
+        defaultValue={defaultValue}
         components={{
           Control: BskyControl,
           ValueContainer: BskyAccountsContainer,
