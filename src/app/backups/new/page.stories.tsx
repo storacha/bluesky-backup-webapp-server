@@ -54,6 +54,7 @@ const meta = {
           atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
           storachaSpace:
             'did:key:zMw6cW3gpcPQzNkdfprbTZZh2MajkgZ3MdbqgUsqmksvBPiz',
+          delegationCid: null,
           includeRepository: true,
           includeBlobs: true,
           includePreferences: false,
@@ -65,6 +66,7 @@ const meta = {
           atprotoAccount: 'did:plc:vv44vwwbr3lmbjht3p5fd7wz',
           storachaSpace:
             'did:key:zMwdHTDrZWDPyrEA2GLc3nnBTXcAn6RN3Lexio45ULK56BXA',
+          delegationCid: null,
           includeRepository: false,
           includeBlobs: false,
           includePreferences: true,
