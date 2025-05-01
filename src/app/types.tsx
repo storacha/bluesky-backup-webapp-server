@@ -3,7 +3,7 @@ import { Did } from '@atproto/oauth-client-node'
 export type SpaceDid = Did<'key'>
 
 export type Backup = {
-  id: number
+  id: string
   accountDid: string
   name: string
   atprotoAccount: Did
@@ -26,9 +26,9 @@ export type BackupInput = Input<Backup, 'id'>
 type SnapshotStatus = 'not-started' | 'in-progress' | 'failed' | 'success'
 
 export type Snapshot = {
-  id: number
+  id: string
   atprotoAccount: Did
-  backupId: number
+  backupId: string
   repositoryStatus: SnapshotStatus
   repositoryCid?: string
   blobsStatus: SnapshotStatus
@@ -50,8 +50,8 @@ export type SnapshotInput = Input<
 export interface ATBlob {
   cid: string
   contentType?: string
-  snapshotId: number
-  backupId?: number
+  snapshotId: string
+  backupId?: string
   createdAt: string
 }
 

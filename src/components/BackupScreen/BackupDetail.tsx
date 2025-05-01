@@ -214,7 +214,7 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
           )}
           <Stack $gap="2rem">
             {backup ? (
-              <Heading>Backup #{backup.id}</Heading>
+              <Heading>{backup.name}</Heading>
             ) : (
               <Heading>New Backup</Heading>
             )}

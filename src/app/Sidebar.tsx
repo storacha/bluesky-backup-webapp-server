@@ -94,7 +94,7 @@ const LogOutButton = styled(BaseLogOutButton)`
 export function Sidebar({
   selectedBackupId,
 }: {
-  selectedBackupId: number | null
+  selectedBackupId: string | null
 }) {
   return (
     <SidebarOutside>
@@ -115,7 +115,7 @@ export function Sidebar({
   )
 }
 
-function Backups({ selectedBackupId }: { selectedBackupId: number | null }) {
+function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
   const { data } = useSWR(['api', '/api/backups'])
 
   if (!data) return <Loader />

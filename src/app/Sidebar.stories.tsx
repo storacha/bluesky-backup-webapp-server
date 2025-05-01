@@ -43,7 +43,7 @@ export const WithBackups: Story = {
       ['api', '/api/backups'],
       [
         {
-          id: 1,
+          id: 'abc',
           accountDid: 'did:mailto:gmail.com:timothy-chalamet',
           name: 'Backup #1',
           atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
@@ -55,7 +55,7 @@ export const WithBackups: Story = {
           delegationCid: null,
         },
         {
-          id: 2,
+          id: 'def',
           accountDid: 'did:mailto:gmail.com:timothy-chalamet',
           name: 'Bluesky #452',
           atprotoAccount: 'did:plc:vv44vwwbr3lmbjht3p5fd7wz',
@@ -70,13 +70,13 @@ export const WithBackups: Story = {
     ),
   ],
   args: {
-    selectedBackupId: 1,
+    selectedBackupId: 'abc',
   },
 }
 
 export const WhileBackupsLoading: Story = {
   decorators: [withData(['api', '/api/backups'], new Promise(() => {}))],
   args: {
-    selectedBackupId: 1,
+    selectedBackupId: 'abc',
   },
 }

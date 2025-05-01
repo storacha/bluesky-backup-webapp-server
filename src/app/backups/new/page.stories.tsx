@@ -48,7 +48,7 @@ const meta = {
       ['api', '/api/backups'],
       [
         {
-          id: 1,
+          id: '1234',
           accountDid: 'did:mailto:gmail.com:timothy-chalamet',
           name: 'Backup #1',
           atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
@@ -60,7 +60,7 @@ const meta = {
           includePreferences: false,
         },
         {
-          id: 2,
+          id: '5678',
           accountDid: 'did:mailto:gmail.com:timothy-chalamet',
           name: 'Bluesky #452',
           atprotoAccount: 'did:plc:vv44vwwbr3lmbjht3p5fd7wz',
