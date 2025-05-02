@@ -3,6 +3,7 @@
 import { Account, useAuthenticator } from '@storacha/ui-react'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
 import { Backup, SpaceDid } from '@/app/types'
@@ -11,8 +12,9 @@ import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSele
 import { CreateButton } from '@/components/ui/CreateButton'
 import { delegate } from '@/lib/delegate'
 import { uploadCAR } from '@/lib/storacha'
+import { shortenDID } from '@/lib/ui'
 
-import { Container, Heading, Spinner, Stack, StyleProps, Text } from '../ui'
+import { Container, Heading, Stack, StyleProps, Text } from '../ui'
 
 import { DataBox } from './Data'
 
@@ -130,34 +132,56 @@ function NewBackupForm({
   setIsSubmitting?: (v: boolean) => void
 }) {
   const [{ client }] = useAuthenticator()
+
   async function generateDelegationAndCreateNewBackup(formData: FormData) {
-    console.log('GENERATING', setIsSubmitting)
     if (setIsSubmitting) setIsSubmitting(true)
+
     const space = formData.get('storacha_space') as SpaceDid | undefined
     if (!space) {
       console.error('space id not defined, cannot create delegation.')
-      throw new Error('space is not defined, cannot create delegation')
+      toast.error('Space ID not defined, cannot create delegation.')
+      if (setIsSubmitting) setIsSubmitting(false)
+      return
     }
+
     if (!client) {
       console.error('client not defined, cannot create delegation')
-      throw new Error('client is not defined, cannot create delegation')
+      toast.error('Client not defined, cannot create delegation.')
+      if (setIsSubmitting) setIsSubmitting(false)
+      return
     }
-    await client.setCurrentSpace(space)
-    // upload the delegation to Storacha so we can use it later
 
-    // create a delegation valid for a year of backups
-    const delegationDuration = 1000 * 60 * 60 * 24 * 365
-    const delegationCid = await uploadCAR(
-      client,
-      new Blob([
-        await delegate(client, space, { duration: delegationDuration }),
-      ])
-    )
-    formData.append('delegation_cid', delegationCid.toString())
-    const result = await createNewBackup(formData)
-    if (setIsSubmitting) setIsSubmitting(false)
-    return result
+    try {
+      await client.setCurrentSpace(space)
+      // upload the delegation to Storacha so we can use it later
+
+      // Create a delegation valid for a year of backups
+      const delegationDuration = 1000 * 60 * 60 * 24 * 365
+      const delegationCid = await uploadCAR(
+        client,
+        new Blob([
+          await delegate(client, space, { duration: delegationDuration }),
+        ])
+      )
+      formData.append('delegation_cid', delegationCid.toString())
+
+      const result = await createNewBackup(formData)
+      if (setIsSubmitting) setIsSubmitting(true)
+      return result
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message === 'NEXT_REDIRECT'
+            ? 'Backup created successfully! Redirecting...'
+            : error.message
+          : 'Unknown error'
+      )
+      console.error('Backup creation error:', error)
+    } finally {
+      if (setIsSubmitting) setIsSubmitting(false)
+    }
   }
+
   return <form action={generateDelegationAndCreateNewBackup}>{children}</form>
 }
 
@@ -183,6 +207,7 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
     blobs: false,
     preferences: false,
   })
+
   useEffect(() => {
     if (backup) {
       setData({
@@ -231,7 +256,7 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
                     name="storacha_space"
                     {...(backup && {
                       disabled: true,
-                      value: backup.storachaSpace,
+                      value: shortenDID(backup.storachaSpace),
                     })}
                   />
                 </Wrapper>
@@ -254,10 +279,10 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
             </Stack>
             {backup ? (
               <CreateSnapshotButton backup={backup} />
-            ) : isSubmitting ? (
-              <Spinner />
             ) : (
-              <CreateButton type="submit">create backup</CreateButton>
+              <CreateButton $isLoading={isSubmitting} type="submit">
+                create backup
+              </CreateButton>
             )}
           </Stack>
         </Container>

@@ -1,22 +1,28 @@
-import { Button } from '@/components/ui'
+import { StatefulButton } from '@/components/ui'
 
-import type React from 'react'
+import type { StyleProps } from '@/components/ui/style'
+import type { ButtonHTMLAttributes, ReactNode } from 'react'
 
 /**
  * A button that we'd use for creating a new item. This is currently a guess at
- * its actual scope--the name should evolve as we understan what this form of
+ * its actual scope--the name should evolve as we understand what this form of
  * button should be used for in the app.
  */
 export const CreateButton = ({
   type,
   onClick,
-  disabled,
+  disabled = false,
   children,
-}: Pick<
-  React.ComponentProps<typeof Button>,
-  'type' | 'onClick' | 'disabled' | 'children'
->) => (
-  <Button
+  $isLoading = false,
+  $mt = '1.4rem',
+  ...rest
+}: Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'> & {
+  disabled?: boolean
+  children: ReactNode
+  $isLoading?: boolean
+  $mt?: string
+} & Partial<StyleProps>) => (
+  <StatefulButton
     $background={
       disabled ? 'var(--color-gray-medium)' : 'var(--color-dark-blue)'
     }
@@ -24,11 +30,13 @@ export const CreateButton = ({
     $textTransform="capitalize"
     $width="fit-content"
     $fontSize="0.75rem"
-    $mt="1.4rem"
+    $mt={$mt}
     type={type}
     onClick={onClick}
+    isLoading={$isLoading}
     disabled={disabled}
+    {...rest}
   >
     {children}
-  </Button>
+  </StatefulButton>
 )

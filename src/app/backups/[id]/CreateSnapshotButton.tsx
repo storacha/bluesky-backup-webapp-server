@@ -5,7 +5,6 @@ import { useState } from 'react'
 
 import { useSWRMutation } from '@/app/swr'
 import { Backup } from '@/app/types'
-import { Spinner } from '@/components/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
 import { delegate } from '@/lib/delegate'
 
@@ -42,9 +41,7 @@ export const CreateSnapshotButton = ({ backup }: { backup: Backup }) => {
     return null
   }
 
-  return isSubmitting ? (
-    <Spinner />
-  ) : (
+  return (
     <CreateButton
       onClick={
         enabled &&
@@ -52,6 +49,7 @@ export const CreateSnapshotButton = ({ backup }: { backup: Backup }) => {
           trigger()
         })
       }
+      $isLoading={isSubmitting}
     >
       create snapshot
     </CreateButton>
