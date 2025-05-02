@@ -17,7 +17,7 @@ const buttonBackgroundColor = (
   }
 }
 
-export const ButtonElement = styled.button<Partial<BtnProps>>`
+const ButtonElement = styled.button<Partial<BtnProps>>`
   font-family: ${({ $fontFamily = 'var(--font-dm-mono)' }) => $fontFamily};
   font-weight: ${({ $fontWeight = '300' }) => $fontWeight};
   padding: ${({ $py = '0.75rem', $px = '1rem' }) => `${$py} ${$px}`};
