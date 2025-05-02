@@ -28,8 +28,7 @@ import db, { PrefsDoc } from '@/lib/db'
 import { cidUrl } from '@/lib/storacha'
 import { shortenDID } from '@/lib/ui'
 
-import { Box } from './BackupScreen/BackupDetail'
-import { Button, Heading, InputField, Stack, SubHeading, Text } from './ui'
+import { Box, Button, Heading, InputField, Stack, SubHeading, Text } from './ui'
 
 type LoginFn = (
   identifier: string,

@@ -1,7 +1,5 @@
 import { Switch } from '../Switch'
-import { Stack, Text } from '../ui'
-
-import { Box } from './BackupDetail'
+import { Box, Stack, Text } from '../ui'
 
 interface DataBoxProps {
   title: string

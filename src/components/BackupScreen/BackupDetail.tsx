@@ -15,7 +15,7 @@ import { delegate } from '@/lib/delegate'
 import { uploadCAR } from '@/lib/storacha'
 import { shortenDID } from '@/lib/ui'
 
-import { Container, Heading, Stack, StyleProps, Text } from '../ui'
+import { Container, Heading, Stack, Text } from '../ui'
 
 import { DataBox } from './Data'
 
@@ -53,30 +53,6 @@ const ConnectingLine = styled.div`
   background-color: var(--color-gray-light);
   margin: 0;
   flex-shrink: 0;
-`
-
-export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
-  border: ${({ $borderWidth = '1px', $isFocused }) =>
-      $isFocused ? '2px' : $borderWidth}
-    ${({ $borderStyle = 'dashed', $isFocused }) =>
-      $isFocused ? 'solid' : $borderStyle}
-    ${({ $borderColor = 'var(--color-gray-light)', $isFocused }) =>
-      $isFocused ? 'var(--color-dark-blue)' : $borderColor};
-  border-radius: 12px;
-  height: ${({ $height = '66px' }) => $height};
-  width: ${({ $width = '100%' }) => $width};
-  display: ${({ $display = '' }) => $display};
-  justify-content: ${({ $justifyContent = '' }) => $justifyContent};
-  align-items: center;
-  padding: ${({ $padding = '0 0.6rem' }) => $padding};
-  gap: ${({ $gap = 0 }) => $gap};
-  cursor: pointer;
-  background: ${({ $background = '' }) => $background};
-  position: ${({ $position = '' }) => $position};
-  top: ${({ $top = '' }) => $top};
-  right: ${({ $right = '' }) => $right};
-  left: ${({ $left = '' }) => $left};
-  bottom: ${({ $bottom = '' }) => $bottom};
 `
 
 export const AccountLogo = styled.div<{
@@ -125,9 +101,8 @@ const DATA_BOXES: DataConfig[] = [
   // },
 ]
 
-const CreateBackupButton = ()=> {
+const CreateBackupButton = () => {
   const { pending } = useFormStatus()
-  console.log("pending", pending)
 
   return (
     <CreateButton $isLoading={pending} type="submit">
