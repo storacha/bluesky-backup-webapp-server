@@ -1,7 +1,7 @@
 import { CredentialSession } from '@atproto/api'
 import { fn } from '@storybook/test'
 
-import { RestoreDialogView } from '@/components/RestoreUI'
+import { RestoreDialogView } from './RestoreDialogView'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -23,13 +23,11 @@ const meta = {
   },
   tags: ['autodocs'],
   args: {
-    keys: [],
     loginToSource: fn(),
     loginToSink: fn(),
     createAccount: fn(),
     restoreRepo: fn(),
     restoreBlobs: fn(),
-    restorePrefsDoc: fn(),
     transferIdentity: fn(),
     sendPlcRestoreAuthorizationEmail: fn(),
     setupPlcRestore: fn(),

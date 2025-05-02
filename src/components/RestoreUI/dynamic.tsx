@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 
-import { Spinner } from './ui'
+import { Spinner } from '../ui'
 
 export default function Restore({ snapshotId }: { snapshotId: string }) {
   const RestoreUI = dynamic(() => import('./RestoreUI'), {

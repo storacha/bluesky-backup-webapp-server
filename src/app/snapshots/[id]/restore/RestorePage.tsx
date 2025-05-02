@@ -2,7 +2,7 @@
 
 import { Sidebar } from '@/app/Sidebar'
 import { Box } from '@/components/BackupScreen/BackupDetail'
-import RestoreDialog from '@/components/Restore'
+import RestoreDialog from '@/components/RestoreUI/dynamic'
 
 export default function RestorePage({ id }: { id: string }) {
   return (
