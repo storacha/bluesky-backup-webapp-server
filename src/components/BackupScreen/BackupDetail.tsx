@@ -50,10 +50,15 @@ export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
   height: ${({ $height = '66px' }) => $height};
   width: ${({ $width = '100%' }) => $width};
   display: ${({ $display = '' }) => $display};
-  justify-content: space-between;
+  justify-content: ${({ $justifyContent = '' }) => $justifyContent};
   align-items: center;
   gap: ${({ $gap = 0 }) => $gap};
   background: ${({ $background = '' }) => $background};
+  position: ${({ $position = '' }) => $position};
+  top: ${({ $top = '' }) => $top};
+  right: ${({ $right = '' }) => $right};
+  left: ${({ $left = '' }) => $left};
+  bottom: ${({ $bottom = '' }) => $bottom};
 `
 
 export const AccountLogo = styled.div<{
@@ -111,7 +116,6 @@ function NewBackupForm({
 }) {
   const [{ client }] = useAuthenticator()
   async function generateDelegationAndCreateNewBackup(formData: FormData) {
-    console.log('GENERATING', setIsSubmitting)
     if (setIsSubmitting) setIsSubmitting(true)
     const space = formData.get('storacha_space') as SpaceDid | undefined
     if (!space) {
