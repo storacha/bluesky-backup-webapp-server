@@ -13,8 +13,8 @@ import { toast } from 'sonner'
 import { GATEWAY_HOSTNAME, GATEWAY_ID } from '@/lib/constants'
 import { shorten } from '@/lib/ui'
 
-import { Box } from '../BackupScreen/BackupDetail'
 import {
+  Box,
   InputField,
   Modal,
   ModalProps,

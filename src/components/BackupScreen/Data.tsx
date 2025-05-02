@@ -1,8 +1,7 @@
 import { useId } from 'react'
 
-import { Stack, Text } from '../ui'
+import { Box, Stack, Text } from '../ui'
 
-import { Box } from './BackupDetail'
 import { Switch } from './Switch'
 
 interface DataBoxProps {
@@ -25,6 +24,7 @@ export const DataBox = ({
   const id = useId()
   return (
     <Box
+      $padding="8px"
       $display="flex"
       $justifyContent="space-between"
       $background="var(--color-white)"

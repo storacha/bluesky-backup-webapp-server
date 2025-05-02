@@ -9,7 +9,7 @@ import { dmMono, dmSans, epilogue } from './globalStyle'
 import { SWRConfigProvider } from './swr'
 
 export const metadata: Metadata = {
-  title: 'Bb',
+  title: 'Bluesky Backups by Storacha',
   description: 'Backup & Restore your Bluesky Account',
 }
 

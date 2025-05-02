@@ -10,9 +10,9 @@ import { useSWR } from '@/app/swr'
 import { shortenDID } from '@/lib/ui'
 
 import { AddBskyAccountModal } from '../modals'
-import { Option, SelectField, Stack, Text } from '../ui'
+import { Box, Option, SelectField, Stack, Text } from '../ui'
 
-import { AccountLogo, Box } from './BackupDetail'
+import { AccountLogo } from './BackupDetail'
 
 const LOG_INTO_BLUESKY_VALUE = '-connect-'
 
@@ -42,15 +42,28 @@ export const BlueskyAccountSelect = (props: {
     const result: Option[] = []
 
     if (props.disabled && props.value) {
-      return [{ value: props.value, label: props.value, icon: '/bluesky.png' }]
+      return [
+        {
+          value: props.value,
+          label: shortenDID(props.value),
+          icon: '/bluesky.png',
+        },
+      ]
     }
 
     if (atprotoAccounts && atprotoAccounts.length > 0) {
-      const bskyAccounts = atprotoAccounts.map((account) => ({
-        value: account,
-        label: shortenDID(account),
-        icon: '/bluesky.png',
-      }))
+      const bskyAccounts = atprotoAccounts.map((account) => {
+        const formattedAccount =
+          typeof account === 'string' && account.startsWith('did:')
+            ? account
+            : `did:plc:${account}`
+
+        return {
+          value: formattedAccount,
+          label: shortenDID(formattedAccount),
+          icon: '/bluesky.png',
+        }
+      })
       result.push(...bskyAccounts)
     }
 
@@ -173,7 +186,8 @@ export const BlueskyAccountSelect = (props: {
           ValueContainer: BskyAccountsContainer,
         }}
       />
-      {/* keeping this here to bypass knip in the CI. when it's time to use the modal, i'll update */}
+      <input type="hidden" name={props.name} value={selectedValue || ''} />
+      {/* Keeping this here to bypass knip in the CI. When it's time to use the modal, I'll update */}
       <AddBskyAccountModal isOpen={false} onClose={() => {}} />
     </>
   )

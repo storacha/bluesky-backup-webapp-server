@@ -34,15 +34,15 @@ export type StyleProps = {
   $bottom: Property.Bottom
   $borderRadius: Property.BorderRadius
   $fontFamily: Property.FontFamily
-}
-
-export interface BtnProps extends StyleProps {
   $mt: Property.MarginTop
   $mx: `${Property.MarginLeft} ${Property.MarginRight}`
   $px: `${Property.PaddingLeft} ${Property.PaddingRight}`
   $py: `${Property.PaddingTop} ${Property.PaddingBottom}`
   $my: `${Property.MarginTop} ${Property.MarginBottom}`
   $pt: `${Property.PaddingTop}`
+}
+
+export interface BtnProps extends StyleProps {
   $isLoading?: boolean
   $hideLoadingText?: boolean
   $variant?: string

@@ -9,9 +9,9 @@ import { useDisclosure } from '@/hooks/use-disclosure'
 import { shortenDID } from '@/lib/ui'
 
 import { CreateSpaceModal } from '../modals'
-import { Option, SelectField, Stack, Text } from '../ui'
+import { Box, Option, SelectField, Stack, Text } from '../ui'
 
-import { AccountLogo, Box } from './BackupDetail'
+import { AccountLogo } from './BackupDetail'
 
 const CREATE_NEW_STORACHA_SPACE_VALUE = '-create-'
 

@@ -22,8 +22,7 @@ export const CreateSnapshotButton = ({ backup }: { backup: Backup }) => {
   const account = accounts[0]
 
   const enabled = client && backup
-
-  const { trigger } = useSWRMutation(
+  const { trigger, isMutating } = useSWRMutation(
     enabled && ['api', `/api/backups/${backup.id}/snapshots`],
     async () => {
       // SWR guarantees this won't actually happen.
@@ -46,6 +45,7 @@ export const CreateSnapshotButton = ({ backup }: { backup: Backup }) => {
           trigger()
         })
       }
+      $isLoading={isMutating}
     >
       create snapshot
     </CreateButton>

@@ -26,6 +26,21 @@ export const Text = styled.p<TextProps>`
   width: ${({ $width = '' }) => $width};
   border: ${({ $border = '' }) => $border};
 `
+
+export const Heading = styled.h2`
+  font-weight: 700;
+  color: #000;
+  font-size: 1.125rem;
+  text-transform: capitalize;
+`
+
+export const SubHeading = styled.h3`
+  font-weight: 600;
+  color: var(--color-gray-medium);
+  font-size: 0.75rem;
+  text-transform: capitalize;
+`
+
 // we may need this. maybe not now, but later
 // just to bypass knip's warning, i'll leaved it commented out.
 // const Flex = styled.div<Partial<StyleProps>>`

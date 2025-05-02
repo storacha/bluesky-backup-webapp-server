@@ -8,7 +8,7 @@ import { Backup } from '@/app/types'
 import { useStorachaAccount } from '@/hooks/use-plan'
 
 import { BackupDetail } from './BackupDetail'
-import { BackupRestore } from './Restore'
+import Sidebar from './RightSidebar'
 
 const BackupContainer = styled.div`
   display: flex;
@@ -51,7 +51,7 @@ export const BackupScreen = ({ backup }: { backup?: Backup }) => {
         </PanelResizeHandle>
         <Panel defaultSize={40} minSize={40}>
           <Suspense>
-            <BackupRestore backup={backup} />
+            <Sidebar backup={backup} />
           </Suspense>
         </Panel>
       </PanelGroup>
