@@ -32,7 +32,7 @@ interface BackupProps {
 }
 
 export const Container = styled.div`
-  padding: 3.4rem 3.2em;
+  padding: 2.5rem;
 `
 
 export const Heading = styled.h2`
@@ -49,25 +49,12 @@ export const SubHeading = styled.h3`
   text-transform: capitalize;
 `
 
-const AccountsContainer = styled.div`
-  display: flex;
-  align-items: center;
-  position: relative;
-  width: 100%;
-`
-
-const Wrapper = styled.div`
-  flex: 1;
-  min-width: 0;
-  width: 100%;
-`
-
-const ConnectingLine = styled.div`
-  width: 30px;
-  height: 1px;
-  background-color: var(--color-gray-light);
-  margin: 0;
-  flex-shrink: 0;
+const AccountsContainer = styled(Stack)`
+  background-image: linear-gradient(0deg, var(--color-gray-light));
+  background-size: 1rem 1px;
+  background-repeat: no-repeat;
+  background-position: center;
+  gap: 1rem;
 `
 
 export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
@@ -83,7 +70,6 @@ export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
   display: ${({ $display = '' }) => $display};
   justify-content: ${({ $justifyContent = '' }) => $justifyContent};
   align-items: center;
-  padding: ${({ $padding = '0 0.6rem' }) => $padding};
   gap: ${({ $gap = 0 }) => $gap};
   background: ${({ $background = '' }) => $background};
   position: ${({ $position = '' }) => $position};
@@ -178,6 +164,19 @@ function MaybeForm({
   return backup ? children : <NewBackupForm>{children}</NewBackupForm>
 }
 
+const Section = ({
+  title,
+  children,
+}: {
+  title: string
+  children: ReactNode
+}) => (
+  <Stack $gap="0.75rem">
+    <Text>{title}</Text>
+    {children}
+  </Stack>
+)
+
 export const BackupDetail = ({ account, backup }: BackupProps) => {
   const [data, setData] = useState<Record<string, boolean>>({
     repository: true,
@@ -202,64 +201,55 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
   }
 
   return (
-    <>
-      <MaybeForm backup={backup}>
-        {account && (
-          <input type="hidden" name="account" value={account.did()} />
-        )}
-        <Container>
-          <Stack $gap="2rem">
-            {backup ? (
-              <Heading>{backup.name}</Heading>
-            ) : (
-              <Heading>New Backup</Heading>
-            )}
-            <Stack $gap="1rem">
-              <AccountsContainer>
-                <Wrapper>
-                  <BlueskyAccountSelect
-                    name="atproto_account"
-                    {...(backup && {
-                      disabled: true,
-                      value: backup.atprotoAccount,
-                    })}
-                  />
-                </Wrapper>
-                <ConnectingLine />
-                <Wrapper>
-                  <StorachaSpaceSelect
-                    name="storacha_space"
-                    {...(backup && {
-                      disabled: true,
-                      value: backup.storachaSpace,
-                    })}
-                  />
-                </Wrapper>
-              </AccountsContainer>
+    <MaybeForm backup={backup}>
+      {account && <input type="hidden" name="account" value={account.did()} />}
+      <Container>
+        <Stack $gap="2.5rem">
+          {backup ? (
+            <Heading>Backup #{backup.id}</Heading>
+          ) : (
+            <Heading>New Backup</Heading>
+          )}
+          <Section title="Accounts">
+            <AccountsContainer $direction="row" $even>
+              <BlueskyAccountSelect
+                name="atproto_account"
+                {...(backup && {
+                  disabled: true,
+                  value: backup.atprotoAccount,
+                })}
+              />
+              <StorachaSpaceSelect
+                name="storacha_space"
+                {...(backup && {
+                  disabled: true,
+                  value: backup.storachaSpace,
+                })}
+              />
+            </AccountsContainer>
+          </Section>
+
+          <Section title="Data">
+            <Stack $direction="row" $gap="1rem" $even $wrap="wrap">
+              {DATA_BOXES.map((box) => (
+                <DataBox
+                  key={box.key}
+                  name={box.name}
+                  title={box.title}
+                  description={box.description}
+                  value={data[box.key] || false}
+                  onToggle={() => !backup && toggle(box.key)}
+                />
+              ))}
             </Stack>
-            <Stack $gap="1.25rem">
-              <Text $textTransform="capitalize">data</Text>
-              <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
-                {DATA_BOXES.map((box) => (
-                  <DataBox
-                    key={box.key}
-                    name={box.name}
-                    title={box.title}
-                    description={box.description}
-                    value={data[box.key] || false}
-                    onToggle={() => !backup && toggle(box.key)}
-                  />
-                ))}
-              </Stack>
-            </Stack>
-            {backup ? (
-              <CreateSnapshotButton backup={backup} />
-            ) : (
-              <CreateButton type="submit">create backup</CreateButton>
-            )}
-          </Stack>
-        </Container>
-      </MaybeForm>
-    </>
+          </Section>
+          {backup ? (
+            <CreateSnapshotButton backup={backup} />
+          ) : (
+            <CreateButton type="submit">create backup</CreateButton>
+          )}
+        </Stack>
+      </Container>
+    </MaybeForm>
   )
 }
