@@ -1,6 +1,6 @@
 'use client'
 
-import Dexie, { type EntityTable } from 'dexie'
+import { Dexie, type EntityTable } from 'dexie'
 
 interface Backup {
   id: number

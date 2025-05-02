@@ -15,14 +15,26 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 })
 
+// `nextCoreWebVitals` already defines the plugin "import", and when
+// `importPlugin.flatConfigs.recommended` tries to define it as well, ESLint
+// doesn't like that. They're the same definition, we just need it to only
+// happen once, so we strip it here.
+const importRecommendedWithoutPlugin = Object.fromEntries(
+  Object.entries(importPlugin.flatConfigs.recommended).filter(
+    ([key]) => key !== 'plugins'
+  )
+)
+
 const eslintConfig = [
   ...compat.config(nextCoreWebVitals),
   ...compat.config(nextTypescript),
+  importRecommendedWithoutPlugin,
+  importPlugin.flatConfigs.typescript,
+  importPlugin.flatConfigs.react,
   {
-    plugins: { importPlugin },
     rules: {
       // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
-      'importPlugin/order': [
+      'import/order': [
         'warn',
         {
           'newlines-between': 'always',
