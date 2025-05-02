@@ -24,7 +24,6 @@ export const CreateButton = ({
     $textTransform="capitalize"
     $width="fit-content"
     $fontSize="0.75rem"
-    $mt="1.4rem"
     type={type}
     onClick={onClick}
     disabled={disabled}
