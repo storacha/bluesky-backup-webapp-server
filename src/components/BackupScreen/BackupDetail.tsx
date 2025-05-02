@@ -12,7 +12,7 @@ import { CreateButton } from '@/components/ui/CreateButton'
 import { delegate } from '@/lib/delegate'
 import { uploadCAR } from '@/lib/storacha'
 
-import { Container, Heading, Spinner, Stack, StyleProps, Text } from '../ui'
+import { Spinner, Stack, StyleProps, Text } from '../ui'
 
 import { DataBox } from './Data'
 
@@ -31,25 +31,30 @@ interface BackupProps {
   backup?: Backup
 }
 
-const AccountsContainer = styled.div`
-  display: flex;
-  align-items: center;
-  position: relative;
-  width: 100%;
+export const Container = styled.div`
+  padding: 2.5rem;
 `
 
-const Wrapper = styled.div`
-  flex: 1;
-  min-width: 0;
-  width: 100%;
+export const Heading = styled.h2`
+  font-weight: 700;
+  color: #000;
+  font-size: 1.125rem;
+  text-transform: capitalize;
 `
 
-const ConnectingLine = styled.div`
-  width: 30px;
-  height: 1px;
-  background-color: var(--color-gray-light);
-  margin: 0;
-  flex-shrink: 0;
+export const SubHeading = styled.h3`
+  font-weight: 600;
+  color: var(--color-gray-medium);
+  font-size: 0.75rem;
+  text-transform: capitalize;
+`
+
+const AccountsContainer = styled(Stack)`
+  background-image: linear-gradient(0deg, var(--color-gray-light));
+  background-size: 1rem 1px;
+  background-repeat: no-repeat;
+  background-position: center;
+  gap: 1rem;
 `
 
 export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
@@ -63,17 +68,10 @@ export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
   height: ${({ $height = '66px' }) => $height};
   width: ${({ $width = '100%' }) => $width};
   display: ${({ $display = '' }) => $display};
-  justify-content: ${({ $justifyContent = '' }) => $justifyContent};
+  justify-content: space-between;
   align-items: center;
-  padding: ${({ $padding = '0 0.6rem' }) => $padding};
   gap: ${({ $gap = 0 }) => $gap};
-  cursor: pointer;
   background: ${({ $background = '' }) => $background};
-  position: ${({ $position = '' }) => $position};
-  top: ${({ $top = '' }) => $top};
-  right: ${({ $right = '' }) => $right};
-  left: ${({ $left = '' }) => $left};
-  bottom: ${({ $bottom = '' }) => $bottom};
 `
 
 export const AccountLogo = styled.div<{
@@ -158,7 +156,11 @@ function NewBackupForm({
     if (setIsSubmitting) setIsSubmitting(false)
     return result
   }
-  return <form action={generateDelegationAndCreateNewBackup}>{children}</form>
+  return (
+    <Container>
+      <form action={generateDelegationAndCreateNewBackup}>{children}</form>
+    </Container>
+  )
 }
 
 function MaybeForm({
@@ -176,6 +178,19 @@ function MaybeForm({
     <NewBackupForm setIsSubmitting={setIsSubmitting}>{children}</NewBackupForm>
   )
 }
+
+const Section = ({
+  title,
+  children,
+}: {
+  title: string
+  children: ReactNode
+}) => (
+  <Stack $gap="0.75rem">
+    <Text>{title}</Text>
+    {children}
+  </Stack>
+)
 
 export const BackupDetail = ({ account, backup }: BackupProps) => {
   const [data, setData] = useState<Record<string, boolean>>({
@@ -199,69 +214,60 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
       [name]: !prev?.[name],
     }))
   }
-
   const [isSubmitting, setIsSubmitting] = useState(false)
+
   return (
-    <>
-      <MaybeForm backup={backup} setIsSubmitting={setIsSubmitting}>
-        {account && (
-          <input type="hidden" name="account" value={account.did()} />
-        )}
-        <Container>
-          <Stack $gap="2rem">
-            {backup ? (
-              <Heading>{backup.name}</Heading>
-            ) : (
-              <Heading>New Backup</Heading>
-            )}
-            <Stack $gap="1rem">
-              <AccountsContainer>
-                <Wrapper>
-                  <BlueskyAccountSelect
-                    name="atproto_account"
-                    {...(backup && {
-                      disabled: true,
-                      value: backup.atprotoAccount,
-                    })}
-                  />
-                </Wrapper>
-                <ConnectingLine />
-                <Wrapper>
-                  <StorachaSpaceSelect
-                    name="storacha_space"
-                    {...(backup && {
-                      disabled: true,
-                      value: backup.storachaSpace,
-                    })}
-                  />
-                </Wrapper>
-              </AccountsContainer>
+    <MaybeForm backup={backup} setIsSubmitting={setIsSubmitting}>
+      {account && <input type="hidden" name="account" value={account.did()} />}
+      <Container>
+        <Stack $gap="2.5rem">
+          {backup ? (
+            <Heading>Backup #{backup.id}</Heading>
+          ) : (
+            <Heading>New Backup</Heading>
+          )}
+          <Section title="Accounts">
+            <AccountsContainer $direction="row" $even>
+              <BlueskyAccountSelect
+                name="atproto_account"
+                {...(backup && {
+                  disabled: true,
+                  value: backup.atprotoAccount,
+                })}
+              />
+              <StorachaSpaceSelect
+                name="storacha_space"
+                {...(backup && {
+                  disabled: true,
+                  value: backup.storachaSpace,
+                })}
+              />
+            </AccountsContainer>
+          </Section>
+
+          <Section title="Data">
+            <Stack $direction="row" $gap="1rem" $even $wrap="wrap">
+              {DATA_BOXES.map((box) => (
+                <DataBox
+                  key={box.key}
+                  name={box.name}
+                  title={box.title}
+                  description={box.description}
+                  value={data[box.key] || false}
+                  onToggle={() => !backup && toggle(box.key)}
+                />
+              ))}
             </Stack>
-            <Stack $gap="1.25rem">
-              <Text $textTransform="capitalize">data</Text>
-              <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
-                {DATA_BOXES.map((box) => (
-                  <DataBox
-                    key={box.key}
-                    name={box.name}
-                    title={box.title}
-                    description={box.description}
-                    value={data[box.key] || false}
-                    onToggle={() => !backup && toggle(box.key)}
-                  />
-                ))}
-              </Stack>
-            </Stack>
-            {backup ? (
-              <CreateSnapshotButton backup={backup} />
-            ) : isSubmitting ? (
-              <Spinner />
-            ) : (
-              <CreateButton type="submit">create backup</CreateButton>
-            )}
-          </Stack>
-        </Container>
-      </MaybeForm>
-    </>
+          </Section>
+          {backup ? (
+            <CreateSnapshotButton backup={backup} />
+          ) : isSubmitting ? (
+            <Spinner />
+          ) : (
+            <CreateButton type="submit">create backup</CreateButton>
+          )}
+        </Stack>
+      </Container>
+    </MaybeForm>
   )
 }
