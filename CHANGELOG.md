@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.1.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.0.2...v1.1.0) (2025-05-02)
+
+
+### Features
+
+* backup "cronjob" ([#44](https://github.com/storacha/bluesky-backup-webapp-server/issues/44)) ([941fb1f](https://github.com/storacha/bluesky-backup-webapp-server/commit/941fb1ff127b8cc932a7089492a81fa0f9661ec9))
+* create Storacha space ([#60](https://github.com/storacha/bluesky-backup-webapp-server/issues/60)) ([7b0c5e5](https://github.com/storacha/bluesky-backup-webapp-server/commit/7b0c5e536d7027c8dfbf308ede10aa1fc2211862))
+* get Storybook stories running again ([f5320bc](https://github.com/storacha/bluesky-backup-webapp-server/commit/f5320bc86687507b4c93c5774ce3dba255f18e88))
+* Loaders work ([8536ff3](https://github.com/storacha/bluesky-backup-webapp-server/commit/8536ff3496b2cc53d06b71d3a3e41aae74dda0b6))
+* snapshot page ([#74](https://github.com/storacha/bluesky-backup-webapp-server/issues/74)) ([e55a134](https://github.com/storacha/bluesky-backup-webapp-server/commit/e55a1344e20bd300e17a1de3a3a480ee0eaca3b3))
+
+
+### Bug Fixes
+
+* add account_did to backup queries ([#66](https://github.com/storacha/bluesky-backup-webapp-server/issues/66)) ([63c7416](https://github.com/storacha/bluesky-backup-webapp-server/commit/63c74162a1f5270fd40aa75b6974b0bb6fc41377))
+* add authorization to a number of endpoints ([6d4e15d](https://github.com/storacha/bluesky-backup-webapp-server/commit/6d4e15d108ede33aac949a0529347bfa0604e9be))
+* Give proper labels to the switches ([5953d07](https://github.com/storacha/bluesky-backup-webapp-server/commit/5953d07e06a5222ef02fd3086c74622c3d40d06a))
+* imports ([b401d77](https://github.com/storacha/bluesky-backup-webapp-server/commit/b401d77b7960c73e75f38b5ba6955059b88e7677))
+* Remove "use client" from Dialog component ([2ce0a38](https://github.com/storacha/bluesky-backup-webapp-server/commit/2ce0a387c3ddf1acf8b53a3ed35075e941fede07))
+* revert bluesky account selector for now ([#65](https://github.com/storacha/bluesky-backup-webapp-server/issues/65)) ([028a3df](https://github.com/storacha/bluesky-backup-webapp-server/commit/028a3df8fcc1ae15f97d0074dd25b229a97f0247))
+* session initialization ([#70](https://github.com/storacha/bluesky-backup-webapp-server/issues/70)) ([4fc9cf9](https://github.com/storacha/bluesky-backup-webapp-server/commit/4fc9cf9196336ec2c323cdc4b3d2a7fcf50a01b7))
+
 ## [1.0.2](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.0.1...v1.0.2) (2025-04-29)
 
 ### Bug Fixes
