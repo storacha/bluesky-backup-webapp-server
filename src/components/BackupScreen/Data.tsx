@@ -1,7 +1,9 @@
-import { Switch } from '../Switch'
+import { useId } from 'react'
+
 import { Stack, Text } from '../ui'
 
 import { Box } from './BackupDetail'
+import { Switch } from './Switch'
 
 interface DataBoxProps {
   title: string
@@ -20,6 +22,7 @@ export const DataBox = ({
   onToggle,
   width = '48%',
 }: DataBoxProps) => {
+  const id = useId()
   return (
     <Box
       $display="flex"
@@ -29,12 +32,20 @@ export const DataBox = ({
       $width={width}
     >
       <Stack>
-        <Text $color="var(--color-black)" $textTransform="capitalize">
-          {title}
-        </Text>
+        <label htmlFor={id}>
+          <Text $color="var(--color-black)" $textTransform="capitalize">
+            {title}
+          </Text>
+        </label>
         <Text>{description}</Text>
       </Stack>
-      <Switch name={name} value={value} onClick={onToggle} />
+      <Switch
+        id={id}
+        name={name}
+        value={value}
+        onClick={onToggle}
+        aria-label={title}
+      />
     </Box>
   )
 }

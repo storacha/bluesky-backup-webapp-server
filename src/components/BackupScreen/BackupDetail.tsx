@@ -85,7 +85,6 @@ export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
   align-items: center;
   padding: ${({ $padding = '0 0.6rem' }) => $padding};
   gap: ${({ $gap = 0 }) => $gap};
-  cursor: pointer;
   background: ${({ $background = '' }) => $background};
   position: ${({ $position = '' }) => $position};
   top: ${({ $top = '' }) => $top};
