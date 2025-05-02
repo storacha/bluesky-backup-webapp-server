@@ -10,7 +10,7 @@ import {
 import { Stack } from '@/components/ui'
 import { GATEWAY_HOSTNAME } from '@/lib/constants'
 
-export default function RepoPage ({ id }: { id: string }) {
+export default function RepoPage({ id }: { id: string }) {
   const { data: snapshot, error } = useSWR(['api', `/api/snapshots/${id}`])
   if (error) throw error
   if (!snapshot) return null
