@@ -1,12 +1,10 @@
-'use server'
-
 import { snapshotOwnedByAccount } from '@/lib/server/auth'
 import { getStorageContext } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
 
 import RepoPage from './RepoPage'
 
-export default async function Backup({
+export default async function Repo({
   params,
 }: {
   params: Promise<{ id: string }>

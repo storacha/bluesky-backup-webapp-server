@@ -1,12 +1,10 @@
-'use server'
-
 import { snapshotOwnedByAccount } from '@/lib/server/auth'
 import { getStorageContext } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
 
-import BlobsPage from './RestorePage'
+import RestorePage from './RestorePage'
 
-export default async function Backup({
+export default async function Restore({
   params,
 }: {
   params: Promise<{ id: string }>
@@ -17,5 +15,5 @@ export default async function Backup({
   if (!(await snapshotOwnedByAccount(db, id, account))) {
     return <div>unauthorized</div>
   }
-  return <BlobsPage id={id} />
+  return <RestorePage id={id} />
 }

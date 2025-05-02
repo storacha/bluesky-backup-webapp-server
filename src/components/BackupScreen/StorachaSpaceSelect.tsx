@@ -81,8 +81,9 @@ export const StorachaSpaceSelect = (props: {
         <Box
           $gap="1rem"
           $display="flex"
-          $justifyContent="space-between"
+          $justifyContent="start"
           $background={hasValue ? 'var(--color-white)' : ''}
+          $width="100%"
           $isFocused={props.isFocused}
         >
           <AccountLogo $type="original" $hasAccount={hasValue}>

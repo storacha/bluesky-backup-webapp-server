@@ -5,9 +5,7 @@ import useSWR from 'swr'
 import { Backup, Snapshot } from '@/app/types'
 import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
 
-import { Center, Container, Heading, Stack, SubHeading, Text } from '../ui'
-
-import { Box } from './BackupDetail'
+import { Box, Center, Container, Heading, Stack, SubHeading, Text } from '../ui'
 
 const SidebarContainer = styled(Container)`
   height: 100vh;
@@ -34,6 +32,7 @@ const DetailValue = styled.div`
 `
 
 const SnapshotSummary = styled(Box)`
+  padding: 1rem;
   font-size: 0.75rem;
 `
 

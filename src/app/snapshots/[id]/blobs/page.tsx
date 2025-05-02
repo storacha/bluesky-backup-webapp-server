@@ -6,7 +6,7 @@ import { getSession } from '@/lib/sessions'
 
 import BlobsPage from './BlobsPage'
 
-export default async function Backup({
+export default async function Blobs({
   params,
 }: {
   params: Promise<{ id: string }>

@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 const meta = {
   // Uses division slash (∕) instead of regular slash (/) in the title.
-  title: '/snapshots∕[id]',
+  title: '∕snapshots∕[id]',
   component: Page,
   parameters: {
     layout: 'fullscreen',

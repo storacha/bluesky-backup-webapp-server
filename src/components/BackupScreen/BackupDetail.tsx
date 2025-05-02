@@ -34,25 +34,20 @@ interface BackupProps {
   backup?: Backup
 }
 
-const AccountsContainer = styled.div`
-  display: flex;
-  align-items: center;
-  position: relative;
-  width: 100%;
-`
-
 const Wrapper = styled.div`
   flex: 1;
   min-width: 0;
   width: 100%;
 `
 
-const ConnectingLine = styled.div`
-  width: 30px;
-  height: 1px;
-  background-color: var(--color-gray-light);
-  margin: 0;
-  flex-shrink: 0;
+const AccountsContainer = styled(Stack)`
+  background-image: linear-gradient(0deg, var(--color-gray-light));
+  background-size: 1rem 1px;
+  background-repeat: no-repeat;
+  background-position: center;
+  gap: 1rem;
+  align-items: center;
+  position: relative;
 `
 
 export const AccountLogo = styled.div<{
@@ -170,6 +165,19 @@ function MaybeForm({
   return backup ? children : <NewBackupForm>{children}</NewBackupForm>
 }
 
+const Section = ({
+  title,
+  children,
+}: {
+  title: string
+  children: ReactNode
+}) => (
+  <Stack $gap="0.75rem">
+    <Text>{title}</Text>
+    {children}
+  </Stack>
+)
+
 export const BackupDetail = ({ account, backup }: BackupProps) => {
   const [data, setData] = useState<Record<string, boolean>>({
     repository: true,
@@ -207,8 +215,8 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
             ) : (
               <Heading>New Backup</Heading>
             )}
-            <Stack $gap="1rem">
-              <AccountsContainer>
+            <Section title="Accounts">
+              <AccountsContainer $direction="row">
                 <Wrapper>
                   <BlueskyAccountSelect
                     name="atproto_account"
@@ -218,7 +226,6 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
                     })}
                   />
                 </Wrapper>
-                <ConnectingLine />
                 <Wrapper>
                   <StorachaSpaceSelect
                     name="storacha_space"
@@ -227,11 +234,11 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
                       value: shortenDID(backup.storachaSpace),
                     })}
                   />
-                </Wrapper>
+                </Wrapper>{' '}
               </AccountsContainer>
-            </Stack>
-            <Stack $gap="1.25rem">
-              <Text $textTransform="capitalize">data</Text>
+            </Section>
+
+            <Section title="Data">
               <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
                 {DATA_BOXES.map((box) => (
                   <DataBox
@@ -244,7 +251,7 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
                   />
                 ))}
               </Stack>
-            </Stack>
+            </Section>
             {backup ? (
               <CreateSnapshotButton backup={backup} />
             ) : (
