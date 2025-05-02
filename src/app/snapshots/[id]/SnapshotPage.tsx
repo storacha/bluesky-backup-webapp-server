@@ -11,7 +11,7 @@ export default function SnapshotPage({ id }: { id: string }) {
 
   return (
     <>
-      <Sidebar selectedBackupId={id} />
+      <Sidebar selectedBackupId={null} />
       <SnapshotScreen snapshot={snapshot} />
     </>
   )

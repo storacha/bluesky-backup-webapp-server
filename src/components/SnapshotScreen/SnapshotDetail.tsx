@@ -4,17 +4,18 @@ import { styled } from 'next-yak'
 import { Snapshot } from '@/app/types'
 import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
 
-import { Stack, SubHeading } from '../ui'
+import { Heading, Stack, SubHeading } from '../ui'
 
-const Details = styled(Stack)`
+export const Details = styled(Stack)`
   margin-top: 4rem;
+  padding-left: 2rem;
 `
 
-const DetailName = styled(SubHeading)`
+export const DetailName = styled(SubHeading)`
   color: black;
 `
 
-const DetailValue = styled.div`
+export const DetailValue = styled.div`
   font-family: var(--font-dm-mono);
   font-size: 0.75rem;
 `
@@ -26,6 +27,7 @@ export interface SnapshotDetailArgs {
 export default function SnapshotDetail({ snapshot }: SnapshotDetailArgs) {
   return (
     <Details $gap="1rem">
+      <Heading>{formatDate(snapshot.createdAt)} Snapshot</Heading>
       <SubHeading>Details</SubHeading>
       <Stack $direction="row" $alignItems="center" $gap="1rem">
         <DetailName>Account DID</DetailName>

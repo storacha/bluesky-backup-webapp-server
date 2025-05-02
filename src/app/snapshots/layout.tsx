@@ -13,9 +13,5 @@ export default function SnapshotLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return (
-    <Outside $direction="row" $gap="1rem">
-      {children}
-    </Outside>
-  )
+  return <Outside $direction="row">{children}</Outside>
 }
