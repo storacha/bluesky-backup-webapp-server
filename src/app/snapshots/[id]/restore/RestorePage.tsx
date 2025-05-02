@@ -1,8 +1,8 @@
 'use client'
 
 import { Sidebar } from '@/app/Sidebar'
-import { Box } from '@/components/BackupScreen/BackupDetail'
 import RestoreDialog from '@/components/RestoreUI/dynamic'
+import { Box } from '@/components/ui'
 
 export default function RestorePage({ id }: { id: string }) {
   return (

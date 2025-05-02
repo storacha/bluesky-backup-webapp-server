@@ -10,9 +10,9 @@ import { useSWR } from '@/app/swr'
 import { shortenDID } from '@/lib/ui'
 
 import { AddBskyAccountModal } from '../modals'
-import { Option, SelectField, Stack, Text } from '../ui'
+import { Box, Option, SelectField, Stack, Text } from '../ui'
 
-import { AccountLogo, Box } from './BackupDetail'
+import { AccountLogo } from './BackupDetail'
 
 const LOG_INTO_BLUESKY_VALUE = '-connect-'
 

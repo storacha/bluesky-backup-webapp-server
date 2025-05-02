@@ -2,12 +2,11 @@
 
 import { Sidebar } from '@/app/Sidebar'
 import { useSWR } from '@/app/swr'
-import { Box } from '@/components/BackupScreen/BackupDetail'
 import {
   DetailName,
   DetailValue,
 } from '@/components/SnapshotScreen/SnapshotDetail'
-import { Stack } from '@/components/ui'
+import { Box, Stack } from '@/components/ui'
 import { GATEWAY_HOSTNAME } from '@/lib/constants'
 
 export default function RepoPage({ id }: { id: string }) {

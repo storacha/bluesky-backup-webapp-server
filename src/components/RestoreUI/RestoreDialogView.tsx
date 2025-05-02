@@ -21,8 +21,15 @@ import { ATPROTO_DEFAULT_SINK, ATPROTO_DEFAULT_SOURCE } from '@/lib/constants'
 import { PrefsDoc } from '@/lib/db'
 import { shortenDID } from '@/lib/ui'
 
-import { Box } from '../BackupScreen/BackupDetail'
-import { Button, Heading, InputField, Stack, SubHeading, Text } from '../ui'
+import {
+  Box,
+  Button,
+  Heading,
+  InputField,
+  Stack,
+  SubHeading,
+  Text,
+} from '../ui'
 
 export type LoginFn = (
   identifier: string,

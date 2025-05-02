@@ -1,8 +1,7 @@
 import { At } from '@phosphor-icons/react'
 import { ChangeEvent, useState } from 'react'
 
-import { Box } from '../BackupScreen/BackupDetail'
-import { Button, InputField, Modal, ModalProps, Stack, Text } from '../ui'
+import { Box, Button, InputField, Modal, ModalProps, Stack, Text } from '../ui'
 
 import { SharedModalLayout } from './layout'
 

@@ -12,7 +12,7 @@ import { CreateButton } from '@/components/ui/CreateButton'
 import { delegate } from '@/lib/delegate'
 import { uploadCAR } from '@/lib/storacha'
 
-import { Container, Heading, Spinner, Stack, StyleProps, Text } from '../ui'
+import { Container, Heading, Spinner, Stack, Text } from '../ui'
 
 import { DataBox } from './Data'
 
@@ -37,28 +37,6 @@ const AccountsContainer = styled(Stack)`
   background-repeat: no-repeat;
   background-position: center;
   gap: 1rem;
-`
-
-export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
-  border: ${({ $borderWidth = '1px', $isFocused }) =>
-      $isFocused ? '2px' : $borderWidth}
-    ${({ $borderStyle = 'dashed', $isFocused }) =>
-      $isFocused ? 'solid' : $borderStyle}
-    ${({ $borderColor = 'var(--color-gray-light)', $isFocused }) =>
-      $isFocused ? 'var(--color-dark-blue)' : $borderColor};
-  border-radius: 12px;
-  height: ${({ $height = '66px' }) => $height};
-  width: ${({ $width = '100%' }) => $width};
-  display: ${({ $display = '' }) => $display};
-  justify-content: ${({ $justifyContent = '' }) => $justifyContent};
-  align-items: center;
-  gap: ${({ $gap = 0 }) => $gap};
-  background: ${({ $background = '' }) => $background};
-  position: ${({ $position = '' }) => $position};
-  top: ${({ $top = '' }) => $top};
-  right: ${({ $right = '' }) => $right};
-  left: ${({ $left = '' }) => $left};
-  bottom: ${({ $bottom = '' }) => $bottom};
 `
 
 export const AccountLogo = styled.div<{
