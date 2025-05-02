@@ -58,12 +58,12 @@ const AccountsContainer = styled(Stack)`
 `
 
 export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
-  border: ${({ $borderWidth = '1px', $isFocused }) =>
-      $isFocused ? '2px' : $borderWidth}
-    ${({ $borderStyle = 'dashed', $isFocused }) =>
-      $isFocused ? 'solid' : $borderStyle}
-    ${({ $borderColor = 'var(--color-gray-light)', $isFocused }) =>
-      $isFocused ? 'var(--color-dark-blue)' : $borderColor};
+  border-width: ${({ $borderWidth = '1px', $isFocused }) =>
+    $isFocused ? '2px' : $borderWidth};
+  border-style: ${({ $borderStyle = 'dashed', $isFocused }) =>
+    $isFocused ? 'solid' : $borderStyle};
+  border-color: ${({ $borderColor = 'var(--color-gray-light)', $isFocused }) =>
+    $isFocused ? 'var(--color-dark-blue)' : $borderColor};
   border-radius: 12px;
   height: ${({ $height = '66px' }) => $height};
   width: ${({ $width = '100%' }) => $width};
