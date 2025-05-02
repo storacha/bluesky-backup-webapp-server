@@ -1,8 +1,8 @@
 'use client'
 
 import { Sidebar } from '@/app/Sidebar'
-import { useSWR } from '@/app/swr'
 import { BackupScreen } from '@/components/BackupScreen'
+import { useSWR } from '@/lib/swr'
 
 export default function BackupPage({ id }: { id: string }) {
   // TODO: Should we fetch individual backups? We already need the list for the

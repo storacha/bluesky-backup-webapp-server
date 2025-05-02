@@ -1,13 +1,13 @@
 'use client'
 
 import { Sidebar } from '@/app/Sidebar'
-import { useSWR } from '@/app/swr'
 import {
   DetailName,
   DetailValue,
 } from '@/components/SnapshotScreen/SnapshotDetail'
 import { Box, Stack } from '@/components/ui'
 import { GATEWAY_HOSTNAME } from '@/lib/constants'
+import { useSWR } from '@/lib/swr'
 
 export default function RepoPage({ id }: { id: string }) {
   const { data: snapshot, error } = useSWR(['api', `/api/snapshots/${id}`])

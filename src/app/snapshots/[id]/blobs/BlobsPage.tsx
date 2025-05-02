@@ -1,8 +1,8 @@
 'use client'
 
 import { Sidebar } from '@/app/Sidebar'
-import { useSWR } from '@/app/swr'
-import { ATBlob } from '@/app/types'
+import { useSWR } from '@/lib/swr'
+import { ATBlob } from '@/types'
 
 export default function BlobsPage({ id }: { id: string }) {
   const { data: blobsData, error: error } = useSWR([

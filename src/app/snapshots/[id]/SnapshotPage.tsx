@@ -1,8 +1,8 @@
 'use client'
 
 import { Sidebar } from '@/app/Sidebar'
-import { useSWR } from '@/app/swr'
 import { SnapshotScreen } from '@/components/SnapshotScreen'
+import { useSWR } from '@/lib/swr'
 
 export default function SnapshotPage({ id }: { id: string }) {
   const { data: snapshot, error } = useSWR(['api', `/api/snapshots/${id}`])

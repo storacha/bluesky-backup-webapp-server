@@ -6,9 +6,9 @@ import { Loader } from '@/components/Loader'
 import { Stack } from '@/components/ui/Stack'
 
 import { roundRectStyle } from '../components/ui'
+import { useSWR } from '../lib/swr'
 
 import { LogOutButton as BaseLogOutButton } from './authentication'
-import { useSWR } from './swr'
 
 const SidebarOutside = styled.nav`
   display: flex;

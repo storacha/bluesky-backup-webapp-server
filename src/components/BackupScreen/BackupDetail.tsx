@@ -7,13 +7,13 @@ import { useFormStatus } from 'react-dom'
 import { toast } from 'sonner'
 
 import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
-import { Backup, SpaceDid } from '@/app/types'
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
 import { CreateButton } from '@/components/ui/CreateButton'
 import { delegate } from '@/lib/delegate'
 import { uploadCAR } from '@/lib/storacha'
 import { shortenDID } from '@/lib/ui'
+import { Backup, SpaceDid } from '@/types'
 
 import { Container, Heading, Stack, Text } from '../ui'
 

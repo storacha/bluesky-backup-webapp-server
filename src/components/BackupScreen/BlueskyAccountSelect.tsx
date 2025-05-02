@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 import { components, ControlProps, ValueContainerProps } from 'react-select'
 
-import { useSWR } from '@/app/swr'
+import { useSWR } from '@/lib/swr'
 import { shortenDID } from '@/lib/ui'
 
 import { AddBskyAccountModal } from '../modals'

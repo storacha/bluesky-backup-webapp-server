@@ -8,7 +8,7 @@ import {
   BackupInput,
   Snapshot,
   SnapshotInput,
-} from '@/app/types'
+} from '@/types'
 
 // will use psql environment variables
 // https://github.com/porsager/postgres?tab=readme-ov-file#environmental-variables

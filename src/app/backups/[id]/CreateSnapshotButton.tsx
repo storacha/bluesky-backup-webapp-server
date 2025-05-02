@@ -2,10 +2,10 @@
 
 import { useAuthenticator } from '@storacha/ui-react'
 
-import { useSWRMutation } from '@/app/swr'
-import { Backup } from '@/app/types'
 import { CreateButton } from '@/components/ui/CreateButton'
 import { delegate } from '@/lib/delegate'
+import { useSWRMutation } from '@/lib/swr'
+import { Backup } from '@/types'
 
 let createSnapshot: typeof import('./createSnapshot').createSnapshot
 

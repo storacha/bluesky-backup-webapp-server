@@ -4,8 +4,8 @@ import { styled } from 'next-yak'
 import { Suspense } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
-import { Backup } from '@/app/types'
 import { useStorachaAccount } from '@/hooks/use-plan'
+import { Backup } from '@/types'
 
 import { BackupDetail } from './BackupDetail'
 import Sidebar from './RightSidebar'
