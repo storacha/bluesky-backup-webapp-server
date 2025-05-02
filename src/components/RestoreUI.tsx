@@ -438,7 +438,7 @@ const AtProtoElement = styled.div`
   width: 112px;
 `
 
-function RestoreDialogView({
+export function RestoreDialogView({
   sourceSession,
   sinkSession,
   loginToSource,
