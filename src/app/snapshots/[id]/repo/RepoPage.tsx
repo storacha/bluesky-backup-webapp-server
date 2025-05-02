@@ -5,7 +5,6 @@ import { useSWR } from '@/app/swr'
 import { Box } from '@/components/BackupScreen/BackupDetail'
 import {
   DetailName,
-  Details,
   DetailValue,
 } from '@/components/SnapshotScreen/SnapshotDetail'
 import { Stack } from '@/components/ui'
