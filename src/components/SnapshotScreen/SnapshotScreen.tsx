@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { styled } from 'next-yak'
+import { css, styled } from 'next-yak'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
 import { Snapshot } from '@/app/types'
@@ -39,6 +39,17 @@ const RestoreContainer = styled(Container)`
   border-left: 1px solid var(--color-light-blue);
 `
 
+const roundedFull = css`
+  border-radius: calc(infinity * 1px);
+`
+
+const RestoreLink = styled(Link)`
+  border-radius: 100%;
+  border: 1px solid var(--color-black);
+  padding: 0.25rem 1rem;
+  ${roundedFull}
+`
+
 export const SnapshotScreen = ({ snapshot }: { snapshot: Snapshot }) => {
   return (
     <SnapshotContainer>
@@ -53,7 +64,9 @@ export const SnapshotScreen = ({ snapshot }: { snapshot: Snapshot }) => {
         </PanelResizeHandle>
         <Panel defaultSize={40} minSize={40}>
           <RestoreContainer>
-            <Link href={`/snapshots/${snapshot.id}/restore`}>Restore</Link>
+            <RestoreLink href={`/snapshots/${snapshot.id}/restore`}>
+              Restore
+            </RestoreLink>
           </RestoreContainer>
         </Panel>
       </PanelGroup>

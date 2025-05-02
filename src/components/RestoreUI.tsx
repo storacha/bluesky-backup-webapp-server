@@ -2,18 +2,21 @@
 
 import { Agent, CredentialSession } from '@atproto/api'
 import { Secp256k1Keypair } from '@atproto/crypto'
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 import {
-  AdjustmentsHorizontalIcon,
-  ArrowRightCircleIcon,
-  CircleStackIcon,
-  CloudIcon,
-  IdentificationIcon,
-  KeyIcon,
-} from '@heroicons/react/20/solid'
+  Popover as HPopover,
+  PopoverButton as HPopoverButton,
+  PopoverPanel as HPopoverPanel,
+} from '@headlessui/react'
+import { CircleStackIcon } from '@heroicons/react/20/solid'
+import {
+  ArrowCircleRight,
+  Cloud,
+  Database,
+  IdentificationBadge,
+} from '@phosphor-icons/react'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { styled } from 'next-yak'
-import { InputHTMLAttributes, useState } from 'react'
+import { css, styled } from 'next-yak'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import useSWR from 'swr'
 
@@ -26,31 +29,7 @@ import { cidUrl } from '@/lib/storacha'
 import { shortenDID } from '@/lib/ui'
 
 import { Box } from './BackupScreen/BackupDetail'
-import Button from './Button'
-import Keychain from './Keychain'
-import { roundRectStyle } from './ui'
-
-const InputElement = styled.input`
-  border: 1px solid black;
-  ${roundRectStyle};
-  &::placeholder {
-    opacity: 0.5;
-  }
-`
-type InputProps = InputHTMLAttributes<HTMLInputElement> & {
-  label?: string
-}
-const Input = (props: InputProps) => {
-  const { label, ...rest } = props
-  return label ? (
-    <label>
-      <div>{label}</div>
-      <InputElement {...rest} />
-    </label>
-  ) : (
-    <InputElement {...rest} />
-  )
-}
+import { Button, Heading, InputField, Stack, SubHeading, Text } from './ui'
 
 type LoginFn = (
   identifier: string,
@@ -355,7 +334,8 @@ export default function RestoreDialog({ snapshotId }: { snapshotId: string }) {
         operation: plcOp,
       })
       await sinkAgent.com.atproto.server.activateAccount()
-      await sourceAgent.com.atproto.server.deactivateAccount()
+      // TODO: I think we need to do this to be complete, but it currently throws an error
+      //await sourceAgent.com.atproto.server.deactivateAccount()
       setIsTransferringIdentity(false)
       setIsIdentityTransferred(true)
     } else {
@@ -396,14 +376,75 @@ export default function RestoreDialog({ snapshotId }: { snapshotId: string }) {
   )
 }
 
-function RestoreDialogView({
+const Popover = styled(HPopover)`
+  display: relative;
+`
+
+const PopoverButton = styled(HPopoverButton)`
+  outline: none;
+`
+
+const PopoverPanel = styled(HPopoverPanel)`
+  display: flex;
+  background: white;
+  border: 1px solid black;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+`
+
+const DataTypeHeading = styled(Heading)`
+  width: 112px;
+`
+
+interface DataSinkIconOptions {
+  $restored?: boolean
+}
+
+const flexCenter = css`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
+
+const DataSinkIcon = styled.div<DataSinkIconOptions>`
+  background-color: var(--color-white);
+  color: ${({ $restored }) =>
+    $restored ? 'var(--color-green)' : '--color-gray-medium'};
+  border-color: ${({ $restored }) =>
+    $restored ? 'var(--color-green)' : '--color-gray-medium'};
+  width: 32px;
+  height: 32px;
+  ${flexCenter}
+`
+
+const DataSourceIcon = styled.div`
+  ${flexCenter}
+  width: 32px;
+  &:hover {
+    background-color: var(--color-white);
+  }
+`
+//  < div className = "rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center" >
+//<span className="font-bold text-sm ">
+
+const StorachaElement = styled.div`
+  ${flexCenter}
+  width: 112px;
+`
+
+const AtProtoElement = styled.div`
+  ${flexCenter}
+  width: 112px;
+`
+
+export function RestoreDialogView({
   sourceSession,
   sinkSession,
   loginToSource,
   createAccount,
   restoreRepo,
   restoreBlobs,
-  restorePrefsDoc,
   transferIdentity,
   sendPlcRestoreAuthorizationEmail,
   isPlcRestoreAuthorizationEmailSent,
@@ -411,14 +452,11 @@ function RestoreDialogView({
   isPlcRestoreSetup,
   repo,
   blobs,
-  prefsDoc,
   isRestoringRepo,
   isRestoringBlobs,
-  isRestoringPrefsDoc,
   isTransferringIdentity,
   isRepoRestored,
   areBlobsRestored,
-  isPrefsDocRestored,
   isIdentityTransferred,
 }: RestoreDialogViewProps) {
   const [showTransferAuthorization, setShowTransferAuthorization] =
@@ -427,107 +465,99 @@ function RestoreDialogView({
     <Box $height="100%">
       {sourceSession ? (
         sinkSession ? (
-          <div className="flex flex-col items-center">
-            <div className="w-full flex flex-row">
-              <Popover className="relative">
-                <PopoverButton className="outline-none cursor-pointer hover:bg-gray-100 p-2">
-                  <KeyIcon className="w-6 h-6" />
-                </PopoverButton>
-                <PopoverPanel
-                  anchor="bottom"
-                  className="flex flex-col bg-white border rounded p-2"
+          <Stack $alignItems="center">
+            <Stack $alignItems="center">
+              <Stack $alignItems="start">
+                <Stack
+                  $gap="1rem"
+                  $direction="row"
+                  $alignItems="center"
+                  $width="100%"
+                  $bottom="1rem"
                 >
-                  <Keychain />
-                </PopoverPanel>
-              </Popover>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="prose-sm text-center mb-4">
-                <p>
-                  Great 🎉 ! You can use the buttons below to <b>pull</b> your
-                  data out of Storacha 🐔 and load it into your <b>new</b>{' '}
-                  Personal Data Server 🖥️.
-                </p>
-                <p>
-                  If your backup is <b>encrypted</b> 🔏 you&apos;ll need to
-                  ensure the decryption key 🔑 is available. Use the key icon
-                  above 👆 to <b>import</b> your private key if needed.
-                </p>
-              </div>
-              <div className="flex flex-col items-start">
-                <div className="flex flex-row items-center w-full mb-4">
-                  <div className="w-32"></div>
-                  <div className="w-24">
-                    <h4 className="text-center uppercase text-xs font-bold">
-                      Storacha
-                    </h4>
-                  </div>
-                  <div className="w-8 h-6"></div>
-                  <div className="w-44">
-                    <h4 className="text-center uppercase text-xs font-bold">
-                      {sinkSession?.serviceUrl.hostname}
-                    </h4>
-                    <div className="text-center text-xs w-full truncate">
-                      {sinkSession.did && shortenDID(sinkSession.did)}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-row items-center my-2 space-x-12">
-                  <h5 className="font-bold uppercase text-sm text-right w-28">
-                    Repository
-                  </h5>
-                  <Popover className="relative">
-                    <PopoverButton className="outline-none">
-                      <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
-                        <CircleStackIcon className="w-4 h-4" />
-                      </div>
-                    </PopoverButton>
-                    <PopoverPanel
-                      anchor="bottom"
-                      className="flex flex-col bg-white border rounded p-2"
-                    >
-                      <div>Account: {repo?.accountDid}</div>
-                      <div>Created At: {repo?.createdAt.toDateString()}</div>
-                    </PopoverPanel>
-                  </Popover>
+                  <DataTypeHeading />
+                  <StorachaElement>
+                    <Text>Storacha</Text>
+                  </StorachaElement>
+                  <div style={{ width: '48px' }}></div>
+                  <AtProtoElement>
+                    <Stack>
+                      <Text>{sinkSession?.serviceUrl.hostname}</Text>
+                      <Text>
+                        {sinkSession.did && shortenDID(sinkSession.did)}
+                      </Text>
+                    </Stack>
+                  </AtProtoElement>
+                </Stack>
+
+                <Stack
+                  $gap="1rem"
+                  $direction="row"
+                  $alignItems="center"
+                  $left="1rem"
+                  $right="1rem"
+                >
+                  <DataTypeHeading>Repository</DataTypeHeading>
+                  <StorachaElement>
+                    <DataSourceIcon>
+                      <Popover>
+                        <PopoverButton>
+                          <CircleStackIcon
+                            style={{ width: '16px', height: '16px' }}
+                          />
+                        </PopoverButton>
+                        <PopoverPanel anchor="bottom">
+                          <div>Account: {repo?.accountDid}</div>
+                          <div>
+                            Created At: {repo?.createdAt.toDateString()}
+                          </div>
+                        </PopoverPanel>
+                      </Popover>
+                    </DataSourceIcon>
+                  </StorachaElement>
                   {isRestoringRepo ? (
                     <Button
-                      isLoading
-                      hideLoadingText
-                      variant="outline"
-                      className="rounded-full w-8 h-8"
+                      $isLoading
+                      $hideLoadingText
+                      $variant="outline"
                       aria-label="Restoring repository"
                     />
                   ) : (
                     <Button
                       onClick={restoreRepo}
                       disabled={isRestoringRepo}
-                      variant="outline"
-                      className="rounded-full w-8 h-8"
-                      leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                      $variant="outline"
+                      $leftIcon={
+                        <ArrowCircleRight
+                          size="16"
+                          color="var(--color-gray-medium)"
+                        />
+                      }
                     />
                   )}
-                  <div
-                    className={`${isRepoRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}
-                  >
-                    <CircleStackIcon className="w-4 h-4" />
-                  </div>
-                </div>
+                  <AtProtoElement>
+                    <DataSinkIcon $restored={isRepoRestored}>
+                      <Database size="16" />
+                    </DataSinkIcon>
+                  </AtProtoElement>
+                </Stack>
 
-                <div className="flex flex-row items-center my-2 space-x-12">
-                  <h5 className="font-bold uppercase text-sm text-right w-28">
-                    Blobs
-                  </h5>
-                  <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
-                    <span className="font-bold text-sm ">
-                      {blobs?.length || '0'}
-                    </span>
-                  </div>
+                <Stack
+                  $gap="1rem"
+                  $direction="row"
+                  $alignItems="center"
+                  $left="1rem"
+                  $right="1rem"
+                >
+                  <DataTypeHeading>Blobs</DataTypeHeading>
+                  <StorachaElement>
+                    <DataSourceIcon>{blobs?.length || '0'}</DataSourceIcon>
+                  </StorachaElement>
                   {isRestoringBlobs ? (
                     <Button
-                      isLoading
-                      hideLoadingText
-                      variant="outline"
+                      $isLoading
+                      $hideLoadingText
+                      $variant="outline"
                       className="rounded-full w-8 h-8"
                       aria-label="Restoring blobs"
                     />
@@ -535,227 +565,178 @@ function RestoreDialogView({
                     <Button
                       onClick={restoreBlobs}
                       disabled={isRestoringBlobs}
-                      variant="outline"
+                      $variant="outline"
                       className="rounded-full w-8 h-8"
-                      leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
+                      $leftIcon={
+                        <ArrowCircleRight
+                          size="16"
+                          color="var(--color-gray-medium)"
+                        />
+                      }
                     />
                   )}
-                  <div
-                    className={`${areBlobsRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}
-                  >
-                    <CloudIcon className="w-4 h-4" />
-                  </div>
-                </div>
-
-                <div className="flex flex-row items-center my-2 space-x-12">
-                  <h5 className="font-bold uppercase text-sm text-right w-28">
-                    Preferences
-                  </h5>
-                  <Popover className="relative">
-                    <PopoverButton className="outline-none">
-                      <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
-                        <AdjustmentsHorizontalIcon className="w-4 h-4" />
-                      </div>
-                    </PopoverButton>
-                    <PopoverPanel
-                      anchor="bottom"
-                      className="flex flex-col bg-white border rounded p-2"
-                    >
-                      <div>Account: {prefsDoc?.accountDid}</div>
-                      <div>
-                        Created At: {prefsDoc?.createdAt.toDateString()}
-                      </div>
-                    </PopoverPanel>
-                  </Popover>
-                  {isRestoringPrefsDoc ? (
-                    <Button
-                      isLoading
-                      hideLoadingText
-                      variant="outline"
-                      className="rounded-full w-8 h-8"
-                      aria-label="Restoring preferences"
-                    />
-                  ) : (
-                    <Button
-                      onClick={restorePrefsDoc}
-                      disabled={isRestoringPrefsDoc}
-                      variant="outline"
-                      className="rounded-full w-8 h-8"
-                      leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
-                    />
-                  )}
-                  <div
-                    className={`${isPrefsDocRestored ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}
-                  >
-                    <AdjustmentsHorizontalIcon className="w-4 h-4" />
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="prose-sm text-center mt-16">
-                  <p>
-                    You&apos;re locked in 🔐. All that&apos;s left is to send a
-                    confirmation ✅ code to your email.
-                  </p>
-                  <p>
-                    Be careful ⛔️ ! If you&apos;re transferring your identity
-                    away from the Bluesky 🦋 PDS you can&apos;t currently go
-                    back! You may lose access to your DMs 💅 there if you do
-                    this.
-                  </p>
-                </div>
-                <div className="flex flex-col items-start">
-                  <div className="flex flex-row items-center w-full mt-8 mb-4">
-                    <div className="w-28"></div>
-                    <div className="w-32">
-                      <h4 className="text-center uppercase text-xs font-bold">
-                        {sourceSession.serviceUrl.hostname}
-                      </h4>
-                      <div className="text-xs w-full truncate">
+                  <AtProtoElement>
+                    <DataSinkIcon $restored={areBlobsRestored}>
+                      <Cloud size="16" color="var(--color-gray-medium)" />
+                    </DataSinkIcon>
+                  </AtProtoElement>
+                </Stack>
+                <div style={{ height: '30px' }}></div>
+                <Stack
+                  $gap="1rem"
+                  $direction="row"
+                  $alignItems="center"
+                  $left="1rem"
+                  $right="1rem"
+                >
+                  <DataTypeHeading></DataTypeHeading>
+                  <StorachaElement>
+                    <Stack>
+                      <Text>{sourceSession.serviceUrl.hostname}</Text>
+                      <Text>
                         {sourceSession.did && shortenDID(sourceSession.did)}
-                      </div>
-                    </div>
-                    <div className="w-8 h-6"></div>
-                    <div className="w-32">
-                      <h4 className="text-center uppercase text-xs font-bold">
-                        {sinkSession.serviceUrl.hostname}
-                      </h4>
-                      <div className="text-center text-xs w-full truncate">
+                      </Text>
+                    </Stack>
+                  </StorachaElement>
+                  <div style={{ width: '48px' }}></div>
+                  <AtProtoElement>
+                    <Stack>
+                      <Text>{sinkSession.serviceUrl.hostname}</Text>
+                      <Text>
                         {sinkSession.did && shortenDID(sinkSession.did)}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-row items-center my-2 space-x-12">
-                    <h5 className="font-bold uppercase text-sm text-right w-28">
-                      Identity
-                    </h5>
-                    <div className="rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center">
-                      <IdentificationIcon className="w-4 h-4" />
-                    </div>
-                    {isTransferringIdentity ? (
-                      <Button
-                        isLoading
-                        hideLoadingText
-                        variant="outline"
-                        className="rounded-full w-8 h-8 "
-                        aria-label="Transferring identity"
-                      />
-                    ) : isPlcRestoreAuthorizationEmailSent ? (
-                      isPlcRestoreSetup ? (
-                        <div className="flex flex-col items-center">
-                          <Button
-                            onClick={transferIdentity}
-                            disabled={isTransferringIdentity}
-                            variant="outline"
-                            className="rounded-full w-8 h-8 m-auto"
-                            leftIcon={
-                              <ArrowRightCircleIcon className="w-6 h-6" />
-                            }
-                          />
-                          <Popover className="relative h-0 w-0">
-                            <PopoverButton className="w-0 h-0"></PopoverButton>
-                            <PopoverPanel
-                              static
-                              anchor="bottom"
-                              className="flex flex-col bg-white border rounded p-2"
-                            >
-                              <h5 className="w-56 m-auto text-center text-xs font-bold uppercase">
-                                Identity Transfer is not currently reversible,
-                                please use caution!
-                              </h5>
-                            </PopoverPanel>
-                          </Popover>
-                        </div>
-                      ) : (
-                        <PlcTokenForm setPlcToken={setupPlcRestore} />
-                      )
-                    ) : showTransferAuthorization ? (
-                      <div className="flex flex-col w-24 items-center">
+                      </Text>
+                    </Stack>
+                  </AtProtoElement>
+                </Stack>
+                <Stack
+                  $gap="1rem"
+                  $direction="row"
+                  $alignItems="center"
+                  $left="1rem"
+                  $right="1rem"
+                >
+                  <DataTypeHeading>Identity</DataTypeHeading>
+                  <StorachaElement>
+                    <IdentificationBadge
+                      size="16"
+                      color="var(--color-gray-medium)"
+                    />
+                  </StorachaElement>
+                  {isTransferringIdentity ? (
+                    <Button
+                      $isLoading
+                      $hideLoadingText
+                      $variant="outline"
+                      className="rounded-full w-8 h-8 "
+                      aria-label="Transferring identity"
+                    />
+                  ) : isPlcRestoreAuthorizationEmailSent ? (
+                    isPlcRestoreSetup ? (
+                      <div className="flex flex-col items-center">
                         <Button
-                          onClick={sendPlcRestoreAuthorizationEmail}
+                          onClick={transferIdentity}
                           disabled={isTransferringIdentity}
-                          variant="primary"
-                          className="text-xs font-bold uppercase py-1 px-2"
-                        >
-                          Send Email
-                        </Button>
-                        <Popover className="relative h-0 w-0">
-                          <PopoverButton className="w-0 h-0"></PopoverButton>
-                          <PopoverPanel
-                            static
-                            anchor="bottom"
-                            className="flex flex-col bg-white border rounded p-2"
-                          >
-                            <h5 className="w-56 m-auto text-center text-xs font-bold uppercase mt-2">
-                              To transfer your identity you must provide a
-                              confirmation code sent to the email registered
-                              with your current PDS host.
-                            </h5>
+                          $variant="outline"
+                          $leftIcon={
+                            <ArrowCircleRight
+                              size="16"
+                              color="var(--color-gray-medium)"
+                            />
+                          }
+                        />
+                        <Popover>
+                          <PopoverButton></PopoverButton>
+                          <PopoverPanel static anchor="bottom">
+                            <Text>
+                              Identity Transfer is not currently reversible,
+                              please use caution!
+                            </Text>
                           </PopoverPanel>
                         </Popover>
                       </div>
                     ) : (
+                      <PlcTokenForm setPlcToken={setupPlcRestore} />
+                    )
+                  ) : showTransferAuthorization ? (
+                    <Stack>
                       <Button
-                        onClick={() => {
-                          setShowTransferAuthorization(true)
-                        }}
+                        onClick={sendPlcRestoreAuthorizationEmail}
                         disabled={isTransferringIdentity}
-                        variant="outline"
-                        className="rounded-full w-8 h-8"
-                        leftIcon={<ArrowRightCircleIcon className="w-6 h-6" />}
-                      />
-                    )}
+                        $variant="primary"
+                      >
+                        Send Email
+                      </Button>
+                      <Popover>
+                        <PopoverButton></PopoverButton>
+                        <PopoverPanel static anchor="bottom">
+                          <Text>
+                            To transfer your identity you must provide a
+                            confirmation code sent to the email registered with
+                            your current PDS host.
+                          </Text>
+                        </PopoverPanel>
+                      </Popover>
+                    </Stack>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        setShowTransferAuthorization(true)
+                      }}
+                      disabled={isTransferringIdentity}
+                      $variant="outline"
+                      $leftIcon={
+                        <ArrowCircleRight
+                          size="16"
+                          color="var(--color-gray-medium)"
+                        />
+                      }
+                    />
+                  )}
 
-                    <div
-                      className={`${isIdentityTransferred ? 'border-emerald-500 text-emerald-500' : 'border-gray-500 text-gray-500'} rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center`}
-                    >
-                      <IdentificationIcon className="w-4 h-4" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+                  <AtProtoElement>
+                    <DataSinkIcon $restored={isIdentityTransferred}>
+                      <IdentificationBadge
+                        size="16"
+                        color="var(--color-gray-medium)"
+                      />
+                    </DataSinkIcon>
+                  </AtProtoElement>
+                </Stack>
+              </Stack>
+            </Stack>
+          </Stack>
         ) : (
-          <div className="my-4 flex flex-col items-center ">
-            <h3 className="font-bold mb-2">
-              Create a new Bluesky account to restore to:
-            </h3>
-            <div className="w-96">
-              <AtprotoCreateAccountForm
-                createAccount={createAccount}
-                defaultServer={ATPROTO_DEFAULT_SINK}
-              />
-            </div>
-          </div>
+          <Stack $gap="1rem">
+            <Stack $gap="0.25rem">
+              <Heading>Data Restore and Identity Transfer</Heading>
+              <SubHeading>Please create a new ATProto account.</SubHeading>
+            </Stack>
+            <AtprotoCreateAccountForm
+              createAccount={createAccount}
+              defaultServer={ATPROTO_DEFAULT_SINK}
+            />
+          </Stack>
         )
       ) : (
-        <div className="my-8 flex flex-col items-center min-w-96 space-y-4">
-          <div className="prose-sm text-center mb-4">
-            <p>
-              If you&apos;d like to transfer your identity 🪪 to a new{' '}
-              <b>Personal Data Store</b> you can initiate that here by logging
-              in 🪵 to your existing account.
-            </p>
-          </div>
-          <h3 className="font-bold mb-2">
-            Authenticate to your existing Personal Data Server:
-          </h3>
-          <div className="w-96">
-            <AtprotoLoginForm
-              login={loginToSource}
-              defaultServer={ATPROTO_DEFAULT_SOURCE}
-            />
-          </div>
-        </div>
+        <Stack $gap="1rem">
+          <Stack $gap="0.25rem">
+            <Heading>Data Restore and Identity Transfer</Heading>
+            <SubHeading>
+              Please log in to your existing Bluesky account.
+            </SubHeading>
+          </Stack>
+          <AtprotoLoginForm
+            login={loginToSource}
+            defaultServer={ATPROTO_DEFAULT_SOURCE}
+          />
+        </Stack>
       )}
     </Box>
   )
 }
 
-const AtprotoLoginFormElement = styled.form`
-  display: flex;
-  flex-direction: column;
+const LoginFormElement = styled.form`
+  width: 384px;
 `
 
 function AtprotoLoginForm({ login, defaultServer }: AtprotoLoginFormProps) {
@@ -767,26 +748,28 @@ function AtprotoLoginForm({ login, defaultServer }: AtprotoLoginFormProps) {
     reset()
   })
   return (
-    <AtprotoLoginFormElement onSubmit={onSubmit}>
-      <Input
-        label="Server"
-        placeholder={`https://${defaultServer}`}
-        {...register('server')}
-      />
-      <Input
-        label="Handle"
-        placeholder={`racha.${defaultServer}`}
-        autoComplete="off"
-        {...register('handle')}
-      />
-      <Input
-        label="Password"
-        type="password"
-        autoComplete="off"
-        {...register('password')}
-      />
-      <Button type="submit">Log In</Button>
-    </AtprotoLoginFormElement>
+    <LoginFormElement onSubmit={onSubmit}>
+      <Stack $gap="1rem">
+        <InputField
+          label="Server"
+          placeholder={`https://${defaultServer}`}
+          {...register('server')}
+        />
+        <InputField
+          label="Handle"
+          placeholder={`racha.${defaultServer}`}
+          autoComplete="off"
+          {...register('handle')}
+        />
+        <InputField
+          label="Password"
+          type="password"
+          autoComplete="off"
+          {...register('password')}
+        />
+        <Button type="submit">Log In</Button>
+      </Stack>
+    </LoginFormElement>
   )
 }
 
@@ -798,18 +781,13 @@ function PlcTokenForm({
   const { register, handleSubmit } = useForm<PlcTokenFormParams>()
 
   return (
-    <form
-      onSubmit={handleSubmit((data) => setPlcToken(data.token))}
-      className="flex flex-col space-y-2"
-    >
-      <Input placeholder="Confirmation Code" {...register('token')} />
-      <Button
-        type="submit"
-        variant="primary"
-        className="text-xs uppercase font-bold"
-      >
-        Confirm
-      </Button>
+    <form onSubmit={handleSubmit((data) => setPlcToken(data.token))}>
+      <Stack $gap="1rem">
+        <InputField placeholder="Confirmation Code" {...register('token')} />
+        <Button type="submit" $variant="primary">
+          Confirm
+        </Button>
+      </Stack>
     </form>
   )
 }
@@ -821,35 +799,40 @@ function AtprotoCreateAccountForm({
   const { register, handleSubmit } = useForm<CreateAccountForm>()
 
   return (
-    <form
+    <LoginFormElement
       onSubmit={handleSubmit((data) =>
         createAccount(data.handle, data.password, data.email, {
           server: data.server || `https://${defaultServer}`,
           inviteCode: data.inviteCode,
         })
       )}
-      className="flex flex-col space-y-2 w-full"
     >
-      <Input
-        label="Server"
-        placeholder={`https://${defaultServer}`}
-        {...register('server')}
-      />
-      <Input
-        label="Handle"
-        placeholder={`racha.${defaultServer}`}
-        {...register('handle')}
-      />
-      <Input
-        label="Email"
-        placeholder="racha@storacha.network"
-        {...register('email')}
-      />
-      <Input label="Password" type="password" {...register('password')} />
-      <Input label="Invite Code" {...register('inviteCode')} />
-      <Button type="submit" variant="primary">
-        Create Account
-      </Button>
-    </form>
+      <Stack $gap="1rem">
+        <InputField
+          label="Server"
+          placeholder={`https://${defaultServer}`}
+          {...register('server')}
+        />
+        <InputField
+          label="Handle"
+          placeholder={`racha.${defaultServer}`}
+          {...register('handle')}
+        />
+        <InputField
+          label="Email"
+          placeholder="racha@storacha.network"
+          {...register('email')}
+        />
+        <InputField
+          label="Password"
+          type="password"
+          {...register('password')}
+        />
+        <InputField label="Invite Code" {...register('inviteCode')} />
+        <Button type="submit" $variant="primary">
+          Create Account
+        </Button>
+      </Stack>
+    </LoginFormElement>
   )
 }

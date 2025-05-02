@@ -1,32 +1,48 @@
 'use client'
 
 import { useAuthenticator } from '@storacha/ui-react'
-import React, { useId } from 'react'
+import { styled } from 'next-yak'
+import React from 'react'
+
+import { Button, Heading, InputField, Stack, SubHeading } from '@/components/ui'
+
+const ConnectStack = styled(Stack)`
+  padding: 10rem 10rem;
+`
 
 const ConnectPage: React.FC = () => {
   const [{ accounts }] = useAuthenticator()
   const account = accounts[0]
-  const handleId = useId()
   if (!account) return null
 
   return (
-    <div>
-      <h1>Connect to Bluesky</h1>
+    <ConnectStack $gap="1.2rem" $width="100%">
+      <Stack>
+        <Heading>Connect your Bluesky Account</Heading>
+        <SubHeading>
+          To get started, please log in to your Bluesky account.
+        </SubHeading>
+      </Stack>
       <form action="/atproto/oauth" method="POST">
         <input type="hidden" name="account" value={account.did()} />
-        <div>
-          <label htmlFor={handleId}>Bluesky handle:</label>
-          <input
-            type="text"
-            id={handleId}
+        <Stack $gap="1rem">
+          <InputField
             name="handle"
-            placeholder="Enter your handle"
             required
+            label="Bluesky Handle"
+            placeholder="Enter your handle"
           />
-        </div>
-        <button type="submit">Connect</button>
+          <Button
+            $background="var(--color-dark-blue)"
+            $height="fit-content"
+            $fontSize="0.75rem"
+            type="submit"
+          >
+            Connect
+          </Button>
+        </Stack>
       </form>
-    </div>
+    </ConnectStack>
   )
 }
 

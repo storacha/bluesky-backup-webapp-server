@@ -1,14 +1,11 @@
 import { styled } from 'next-yak'
-import { ChangeEvent, ReactNode } from 'react'
+import { InputHTMLAttributes, ReactNode } from 'react'
 
 import { StyleProps } from './style'
 
-interface InputProps {
-  type: string
-  value: string
-  placeholder?: string
+type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+  label?: string
   icon?: ReactNode
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 const Field = styled.div<{ $hasIcon?: boolean } & Partial<StyleProps>>`
@@ -17,17 +14,20 @@ const Field = styled.div<{ $hasIcon?: boolean } & Partial<StyleProps>>`
   width: ${({ $width = '100%' }) => $width};
 `
 
-const InputWrapper = styled.input<{ $hasIcon?: boolean } & Partial<StyleProps>>`
+const InputWrapper = styled.input<
+  { $hasIcon?: boolean; $hasLabel?: boolean } & Partial<StyleProps>
+>`
   height: ${({ $height = '48px' }) => $height};
   width: ${({ $width = '100%' }) => $width};
   border-radius: 0.75rem;
-  font-size: 0.75rem;
+  font-size: 1.2rem;
   border: ${({ $border = '1px solid var(--color-gray-light)' }) => $border};
+  padding-top: ${({ $hasLabel }) => ($hasLabel ? '0' : '1.25rem')};
   padding-left: ${({ $hasIcon }) => ($hasIcon ? '2.5rem' : '0.75rem')};
 
   &::placeholder {
     color: var(--color-gray);
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 400;
   }
 `
@@ -42,24 +42,21 @@ const IconWrapper = styled.div`
   pointer-events: none;
 `
 
-export const InputField = ({
-  type,
-  icon,
-  value,
-  onChange,
-  placeholder,
-}: InputProps) => {
+const Label = styled.h4`
+  color: var(--color-gray-medium);
+  font-size: 0.88rem;
+  position: absolute;
+  left: 0.75rem;
+  top: 0.5rem;
+`
+
+export const InputField = ({ icon, label, ...inputProps }: InputProps) => {
   const hasIcon = !!icon
 
   return (
     <Field $hasIcon={hasIcon}>
-      <InputWrapper
-        $hasIcon={hasIcon}
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        onChange={(e) => onChange(e)}
-      />
+      {label && <Label>{label}</Label>}
+      <InputWrapper $hasIcon={hasIcon} {...inputProps} />
       {icon && <IconWrapper>{icon}</IconWrapper>}
     </Field>
   )

@@ -11,6 +11,8 @@ import { createClient as createAtprotoClient } from '@/lib/atproto'
 import { getServerIdentity } from '@/lib/server/auth'
 import { BBDatabase } from '@/lib/server/db'
 
+import { uploadCAR } from '../storacha'
+
 export const createSnapshotForBackup = async (
   db: BBDatabase,
   account: string,
@@ -109,13 +111,7 @@ const doSnapshot = async (
         throw new Error('Failed to get repo')
       }
 
-      const repoRoot = await storachaClient.uploadCAR(
-        new Blob([repoRes.data]),
-        {
-          // set shard size to 4 GiB - the maximum shard size
-          shardSize: 1024 * 1024 * 1024 * 4,
-        }
-      )
+      const repoRoot = await uploadCAR(storachaClient, new Blob([repoRes.data]))
       await db.updateSnapshot(snapshotId, {
         repositoryStatus: 'success',
         repositoryCid: repoRoot.toString(),
