@@ -6,7 +6,7 @@ import { getStorageContext } from '@/lib/server/db'
 
 export const action = async (data: FormData) => {
   const { db } = getStorageContext()
-  let atprotoAccount = data.get('atproto_account') as Did
+  const atprotoAccount = data.get('atproto_account') as Did
 
   if (!atprotoAccount) {
     throw new Error('ATProto account not provided')
@@ -14,16 +14,6 @@ export const action = async (data: FormData) => {
 
   if (!atprotoAccount.startsWith('did:')) {
     throw new Error('Invalid ATProto account format - must start with "did:"')
-  }
-
-  try {
-    if (atprotoAccount.includes('%')) {
-      const decoded = decodeURIComponent(atprotoAccount) as Did
-      console.log('Decoded atproto_account:', decoded)
-      atprotoAccount = decoded
-    }
-  } catch (error) {
-    console.error('Error decoding account DID:', error)
   }
 
   const backup = await db.addBackup({

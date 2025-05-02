@@ -3,6 +3,7 @@
 import { Account, useAuthenticator } from '@storacha/ui-react'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
+import { useFormStatus } from 'react-dom'
 import { toast } from 'sonner'
 
 import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
@@ -124,31 +125,33 @@ const DATA_BOXES: DataConfig[] = [
   // },
 ]
 
-function NewBackupForm({
-  children,
-  setIsSubmitting,
-}: {
-  children: ReactNode
-  setIsSubmitting?: (v: boolean) => void
-}) {
+const CreateBackupButton = ()=> {
+  const { pending } = useFormStatus()
+  console.log("pending", pending)
+
+  return (
+    <CreateButton $isLoading={pending} type="submit">
+      create backup
+    </CreateButton>
+  )
+}
+
+function NewBackupForm({ children }: { children: ReactNode }) {
   const [{ client }] = useAuthenticator()
 
   async function generateDelegationAndCreateNewBackup(formData: FormData) {
     try {
-      if (setIsSubmitting) setIsSubmitting(true)
       const space = formData.get('storacha_space') as SpaceDid | undefined
 
       if (!space) {
         console.error('space id not defined, cannot create delegation.')
         toast.error('Space ID not defined, cannot create delegation.')
-        if (setIsSubmitting) setIsSubmitting(false)
         return
       }
 
       if (!client) {
         console.error('client not defined, cannot create delegation')
         toast.error('Client not defined, cannot create delegation.')
-        if (setIsSubmitting) setIsSubmitting(false)
         return
       }
 
@@ -176,8 +179,6 @@ function NewBackupForm({
           : 'Unknown error'
       )
       console.error('Backup creation error:', error)
-    } finally {
-      if (setIsSubmitting) setIsSubmitting(false)
     }
   }
 
@@ -187,17 +188,11 @@ function NewBackupForm({
 function MaybeForm({
   children,
   backup,
-  setIsSubmitting,
 }: {
   children: ReactNode
   backup?: Backup
-  setIsSubmitting: (v: boolean) => void
 }) {
-  return backup ? (
-    children
-  ) : (
-    <NewBackupForm setIsSubmitting={setIsSubmitting}>{children}</NewBackupForm>
-  )
+  return backup ? children : <NewBackupForm>{children}</NewBackupForm>
 }
 
 export const BackupDetail = ({ account, backup }: BackupProps) => {
@@ -224,10 +219,9 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
     }))
   }
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
   return (
     <>
-      <MaybeForm backup={backup} setIsSubmitting={setIsSubmitting}>
+      <MaybeForm backup={backup}>
         {account && (
           <input type="hidden" name="account" value={account.did()} />
         )}
@@ -279,9 +273,7 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
             {backup ? (
               <CreateSnapshotButton backup={backup} />
             ) : (
-              <CreateButton $isLoading={isSubmitting} type="submit">
-                create backup
-              </CreateButton>
+              <CreateBackupButton />
             )}
           </Stack>
         </Container>
