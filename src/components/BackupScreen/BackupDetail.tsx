@@ -3,6 +3,7 @@
 import { Account, useAuthenticator } from '@storacha/ui-react'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
+import { useFormStatus } from 'react-dom'
 
 import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
 import { Backup, SpaceDid } from '@/app/types'
@@ -85,16 +86,9 @@ const DATA_BOXES: DataConfig[] = [
   // },
 ]
 
-function NewBackupForm({
-  children,
-  setIsSubmitting,
-}: {
-  children: ReactNode
-  setIsSubmitting?: (v: boolean) => void
-}) {
+function NewBackupForm({ children }: { children: ReactNode }) {
   const [{ client }] = useAuthenticator()
   async function generateDelegationAndCreateNewBackup(formData: FormData) {
-    if (setIsSubmitting) setIsSubmitting(true)
     const space = formData.get('storacha_space') as SpaceDid | undefined
     if (!space) {
       console.error('space id not defined, cannot create delegation.')
@@ -116,9 +110,7 @@ function NewBackupForm({
       ])
     )
     formData.append('delegation_cid', delegationCid.toString())
-    const result = await createNewBackup(formData)
-    if (setIsSubmitting) setIsSubmitting(false)
-    return result
+    return createNewBackup(formData)
   }
   return (
     <Container>
@@ -130,17 +122,11 @@ function NewBackupForm({
 function MaybeForm({
   children,
   backup,
-  setIsSubmitting,
 }: {
   children: ReactNode
   backup?: Backup
-  setIsSubmitting: (v: boolean) => void
 }) {
-  return backup ? (
-    children
-  ) : (
-    <NewBackupForm setIsSubmitting={setIsSubmitting}>{children}</NewBackupForm>
-  )
+  return backup ? children : <NewBackupForm>{children}</NewBackupForm>
 }
 
 const Section = ({
@@ -178,10 +164,10 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
       [name]: !prev?.[name],
     }))
   }
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { pending } = useFormStatus()
 
   return (
-    <MaybeForm backup={backup} setIsSubmitting={setIsSubmitting}>
+    <MaybeForm backup={backup}>
       {account && <input type="hidden" name="account" value={account.did()} />}
       <Container>
         <Stack $gap="2.5rem">
@@ -225,7 +211,7 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
           </Section>
           {backup ? (
             <CreateSnapshotButton backup={backup} />
-          ) : isSubmitting ? (
+          ) : pending ? (
             <Spinner />
           ) : (
             <CreateButton type="submit">create backup</CreateButton>

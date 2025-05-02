@@ -225,30 +225,28 @@ export default function RestoreDialog({ snapshotId }: { snapshotId: string }) {
   }
 
   return (
-    <>
-      <RestoreDialogView
-        sourceSession={sourceSession}
-        sinkSession={sinkSession}
-        loginToSink={loginToSink}
-        loginToSource={loginToSource}
-        createAccount={createAccount}
-        restoreRepo={restoreRepo}
-        restoreBlobs={restoreBlobs}
-        transferIdentity={transferIdentity}
-        sendPlcRestoreAuthorizationEmail={sendPlcRestoreAuthorizationEmail}
-        isPlcRestoreAuthorizationEmailSent={plceRestoreAuthorizationEmailSent}
-        setupPlcRestore={setupPlcRestore}
-        isPlcRestoreSetup={!!plcOp}
-        repo={repo}
-        blobs={blobs}
-        prefsDoc={prefsDoc}
-        isRestoringRepo={isRestoringRepo}
-        isRestoringBlobs={isRestoringBlobs}
-        isTransferringIdentity={isTransferringIdentity}
-        isRepoRestored={isRepoRestored}
-        areBlobsRestored={areBlobsRestored}
-        isIdentityTransferred={isIdentityTransferred}
-      />
-    </>
+    <RestoreDialogView
+      sourceSession={sourceSession}
+      sinkSession={sinkSession}
+      loginToSink={loginToSink}
+      loginToSource={loginToSource}
+      createAccount={createAccount}
+      restoreRepo={restoreRepo}
+      restoreBlobs={restoreBlobs}
+      transferIdentity={transferIdentity}
+      sendPlcRestoreAuthorizationEmail={sendPlcRestoreAuthorizationEmail}
+      isPlcRestoreAuthorizationEmailSent={plceRestoreAuthorizationEmailSent}
+      setupPlcRestore={setupPlcRestore}
+      isPlcRestoreSetup={!!plcOp}
+      repo={repo}
+      blobs={blobs}
+      prefsDoc={prefsDoc}
+      isRestoringRepo={isRestoringRepo}
+      isRestoringBlobs={isRestoringBlobs}
+      isTransferringIdentity={isTransferringIdentity}
+      isRepoRestored={isRepoRestored}
+      areBlobsRestored={areBlobsRestored}
+      isIdentityTransferred={isIdentityTransferred}
+    />
   )
 }

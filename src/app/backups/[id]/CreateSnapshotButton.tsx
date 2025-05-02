@@ -1,7 +1,6 @@
 'use client'
 
 import { useAuthenticator } from '@storacha/ui-react'
-import { useState } from 'react'
 
 import { useSWRMutation } from '@/app/swr'
 import { Backup } from '@/app/types'
@@ -24,17 +23,14 @@ export const CreateSnapshotButton = ({ backup }: { backup: Backup }) => {
   const account = accounts[0]
 
   const enabled = client && backup
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const { trigger } = useSWRMutation(
+  const { trigger, isMutating } = useSWRMutation(
     enabled && ['api', `/api/backups/${backup.id}/snapshots`],
     async () => {
-      setIsSubmitting(true)
       // SWR guarantees this won't actually happen.
       if (!enabled)
         throw new Error('Mutation ran but key should have been null')
       const delegationData = await delegate(client, backup.storachaSpace)
       await createSnapshot({ backupId: backup.id, delegationData })
-      setIsSubmitting(false)
     }
   )
 
@@ -42,7 +38,7 @@ export const CreateSnapshotButton = ({ backup }: { backup: Backup }) => {
     return null
   }
 
-  return isSubmitting ? (
+  return isMutating ? (
     <Spinner />
   ) : (
     <CreateButton

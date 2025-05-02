@@ -1,5 +1,3 @@
-'use client'
-
 import Link from 'next/link'
 import { css, styled } from 'next-yak'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'

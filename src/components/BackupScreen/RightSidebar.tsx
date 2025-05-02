@@ -32,7 +32,7 @@ const DetailValue = styled.div`
 `
 
 const SnapshotSummary = styled(Box)`
-  padding: 8rem;
+  padding: 1rem;
   font-size: 0.75rem;
 `
 
