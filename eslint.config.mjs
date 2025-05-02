@@ -66,6 +66,27 @@ const eslintConfig = [
       ],
     },
   },
+  {
+    // Use `ignores` rather than `target` below, because `target` doesn't
+    // support negated patterns.
+    // https://github.com/import-js/eslint-plugin-import/issues/2800
+    ignores: ['src/app/**/*'],
+    rules: {
+      'import/no-restricted-paths': [
+        'warn',
+        {
+          zones: [
+            {
+              target: '.',
+              from: './src/app',
+              message:
+                "Modules in the `app` directory should not be imported from outside it. Perhaps something is in the `app` directory which shouldn't be?",
+            },
+          ],
+        },
+      ],
+    },
+  },
 ]
 
 export default eslintConfig
