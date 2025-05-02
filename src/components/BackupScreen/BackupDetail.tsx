@@ -134,24 +134,24 @@ function NewBackupForm({
   const [{ client }] = useAuthenticator()
 
   async function generateDelegationAndCreateNewBackup(formData: FormData) {
-    if (setIsSubmitting) setIsSubmitting(true)
-
-    const space = formData.get('storacha_space') as SpaceDid | undefined
-    if (!space) {
-      console.error('space id not defined, cannot create delegation.')
-      toast.error('Space ID not defined, cannot create delegation.')
-      if (setIsSubmitting) setIsSubmitting(false)
-      return
-    }
-
-    if (!client) {
-      console.error('client not defined, cannot create delegation')
-      toast.error('Client not defined, cannot create delegation.')
-      if (setIsSubmitting) setIsSubmitting(false)
-      return
-    }
-
     try {
+      if (setIsSubmitting) setIsSubmitting(true)
+      const space = formData.get('storacha_space') as SpaceDid | undefined
+
+      if (!space) {
+        console.error('space id not defined, cannot create delegation.')
+        toast.error('Space ID not defined, cannot create delegation.')
+        if (setIsSubmitting) setIsSubmitting(false)
+        return
+      }
+
+      if (!client) {
+        console.error('client not defined, cannot create delegation')
+        toast.error('Client not defined, cannot create delegation.')
+        if (setIsSubmitting) setIsSubmitting(false)
+        return
+      }
+
       await client.setCurrentSpace(space)
       // upload the delegation to Storacha so we can use it later
 
@@ -166,7 +166,6 @@ function NewBackupForm({
       formData.append('delegation_cid', delegationCid.toString())
 
       const result = await createNewBackup(formData)
-      if (setIsSubmitting) setIsSubmitting(true)
       return result
     } catch (error) {
       toast.error(
