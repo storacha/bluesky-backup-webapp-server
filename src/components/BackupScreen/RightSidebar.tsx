@@ -96,7 +96,7 @@ const Sidebar = ({ backup }: SidebarProps) => {
       ) : (
         <Center $height="90vh">
           <Instruction $fontWeight="600">
-            Press &quot;Create Snapshot&quot; to get started!
+            Press &quot;Create Backup&quot; to get started!
           </Instruction>
         </Center>
       )}
