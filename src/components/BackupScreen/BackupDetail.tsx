@@ -12,7 +12,7 @@ import { CreateButton } from '@/components/ui/CreateButton'
 import { delegate } from '@/lib/delegate'
 import { uploadCAR } from '@/lib/storacha'
 
-import { Spinner, Stack, StyleProps, Text } from '../ui'
+import { Container, Heading, Spinner, Stack, StyleProps, Text } from '../ui'
 
 import { DataBox } from './Data'
 
@@ -30,24 +30,6 @@ interface BackupProps {
   account?: Account
   backup?: Backup
 }
-
-export const Container = styled.div`
-  padding: 2.5rem;
-`
-
-export const Heading = styled.h2`
-  font-weight: 700;
-  color: #000;
-  font-size: 1.125rem;
-  text-transform: capitalize;
-`
-
-export const SubHeading = styled.h3`
-  font-weight: 600;
-  color: var(--color-gray-medium);
-  font-size: 0.75rem;
-  text-transform: capitalize;
-`
 
 const AccountsContainer = styled(Stack)`
   background-image: linear-gradient(0deg, var(--color-gray-light));
