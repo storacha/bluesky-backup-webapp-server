@@ -74,10 +74,14 @@ tofu -u version
 
 To setup a deployment you can use for remote testing, do the following:
 
+All commands for deployment should be run from the `deploy` directory, so do `cd deploy` before anything else.
+
+From the `deploy` directory:
+
 1. Copy `.env.terraform.tpl` to `.env.terraform`
 2. Fill out the missing variables in `.env.terraform` (put your name in for TF_WORKSPACE for dev purposes)
 3. Run `make apply` -- the first time you run this, it will take a LONG time to deploy everything - also you'll have to confirm deploying various things a few times along the way
 4. If all is well, there's still a "blue-green" deployment to finish, so you'll want to `make wait-deploy` to wait for that to complete
-5. Lastly, run `make db-migrate` to run migrations on the remote database
+5. Lastly, run `make migrate` to run migrations on the remote database
 
 Your environment should be deployed at `~your-name~.bsky.storage`

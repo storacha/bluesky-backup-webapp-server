@@ -31,16 +31,16 @@ yarn-error.log*
 # env files
 .env.tpl
 .env.local
-.env.production.local.tpl
-.env.terraform.tpl
-.env.terraform
+deploy/.env.production.local.tpl
+deploy/.env.terraform.tpl
+deploy/.env.terraform
 
 
 # vercel
 .vercel
 
 # Makefile
-Makefile
+deploy/Makefile
 
 # typescript
 *.tsbuildinfo

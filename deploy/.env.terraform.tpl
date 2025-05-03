@@ -5,3 +5,4 @@ TF_VAR_domain_base=bsky.storage
 TF_VAR_did= # did for your env
 TF_VAR_private_key= # private_key or your env -- do not commit to repo!
 TF_VAR_allowed_account_id=505595374361
+TF_VAR_region=us-west-2
