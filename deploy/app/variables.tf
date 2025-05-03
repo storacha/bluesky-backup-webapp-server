@@ -6,7 +6,11 @@ variable "app" {
 variable "allowed_account_id" {
   description = "account id used for AWS"
   type = string
-  default = "505595374361"
+}
+
+variable "region" {
+  description = "aws region for all services"
+  type        = string
 }
 
 variable "private_key" {
