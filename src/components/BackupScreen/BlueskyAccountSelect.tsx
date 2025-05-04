@@ -77,7 +77,16 @@ export const BlueskyAccountSelect = (props: {
 
   const handleChange = (value: string) => {
     if (value === LOG_INTO_BLUESKY_VALUE) {
-      window.open('/atproto/connect', 'atproto-connect', 'popup')
+      const width = 500
+      const height = 600
+      const left = window.screenX + (window.outerWidth - width) / 2
+      const top = window.screenY + (window.outerHeight - height) / 2
+
+      window.open(
+        '/atproto/connect',
+        'atproto-connect',
+        `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+      )
     } else if (props.onChange) {
       setSelectedValue(value)
       props.onChange(value)
