@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.0...v1.1.1) (2025-05-03)
+
+
+### Bug Fixes
+
+* **storoku:** update to versioned storoku ([eae52f9](https://github.com/storacha/bluesky-backup-webapp-server/commit/eae52f9ce9e19e2c151bd01389427436586c56eb))
+* **storoku:** update to versioned storoku ([94dc5a3](https://github.com/storacha/bluesky-backup-webapp-server/commit/94dc5a319b6d087bcc1c686b45516397da338c2c))
+
 ## [1.1.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.0.2...v1.1.0) (2025-05-02)
 
 
