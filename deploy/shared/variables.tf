@@ -8,7 +8,13 @@ variable "allowed_account_id" {
   type = string
 }
 
+variable "region" {
+  description = "aws region for all services"
+  type        = string
+}
+
 variable "domain_base" {
   type = string
   default = ""
 }
+

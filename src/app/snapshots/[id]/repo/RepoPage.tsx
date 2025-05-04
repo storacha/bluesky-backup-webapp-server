@@ -42,15 +42,6 @@ export default function RepoPage({ id }: { id: string }) {
     <>
       <Sidebar selectedBackupId={null} />
       <Box $padding="2rem">
-        <Stack>
-          <DetailName>Gateway URL</DetailName>
-          <DetailValue>
-            <a target="_blank" href={url}>
-              {url}
-            </a>
-          </DetailValue>
-        </Stack>
-
         {loading ? (
           <p>Loading repository data...</p>
         ) : (
@@ -60,6 +51,9 @@ export default function RepoPage({ id }: { id: string }) {
               <p>Posts: {repo.posts.length}</p>
               <p>Likes: {repo.likes.length}</p>
               <p>Follows: {repo.follows.length}</p>
+              <a target="_blank" href={url}>
+                {url}
+              </a>
             </DetailValue>
           </Stack>
         )}

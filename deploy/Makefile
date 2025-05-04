@@ -7,7 +7,7 @@ else
 	endif
 endif
 
-ECR_URI=$(TF_VAR_allowed_account_id).dkr.ecr.us-west-2.amazonaws.com
+ECR_URI=$(TF_VAR_allowed_account_id).dkr.ecr.$(TF_VAR_region).amazonaws.com
 IMAGE_TAG_BASE=$(ECR_URI)/$(TF_VAR_app)-ecr:$(TF_WORKSPACE)
 
 # This is a hack to eval the image tag only when it's a dependency, cause we don't want to set it until docker builds
@@ -29,15 +29,15 @@ eval_env_file: .env.production.local
 
 .PHONY: docker-login
 docker-login:
-	aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $(ECR_URI)
+	aws ecr get-login-password --region $(TF_VAR_region) | docker login --username AWS --password-stdin $(ECR_URI)
 
 .env.terraform:
 
 .env.production.local: .env.terraform .env.production.local.tpl
-	./scripts/esh -o .env.production.local .env.production.local.tpl 
+	./esh -o .env.production.local .env.production.local.tpl 
 
 docker-build: docker-login .env.production.local
-	docker buildx build --platform linux/arm64 -t $(IMAGE_TAG_BASE)-latest --load .
+	docker buildx build --platform linux/arm64 -t $(IMAGE_TAG_BASE)-latest --load ..
 
 format-filter ="{{ .Id }}"
 
@@ -50,53 +50,53 @@ docker-push: docker-tag eval_image_tag
 .PHONY: clean-terraform
 
 clean-terraform: eval_image_tag
-	tofu -chdir=deploy/app destroy -var="image_tag=$(IMAGE_TAG)" 
+	tofu -chdir=app destroy -var="image_tag=$(IMAGE_TAG)" 
 
 .PHONY: clean-shared
 
 clean-shared:
-	TF_WORKSPACE=default tofu -chdir=deploy/shared destroy
+	TF_WORKSPACE=default tofu -chdir=shared destroy
 
 .PHONY: clean
 
 clean: clean-terraform clean-shared
 
-deploy/app/.terraform:
-	tofu -chdir=deploy/app init -backend-config="key=storacha/$(TF_VAR_app)/terraform.tfstate"
+app/.terraform:
+	tofu -chdir=app init -backend-config="key=storacha/$(TF_VAR_app)/terraform.tfstate"
 
-deploy/shared/.terraform:
-	TF_WORKSPACE=default tofu -chdir=deploy/shared init -backend-config="key=storacha/$(TF_VAR_app)/shared.tfstate"
+shared/.terraform:
+	TF_WORKSPACE=default tofu -chdir=shared init -backend-config="key=storacha/$(TF_VAR_app)/shared.tfstate"
 
 .tfworkspace:
-	tofu -chdir=deploy/app workspace new $(TF_WORKSPACE) 
+	tofu -chdir=app workspace new $(TF_WORKSPACE) 
 	touch .tfworkspace
 
 .PHONY: init
 
-init: deploy/app/.terraform deploy/shared/.terraform .tfworkspace
+init: app/.terraform shared/.terraform .tfworkspace
 
 .PHONY: upgrade-shared
 
 upgrade-shared:
-	TF_WORKSPACE=default tofu -chdir=deploy/shared init --upgrade -backend-config="key=storacha/$(TF_VAR_app)/shared.tfstate"
+	TF_WORKSPACE=default tofu -chdir=shared init --upgrade -backend-config="key=storacha/$(TF_VAR_app)/shared.tfstate"
 
 .PHONY: upgrade-app
 
 upgrade-app: upgrade-shared
-	tofu -chdir=deploy/app init -upgrade -backend-config="key=storacha/$(TF_VAR_app)/terraform.tfstate"
+	tofu -chdir=app init -upgrade -backend-config="key=storacha/$(TF_VAR_app)/terraform.tfstate"
 
 .PHONY: upgrade
 upgrade: upgrade-shared upgrade-app
 
 .PHONY: validate-shared
 
-validate-shared: deploy/shared/.terraform
-	TF_WORKSPACE=default tofu -chdir=deploy/shared validate
+validate-shared: shared/.terraform
+	TF_WORKSPACE=default tofu -chdir=shared validate
 
 .PHONY: validate-app
 
-validate-app: deploy/app/.terraform .tfworkspace
-	tofu -chdir=deploy/app validate
+validate-app: app/.terraform .tfworkspace
+	tofu -chdir=app validate
 
 .PHONY: validate
 
@@ -104,13 +104,13 @@ validate: validate-shared validate-app
 
 .PHONY: plan-shared
 
-plan-shared: deploy/shared/.terraform
-	TF_WORKSPACE=default tofu -chdir=deploy/shared plan
+plan-shared: shared/.terraform
+	TF_WORKSPACE=default tofu -chdir=shared plan
 
 .PHONY: plan-app
 
-plan-app: deploy/app/.terraform .tfworkspace eval_image_tag eval_env_file
-	tofu -chdir=deploy/app plan -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]'
+plan-app: app/.terraform .tfworkspace eval_image_tag eval_env_file
+	tofu -chdir=app plan -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]'
 
 .PHONY: plan
 
@@ -124,13 +124,13 @@ endif
 
 .PHONY: apply-shared
 
-apply-shared: deploy/shared/.terraform
-	TF_WORKSPACE=default tofu -chdir=deploy/shared apply
+apply-shared: shared/.terraform
+	TF_WORKSPACE=default tofu -chdir=shared apply $(APPLY_ARGS)
 
 .PHONY: apply-app
 
-apply-app: deploy/app/.terraform .tfworkspace docker-push eval_image_tag eval_env_file
-	tofu -chdir=deploy/app apply -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]' $(APPLY_ARGS)
+apply-app: app/.terraform .tfworkspace docker-push eval_image_tag eval_env_file
+	tofu -chdir=app apply -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]' $(APPLY_ARGS)
 
 .PHONY: apply
 
@@ -138,19 +138,21 @@ apply: apply-shared apply-app
 
 .PHONY: console-shared
 
-console-shared: deploy/shared/.terraform
-	TF_WORKSPACE=default tofu -chdir=deploy/shared console
+console-shared: shared/.terraform
+	TF_WORKSPACE=default tofu -chdir=shared console $(APPLY_ARGS)
 
 .PHONY: console-app
-console: deploy/app/.terraform .tfworkspace eval_image_tag eval_env_file
-	tofu -chdir=deploy/app console -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]' $(APPLY_ARGS)
+console: app/.terraform .tfworkspace eval_image_tag eval_env_file
+	tofu -chdir=app console -var="image_tag=$(IMAGE_TAG)" -var='env_files=["$(ENV_FILE)"]' $(APPLY_ARGS)
 
 .PHONY: wait-deploy
 wait-deploy:
 	aws deploy wait deployment-successful --deployment-id $(shell aws deploy list-deployments --deployment-group-name $(TF_WORKSPACE)-$(TF_VAR_app)-code-deploy-deployment-group --application-name $(TF_WORKSPACE)-$(TF_VAR_app)-code-deploy-app --query "deployments[0]" --output text)
 
-.PHONY: db-migrate
-db-migrate:
+
+
+.PHONY: migrate
+migrate:
 	aws ecs run-task \
 	--cluster $(TF_WORKSPACE)-$(TF_VAR_app)-cluster \
 	--task-definition $(TF_WORKSPACE)-$(TF_VAR_app) \
@@ -165,3 +167,4 @@ db-migrate:
 		] \
 	}" \
    --network-configuration '$(shell aws ecs describe-services --cluster $(TF_WORKSPACE)-$(TF_VAR_app)-cluster --service $(TF_WORKSPACE)-$(TF_VAR_app)-service --query "services[0].networkConfiguration")'
+

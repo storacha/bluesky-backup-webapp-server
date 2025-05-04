@@ -22,6 +22,8 @@ on:
         required: true
       private-key:
         required: true
+      region:
+        required: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ inputs.workspace }}-${{ github.event.pull_request.number || github.ref }}
@@ -37,6 +39,7 @@ env:
   TF_VAR_app: bluesky
   TF_VAR_domain_base: bsky.storage
   TF_VAR_allowed_account_id: ${{ secrets.aws-account-id }}
+  TF_VAR_region: ${{ secrets.region }}
   DEPLOY_ENV: ci
 
 permissions:
@@ -64,27 +67,33 @@ jobs:
         run: |
           touch .tfworkspace
           make init
+        working-directory: deploy
 
       - name: Build + Push Docker ECR
         run: |
           make docker-push
+        working-directory: deploy
 
       - name: Terraform Plan
         if: ${{ !inputs.apply }}
         run: |
           make plan
+        working-directory: deploy
 
       - name: Terraform Apply
         if: ${{ inputs.apply }}
         run: |
           make apply
+        working-directory: deploy
 
-      - name: Run DB migrations
+      - name: Run 'migrate'
         if: ${{ inputs.apply }}
         run: |
-          make db-migrate
+          make migrate
+        working-directory: deploy
 
       - name: Wait For Deployment
         if: ${{ inputs.apply }}
         run: |
           make wait-deploy
+        working-directory: deploy
