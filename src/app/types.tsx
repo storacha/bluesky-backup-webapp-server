@@ -1,4 +1,4 @@
-import {RepoEntry} from "@atcute/car"
+import { RepoEntry } from '@atcute/car'
 import { Did } from '@atproto/oauth-client-node'
 
 export type SpaceDid = Did<'key'>

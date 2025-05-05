@@ -1,6 +1,4 @@
 'use client'
-import { useEffect } from 'react'
-
 import { Sidebar } from '@/app/Sidebar'
 import { useSWR } from '@/app/swr'
 import {
@@ -15,23 +13,8 @@ export default function RepoPage({ id }: { id: string }) {
   const { data: snapshot, error } = useSWR(['api', `/api/snapshots/${id}`])
 
   const { repo, loading } = useRepo({
-    did: snapshot?.atprotoAccount || ''
+    cid: snapshot?.repositoryCid || '',
   })
-
-  useEffect(() => {
-    if (snapshot?.atprotoAccount) {
-      console.log('Snapshot loaded with atprotoAccount:', snapshot.atprotoAccount)
-    }
-  }, [snapshot])
-
-  useEffect(() => {
-    console.log('Current repo state:', {
-      postsCount: repo.posts.length,
-      likesCount: repo.likes.length,
-      followsCount: repo.follows.length,
-      loading
-    })
-  }, [repo, loading])
 
   if (error) throw error
   if (!snapshot) return null

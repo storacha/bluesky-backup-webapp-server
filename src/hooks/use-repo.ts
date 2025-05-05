@@ -4,17 +4,15 @@ import { PostView } from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import { useCallback, useEffect, useState } from 'react'
 
 import { ExtendedRepoEntry } from '@/app/types'
-
-import { useAtpAgent } from './use-atp-agent'
+import { loadCid } from '@/lib/storacha'
 
 export type RepoParams = {
-  did: string
+  cid: string
 }
 
 type State = 'loading' | 'idle'
 
-export const useRepo = ({ did }: RepoParams) => {
-  const agent = useAtpAgent()
+export const useRepo = ({ cid }: RepoParams) => {
   const [repo, setRepo] = useState<Uint8Array | null>(null)
   const [parsedRepo, setParsedRepo] = useState<ExtendedRepoEntry[]>([])
   const [state, setState] = useState<State>('idle')
@@ -55,51 +53,45 @@ export const useRepo = ({ did }: RepoParams) => {
 
   useEffect(() => {
     const parseRepoData = async () => {
-      if (repo && did) {
-        try {
-          setState('loading')
-          console.log('Parsing repo data for DID:', did)
-          const repoData = [...iterateAtpRepo(repo)]
-          console.log("Parsed repo data:", repoData)
-          setParsedRepo(repoData as ExtendedRepoEntry[])
-        } catch (error) {
-          console.error('Error parsing repo', error)
-        } finally {
-          setState('idle')
-        }
+      if (!repo || !cid) return;
+
+      try {
+        setState('loading')
+        const repoData = [...iterateAtpRepo(repo)]
+        setParsedRepo(repoData as ExtendedRepoEntry[])
+      } catch (error) {
+        console.error('Error parsing repo', error)
+      } finally {
+        setState('idle')
       }
     }
 
     parseRepoData()
-  }, [repo, did])
+  }, [repo, cid])
 
-  const getRepo = useCallback(
-    async (did: string) => {
-      if (!did || !agent) {
-        console.log('Missing DID or agent:', { did, hasAgent: !!agent })
-        return
-      }
 
-      try {
-        setState('loading')
-        console.log('Fetching repo for DID:', did)
-        const data = await agent.com.atproto.sync.getRepo({ did })
-        console.log('Repo data received:', !!data?.data)
-        setRepo(data?.data || null)
-      } catch (error) {
-        console.error('Error fetching repo:', error)
-        setState('idle')
-      }
-    },
-    [agent]
-  )
+  const getRepo = useCallback(async (cidToLoad: string) => {
+    if (!cidToLoad) {
+      console.log('No CID provided, skipping!')
+      return
+    }
+
+    try {
+      setState('loading')
+      const data = await loadCid(cidToLoad)
+      setRepo(new Uint8Array(data))
+    } catch (error) {
+      console.error('Error fetching repo:', error)
+    } finally {
+      setState('idle')
+    }
+  }, [])
 
   useEffect(() => {
-    if (did && agent && !repo) {
-      console.log('Triggering repo fetch for DID:', did)
-      getRepo(did)
+    if (cid) {
+      getRepo(cid)
     }
-  }, [did, agent, repo, getRepo])
+  }, [cid, getRepo])
 
   return {
     getRepo,
@@ -136,8 +128,8 @@ export const useQuotedPost = ({
   const quotedPostUris = postsWithEmbeds
     .filter((post) => post.record.embed?.$type === 'app.bsky.embed.record')
     // @ts-expect-error there should be a relationship with PostView and Post in utils/types.ts
-    // i'll address this later
     .map((post) => post?.record?.embed?.record.uri)
+    .filter(Boolean)
 
   const getQuotedContent = useCallback(
     async (uris: string[]) => {
