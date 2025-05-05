@@ -2,9 +2,9 @@ import { logAndCaptureError } from '@/app/sentry'
 import { isCronjobAuthed } from '@/lib/server/auth'
 import { getStorageContext } from '@/lib/server/db'
 
-const PREFIX = "hourly: "
+const PREFIX = 'hourly: '
 
-export async function POST (request: Request) {
+export async function POST(request: Request) {
   console.log(`${PREFIX}Starting hourly snapshotting process...`)
   if (!isCronjobAuthed(request)) {
     console.error(`${PREFIX}Hourly snapshot auth not found.`)
@@ -35,6 +35,8 @@ export async function POST (request: Request) {
       logAndCaptureError(e)
     }
   }
-  console.log(`${PREFIX}Hourly snapshotting process started ${backups?.length} jobs`)
+  console.log(
+    `${PREFIX}Hourly snapshotting process started ${backups?.length} jobs`
+  )
   return Response.json({})
 }
