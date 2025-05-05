@@ -4,7 +4,7 @@ import { Account, Client, useAuthenticator } from '@storacha/ui-react'
 import { styled } from 'next-yak'
 import { useEffect, useState } from 'react'
 
-import { Stack } from '@/components/ui'
+import { Center, Stack, Text } from '@/components/ui'
 import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
 
@@ -66,7 +66,15 @@ export function LoggedIn() {
   return (
     <Outside $direction="row">
       <Sidebar selectedBackupId={null} />
-      <BackupScreen />
+      <BackupScreen
+        sidebarContent={
+          <Center $height="90vh">
+            <Text $fontWeight="600">
+              Press &quot;Create Backup&quot; to get started!
+            </Text>
+          </Center>
+        }
+      />
     </Outside>
   )
 }

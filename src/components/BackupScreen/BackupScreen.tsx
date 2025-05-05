@@ -1,16 +1,13 @@
 'use client'
 
-import Link from 'next/link'
 import { styled } from 'next-yak'
-import { Suspense } from 'react'
+import { ReactNode, Suspense } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
-import useSWR from 'swr'
 
 import { useStorachaAccount } from '@/hooks/use-plan'
-import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
-import { Backup, Snapshot } from '@/types'
+import { Backup } from '@/types'
 
-import { Box, Center, Heading, Stack, SubHeading, Text } from '../ui'
+import { Heading } from '../ui'
 
 import { BackupDetail } from './BackupDetail'
 import RightSidebar from './RightSidebar'
@@ -39,40 +36,14 @@ const ResizeHandleInner = styled.div`
   }
 `
 
-const Instruction = styled(Text)``
-
-const SnapshotContainer = styled(Stack)`
-  margin-top: 4rem;
-`
-
-const Details = styled(Stack)`
-  margin-top: 4rem;
-`
-
-const DetailName = styled(SubHeading)`
-  color: black;
-`
-
-const DetailValue = styled.div`
-  font-family: var(--font-dm-mono);
-  font-size: 0.75rem;
-`
-
-const SnapshotSummary = styled(Box)`
-  padding: 1rem;
-  font-size: 0.75rem;
-`
-
-const SnapshotLink = styled(Link)`
-  width: 100%;
-  height: 100%;
-`
-
-export const BackupScreen = ({ backup }: { backup?: Backup }) => {
+export const BackupScreen = ({
+  backup,
+  sidebarContent: sidebar,
+}: {
+  backup?: Backup
+  sidebarContent: ReactNode
+}) => {
   const account = useStorachaAccount()
-  const { data: snapshots } = useSWR<Snapshot[]>(
-    backup && ['api', `/api/backups/${backup.id}/snapshots`]
-  )
 
   return (
     <BackupContainer>
@@ -91,55 +62,7 @@ export const BackupScreen = ({ backup }: { backup?: Backup }) => {
           <Suspense>
             <RightSidebar>
               <Heading>Backup & Restore</Heading>
-              {backup ? (
-                <>
-                  <Details $gap="1rem">
-                    <SubHeading>Details</SubHeading>
-                    <Stack $direction="row" $alignItems="center" $gap="1rem">
-                      <DetailName>Account DID</DetailName>
-                      <DetailValue>
-                        {shortenDID(backup.atprotoAccount)}
-                      </DetailValue>
-                    </Stack>
-                    <Stack $direction="row" $alignItems="center" $gap="1rem">
-                      <DetailName>Delegation CID</DetailName>
-                      <DetailValue>
-                        {backup.delegationCid
-                          ? shortenCID(backup.delegationCid)
-                          : 'No delegation set'}
-                      </DetailValue>
-                    </Stack>
-                  </Details>
-                  <SnapshotContainer $gap="1rem">
-                    <SubHeading>Snapshots</SubHeading>
-                    {snapshots?.map((snapshot) => (
-                      <SnapshotSummary
-                        key={snapshot.id}
-                        $background="var(--color-white)"
-                      >
-                        <SnapshotLink href={`/snapshots/${snapshot.id}`}>
-                          <Stack
-                            $direction="row"
-                            $alignItems="center"
-                            $justifyContent="space-between"
-                            $width="100%"
-                          >
-                            <Stack $direction="column" $alignItems="flex-start">
-                              <h3>{formatDate(snapshot.createdAt)} Snapshot</h3>
-                            </Stack>
-                          </Stack>
-                        </SnapshotLink>
-                      </SnapshotSummary>
-                    ))}
-                  </SnapshotContainer>
-                </>
-              ) : (
-                <Center $height="90vh">
-                  <Instruction $fontWeight="600">
-                    Press &quot;Create Backup&quot; to get started!
-                  </Instruction>
-                </Center>
-              )}
+              {sidebar}
             </RightSidebar>
           </Suspense>
         </Panel>
