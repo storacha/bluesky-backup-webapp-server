@@ -9,7 +9,7 @@ interface DataBoxProps {
   name: string
   description: string
   value: boolean
-  onToggle: () => void
+  onToggle?: () => void
   width?: string
 }
 
@@ -43,7 +43,7 @@ export const DataBox = ({
         id={id}
         name={name}
         value={value}
-        onClick={onToggle}
+        onChange={onToggle}
         aria-label={title}
       />
     </Box>

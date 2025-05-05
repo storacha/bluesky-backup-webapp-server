@@ -51,34 +51,6 @@ export const AccountLogo = styled.div<{
   }
 `
 
-interface DataConfig {
-  title: string
-  description: string
-  key: string
-  name: string
-}
-
-const DATA_BOXES: DataConfig[] = [
-  {
-    title: 'repository',
-    description: 'Posts, Follows...',
-    key: 'repository',
-    name: 'include_repository',
-  },
-  {
-    title: 'blobs',
-    description: 'Images, Profile Picture...',
-    key: 'blobs',
-    name: 'include_blobs',
-  },
-  // {
-  //   title: 'preferences',
-  //   description: 'Subscriptions, Feeds...',
-  //   key: 'preferences',
-  //   name: 'include_preferences',
-  // },
-]
-
 const Section = ({
   title,
   children,
@@ -144,22 +116,26 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
                   value: shortenDID(backup.storachaSpace),
                 })}
               />
-            </Wrapper>{' '}
+            </Wrapper>
           </AccountsContainer>
         </Section>
 
         <Section title="Data">
           <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
-            {DATA_BOXES.map((box) => (
-              <DataBox
-                key={box.key}
-                name={box.name}
-                title={box.title}
-                description={box.description}
-                value={data[box.key] || false}
-                onToggle={() => !backup && toggle(box.key)}
-              />
-            ))}
+            <DataBox
+              name="include_repository"
+              title="repository"
+              description="Posts, Follows..."
+              value={data.repository || false}
+              onToggle={backup ? undefined : () => toggle('repository')}
+            />
+            <DataBox
+              name="include_blobs"
+              title="blobs"
+              description="Images, Profile Picture..."
+              value={data.blobs || false}
+              onToggle={backup ? undefined : () => toggle('blobs')}
+            />
           </Stack>
         </Section>
       </Stack>

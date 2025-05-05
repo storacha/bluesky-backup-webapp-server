@@ -7,7 +7,7 @@ interface SwitchProps {
   id?: string
   value: boolean
   name: string
-  onClick: (value: boolean) => void
+  onChange?: (value: boolean) => void
   label?: string
   isDisabled?: boolean
   children?: React.ReactNode
@@ -15,7 +15,7 @@ interface SwitchProps {
 
 interface AriaSwitchProps extends Omit<SwitchProps, 'value' | 'onClick'> {
   isSelected: boolean
-  onChange: (isSelected: boolean) => void
+  onChange?: (isSelected: boolean) => void
 }
 
 const SWITCH_WIDTH = 30
@@ -105,10 +105,10 @@ const AriaSwitch = (props: AriaSwitchProps) => {
   )
 }
 
-export const Switch = ({ value, onClick, ...otherProps }: SwitchProps) => {
+export const Switch = ({ value, onChange, ...otherProps }: SwitchProps) => {
   const ariaProps: AriaSwitchProps = {
     isSelected: value,
-    onChange: onClick,
+    onChange,
     ...otherProps,
   }
 
