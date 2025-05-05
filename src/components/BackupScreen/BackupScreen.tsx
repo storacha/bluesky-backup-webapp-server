@@ -4,7 +4,7 @@ import { styled } from 'next-yak'
 import { ReactNode, Suspense } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
-import { Heading } from '../ui'
+import { Container, Heading } from '../ui'
 
 import RightSidebar from './RightSidebar'
 
@@ -43,7 +43,9 @@ export const BackupScreen = ({
     <BackupContainer>
       <PanelGroup autoSaveId="backup-restore-layout" direction="horizontal">
         <Panel defaultSize={60} minSize={45}>
-          <Suspense>{children}</Suspense>
+          <Container>
+            <Suspense>{children}</Suspense>
+          </Container>
         </Panel>
         <PanelResizeHandle>
           <ResizeHandleOuter>
