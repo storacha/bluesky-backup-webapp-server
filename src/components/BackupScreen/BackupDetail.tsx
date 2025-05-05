@@ -6,9 +6,6 @@ import { ReactNode, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { toast } from 'sonner'
 
-// Addressed further on in https://github.com/storacha/bluesky-backup-webapp-server/pull/101
-// eslint-disable-next-line import/no-restricted-paths
-import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
 import { CreateButton } from '@/components/ui/CreateButton'
@@ -256,11 +253,7 @@ export const BackupDetail = ({ account, backup }: BackupProps) => {
                 ))}
               </Stack>
             </Section>
-            {backup ? (
-              <CreateSnapshotButton backup={backup} />
-            ) : (
-              <CreateBackupButton />
-            )}
+            {!backup && <CreateBackupButton />}
           </Stack>
         </Container>
       </MaybeForm>

@@ -12,6 +12,8 @@ import { useSWR } from '@/lib/swr'
 import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
 import { Backup } from '@/types'
 
+import { CreateSnapshotButton } from './CreateSnapshotButton'
+
 const SnapshotContainer = styled(Stack)`
   margin-top: 4rem;
 `
@@ -80,6 +82,7 @@ const RightSidebarContent = ({ backup }: { backup: Backup }) => {
             </SnapshotLink>
           </SnapshotSummary>
         ))}
+        <CreateSnapshotButton backup={backup} />
       </SnapshotContainer>
     </>
   )
