@@ -6,6 +6,8 @@ import { ReactNode, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { toast } from 'sonner'
 
+// Addressed further on in https://github.com/storacha/bluesky-backup-webapp-server/pull/101
+// eslint-disable-next-line import/no-restricted-paths
 import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
@@ -26,6 +28,8 @@ if (process.env.STORYBOOK) {
     throw new Error('Server Functions are not available in Storybook')
   }
 } else {
+  // Addressed further on in https://github.com/storacha/bluesky-backup-webapp-server/pull/101
+  // eslint-disable-next-line import/no-restricted-paths
   createNewBackup = (await import('@/app/backups/new/createNewBackup')).action
 }
 
