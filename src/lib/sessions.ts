@@ -1,4 +1,3 @@
-import { AtpSessionData } from '@atproto/api'
 import { getIronSession, IronSession } from 'iron-session'
 import { cookies } from 'next/headers'
 
@@ -8,7 +7,6 @@ export type AccountDID = string
 
 export interface BBSession {
   did: AccountDID
-  sessionData?: AtpSessionData
 }
 
 export async function getSession(): Promise<IronSession<BBSession>> {
