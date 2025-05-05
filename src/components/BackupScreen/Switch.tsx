@@ -1,22 +1,12 @@
+import { ToggleStateOptions, useToggleState } from '@react-stately/toggle'
 import { css, styled } from 'next-yak'
 import { useRef } from 'react'
-import { useFocusRing, useSwitch, VisuallyHidden } from 'react-aria'
-import { useToggleState } from 'react-stately'
-
-interface SwitchProps {
-  id?: string
-  value: boolean
-  name: string
-  onChange?: (value: boolean) => void
-  label?: string
-  isDisabled?: boolean
-  children?: React.ReactNode
-}
-
-interface AriaSwitchProps extends Omit<SwitchProps, 'value' | 'onClick'> {
-  isSelected: boolean
-  onChange?: (isSelected: boolean) => void
-}
+import {
+  AriaSwitchProps,
+  useFocusRing,
+  useSwitch,
+  VisuallyHidden,
+} from 'react-aria'
 
 const SWITCH_WIDTH = 30
 const NOB_DIAMETER = 16
@@ -73,11 +63,7 @@ const SwitchWrapper = styled.div<{ $isDisabled?: boolean }>`
   opacity: ${({ $isDisabled }) => ($isDisabled ? 0.4 : 1)};
 `
 
-const LabelText = styled.span`
-  margin-left: 8px;
-`
-
-const AriaSwitch = (props: AriaSwitchProps) => {
+export const Switch = (props: ToggleStateOptions & AriaSwitchProps) => {
   const ref = useRef<HTMLInputElement>(null)
   const state = useToggleState(props)
   const { inputProps } = useSwitch(props, state, ref)
@@ -99,18 +85,6 @@ const AriaSwitch = (props: AriaSwitchProps) => {
           $isDisabled={props.isDisabled}
         />
       </SwitchContainer>
-      {props.label && <LabelText>{props.label}</LabelText>}
-      {props.children}
     </SwitchWrapper>
   )
-}
-
-export const Switch = ({ value, onChange, ...otherProps }: SwitchProps) => {
-  const ariaProps: AriaSwitchProps = {
-    isSelected: value,
-    onChange,
-    ...otherProps,
-  }
-
-  return <AriaSwitch {...ariaProps} />
 }

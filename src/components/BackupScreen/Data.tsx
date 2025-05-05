@@ -39,13 +39,7 @@ export const DataBox = ({
         </label>
         <Text>{description}</Text>
       </Stack>
-      <Switch
-        id={id}
-        name={name}
-        value={value}
-        onChange={onToggle}
-        aria-label={title}
-      />
+      <Switch id={id} name={name} isSelected={value} onChange={onToggle} />
     </Box>
   )
 }
