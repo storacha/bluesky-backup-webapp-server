@@ -1,7 +1,51 @@
-import { useAuthenticator } from '@storacha/ui-react'
+import {
+  Account,
+  DID,
+  PlanGetSuccess,
+  PlanSetFailure,
+  PlanSetSuccess,
+  Result,
+  useAuthenticator,
+} from '@storacha/ui-react'
+import useSWR, { SWRResponse } from 'swr'
+
+import { logAndCaptureError } from '@/lib/sentry'
 
 export function useStorachaAccount() {
   const [{ accounts }] = useAuthenticator()
   const account = accounts[0]
   return account
+}
+
+/**
+ * calculate the cache key for a plan's account
+ */
+const planKey = (account?: Account) =>
+  account ? `/plan/${account.did()}` : undefined
+
+type UsePlanResult = SWRResponse<PlanGetSuccess | undefined> & {
+  setPlan: (plan: DID) => Promise<Result<PlanSetSuccess, PlanSetFailure>>
+}
+
+export const usePlan = (account?: Account) => {
+  const result = useSWR<PlanGetSuccess | undefined>(planKey(account), {
+    fetcher: async () => {
+      if (!account) return
+      const result = await account.plan.get()
+      if (result.error) throw new Error('getting plan', { cause: result.error })
+      return result.ok
+    },
+    onError: logAndCaptureError,
+  })
+
+  // @ts-expect-error it's important to assign this into the existing object
+  // to avoid calling the getters in SWRResponse when copying values over -
+  // I can't think of a cleaner way to do this but open to refactoring
+  result.setPlan = async (plan: DID) => {
+    if (!account) throw Error('cannot set plan, account is undefined')
+    const setResult = await account.plan.set(plan)
+    await result.mutate()
+    return setResult
+  }
+  return result as UsePlanResult
 }

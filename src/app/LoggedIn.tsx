@@ -7,8 +7,10 @@ import { useFormStatus } from 'react-dom'
 import { toast } from 'sonner'
 
 import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
-import { Center, Stack, Text } from '@/components/ui'
+import StripePricingTable from '@/components/StripePricingTable'
+import { Center, Spinner, Stack, Text } from '@/components/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
+import { usePlan, useStorachaAccount } from '@/hooks/use-plan'
 import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
 import { delegate } from '@/lib/delegate'
@@ -124,13 +126,14 @@ const CreateBackupButton = () => {
 }
 
 export function LoggedIn() {
-  const [{ accounts, client }] = useAuthenticator()
-  const account = accounts[0]
+  const [{ client }] = useAuthenticator()
+  const account = useStorachaAccount()
   const { error: sessionDIDError, mutate } = useSWR(['api', '/session/did'])
 
   const [sessionCreationAttempted, setSessionCreationAttempted] =
     useState(false)
-
+  const { data: plan, isLoading: planIsLoading } = usePlan(account)
+  console.log('plan: ', plan)
   useEffect(() => {
     // if the client & account are loaded, the session DID is erroring and we're
     // not currently creating a session, try to create one
@@ -149,20 +152,26 @@ export function LoggedIn() {
   return (
     <Outside $direction="row">
       <Sidebar selectedBackupId={null} />
-      <BackupScreen
-        sidebarContent={
-          <Center $height="90vh">
-            <Text $fontWeight="600">
-              Press &quot;Create Backup&quot; to get started!
-            </Text>
-          </Center>
-        }
-      >
-        <NewBackupForm account={account}>
-          <BackupDetail />
-          <CreateBackupButton />
-        </NewBackupForm>
-      </BackupScreen>
+      {planIsLoading ? (
+        <Spinner />
+      ) : plan ? (
+        <BackupScreen
+          sidebarContent={
+            <Center $height="90vh">
+              <Text $fontWeight="600">
+                Press &quot;Create Backup&quot; to get started!
+              </Text>
+            </Center>
+          }
+        >
+          <NewBackupForm account={account}>
+            <BackupDetail />
+            <CreateBackupButton />
+          </NewBackupForm>
+        </BackupScreen>
+      ) : (
+        <StripePricingTable />
+      )}
     </Outside>
   )
 }
