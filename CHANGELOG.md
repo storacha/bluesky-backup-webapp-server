@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.2...v1.1.3) (2025-05-05)
+
+
+### Bug Fixes
+
+* **deploy:** allow writes to the file system in the container ([dc4dba9](https://github.com/storacha/bluesky-backup-webapp-server/commit/dc4dba910b767709cf53b74cd5fa23e1499a0672))
+
 ## [1.1.2](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.1...v1.1.2) (2025-05-05)
 
 
