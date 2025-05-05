@@ -87,7 +87,6 @@ function newKvNamespace(table: string): KVNamespace {
   const tableSql = sql(table)
   return {
     put: async (key, value, options = {}) => {
-      console.log('putting', key, 'to', table, 'with', options)
       const ttl = options.expirationTtl ?? null
       await sql`
       insert into ${tableSql} (
@@ -107,7 +106,6 @@ function newKvNamespace(table: string): KVNamespace {
       `
     },
     get: async (key) => {
-      console.log('getting', key, 'from', table)
       const results = await sql<{ value: string }[]>`
         select value
         from ${tableSql}
@@ -121,12 +119,10 @@ function newKvNamespace(table: string): KVNamespace {
     },
 
     delete: async (key) => {
-      console.log('deleting', key, 'from', table)
       await sql`delete from ${tableSql} where key = ${key}`
     },
 
     list: async ({ prefix }) => {
-      console.log('listing keys with prefix', prefix, 'in', table)
       const results = await sql<{ key: string }[]>`
       select key
       from ${tableSql}
