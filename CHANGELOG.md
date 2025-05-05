@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.2](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.1...v1.1.2) (2025-05-05)
+
+
+### Bug Fixes
+
+* add some very granular logging to the hourly job ([#92](https://github.com/storacha/bluesky-backup-webapp-server/issues/92)) ([e75fa2e](https://github.com/storacha/bluesky-backup-webapp-server/commit/e75fa2ef7542545c1a32d5015b20eeb6a03f43b4))
+* remove two unecessary `use server` directives ([#90](https://github.com/storacha/bluesky-backup-webapp-server/issues/90)) ([c20d510](https://github.com/storacha/bluesky-backup-webapp-server/commit/c20d51038b0cb33596d4f48ecb666fca19fd0dfa))
+
 ## [1.1.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.0...v1.1.1) (2025-05-03)
 
 
