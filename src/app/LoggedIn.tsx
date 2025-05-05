@@ -4,6 +4,7 @@ import { Account, Client, useAuthenticator } from '@storacha/ui-react'
 import { styled } from 'next-yak'
 import { useEffect, useState } from 'react'
 
+import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
 import { Center, Stack, Text } from '@/components/ui'
 import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
@@ -74,7 +75,9 @@ export function LoggedIn() {
             </Text>
           </Center>
         }
-      />
+      >
+        <BackupDetail account={account} />
+      </BackupScreen>
     </Outside>
   )
 }

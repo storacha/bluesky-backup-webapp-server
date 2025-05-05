@@ -4,12 +4,8 @@ import { styled } from 'next-yak'
 import { ReactNode, Suspense } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
-import { useStorachaAccount } from '@/hooks/use-plan'
-import { Backup } from '@/types'
-
 import { Heading } from '../ui'
 
-import { BackupDetail } from './BackupDetail'
 import RightSidebar from './RightSidebar'
 
 const BackupContainer = styled.div`
@@ -37,21 +33,17 @@ const ResizeHandleInner = styled.div`
 `
 
 export const BackupScreen = ({
-  backup,
+  children,
   sidebarContent: sidebar,
 }: {
-  backup?: Backup
+  children: ReactNode
   sidebarContent: ReactNode
 }) => {
-  const account = useStorachaAccount()
-
   return (
     <BackupContainer>
       <PanelGroup autoSaveId="backup-restore-layout" direction="horizontal">
         <Panel defaultSize={60} minSize={45}>
-          <Suspense>
-            <BackupDetail account={account} backup={backup} />
-          </Suspense>
+          <Suspense>{children}</Suspense>
         </Panel>
         <PanelResizeHandle>
           <ResizeHandleOuter>
