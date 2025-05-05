@@ -52,7 +52,7 @@ resource "random_password" "session_password" {
 
 
 module "app" {
-  source = "github.com/storacha/storoku//app?ref=v0.2.8"
+  source = "github.com/storacha/storoku//app?ref=v0.2.14"
   private_key = var.private_key
   private_key_env_var = "SERVER_IDENTITY_PRIVATE_KEY"
   httpport = 3000
@@ -61,6 +61,7 @@ module "app" {
   app = var.app
   appState = var.app
   environment = terraform.workspace
+  write_to_container = true
   # if there are any env vars you want available only to your container
   # in the vpc as opposed to set in the dockerfile, enter them here
   # NOTE: do not put sensitive data in env-vars. use secrets
