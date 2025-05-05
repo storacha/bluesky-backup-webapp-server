@@ -53,7 +53,7 @@ export const useRepo = ({ cid }: RepoParams) => {
 
   useEffect(() => {
     const parseRepoData = async () => {
-      if (!repo || !cid) return;
+      if (!repo || !cid) return
 
       try {
         setState('loading')
@@ -68,7 +68,6 @@ export const useRepo = ({ cid }: RepoParams) => {
 
     parseRepoData()
   }, [repo, cid])
-
 
   const getRepo = useCallback(async (cidToLoad: string) => {
     if (!cidToLoad) {
