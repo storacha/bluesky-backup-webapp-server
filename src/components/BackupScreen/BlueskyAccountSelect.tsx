@@ -1,11 +1,11 @@
 'use client'
 
 import { CaretDown, PlusCircle } from '@phosphor-icons/react'
-import { useAuthenticator } from '@storacha/ui-react'
 import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 import { components, ControlProps, ValueContainerProps } from 'react-select'
 
+import { useStorachaAccount } from '@/hooks/use-plan'
 import { useSWR } from '@/lib/swr'
 import { shortenDID } from '@/lib/ui'
 
@@ -22,8 +22,7 @@ export const BlueskyAccountSelect = (props: {
   onChange?: (value: string) => void
   disabled?: boolean
 }) => {
-  const [{ accounts }] = useAuthenticator()
-  const account = accounts[0]
+  const account = useStorachaAccount()
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
     props.defaultValue
   )
