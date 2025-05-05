@@ -1,5 +1,3 @@
-'use server'
-
 import { snapshotOwnedByAccount } from '@/lib/server/auth'
 import { getStorageContext } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
