@@ -7,7 +7,6 @@ import { Sidebar } from '@/app/Sidebar'
 import { BackupScreen } from '@/components/BackupScreen'
 import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
 import { Box, Stack, SubHeading } from '@/components/ui'
-import { useStorachaAccount } from '@/hooks/use-plan'
 import { useSWR } from '@/lib/swr'
 import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
 import { Backup } from '@/types'
@@ -89,8 +88,6 @@ const RightSidebarContent = ({ backup }: { backup: Backup }) => {
 }
 
 export default function BackupPage({ id }: { id: string }) {
-  const account = useStorachaAccount()
-
   // TODO: Should we fetch individual backups? We already need the list for the
   // sidebar, and they're not heavy so far, but we should check back on this at
   // the end of the first version.
@@ -104,7 +101,7 @@ export default function BackupPage({ id }: { id: string }) {
     <>
       <Sidebar selectedBackupId={id} />
       <BackupScreen sidebarContent={<RightSidebarContent backup={backup} />}>
-        <BackupDetail account={account} backup={backup} />
+        <BackupDetail backup={backup} />
       </BackupScreen>
     </>
   )

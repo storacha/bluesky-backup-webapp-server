@@ -57,10 +57,17 @@ async function createSession(client: Client, account: Account) {
   })
 }
 
-function NewBackupForm({ children }: { children: ReactNode }) {
+function NewBackupForm({
+  account,
+  children,
+}: {
+  account: Account
+  children: ReactNode
+}) {
   const [{ client }] = useAuthenticator()
 
   async function generateDelegationAndCreateNewBackup(formData: FormData) {
+    formData.append('account', account.did())
     try {
       const space = formData.get('storacha_space') as SpaceDid | undefined
 
@@ -151,8 +158,8 @@ export function LoggedIn() {
           </Center>
         }
       >
-        <NewBackupForm>
-          <BackupDetail account={account} />
+        <NewBackupForm account={account}>
+          <BackupDetail />
           <CreateBackupButton />
         </NewBackupForm>
       </BackupScreen>

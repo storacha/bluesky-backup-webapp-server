@@ -63,7 +63,9 @@ const SwitchWrapper = styled.div<{ $isDisabled?: boolean }>`
   opacity: ${({ $isDisabled }) => ($isDisabled ? 0.4 : 1)};
 `
 
-export const Switch = (props: ToggleStateOptions & AriaSwitchProps) => {
+export type SwitchProps = ToggleStateOptions & AriaSwitchProps
+
+export const Switch = (props: SwitchProps) => {
   const ref = useRef<HTMLInputElement>(null)
   const state = useToggleState(props)
   const { inputProps } = useSwitch(props, state, ref)

@@ -1,19 +1,16 @@
 'use client'
 
-import { Account } from '@storacha/ui-react'
 import { styled } from 'next-yak'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode } from 'react'
 
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
 import { Heading, Stack, Text } from '@/components/ui'
-import { shortenDID } from '@/lib/ui'
 import { Backup } from '@/types'
 
 import { DataBox } from './Data'
 
 interface BackupProps {
-  account?: Account
   backup?: Backup
 }
 
@@ -64,81 +61,58 @@ const Section = ({
   </Stack>
 )
 
-export const BackupDetail = ({ account, backup }: BackupProps) => {
-  const [data, setData] = useState<Record<string, boolean>>({
-    repository: true,
-    blobs: false,
-    preferences: false,
-  })
-
-  useEffect(() => {
-    if (backup) {
-      setData({
-        repository: backup.includeRepository,
-        blobs: backup.includeBlobs,
-        preferences: backup.includePreferences,
-      })
-    }
-  }, [backup])
-
-  const toggle = (name: string) => {
-    setData((prev) => ({
-      ...prev,
-      [name]: !prev?.[name],
-    }))
-  }
-
+/**
+ * A detail view/form for a Backup. If {@link Backup} is provided, its values
+ * will be displayed, and the form elements will be disabled. Otherwise, the
+ * form elements will be empty and editable.
+ *
+ * To submit the data, wrap this component with a form element.
+ */
+export const BackupDetail = ({ backup }: BackupProps) => {
   return (
-    <>
-      {account && <input type="hidden" name="account" value={account.did()} />}
-      <Stack $gap="2rem">
-        {backup ? (
-          <Heading>{backup.name}</Heading>
-        ) : (
-          <Heading>New Backup</Heading>
-        )}
-        <Section title="Accounts">
-          <AccountsContainer $direction="row">
-            <Wrapper>
-              <BlueskyAccountSelect
-                name="atproto_account"
-                {...(backup && {
-                  disabled: true,
-                  value: backup.atprotoAccount,
-                })}
-              />
-            </Wrapper>
-            <Wrapper>
-              <StorachaSpaceSelect
-                name="storacha_space"
-                {...(backup && {
-                  disabled: true,
-                  value: shortenDID(backup.storachaSpace),
-                })}
-              />
-            </Wrapper>
-          </AccountsContainer>
-        </Section>
+    <Stack $gap="2rem">
+      {backup ? (
+        <Heading>{backup.name}</Heading>
+      ) : (
+        <Heading>New Backup</Heading>
+      )}
+      <Section title="Accounts">
+        <AccountsContainer $direction="row">
+          <Wrapper>
+            <BlueskyAccountSelect
+              name="atproto_account"
+              defaultValue={backup?.atprotoAccount}
+              disabled={!!backup}
+            />
+          </Wrapper>
+          <Wrapper>
+            <StorachaSpaceSelect
+              name="storacha_space"
+              defaultValue={backup?.atprotoAccount}
+              disabled={!!backup}
+            />
+          </Wrapper>
+        </AccountsContainer>
+      </Section>
 
-        <Section title="Data">
-          <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
-            <DataBox
-              name="include_repository"
-              title="repository"
-              description="Posts, Follows..."
-              value={data.repository || false}
-              onToggle={backup ? undefined : () => toggle('repository')}
-            />
-            <DataBox
-              name="include_blobs"
-              title="blobs"
-              description="Images, Profile Picture..."
-              value={data.blobs || false}
-              onToggle={backup ? undefined : () => toggle('blobs')}
-            />
-          </Stack>
-        </Section>
-      </Stack>
-    </>
+      <Section title="Data">
+        <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
+          <DataBox
+            name="include_repository"
+            label="Repository"
+            description="Posts, Follows..."
+            defaultSelected={backup?.includeRepository}
+            isDisabled={!!backup}
+          />
+          <DataBox
+            name="include_blobs"
+            label="Blobs"
+            description="Images, Profile Picture..."
+            defaultSelected={backup?.includeBlobs}
+            isDisabled={!!backup}
+          />
+        </Stack>
+      </Section>
+    </Stack>
   )
 }
