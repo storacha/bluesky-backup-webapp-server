@@ -1,5 +1,6 @@
 import { Signer } from '@aws-sdk/rds-signer'
 import postgres from 'postgres'
+import { validate as validateUUID } from 'uuid'
 
 import {
   ATBlob,
@@ -171,6 +172,8 @@ export function getStorageContext(): StorageContext {
       },
 
       async findBlobsForBackup(id) {
+        if (!validateUUID(id)) return { results: [] }
+
         const results = await sql<ATBlob[]>`
           select
             cid,
@@ -186,6 +189,8 @@ export function getStorageContext(): StorageContext {
       },
 
       async findBlobsForSnapshot(id) {
+        if (!validateUUID(id)) return { results: [] }
+
         const results = await sql<ATBlob[]>`
           select
             cid,
@@ -199,7 +204,9 @@ export function getStorageContext(): StorageContext {
           results,
         }
       },
-      async findSnapshot(id: string) {
+      async findSnapshot(id) {
+        if (!validateUUID(id)) return { result: undefined }
+
         const [result] = await sql<Snapshot[]>`
           select *
           from snapshots
@@ -232,6 +239,8 @@ export function getStorageContext(): StorageContext {
         return results[0]
       },
       async findSnapshots(backupId) {
+        if (!validateUUID(backupId)) return { results: [] }
+
         const results = await sql<Snapshot[]>`
           select *
           from snapshots
@@ -271,7 +280,9 @@ export function getStorageContext(): StorageContext {
           results,
         }
       },
-      async findBackup(id: string) {
+      async findBackup(id) {
+        if (!validateUUID(id)) return { result: undefined }
+
         const [result] = await sql<Backup[]>`
           select *
           from backups
