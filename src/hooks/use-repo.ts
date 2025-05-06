@@ -1,6 +1,4 @@
 import { iterateAtpRepo } from '@atcute/car'
-import AtpAgent from '@atproto/api'
-import { PostView } from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import { useCallback, useEffect, useState } from 'react'
 
 import { ExtendedRepoEntry } from '@/app/types'
@@ -106,59 +104,5 @@ export const useRepo = ({ cid }: RepoParams) => {
       },
     },
     loading: state === 'loading',
-  }
-}
-
-export const useQuotedPost = ({
-  posts,
-  agent,
-}: {
-  agent: AtpAgent
-  posts: ExtendedRepoEntry[]
-}) => {
-  const [quotedContent, setQuotedContent] = useState<Record<string, PostView>>(
-    {}
-  )
-
-  const postsWithEmbeds = posts.filter(
-    (post) => post.record && post.record.embed !== undefined
-  )
-
-  const quotedPostUris = postsWithEmbeds
-    .filter((post) => post.record.embed?.$type === 'app.bsky.embed.record')
-    // @ts-expect-error there should be a relationship with PostView and Post in utils/types.ts
-    .map((post) => post?.record?.embed?.record.uri)
-    .filter(Boolean)
-
-  const getQuotedContent = useCallback(
-    async (uris: string[]) => {
-      if (uris.length === 0) return
-
-      try {
-        const res = await agent.api.app.bsky.feed.getPosts({ uris })
-
-        const newQuotedContent = { ...quotedContent }
-        res.data.posts.forEach((post) => {
-          newQuotedContent[post.uri] = post
-        })
-
-        setQuotedContent(newQuotedContent)
-      } catch (error) {
-        console.error('Error fetching quoted posts:', error)
-      }
-    },
-    [agent.api.app.bsky.feed, quotedContent]
-  )
-
-  useEffect(() => {
-    const urisToFetch = quotedPostUris.filter((uri) => !quotedContent[uri])
-    if (urisToFetch.length > 0) {
-      getQuotedContent(urisToFetch)
-    }
-  }, [quotedPostUris, getQuotedContent, quotedContent])
-
-  return {
-    quotedContent,
-    postsWithEmbeds,
   }
 }
