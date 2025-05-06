@@ -1,12 +1,13 @@
 import { ToggleStateOptions, useToggleState } from '@react-stately/toggle'
 import { css, styled } from 'next-yak'
-import { useRef } from 'react'
+import { forwardRef, useRef } from 'react'
 import {
   AriaSwitchProps,
   useFocusRing,
   useSwitch,
   VisuallyHidden,
 } from 'react-aria'
+import { mergeRefs } from 'react-merge-refs'
 
 const SWITCH_WIDTH = 30
 const NOB_DIAMETER = 16
@@ -65,16 +66,23 @@ const SwitchWrapper = styled.div<{ $isDisabled?: boolean }>`
 
 export type SwitchProps = ToggleStateOptions & AriaSwitchProps
 
-export const Switch = (props: SwitchProps) => {
-  const ref = useRef<HTMLInputElement>(null)
+export const Switch = forwardRef<HTMLInputElement>(function Switch(
+  props: SwitchProps,
+  externalRef
+) {
+  const internalRef = useRef<HTMLInputElement>(null)
   const state = useToggleState(props)
-  const { inputProps } = useSwitch(props, state, ref)
+  const { inputProps } = useSwitch(props, state, internalRef)
   const { isFocusVisible, focusProps } = useFocusRing()
 
   return (
     <SwitchWrapper $isDisabled={props.isDisabled}>
       <VisuallyHidden>
-        <input {...inputProps} {...focusProps} ref={ref} />
+        <input
+          {...inputProps}
+          {...focusProps}
+          ref={mergeRefs([internalRef, externalRef])}
+        />
       </VisuallyHidden>
       <SwitchContainer
         $isSelected={state.isSelected}
@@ -89,4 +97,4 @@ export const Switch = (props: SwitchProps) => {
       </SwitchContainer>
     </SwitchWrapper>
   )
-}
+})

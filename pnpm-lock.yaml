@@ -116,6 +116,9 @@ importers:
       react-hook-form:
         specifier: ^7.54.2
         version: 7.54.2(react@18.3.1)
+      react-merge-refs:
+        specifier: ^3.0.1
+        version: 3.0.1(react@18.3.1)
       react-resizable-panels:
         specifier: ^2.1.7
         version: 2.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -147,6 +150,9 @@ importers:
       '@storybook/addon-essentials':
         specifier: 8.6.12
         version: 8.6.12(@types/react@18.3.18)(storybook@8.6.12(prettier@3.5.3))
+      '@storybook/addon-interactions':
+        specifier: ^8.6.12
+        version: 8.6.12(storybook@8.6.12(prettier@3.5.3))
       '@storybook/addon-links':
         specifier: 8.6.12
         version: 8.6.12(react@18.3.1)(storybook@8.6.12(prettier@3.5.3))
@@ -2879,6 +2885,11 @@ packages:
 
   '@storybook/addon-highlight@8.6.12':
     resolution: {integrity: sha512-9FITVxdoycZ+eXuAZL9ElWyML/0fPPn9UgnnAkrU7zkMi+Segq/Tx7y+WWanC5zfWZrXAuG6WTOYEXeWQdm//w==}
+    peerDependencies:
+      storybook: ^8.6.12
+
+  '@storybook/addon-interactions@8.6.12':
+    resolution: {integrity: sha512-cTAJlTq6uVZBEbtwdXkXoPQ4jHOAGKQnYSezBT4pfNkdjn/FnEeaQhMBDzf14h2wr5OgBnJa6Lmd8LD9ficz4A==}
     peerDependencies:
       storybook: ^8.6.12
 
@@ -5616,6 +5627,11 @@ packages:
 
   react-is@17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
+
+  react-merge-refs@3.0.1:
+    resolution: {integrity: sha512-XTGmeNIBIFnaMp93ds8Nh948pFgwclm291nSw9Y5EMuMn9rcCwBnbUPhgmZuc1msP6JkqlhO4Hte3pN3wSN3ug==}
+    peerDependencies:
+      react: '>=16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0'
 
   react-native-fetch-api@3.0.0:
     resolution: {integrity: sha512-g2rtqPjdroaboDKTsJCTlcmtw54E25OjyaunUP0anOZn4Fuo2IKs8BVfe02zVggA/UysbmfSnRJIqtNkAgggNA==}
@@ -10304,6 +10320,15 @@ snapshots:
       '@storybook/global': 5.0.0
       storybook: 8.6.12(prettier@3.5.3)
 
+  '@storybook/addon-interactions@8.6.12(storybook@8.6.12(prettier@3.5.3))':
+    dependencies:
+      '@storybook/global': 5.0.0
+      '@storybook/instrumenter': 8.6.12(storybook@8.6.12(prettier@3.5.3))
+      '@storybook/test': 8.6.12(storybook@8.6.12(prettier@3.5.3))
+      polished: 4.3.1
+      storybook: 8.6.12(prettier@3.5.3)
+      ts-dedent: 2.2.0
+
   '@storybook/addon-links@8.6.12(react@18.3.1)(storybook@8.6.12(prettier@3.5.3))':
     dependencies:
       '@storybook/global': 5.0.0
@@ -13693,6 +13718,10 @@ snapshots:
   react-is@16.13.1: {}
 
   react-is@17.0.2: {}
+
+  react-merge-refs@3.0.1(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   react-native-fetch-api@3.0.0:
     dependencies:

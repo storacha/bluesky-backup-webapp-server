@@ -8,7 +8,7 @@ import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSele
 import { Heading, Stack, Text } from '@/components/ui'
 import { Backup } from '@/types'
 
-import { DataBox } from './Data'
+import { DataBox } from './DataBox'
 
 interface BackupProps {
   backup?: Backup

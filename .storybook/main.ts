@@ -1,8 +1,10 @@
 import path from 'path'
-import type { StorybookConfig } from '@storybook/nextjs'
+
 import loadConfig from 'next/dist/server/config'
 import { PHASE_DEVELOPMENT_SERVER } from 'next/dist/shared/lib/constants'
-import { IgnorePlugin, Configuration as WebpackConfig } from 'webpack'
+import { Configuration as WebpackConfig, IgnorePlugin } from 'webpack'
+
+import type { StorybookConfig } from '@storybook/nextjs'
 
 const config: StorybookConfig = {
   stories: [
@@ -24,6 +26,7 @@ const config: StorybookConfig = {
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-links',
+    '@storybook/addon-interactions',
     '@chromatic-com/storybook',
   ],
   framework: {

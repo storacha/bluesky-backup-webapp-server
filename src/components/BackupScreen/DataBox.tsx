@@ -1,11 +1,13 @@
-import { useId } from 'react'
+import { useId, useRef } from 'react'
 
 import { Box, Stack, Text } from '../ui'
 
 import { Switch, SwitchProps } from './Switch'
 
 interface DataBoxProps extends SwitchProps {
+  /** The main label text for the box. */
   label: string
+  /** A slightly longer description */
   description: string
   width?: string
 }
@@ -17,6 +19,7 @@ export const DataBox = ({
   ...switchProps
 }: DataBoxProps) => {
   const id = useId()
+  const switchRef = useRef<HTMLInputElement>(null)
   return (
     <Box
       $padding="8px"
@@ -25,6 +28,10 @@ export const DataBox = ({
       $background="var(--color-white)"
       $borderStyle="solid"
       $width={width}
+      onClick={() => {
+        switchRef.current?.click()
+      }}
+      data-testid="data-box"
     >
       <Stack>
         <label htmlFor={id}>
@@ -34,7 +41,7 @@ export const DataBox = ({
         </label>
         <Text>{description}</Text>
       </Stack>
-      <Switch id={id} {...switchProps} />
+      <Switch id={id} ref={switchRef} {...switchProps} />
     </Box>
   )
 }
