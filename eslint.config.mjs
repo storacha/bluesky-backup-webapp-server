@@ -33,6 +33,7 @@ const eslintConfig = [
   importPlugin.flatConfigs.react,
   {
     rules: {
+      'no-useless-rename': 'warn',
       // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
       'import/order': [
         'warn',
