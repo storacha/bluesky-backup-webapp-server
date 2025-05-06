@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.5](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.4...v1.1.5) (2025-05-06)
+
+
+### Bug Fixes
+
+* Don't blow up on bad UUIDs ([24c4cf6](https://github.com/storacha/bluesky-backup-webapp-server/commit/24c4cf6fe3ce7140691ca29e0a9da89c03148cb5))
+
 ## [1.1.4](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.3...v1.1.4) (2025-05-06)
 
 
