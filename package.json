@@ -15,11 +15,13 @@
     "typecheck": "tsc --noEmit",
     "test": "echo 'There are no tests yet'",
     "knip": "knip",
+    "knip:production": "knip --production",
     "knip:watch": "FORCE_COLOR=true ./scripts/fswatch-less knip",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "db:migrate": "node ./scripts/migrate.mjs",
-    "db:dev:console": "psql --username admin --password bsky_backups_dev"
+    "db:dev:console": "psql --username admin --password bsky_backups_dev",
+    "check-all": "pnpm run '/^(format:check|lint|knip|knip:production|typecheck|test|build)$/'"
   },
   "dependencies": {
     "@atproto-labs/simple-store": "^0.1.2",
