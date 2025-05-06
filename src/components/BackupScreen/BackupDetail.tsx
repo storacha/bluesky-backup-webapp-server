@@ -1,40 +1,16 @@
 'use client'
 
-import { Account, useAuthenticator } from '@storacha/ui-react'
 import { styled } from 'next-yak'
-import { ReactNode, useEffect, useState } from 'react'
-import { useFormStatus } from 'react-dom'
-import { toast } from 'sonner'
+import { ReactNode } from 'react'
 
-// Addressed further on in https://github.com/storacha/bluesky-backup-webapp-server/pull/101
-// eslint-disable-next-line import/no-restricted-paths
-import { CreateSnapshotButton } from '@/app/backups/[id]/CreateSnapshotButton'
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
-import { CreateButton } from '@/components/ui/CreateButton'
-import { delegate } from '@/lib/delegate'
-import { uploadCAR } from '@/lib/storacha'
-import { shortenDID } from '@/lib/ui'
-import { Backup, SpaceDid } from '@/types'
+import { Heading, Stack, Text } from '@/components/ui'
+import { Backup } from '@/types'
 
-import { Container, Heading, Stack, Text } from '../ui'
-
-import { DataBox } from './Data'
-
-let createNewBackup: typeof import('@/app/backups/new/createNewBackup').action
-
-if (process.env.STORYBOOK) {
-  createNewBackup = () => {
-    throw new Error('Server Functions are not available in Storybook')
-  }
-} else {
-  // Addressed further on in https://github.com/storacha/bluesky-backup-webapp-server/pull/101
-  // eslint-disable-next-line import/no-restricted-paths
-  createNewBackup = (await import('@/app/backups/new/createNewBackup')).action
-}
+import { DataBox } from './DataBox'
 
 interface BackupProps {
-  account?: Account
   backup?: Backup
 }
 
@@ -72,103 +48,6 @@ export const AccountLogo = styled.div<{
   }
 `
 
-interface DataConfig {
-  title: string
-  description: string
-  key: string
-  name: string
-}
-
-const DATA_BOXES: DataConfig[] = [
-  {
-    title: 'repository',
-    description: 'Posts, Follows...',
-    key: 'repository',
-    name: 'include_repository',
-  },
-  {
-    title: 'blobs',
-    description: 'Images, Profile Picture...',
-    key: 'blobs',
-    name: 'include_blobs',
-  },
-  // {
-  //   title: 'preferences',
-  //   description: 'Subscriptions, Feeds...',
-  //   key: 'preferences',
-  //   name: 'include_preferences',
-  // },
-]
-
-const CreateBackupButton = () => {
-  const { pending } = useFormStatus()
-
-  return (
-    <CreateButton $isLoading={pending} type="submit">
-      create backup
-    </CreateButton>
-  )
-}
-
-function NewBackupForm({ children }: { children: ReactNode }) {
-  const [{ client }] = useAuthenticator()
-
-  async function generateDelegationAndCreateNewBackup(formData: FormData) {
-    try {
-      const space = formData.get('storacha_space') as SpaceDid | undefined
-
-      if (!space) {
-        console.error('space id not defined, cannot create delegation.')
-        toast.error('Space ID not defined, cannot create delegation.')
-        return
-      }
-
-      if (!client) {
-        console.error('client not defined, cannot create delegation')
-        toast.error('Client not defined, cannot create delegation.')
-        return
-      }
-
-      await client.setCurrentSpace(space)
-      // upload the delegation to Storacha so we can use it later
-
-      // Create a delegation valid for a year of backups
-      const delegationDuration = 1000 * 60 * 60 * 24 * 365
-      const delegationCid = await uploadCAR(
-        client,
-        new Blob([
-          await delegate(client, space, { duration: delegationDuration }),
-        ])
-      )
-      formData.append('delegation_cid', delegationCid.toString())
-
-      const result = await createNewBackup(formData)
-      return result
-    } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message === 'NEXT_REDIRECT'
-            ? 'Backup created successfully! Redirecting...'
-            : error.message
-          : 'Unknown error'
-      )
-      console.error('Backup creation error:', error)
-    }
-  }
-
-  return <form action={generateDelegationAndCreateNewBackup}>{children}</form>
-}
-
-function MaybeForm({
-  children,
-  backup,
-}: {
-  children: ReactNode
-  backup?: Backup
-}) {
-  return backup ? children : <NewBackupForm>{children}</NewBackupForm>
-}
-
 const Section = ({
   title,
   children,
@@ -182,88 +61,58 @@ const Section = ({
   </Stack>
 )
 
-export const BackupDetail = ({ account, backup }: BackupProps) => {
-  const [data, setData] = useState<Record<string, boolean>>({
-    repository: true,
-    blobs: false,
-    preferences: false,
-  })
-
-  useEffect(() => {
-    if (backup) {
-      setData({
-        repository: backup.includeRepository,
-        blobs: backup.includeBlobs,
-        preferences: backup.includePreferences,
-      })
-    }
-  }, [backup])
-
-  const toggle = (name: string) => {
-    setData((prev) => ({
-      ...prev,
-      [name]: !prev?.[name],
-    }))
-  }
-
+/**
+ * A detail view/form for a Backup. If {@link Backup} is provided, its values
+ * will be displayed, and the form elements will be disabled. Otherwise, the
+ * form elements will be empty and editable.
+ *
+ * To submit the data, wrap this component with a form element.
+ */
+export const BackupDetail = ({ backup }: BackupProps) => {
   return (
-    <>
-      <MaybeForm backup={backup}>
-        {account && (
-          <input type="hidden" name="account" value={account.did()} />
-        )}
-        <Container>
-          <Stack $gap="2rem">
-            {backup ? (
-              <Heading>{backup.name}</Heading>
-            ) : (
-              <Heading>New Backup</Heading>
-            )}
-            <Section title="Accounts">
-              <AccountsContainer $direction="row">
-                <Wrapper>
-                  <BlueskyAccountSelect
-                    name="atproto_account"
-                    {...(backup && {
-                      disabled: true,
-                      value: backup.atprotoAccount,
-                    })}
-                  />
-                </Wrapper>
-                <Wrapper>
-                  <StorachaSpaceSelect
-                    name="storacha_space"
-                    {...(backup && {
-                      disabled: true,
-                      value: shortenDID(backup.storachaSpace),
-                    })}
-                  />
-                </Wrapper>{' '}
-              </AccountsContainer>
-            </Section>
+    <Stack $gap="2rem">
+      {backup ? (
+        <Heading>{backup.name}</Heading>
+      ) : (
+        <Heading>New Backup</Heading>
+      )}
+      <Section title="Accounts">
+        <AccountsContainer $direction="row">
+          <Wrapper>
+            <BlueskyAccountSelect
+              name="atproto_account"
+              defaultValue={backup?.atprotoAccount}
+              disabled={!!backup}
+            />
+          </Wrapper>
+          <Wrapper>
+            <StorachaSpaceSelect
+              name="storacha_space"
+              defaultValue={backup?.atprotoAccount}
+              disabled={!!backup}
+            />
+          </Wrapper>
+        </AccountsContainer>
+      </Section>
 
-            <Section title="Data">
-              <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
-                {DATA_BOXES.map((box) => (
-                  <DataBox
-                    key={box.key}
-                    name={box.name}
-                    title={box.title}
-                    description={box.description}
-                    value={data[box.key] || false}
-                    onToggle={() => !backup && toggle(box.key)}
-                  />
-                ))}
-              </Stack>
-            </Section>
-            {backup ? (
-              <CreateSnapshotButton backup={backup} />
-            ) : (
-              <CreateBackupButton />
-            )}
-          </Stack>
-        </Container>
-      </MaybeForm>
-    </>
+      <Section title="Data">
+        <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
+          <DataBox
+            name="include_repository"
+            label="Repository"
+            description="Posts, Follows..."
+            defaultSelected={backup?.includeRepository}
+            isDisabled={!!backup}
+          />
+          <DataBox
+            name="include_blobs"
+            label="Blobs"
+            description="Images, Profile Picture..."
+            defaultSelected={backup?.includeBlobs}
+            isDisabled={!!backup}
+          />
+        </Stack>
+      </Section>
+    </Stack>
   )
 }

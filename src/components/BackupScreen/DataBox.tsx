@@ -1,27 +1,25 @@
-import { useId } from 'react'
+import { useId, useRef } from 'react'
 
 import { Box, Stack, Text } from '../ui'
 
-import { Switch } from './Switch'
+import { Switch, SwitchProps } from './Switch'
 
-interface DataBoxProps {
-  title: string
-  name: string
+interface DataBoxProps extends SwitchProps {
+  /** The main label text for the box. */
+  label: string
+  /** A slightly longer description */
   description: string
-  value: boolean
-  onToggle: () => void
   width?: string
 }
 
 export const DataBox = ({
-  title,
-  name,
+  label,
   description,
-  value,
-  onToggle,
   width = '48%',
+  ...switchProps
 }: DataBoxProps) => {
   const id = useId()
+  const switchRef = useRef<HTMLInputElement>(null)
   return (
     <Box
       $padding="8px"
@@ -30,22 +28,20 @@ export const DataBox = ({
       $background="var(--color-white)"
       $borderStyle="solid"
       $width={width}
+      onClick={() => {
+        switchRef.current?.click()
+      }}
+      data-testid="data-box"
     >
       <Stack>
         <label htmlFor={id}>
           <Text $color="var(--color-black)" $textTransform="capitalize">
-            {title}
+            {label}
           </Text>
         </label>
         <Text>{description}</Text>
       </Stack>
-      <Switch
-        id={id}
-        name={name}
-        value={value}
-        onClick={onToggle}
-        aria-label={title}
-      />
+      <Switch id={id} ref={switchRef} {...switchProps} />
     </Box>
   )
 }

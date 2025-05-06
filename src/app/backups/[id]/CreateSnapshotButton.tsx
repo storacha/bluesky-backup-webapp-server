@@ -47,7 +47,7 @@ export const CreateSnapshotButton = ({ backup }: { backup: Backup }) => {
       }
       $isLoading={isMutating}
     >
-      create snapshot
+      Create Snapshot
     </CreateButton>
   )
 }
