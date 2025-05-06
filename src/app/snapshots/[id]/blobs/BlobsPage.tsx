@@ -5,7 +5,7 @@ import { useSWR } from '@/lib/swr'
 import { ATBlob } from '@/types'
 
 export default function BlobsPage({ id }: { id: string }) {
-  const { data: blobsData, error: error } = useSWR([
+  const { data: blobsData, error } = useSWR([
     'api',
     `/api/snapshots/${id}/blobs`,
   ])
