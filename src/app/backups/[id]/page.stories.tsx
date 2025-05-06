@@ -49,6 +49,20 @@ const meta = {
       ]
     ),
     withData(
+      ['atproto-handle', 'did:plc:ro3eio7zgqosf5gnxsq6ik5m'],
+      'chalametoui.bsky.social'
+    ),
+  ],
+} satisfies Meta<typeof Page>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const WithNoSnapshots: Story = {}
+
+export const WithSnapshots: Story = {
+  decorators: [
+    withData(
       ['api', '/api/backups/abc/snapshots'],
       [
         {
@@ -75,15 +89,5 @@ const meta = {
         },
       ]
     ),
-    withData(
-      ['atproto-handle', 'did:plc:ro3eio7zgqosf5gnxsq6ik5m'],
-      'chalametoui.bsky.social'
-    ),
   ],
-} satisfies Meta<typeof Page>
-
-export default meta
-type Story = StoryObj<typeof meta>
-
-export const Default: Story = {}
-Default.storyName = '∕backups∕[id]'
+}

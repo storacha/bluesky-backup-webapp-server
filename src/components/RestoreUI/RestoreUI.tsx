@@ -6,10 +6,10 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { useState } from 'react'
 import useSWR from 'swr'
 
-import { ATBlob, Snapshot } from '@/app/types'
 import { ATPROTO_DEFAULT_SINK, ATPROTO_DEFAULT_SOURCE } from '@/lib/constants'
 import db from '@/lib/db'
 import { cidUrl } from '@/lib/storacha'
+import { ATBlob, Snapshot } from '@/types'
 
 import {
   Blob,

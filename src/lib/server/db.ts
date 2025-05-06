@@ -1,5 +1,6 @@
 import { Signer } from '@aws-sdk/rds-signer'
 import postgres from 'postgres'
+import { validate as validateUUID } from 'uuid'
 
 import {
   ATBlob,
@@ -8,7 +9,7 @@ import {
   BackupInput,
   Snapshot,
   SnapshotInput,
-} from '@/app/types'
+} from '@/types'
 
 // will use psql environment variables
 // https://github.com/porsager/postgres?tab=readme-ov-file#environmental-variables
@@ -87,7 +88,6 @@ function newKvNamespace(table: string): KVNamespace {
   const tableSql = sql(table)
   return {
     put: async (key, value, options = {}) => {
-      console.log('putting', key, 'to', table, 'with', options)
       const ttl = options.expirationTtl ?? null
       await sql`
       insert into ${tableSql} (
@@ -107,7 +107,6 @@ function newKvNamespace(table: string): KVNamespace {
       `
     },
     get: async (key) => {
-      console.log('getting', key, 'from', table)
       const results = await sql<{ value: string }[]>`
         select value
         from ${tableSql}
@@ -121,12 +120,10 @@ function newKvNamespace(table: string): KVNamespace {
     },
 
     delete: async (key) => {
-      console.log('deleting', key, 'from', table)
       await sql`delete from ${tableSql} where key = ${key}`
     },
 
     list: async ({ prefix }) => {
-      console.log('listing keys with prefix', prefix, 'in', table)
       const results = await sql<{ key: string }[]>`
       select key
       from ${tableSql}
@@ -175,6 +172,8 @@ export function getStorageContext(): StorageContext {
       },
 
       async findBlobsForBackup(id) {
+        if (!validateUUID(id)) return { results: [] }
+
         const results = await sql<ATBlob[]>`
           select
             cid,
@@ -190,6 +189,8 @@ export function getStorageContext(): StorageContext {
       },
 
       async findBlobsForSnapshot(id) {
+        if (!validateUUID(id)) return { results: [] }
+
         const results = await sql<ATBlob[]>`
           select
             cid,
@@ -203,7 +204,9 @@ export function getStorageContext(): StorageContext {
           results,
         }
       },
-      async findSnapshot(id: string) {
+      async findSnapshot(id) {
+        if (!validateUUID(id)) return { result: undefined }
+
         const [result] = await sql<Snapshot[]>`
           select *
           from snapshots
@@ -236,6 +239,8 @@ export function getStorageContext(): StorageContext {
         return results[0]
       },
       async findSnapshots(backupId) {
+        if (!validateUUID(backupId)) return { results: [] }
+
         const results = await sql<Snapshot[]>`
           select *
           from snapshots
@@ -275,7 +280,9 @@ export function getStorageContext(): StorageContext {
           results,
         }
       },
-      async findBackup(id: string) {
+      async findBackup(id) {
+        if (!validateUUID(id)) return { result: undefined }
+
         const [result] = await sql<Backup[]>`
           select *
           from backups

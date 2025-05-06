@@ -4,9 +4,10 @@ import { Toaster } from 'sonner'
 
 import StorachaProvider from '@/components/StorachaProvider'
 
+import { SWRConfigProvider } from '../lib/swr'
+
 import { Authenticator } from './authentication'
 import { dmMono, dmSans, epilogue } from './globalStyle'
-import { SWRConfigProvider } from './swr'
 
 export const metadata: Metadata = {
   title: 'Bluesky Backups by Storacha',

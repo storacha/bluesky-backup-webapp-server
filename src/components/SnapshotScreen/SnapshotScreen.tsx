@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { css, styled } from 'next-yak'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
-import { Snapshot } from '@/app/types'
+import { Snapshot } from '@/types'
 
 import { Container } from '../ui'
 

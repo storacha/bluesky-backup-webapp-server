@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { styled } from 'next-yak'
 
-import { Snapshot } from '@/app/types'
 import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
+import { Snapshot } from '@/types'
 
 import CopyButton from '../CopyButton'
 import { Heading, Stack, SubHeading } from '../ui'

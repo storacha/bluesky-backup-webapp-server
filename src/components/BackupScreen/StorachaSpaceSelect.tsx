@@ -17,7 +17,7 @@ const CREATE_NEW_STORACHA_SPACE_VALUE = '-create-'
 
 export const StorachaSpaceSelect = (props: {
   name: string
-  value?: string
+  defaultValue?: string
   onChange?: (value: string) => void
   disabled?: boolean
 }) => {
@@ -25,13 +25,17 @@ export const StorachaSpaceSelect = (props: {
   const [{ spaces, accounts }] = useAuthenticator()
   const account = accounts?.[0]
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
-    props.value
+    props.defaultValue
   )
 
   const options = useMemo(() => {
-    if (props.disabled && props.value) {
+    if (props.disabled && props.defaultValue) {
       return [
-        { value: props.value, label: props.value, icon: '/storacha-red.png' },
+        {
+          value: props.defaultValue,
+          label: props.defaultValue,
+          icon: '/storacha-red.png',
+        },
       ]
     }
     const result: Option[] = []
@@ -51,7 +55,7 @@ export const StorachaSpaceSelect = (props: {
     })
 
     return result
-  }, [spaces, account, props.disabled, props.value])
+  }, [spaces, account, props.disabled, props.defaultValue])
 
   const handleChange = (value: string) => {
     if (value === CREATE_NEW_STORACHA_SPACE_VALUE) {
