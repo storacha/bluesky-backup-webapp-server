@@ -6,5 +6,6 @@ import { captureException } from '@sentry/nextjs'
  * @param err the error - typed as unknown to match catch(err)
  */
 export function logAndCaptureError(err: unknown) {
+  console.error(err)
   captureException(err)
 }
