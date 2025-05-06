@@ -5,11 +5,12 @@ import { ed25519, Verifier } from '@ucanto/principal'
 import { access, DIDResolutionError } from '@ucanto/validator'
 
 import { atproto } from '@/lib/capabilities'
-import { IDENTITY_AUTHORITY, SERVER_DID } from '@/lib/constants'
 import {
   DidKey,
   DidWeb,
+  IDENTITY_AUTHORITY,
   PRODUCTION_UPLOAD_SERVICE_PUBLIC_KEY,
+  SERVER_DID,
   STAGING_UPLOAD_SERVICE_PUBLIC_KEY,
 } from '@/lib/constants'
 import { getConstants } from '@/lib/server/constants'

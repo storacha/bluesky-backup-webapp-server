@@ -9,9 +9,9 @@ import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
 
 import { BackupScreen } from '../components/BackupScreen'
+import { useSWR } from '../lib/swr'
 
 import { Sidebar } from './Sidebar'
-import { useSWR } from './swr'
 
 const Outside = styled(Stack)`
   min-height: 100vh;

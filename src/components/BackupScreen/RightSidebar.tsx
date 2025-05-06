@@ -2,8 +2,8 @@ import Link from 'next/link'
 import { styled } from 'next-yak'
 import useSWR from 'swr'
 
-import { Backup, Snapshot } from '@/app/types'
 import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
+import { Backup, Snapshot } from '@/types'
 
 import { Box, Center, Container, Heading, Stack, SubHeading, Text } from '../ui'
 
