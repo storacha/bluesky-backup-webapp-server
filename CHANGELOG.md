@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.3...v1.1.4) (2025-05-06)
+
+
+### Bug Fixes
+
+* **cron:** add dead letter queue ([#102](https://github.com/storacha/bluesky-backup-webapp-server/issues/102)) ([f468a5e](https://github.com/storacha/bluesky-backup-webapp-server/commit/f468a5e44fae4c89f8e170a1af4bad2b2ac61aee))
+
 ## [1.1.3](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.2...v1.1.3) (2025-05-05)
 
 
