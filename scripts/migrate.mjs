@@ -1,7 +1,8 @@
-import shift from 'postgres-shift'
-import postgres from 'postgres'
 import { fileURLToPath } from 'url'
+
 import { Signer } from '@aws-sdk/rds-signer'
+import postgres from 'postgres'
+import shift from 'postgres-shift'
 import '@dotenvx/dotenvx/config'
 
 const {
