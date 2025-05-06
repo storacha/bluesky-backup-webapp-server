@@ -1,18 +1,17 @@
 'use client'
 
-import { useAuthenticator } from '@storacha/ui-react'
 import { styled } from 'next-yak'
 import React from 'react'
 
 import { Button, Heading, InputField, Stack, SubHeading } from '@/components/ui'
+import { useStorachaAccount } from '@/hooks/use-plan'
 
 const ConnectStack = styled(Stack)`
   padding: 10rem 10rem;
 `
 
 const ConnectPage: React.FC = () => {
-  const [{ accounts }] = useAuthenticator()
-  const account = accounts[0]
+  const account = useStorachaAccount()
   if (!account) return null
 
   return (

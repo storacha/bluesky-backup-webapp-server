@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.1.4](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.3...v1.1.4) (2025-05-06)
+
+
+### Bug Fixes
+
+* **cron:** add dead letter queue ([#102](https://github.com/storacha/bluesky-backup-webapp-server/issues/102)) ([f468a5e](https://github.com/storacha/bluesky-backup-webapp-server/commit/f468a5e44fae4c89f8e170a1af4bad2b2ac61aee))
+
+## [1.1.3](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.2...v1.1.3) (2025-05-05)
+
+
+### Bug Fixes
+
+* **deploy:** allow writes to the file system in the container ([dc4dba9](https://github.com/storacha/bluesky-backup-webapp-server/commit/dc4dba910b767709cf53b74cd5fa23e1499a0672))
+
+## [1.1.2](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.1...v1.1.2) (2025-05-05)
+
+
+### Bug Fixes
+
+* add some very granular logging to the hourly job ([#92](https://github.com/storacha/bluesky-backup-webapp-server/issues/92)) ([e75fa2e](https://github.com/storacha/bluesky-backup-webapp-server/commit/e75fa2ef7542545c1a32d5015b20eeb6a03f43b4))
+* remove two unecessary `use server` directives ([#90](https://github.com/storacha/bluesky-backup-webapp-server/issues/90)) ([c20d510](https://github.com/storacha/bluesky-backup-webapp-server/commit/c20d51038b0cb33596d4f48ecb666fca19fd0dfa))
+
+## [1.1.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.0...v1.1.1) (2025-05-03)
+
+
+### Bug Fixes
+
+* **storoku:** update to versioned storoku ([eae52f9](https://github.com/storacha/bluesky-backup-webapp-server/commit/eae52f9ce9e19e2c151bd01389427436586c56eb))
+* **storoku:** update to versioned storoku ([94dc5a3](https://github.com/storacha/bluesky-backup-webapp-server/commit/94dc5a319b6d087bcc1c686b45516397da338c2c))
+
 ## [1.1.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.0.2...v1.1.0) (2025-05-02)
 
 

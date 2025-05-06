@@ -1,12 +1,12 @@
 'use client'
 
 import { CaretDown, PlusCircle } from '@phosphor-icons/react'
-import { useAuthenticator } from '@storacha/ui-react'
 import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 import { components, ControlProps, ValueContainerProps } from 'react-select'
 
-import { useSWR } from '@/app/swr'
+import { useStorachaAccount } from '@/hooks/use-plan'
+import { useSWR } from '@/lib/swr'
 import { shortenDID } from '@/lib/ui'
 
 import { AddBskyAccountModal } from '../modals'
@@ -18,14 +18,13 @@ const LOG_INTO_BLUESKY_VALUE = '-connect-'
 
 export const BlueskyAccountSelect = (props: {
   name: string
-  value?: string
+  defaultValue?: string
   onChange?: (value: string) => void
   disabled?: boolean
 }) => {
-  const [{ accounts }] = useAuthenticator()
-  const account = accounts[0]
+  const account = useStorachaAccount()
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
-    props.value
+    props.defaultValue
   )
 
   const { data: atprotoAccounts, isLoading } = useSWR(
@@ -33,19 +32,19 @@ export const BlueskyAccountSelect = (props: {
   )
 
   useEffect(() => {
-    if (props.value) {
-      setSelectedValue(props.value)
+    if (props.defaultValue) {
+      setSelectedValue(props.defaultValue)
     }
-  }, [props.value])
+  }, [props.defaultValue])
 
   const options = useMemo(() => {
     const result: Option[] = []
 
-    if (props.disabled && props.value) {
+    if (props.disabled && props.defaultValue) {
       return [
         {
-          value: props.value,
-          label: shortenDID(props.value),
+          value: props.defaultValue,
+          label: shortenDID(props.defaultValue),
           icon: '/bluesky.png',
         },
       ]
@@ -73,7 +72,7 @@ export const BlueskyAccountSelect = (props: {
     })
 
     return result
-  }, [atprotoAccounts, props.value, props.disabled])
+  }, [atprotoAccounts, props.defaultValue, props.disabled])
 
   const handleChange = (value: string) => {
     if (value === LOG_INTO_BLUESKY_VALUE) {

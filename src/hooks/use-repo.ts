@@ -1,8 +1,8 @@
 import { iterateAtpRepo } from '@atcute/car'
 import { useCallback, useEffect, useState } from 'react'
 
-import { ExtendedRepoEntry } from '@/app/types'
 import { loadCid } from '@/lib/storacha'
+import { ExtendedRepoEntry } from '@/types'
 
 export type RepoParams = {
   cid: string

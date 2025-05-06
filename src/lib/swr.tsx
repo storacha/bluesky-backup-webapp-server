@@ -5,7 +5,7 @@ import React from 'react'
 import useSWRBase, { SWRConfig, SWRResponse } from 'swr'
 import useSWRMutationBase, { MutationFetcher } from 'swr/mutation'
 
-import { ATBlob, Backup, Snapshot } from './types'
+import { ATBlob, Backup, Snapshot } from '../types'
 
 // This type defines what's fetchable with `useSWR`. It is a union of key/data
 // pairs. The key can match a pattern by being as wide as it needs to be.

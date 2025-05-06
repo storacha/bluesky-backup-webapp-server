@@ -1,22 +1,13 @@
+import { ToggleStateOptions, useToggleState } from '@react-stately/toggle'
 import { css, styled } from 'next-yak'
-import { useRef } from 'react'
-import { useFocusRing, useSwitch, VisuallyHidden } from 'react-aria'
-import { useToggleState } from 'react-stately'
-
-interface SwitchProps {
-  id?: string
-  value: boolean
-  name: string
-  onClick: (value: boolean) => void
-  label?: string
-  isDisabled?: boolean
-  children?: React.ReactNode
-}
-
-interface AriaSwitchProps extends Omit<SwitchProps, 'value' | 'onClick'> {
-  isSelected: boolean
-  onChange: (isSelected: boolean) => void
-}
+import { forwardRef, useRef } from 'react'
+import {
+  AriaSwitchProps,
+  useFocusRing,
+  useSwitch,
+  VisuallyHidden,
+} from 'react-aria'
+import { mergeRefs } from 'react-merge-refs'
 
 const SWITCH_WIDTH = 30
 const NOB_DIAMETER = 16
@@ -73,20 +64,25 @@ const SwitchWrapper = styled.div<{ $isDisabled?: boolean }>`
   opacity: ${({ $isDisabled }) => ($isDisabled ? 0.4 : 1)};
 `
 
-const LabelText = styled.span`
-  margin-left: 8px;
-`
+export type SwitchProps = ToggleStateOptions & AriaSwitchProps
 
-const AriaSwitch = (props: AriaSwitchProps) => {
-  const ref = useRef<HTMLInputElement>(null)
+export const Switch = forwardRef<HTMLInputElement>(function Switch(
+  props: SwitchProps,
+  externalRef
+) {
+  const internalRef = useRef<HTMLInputElement>(null)
   const state = useToggleState(props)
-  const { inputProps } = useSwitch(props, state, ref)
+  const { inputProps } = useSwitch(props, state, internalRef)
   const { isFocusVisible, focusProps } = useFocusRing()
 
   return (
     <SwitchWrapper $isDisabled={props.isDisabled}>
       <VisuallyHidden>
-        <input {...inputProps} {...focusProps} ref={ref} />
+        <input
+          {...inputProps}
+          {...focusProps}
+          ref={mergeRefs([internalRef, externalRef])}
+        />
       </VisuallyHidden>
       <SwitchContainer
         $isSelected={state.isSelected}
@@ -99,18 +95,6 @@ const AriaSwitch = (props: AriaSwitchProps) => {
           $isDisabled={props.isDisabled}
         />
       </SwitchContainer>
-      {props.label && <LabelText>{props.label}</LabelText>}
-      {props.children}
     </SwitchWrapper>
   )
-}
-
-export const Switch = ({ value, onClick, ...otherProps }: SwitchProps) => {
-  const ariaProps: AriaSwitchProps = {
-    isSelected: value,
-    onChange: onClick,
-    ...otherProps,
-  }
-
-  return <AriaSwitch {...ariaProps} />
-}
+})

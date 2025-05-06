@@ -1,4 +1,4 @@
-import { FetchedData, Key } from '@/app/swr'
+import { FetchedData, Key } from '@/lib/swr'
 import { Decorator } from '@storybook/react'
 import { SWRConfig, unstable_serialize } from 'swr'
 
