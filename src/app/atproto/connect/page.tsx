@@ -20,7 +20,7 @@ const ConnectPage: React.FC = () => {
   if (!account) return null
 
   return (
-    <Center $height="100vh" $width="100%">
+    <Center $height="100vh">
       <ConnectStack $gap="1.2rem" $width="100%">
         <Stack>
           <Heading>Connect your Bluesky Account</Heading>
