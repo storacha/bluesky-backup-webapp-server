@@ -43,6 +43,7 @@ async function getPublicProfile(did: Did): Promise<ProfileData | null> {
       if (!handle) return { did, handle: 'unknown' }
 
       try {
+        // we're still hitting this auth roadblock here.
         const profileResponse = await fetch(
           `https://bsky.social/xrpc/app.bsky.actor.getProfile?actor=${did}`
         )
