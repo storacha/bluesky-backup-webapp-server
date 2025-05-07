@@ -45,7 +45,6 @@
     "@ucanto/principal": "^9.0.2",
     "@ucanto/transport": "^9.1.1",
     "@ucanto/validator": "^9.1.0",
-    "@w3ui/react": "^2.5.5",
     "dexie": "^4.0.11",
     "dexie-react-hooks": "^1.1.7",
     "iron-session": "^8.0.4",
