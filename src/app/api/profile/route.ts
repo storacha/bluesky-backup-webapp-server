@@ -58,9 +58,11 @@ async function getPublicProfile(did: Did): Promise<ProfileData | null> {
 
         if (!profileResponse.ok) {
           const errText = await profileResponse.text()
-          console.error(`Failed to fetch detailed profile: ${profileResponse.status}`, errText)
+          console.error(
+            `Failed to fetch detailed profile: ${profileResponse.status}`,
+            errText
+          )
         }
-
       } catch (error) {
         console.error('Error fetching detailed profile:', error)
       }
