@@ -99,7 +99,7 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2
       react:
-        specifier: ^18.0.0
+        specifier: ^18.3.0
         version: 18.3.1
       react-aria:
         specifier: ^3.39.0
@@ -108,7 +108,7 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0(react@18.3.1)
       react-dom:
-        specifier: ^18.0.0
+        specifier: ^18.3.0
         version: 18.3.1(react@18.3.1)
       react-hook-form:
         specifier: ^7.54.2
