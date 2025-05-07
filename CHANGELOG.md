@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.6...v1.2.0) (2025-05-07)
+
+
+### Features
+
+* tweak readme ([#110](https://github.com/storacha/bluesky-backup-webapp-server/issues/110)) ([02a1251](https://github.com/storacha/bluesky-backup-webapp-server/commit/02a125119b55697960fc2c70318e9f00be0b1100))
+
 ## [1.1.6](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.5...v1.1.6) (2025-05-07)
 
 
