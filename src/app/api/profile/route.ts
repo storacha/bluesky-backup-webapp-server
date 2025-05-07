@@ -41,33 +41,6 @@ async function getPublicProfile(did: Did): Promise<ProfileData | null> {
       )
       const profileHandle = handle ? handle.replace('at://', '') : null
       if (!handle) return { did, handle: 'unknown' }
-
-      try {
-        // we're still hitting this auth roadblock here.
-        const profileResponse = await fetch(
-          `https://bsky.social/xrpc/app.bsky.actor.getProfile?actor=${did}`
-        )
-
-        if (profileResponse.ok) {
-          const profileData = await profileResponse.json()
-          return {
-            did,
-            handle: profileData.handle,
-            displayName: profileData.displayName || profileData.handle,
-          }
-        }
-
-        if (!profileResponse.ok) {
-          const errText = await profileResponse.text()
-          console.error(
-            `Failed to fetch detailed profile: ${profileResponse.status}`,
-            errText
-          )
-        }
-      } catch (error) {
-        console.error('Error fetching detailed profile:', error)
-      }
-
       return { did, handle: profileHandle }
     } else if (did.startsWith('did:web')) {
       const domain = did.replace('did:web', '').replace(/%3A/g, ':')
