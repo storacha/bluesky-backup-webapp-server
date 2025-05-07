@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.6](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.5...v1.1.6) (2025-05-07)
+
+
+### Bug Fixes
+
+* **deploy/app:** attach role to policy ([#107](https://github.com/storacha/bluesky-backup-webapp-server/issues/107)) ([e9a60a9](https://github.com/storacha/bluesky-backup-webapp-server/commit/e9a60a9eacd43a5a13c53f1a0adfe4087daff6d1))
+
 ## [1.1.5](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.4...v1.1.5) (2025-05-06)
 
 
