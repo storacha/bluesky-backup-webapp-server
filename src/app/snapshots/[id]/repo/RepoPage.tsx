@@ -1,12 +1,9 @@
 'use client'
 import { Sidebar } from '@/app/Sidebar'
-import {
-  DetailName,
-  DetailValue,
-} from '@/components/SnapshotScreen/SnapshotDetail'
+import { Posts } from '@/components/Posts'
+import { DetailName } from '@/components/SnapshotScreen/SnapshotDetail'
 import { Box, Stack } from '@/components/ui'
 import { useRepo } from '@/hooks/use-repo'
-import { GATEWAY_HOSTNAME } from '@/lib/constants'
 import { useSWR } from '@/lib/swr'
 
 export default function RepoPage({ id }: { id: string }) {
@@ -19,25 +16,16 @@ export default function RepoPage({ id }: { id: string }) {
   if (error) throw error
   if (!snapshot) return null
 
-  const url = `https://${snapshot.repositoryCid}.${GATEWAY_HOSTNAME}`
-
   return (
     <>
       <Sidebar selectedBackupId={null} />
-      <Box $padding="2rem">
+      <Box $padding="2rem" $borderStyle="none" $height="100%">
         {loading ? (
           <p>Loading repository data...</p>
         ) : (
           <Stack>
             <DetailName>Repository Stats</DetailName>
-            <DetailValue>
-              <p>Posts: {repo.posts.length}</p>
-              <p>Likes: {repo.likes.length}</p>
-              <p>Follows: {repo.follows.length}</p>
-              <a target="_blank" href={url}>
-                {url}
-              </a>
-            </DetailValue>
+            <Posts repositoryDid={snapshot.atprotoAccount} posts={repo.posts} />
           </Stack>
         )}
       </Box>

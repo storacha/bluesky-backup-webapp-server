@@ -75,6 +75,7 @@ export type Post = {
     handle: string
     displayName: string
   }
+  creator?: string
   embed?: ExternalEmbeds | ImageEmbeds | QuotedEmbeds
 }
 
@@ -125,6 +126,7 @@ export type QuotedEmbeds = {
 
 export interface ExtendedRepoEntry extends RepoEntry {
   record: Post
+  uri: string
 }
 
 export type LikedRecord = {
@@ -137,3 +139,9 @@ export type LikedRecord = {
 }
 
 export type LikedRecords = LikedRecord[]
+
+export type ProfileData = {
+  did: string
+  handle: string
+  displayName?: string
+}

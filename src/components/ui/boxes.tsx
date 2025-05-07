@@ -26,7 +26,7 @@ export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
   width: ${({ $width = '100%' }) => $width};
   display: ${({ $display = '' }) => $display};
   justify-content: ${({ $justifyContent = '' }) => $justifyContent};
-  align-items: center;
+  align-items: ${({ $alignItems = 'center'}) => $alignItems};
   padding: ${({ $padding = '0 0.6rem' }) => $padding};
   gap: ${({ $gap = 0 }) => $gap};
   background: ${({ $background = '' }) => $background};
@@ -35,4 +35,16 @@ export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
   right: ${({ $right = '' }) => $right};
   left: ${({ $left = '' }) => $left};
   bottom: ${({ $bottom = '' }) => $bottom};
+`
+
+export const Flex = styled.div<Partial<StyleProps>>`
+  height: ${({ $height = '66px' }) => $height};
+  width: ${({ $width = '100%' }) => $width};
+  display: flex;
+  justify-content: ${({ $justifyContent = '' }) => $justifyContent};
+  align-items: ${({ $alignItems = '' }) => $alignItems};
+  padding: ${({ $padding = '0 0.6rem' }) => $padding};
+  gap: ${({ $gap = 0 }) => $gap};
+  cursor: pointer;
+  background: ${({ $background = '' }) => $background};
 `

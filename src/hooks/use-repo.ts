@@ -14,6 +14,7 @@ export const useRepo = ({ cid }: RepoParams) => {
   const [repo, setRepo] = useState<Uint8Array | null>(null)
   const [parsedRepo, setParsedRepo] = useState<ExtendedRepoEntry[]>([])
   const [state, setState] = useState<State>('idle')
+  const [authorDid, setAuthorDid] = useState<string | null>(null)
 
   const sortByCreatedAtDesc = (entries: ExtendedRepoEntry[]) => {
     return entries.sort((a, b) => {
@@ -35,10 +36,10 @@ export const useRepo = ({ cid }: RepoParams) => {
   const reposts = sortByCreatedAtDesc(
     parsedRepo.filter((repo) => repo.collection === 'app.bsky.feed.repost')
   )
+
   const postsWithEmbeds = posts.filter(
     (post) => post.record && post.record.embed !== undefined
   )
-
   const externalEmbed = postsWithEmbeds.filter(
     (post) => post.record.embed?.$type === 'app.bsky.embed.external'
   )
@@ -50,9 +51,29 @@ export const useRepo = ({ cid }: RepoParams) => {
   )
 
   useEffect(() => {
+    if (parsedRepo.length === 0) return
+
+    for (const post of posts) {
+      if (post.uri) {
+        const match = post.uri.match(/at:\/\/(did:[^\/]+)/)
+        if (match && match[1]) {
+          setAuthorDid(match[1])
+          return
+        }
+      }
+    }
+
+    for (const follow of follows) {
+      if (follow.record?.creator) {
+        setAuthorDid(follow.record.creator)
+        return
+      }
+    }
+  }, [parsedRepo, posts, follows])
+
+  useEffect(() => {
     const parseRepoData = async () => {
       if (!repo || !cid) return
-
       try {
         setState('loading')
         const repoData = [...iterateAtpRepo(repo)]
@@ -63,7 +84,6 @@ export const useRepo = ({ cid }: RepoParams) => {
         setState('idle')
       }
     }
-
     parseRepoData()
   }, [repo, cid])
 
@@ -72,7 +92,6 @@ export const useRepo = ({ cid }: RepoParams) => {
       console.log('No CID provided, skipping!')
       return
     }
-
     try {
       setState('loading')
       const data = await loadCid(cidToLoad)
@@ -97,6 +116,7 @@ export const useRepo = ({ cid }: RepoParams) => {
       likes: likes,
       follows: follows,
       reposts: reposts,
+      authorDid,
       embeds: {
         external: externalEmbed,
         withImages: imageEmbeds,
