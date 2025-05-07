@@ -36,7 +36,6 @@ resource "aws_iam_policy" "hourly_backup" {
  policy = data.aws_iam_policy_document.assume_eventbridge_role.json
 }
 
-
 data "aws_iam_policy_document" "assume_eventbridge_role" {
  statement {
    effect  = "Allow"
@@ -51,6 +50,11 @@ data "aws_iam_policy_document" "assume_eventbridge_role" {
 
   resources = [aws_sqs_queue.hourly_backup_deadletter.arn]
  }
+}
+
+resource "aws_iam_role_policy_attachment" "hourly_backup" {
+  role = aws_iam_role.hourly_backup.name
+  policy_arn = aws_iam_policy.hourly_backup.arn
 }
 
 resource "aws_cloudwatch_event_target" "hourly_backup" {
