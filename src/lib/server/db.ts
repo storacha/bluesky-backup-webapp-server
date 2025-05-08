@@ -172,37 +172,6 @@ function newLock(table: string): SqlLock {
   }
 }
 
-// simple request lock implementation that uses p-retry to
-// try to acquire a lock for a particular key
-// const requestLockKv = newKvNamespace('refresh_locks')
-// const lock = async (key: string) =>
-//   retry(
-//     async () => {
-//       const lockholder = await requestLockKv.get(key)
-//       if (lockholder) {
-//         throw new Error(`lock acquired by ${lockholder}`)
-//       } else {
-//         // there is a
-//         const id = randomUUID()
-//         await requestLockKv.put(key, id)
-//         return id
-//       }
-//     },
-//     {
-//       // try for 30 seconds per the comment in the requestLock docs on
-//       // https://www.npmjs.com/package/@atproto/oauth-client-node
-//       maxRetryTime: 30 * 1000,
-//     }
-//   )
-
-// const unlock = async (key: string, lockId: string) => {
-//   const lockholder = await requestLockKv.get(key)
-//   // if we are the lockholder, delete the key to unlock
-//   if (lockholder === lockId) {
-//     await requestLockKv.delete(key)
-//   }
-//   // otherwise we don't have the lock, so fail silently, it's fine (maybe?)
-// }
 const lock = newLock('refresh_locks')
 export const requestLock: RuntimeLock = async (key, fn) => {
   const lockId = await lock.lock(key)
