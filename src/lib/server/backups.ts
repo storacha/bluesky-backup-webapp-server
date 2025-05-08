@@ -134,25 +134,29 @@ const doSnapshot = async (
         })
         // TODO handle blobsRes.success == false
         for (const cid of blobsRes.data.cids) {
-          const blobRes = await atpAgent.com.atproto.sync.getBlob({
-            did: atpAgent.did,
-            cid,
-          })
-          // TODO handle blobRes.success == false
+          const { result: existingBlob } = await db.getBlob(cid)
+          // only try to sync this blob if we've seen it before
+          if (!existingBlob) {
+            const blobRes = await atpAgent.com.atproto.sync.getBlob({
+              did: atpAgent.did,
+              cid,
+            })
+            // TODO handle blobRes.success == false
 
-          const uploadCid = await storachaClient.uploadFile(
-            new Blob([blobRes.data])
-          )
-          // TODO: figure out how to fail if cid and uploadCid don't match
-          console.log(
-            `Uploaded blob with CID ${cid} and got ${uploadCid} from Storacha - these should be the same`
-          )
-          await db.addBlob({
-            cid,
-            contentType: blobRes.headers['content-type'],
-            snapshotId: snapshotId,
-            backupId: options.backupId,
-          })
+            const uploadCid = await storachaClient.uploadFile(
+              new Blob([blobRes.data])
+            )
+            // TODO: figure out how to fail if cid and uploadCid don't match
+            console.log(
+              `Uploaded blob with CID ${cid} and got ${uploadCid} from Storacha - these should be the same`
+            )
+            await db.addBlob({
+              cid,
+              contentType: blobRes.headers['content-type'],
+              snapshotId: snapshotId,
+              backupId: options.backupId,
+            })
+          }
         }
       } while (blobsRes.data.cursor)
 

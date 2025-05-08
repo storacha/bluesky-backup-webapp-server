@@ -48,6 +48,7 @@ export type SnapshotInput = Input<
 >
 
 export interface ATBlob {
+  id: string
   cid: string
   contentType?: string
   snapshotId: string
@@ -55,4 +56,4 @@ export interface ATBlob {
   createdAt: string
 }
 
-export type ATBlobInput = Input<ATBlob, 'createdAt'>
+export type ATBlobInput = Input<ATBlob, 'id' | 'createdAt'>
