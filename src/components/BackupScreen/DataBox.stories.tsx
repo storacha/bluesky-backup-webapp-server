@@ -36,6 +36,7 @@ export const ToggleOn: Story = {
     await expect(switchInput).toBeChecked()
   },
 }
+
 export const ToggleOff: Story = {
   args: {
     defaultSelected: true,

@@ -1,6 +1,6 @@
 // copied from console
 
-import { UnknownLink } from '@w3ui/react'
+import { UnknownLink } from '@storacha/ui-react'
 
 export function shortenCID(cid: UnknownLink | string) {
   return shorten(cid.toString(), 5, 4)

@@ -1,6 +1,6 @@
-# blusky-backup-webapp
+# blusky-backup-webapp-server
 
-HOT HOT HOT backups for your ATProto PDS
+HOT HOT HOT identity and data backup for your ATProto PDS
 
 ## Local
 

@@ -54,8 +54,8 @@ importers:
         specifier: ^1.2.6
         version: 1.2.6(encoding@0.1.13)
       '@storacha/ui-react':
-        specifier: ^2.5.24
-        version: 2.5.24(@types/react@18.3.18)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^2.6.9
+        version: 2.6.9(@types/react@18.3.18)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@ucanto/client':
         specifier: ^9.0.1
         version: 9.0.1
@@ -74,9 +74,6 @@ importers:
       '@ucanto/validator':
         specifier: ^9.1.0
         version: 9.1.0
-      '@w3ui/react':
-        specifier: ^2.5.5
-        version: 2.5.5(@types/react@18.3.18)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       dexie:
         specifier: ^4.0.11
         version: 4.0.11
@@ -1272,8 +1269,14 @@ packages:
   '@floating-ui/core@1.6.9':
     resolution: {integrity: sha512-uMXCuQ3BItDUbAMhIXw7UPXRfAlOAvZzdK9BWpE60MCn+Svt3aLn9jsPTi/WNGlRUu2uI0v5S7JiIUsbsvh3fw==}
 
+  '@floating-ui/core@1.7.0':
+    resolution: {integrity: sha512-FRdBLykrPPA6P76GGGqlex/e7fbe0F1ykgxHYNXQsH/iTEtjMj/f9bpY5oQqbjt5VgZvgz/uKXbGuROijh3VLA==}
+
   '@floating-ui/dom@1.6.13':
     resolution: {integrity: sha512-umqzocjDgNRGTuO7Q8CU32dkHkECqI8ZdMZ5Swb6QAM0t5rnlrN3lGo1hdpscRd3WS8T6DKYK4ephgIH9iRh3w==}
+
+  '@floating-ui/dom@1.7.0':
+    resolution: {integrity: sha512-lGTor4VlXcesUMh1cupTUTDoCxMb0V6bm3CnxHzQcw8Eaf1jQbgQX4i02fYgT0vJ82tb5MZ4CZk1LRGkktJCzg==}
 
   '@floating-ui/react-dom@2.1.2':
     resolution: {integrity: sha512-06okr5cgPzMNBy+Ycse2A6udMi4bqwW/zgBF/rwjcNqWkyr82Mcg8b0vjX8OJpZFy/FKjJmw6wV7t44kK6kW7A==}
@@ -1472,9 +1475,6 @@ packages:
 
   '@ipld/dag-ucan@3.4.5':
     resolution: {integrity: sha512-wiWhH0Ju7WgnumsarHCYtlo+1NRy+WIsXyAB7g2sDqVsKCyEJiLLmjeZzKqNv+qMxLnUS8bQ287cPiQ//s/oJQ==}
-
-  '@ipld/unixfs@2.2.0':
-    resolution: {integrity: sha512-lDQ2eRhJlbFaBoO3bhOmDVCLmpOnhwtwbilqUgAAhbhoPSmLrnv7gsBuToZjXOdPaEGSL7apkmm6nFrcU6zh4Q==}
 
   '@ipld/unixfs@3.0.0':
     resolution: {integrity: sha512-Tj3/BPOlnemcZQ2ETIZAO8hqAs9KNzWyX5J9+JCL9jDwvYwjxeYjqJ3v+9DusNvTBmJhZnGVP6ijUHrsuOLp+g==}
@@ -2852,6 +2852,10 @@ packages:
     resolution: {integrity: sha512-8uB5dPwVBjtY3fg4ENBjLfyTBJy9jFY9w6NTBpvMPBoc40iKgNQq7tmFE7S/FqxMIkizh1UYRq7+uf/Y+7pqdg==}
     engines: {node: '>=18'}
 
+  '@storacha/client@1.2.8':
+    resolution: {integrity: sha512-yPRs+p1KsdUtg5CQdgyfKJd3lz6znqjHLzsmasVW4FVvd3+GnEBXzg+4yS3HeujB9wKLCTn8mqWF70q1jyGqmg==}
+    engines: {node: '>=18'}
+
   '@storacha/did-mailto@1.0.2':
     resolution: {integrity: sha512-0ee1t15yG4xdyIYz2iL+wP06VnGQf8zJ/xpszjf4sdP2sTgAVzx92LfEgHcuIbFF4sabcJXzHFAcMi8l8u64Mg==}
     engines: {node: '>=16.15'}
@@ -2862,16 +2866,19 @@ packages:
   '@storacha/one-webcrypto@1.0.1':
     resolution: {integrity: sha512-bD+vWmcgsEBqU0Dz04BR43SA03bBoLTAY29vaKasY9Oe8cb6XIP0/vkm0OS2UwKC13c8uRgFW4rjJUgDCNLejQ==}
 
-  '@storacha/ui-core@2.4.37':
-    resolution: {integrity: sha512-gvY8BMF7BEIMj9DSL4Fz2vmz6/W9t6XY+ZnYFS4gkkjw16RRDpTP9VexG/vl12geOJrcyulQvq7Qj1CzVnIFDg==}
+  '@storacha/ui-core@2.4.43':
+    resolution: {integrity: sha512-owx2M6wJXh4Fwqr4ezEJEEa8CsQXC/aRGttSDEb/xt8AVmZwV8ADyN5lB6GNBP9rTnR+bqamMZoeNQTMkuiubA==}
 
-  '@storacha/ui-react@2.5.24':
-    resolution: {integrity: sha512-fTJYIkbjvuN23VKxXkZ5hS4kr7ZKVzIZrqo7jUMYB5omt7TJr7+Q22aierY2td+YEQyqyYgL5qOd741mBFZYXA==}
+  '@storacha/ui-react@2.6.9':
+    resolution: {integrity: sha512-fFV+ElLFO18pZJy6LIM994gLnGKasBB5PoLQUiQ+Jxvn0sCN2bW1sJhmUzxUjWjTMgvpobh7xWigS3QIiKHOVA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
   '@storacha/upload-client@1.0.9':
     resolution: {integrity: sha512-hW0LwhVb22FfmttuaJ1JK6Zw0/02OVS0TiBtmQCoPEhY3C1e/muZ2OYkzbeK2i+hGUUCI+s2l/JyzOIiVWKsjw==}
+
+  '@storacha/upload-client@1.1.1':
+    resolution: {integrity: sha512-zUasr64X/SgkWyvyKxZavlPX8CdyTHHtQgrXsFRt68PmrJxs2/3BaJk4JfQ0nJRl/d2c0nxbo/Qbj2Zr5idsug==}
 
   '@storybook/addon-actions@8.6.12':
     resolution: {integrity: sha512-B5kfiRvi35oJ0NIo53CGH66H471A3XTzrfaa6SxXEJsgxxSeKScG5YeXcCvLiZfvANRQ7QDsmzPUgg0o3hdMXw==}
@@ -3290,40 +3297,8 @@ packages:
   '@vitest/utils@2.1.9':
     resolution: {integrity: sha512-v0psaMSkNJ3A2NMrUEHFRzJtDPFn+/VWZ5WxImB21T9fjucJRmS7xCS3ppEnARb9y11OAzaD+P2Ps+b+BGX5iQ==}
 
-  '@w3ui/core@2.4.3':
-    resolution: {integrity: sha512-jIF/Bg83DUcgHq0c9IYl2fDy9dku/+AY/TK//ZqCoaFgAr0ogW9cEbHAr3Gv54VdFwZrx9uTHjcx0yH8JwAokg==}
-
-  '@w3ui/react@2.5.5':
-    resolution: {integrity: sha512-CB/X7SJJBlAU3BU+Ylx3g47pJ4SNo2EnnQhd3R6gRlKxRjxLW0bWF8pNXOSi7jzmbThWdCQ4TPq+F62uPALkAA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-
-  '@web3-storage/access@20.1.2':
-    resolution: {integrity: sha512-txhk5+zGqHd+7lGrgjf36AZugHKa05VKfEDmoTrYxIM0RGCCS5nEx1elzNxY4dxyUHJ1HGMNaN10QCOoY1X5yQ==}
-
-  '@web3-storage/blob-index@1.0.5':
-    resolution: {integrity: sha512-mhzupWeRfxLljoULcagU++mOmQOriCBMKniUhsmrCXrtRV8voF7op/ymqix1f9uX1M5iB93YXcfxAVBwGWWKoA==}
-    engines: {node: '>=16.15'}
-
-  '@web3-storage/capabilities@18.0.1':
-    resolution: {integrity: sha512-FLAUpuuFYkLrMkXy/W7iVNQdFlqGCZUrQr30L2C05SbQdpb/4tN6jqRG+l2nvAYTaYjWTYzsYLHGy2illsuNZQ==}
-
   '@web3-storage/data-segment@5.3.0':
     resolution: {integrity: sha512-zFJ4m+pEKqtKatJNsFrk/2lHeFSbkXZ6KKXjBe7/2ayA9wAar7T/unewnOcZrrZTnCWmaxKsXWqdMFy9bXK9dw==}
-
-  '@web3-storage/did-mailto@2.1.0':
-    resolution: {integrity: sha512-TRmfSXj1IhtX3ESurSNOylZSBKi0z/VJNoMLpof+AVRdovgZjjocpiePQTs2pfHKqHTHfJXc9AboWyK4IKTWMw==}
-    engines: {node: '>=16.15'}
-
-  '@web3-storage/filecoin-client@3.3.5':
-    resolution: {integrity: sha512-3JFKnHFizlljRSJyyCdNN3Np4MN5riBvjAXweqNmu4s2sChMB8kopnCkAFoMeEom9r7ZAnBAkMO3Wacjs6Nlcw==}
-
-  '@web3-storage/upload-client@17.1.3':
-    resolution: {integrity: sha512-pOD5EM6RJgsJ3gRZWfhwfbD21OLvNQ239aD4D5BsQsEEgEoqR8aXdrjDWU4T8DA4YXU6VIai/VGIsDXgw+eg7g==}
-
-  '@web3-storage/w3up-client@17.1.2':
-    resolution: {integrity: sha512-vS6pvbIfr0iUorH7LBGm24GDBMQ4xdJRlFTlLWktfEAqzBiPE3v7lXDDF4suXl9DzjkLYK8+eSuSqb5+zru2eA==}
-    engines: {node: '>=18'}
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -5100,14 +5075,6 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  multiformats@11.0.2:
-    resolution: {integrity: sha512-b5mYMkOkARIuVZCpvijFj9a6m5wMVLC7cf/jIPd5D/ARDOfLC5+IFkbgDXQgcU2goIsTD/O9NY4DI/Mt4OGvlg==}
-    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
-
-  multiformats@12.1.3:
-    resolution: {integrity: sha512-eajQ/ZH7qXZQR2AgtfpmSMizQzmyYVmCql7pdhldPuYQi4atACekbJaQplk6dWyIi10jCaFnd6pqvcEFXjbaJw==}
-    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
-
   multiformats@13.3.2:
     resolution: {integrity: sha512-qbB0CQDt3QKfiAzZ5ZYjLFOs+zW43vA4uyM8g27PeEuXZybUOFyjrVdP93HPBHMoglibwfkdVwbzfUq8qGcH6g==}
 
@@ -6316,6 +6283,11 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
+  use-sync-external-store@1.5.0:
+    resolution: {integrity: sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
@@ -6477,10 +6449,10 @@ snapshots:
   '@ariakit/react-core@0.3.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@ariakit/core': 0.3.11
-      '@floating-ui/dom': 1.6.13
+      '@floating-ui/dom': 1.7.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      use-sync-external-store: 1.4.0(react@18.3.1)
+      use-sync-external-store: 1.5.0(react@18.3.1)
 
   '@ariakit/react@0.3.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -8039,9 +8011,18 @@ snapshots:
     dependencies:
       '@floating-ui/utils': 0.2.9
 
+  '@floating-ui/core@1.7.0':
+    dependencies:
+      '@floating-ui/utils': 0.2.9
+
   '@floating-ui/dom@1.6.13':
     dependencies:
       '@floating-ui/core': 1.6.9
+      '@floating-ui/utils': 0.2.9
+
+  '@floating-ui/dom@1.7.0':
+    dependencies:
+      '@floating-ui/core': 1.7.0
       '@floating-ui/utils': 0.2.9
 
   '@floating-ui/react-dom@2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
@@ -8230,16 +8211,6 @@ snapshots:
       '@ipld/dag-cbor': 9.2.2
       '@ipld/dag-json': 10.2.3
       multiformats: 13.3.2
-
-  '@ipld/unixfs@2.2.0':
-    dependencies:
-      '@ipld/dag-pb': 4.1.3
-      '@multiformats/murmur3': 2.1.8
-      '@perma/map': 1.0.3
-      actor: 2.3.1
-      multiformats: 11.0.2
-      protobufjs: 7.4.0
-      rabin-rs: 2.1.0
 
   '@ipld/unixfs@3.0.0':
     dependencies:
@@ -10241,6 +10212,24 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@storacha/client@1.2.8(encoding@0.1.13)':
+    dependencies:
+      '@ipld/dag-ucan': 3.4.5
+      '@storacha/access': 1.1.1
+      '@storacha/blob-index': 1.0.5
+      '@storacha/capabilities': 1.4.0
+      '@storacha/did-mailto': 1.0.2
+      '@storacha/filecoin-client': 1.0.6
+      '@storacha/upload-client': 1.1.1(encoding@0.1.13)
+      '@ucanto/client': 9.0.1
+      '@ucanto/core': 10.3.1
+      '@ucanto/interface': 10.2.0
+      '@ucanto/principal': 9.0.2
+      '@ucanto/transport': 9.2.0
+      environment: 1.1.0
+    transitivePeerDependencies:
+      - encoding
+
   '@storacha/did-mailto@1.0.2': {}
 
   '@storacha/filecoin-client@1.0.6':
@@ -10254,24 +10243,24 @@ snapshots:
 
   '@storacha/one-webcrypto@1.0.1': {}
 
-  '@storacha/ui-core@2.4.37(encoding@0.1.13)':
+  '@storacha/ui-core@2.4.43(encoding@0.1.13)':
     dependencies:
       '@ipld/dag-ucan': 3.4.5
       '@storacha/access': 1.1.1
-      '@storacha/client': 1.2.6(encoding@0.1.13)
+      '@storacha/client': 1.2.8(encoding@0.1.13)
       '@storacha/did-mailto': 1.0.2
       '@ucanto/client': 9.0.1
       '@ucanto/interface': 10.2.0
       '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.1.1
+      '@ucanto/transport': 9.2.0
     transitivePeerDependencies:
       - encoding
 
-  '@storacha/ui-react@2.5.24(@types/react@18.3.18)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@storacha/ui-react@2.6.9(@types/react@18.3.18)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@ariakit/react': 0.3.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@ariakit/react-core': 0.3.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@storacha/ui-core': 2.4.37(encoding@0.1.13)
+      '@storacha/ui-core': 2.4.43(encoding@0.1.13)
       ariakit-react-utils: 0.17.0-next.27(@types/react@18.3.18)(react@18.3.1)
       react: 18.3.1
     transitivePeerDependencies:
@@ -10280,6 +10269,27 @@ snapshots:
       - react-dom
 
   '@storacha/upload-client@1.0.9(encoding@0.1.13)':
+    dependencies:
+      '@ipld/car': 5.4.0
+      '@ipld/dag-cbor': 9.2.2
+      '@ipld/dag-ucan': 3.4.5
+      '@ipld/unixfs': 3.0.0
+      '@storacha/blob-index': 1.0.5
+      '@storacha/capabilities': 1.4.0
+      '@storacha/filecoin-client': 1.0.6
+      '@ucanto/client': 9.0.1
+      '@ucanto/core': 10.3.1
+      '@ucanto/interface': 10.2.0
+      '@ucanto/transport': 9.2.0
+      '@web3-storage/data-segment': 5.3.0
+      ipfs-utils: 9.0.14(encoding@0.1.13)
+      multiformats: 13.3.2
+      p-retry: 5.1.2
+      varint: 6.0.0
+    transitivePeerDependencies:
+      - encoding
+
+  '@storacha/upload-client@1.1.1(encoding@0.1.13)':
     dependencies:
       '@ipld/car': 5.4.0
       '@ipld/dag-cbor': 9.2.2
@@ -10943,127 +10953,11 @@ snapshots:
       loupe: 3.1.3
       tinyrainbow: 1.2.0
 
-  '@w3ui/core@2.4.3(encoding@0.1.13)':
-    dependencies:
-      '@ipld/dag-ucan': 3.4.5
-      '@ucanto/client': 9.0.1
-      '@ucanto/interface': 10.2.0
-      '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.1.1
-      '@web3-storage/access': 20.1.2
-      '@web3-storage/did-mailto': 2.1.0
-      '@web3-storage/w3up-client': 17.1.2(encoding@0.1.13)
-    transitivePeerDependencies:
-      - encoding
-
-  '@w3ui/react@2.5.5(@types/react@18.3.18)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@ariakit/react': 0.3.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@ariakit/react-core': 0.3.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@w3ui/core': 2.4.3(encoding@0.1.13)
-      ariakit-react-utils: 0.17.0-next.27(@types/react@18.3.18)(react@18.3.1)
-      react: 18.3.1
-    transitivePeerDependencies:
-      - '@types/react'
-      - encoding
-      - react-dom
-
-  '@web3-storage/access@20.1.2':
-    dependencies:
-      '@ipld/car': 5.4.0
-      '@ipld/dag-ucan': 3.4.5
-      '@scure/bip39': 1.5.4
-      '@storacha/one-webcrypto': 1.0.1
-      '@ucanto/client': 9.0.1
-      '@ucanto/core': 10.3.1
-      '@ucanto/interface': 10.2.0
-      '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.1.1
-      '@ucanto/validator': 9.1.0
-      '@web3-storage/capabilities': 18.0.1
-      '@web3-storage/did-mailto': 2.1.0
-      bigint-mod-arith: 3.3.1
-      conf: 11.0.2
-      multiformats: 13.3.2
-      p-defer: 4.0.1
-      type-fest: 4.35.0
-      uint8arrays: 5.1.0
-
-  '@web3-storage/blob-index@1.0.5':
-    dependencies:
-      '@ipld/dag-cbor': 9.2.2
-      '@storacha/one-webcrypto': 1.0.1
-      '@ucanto/core': 10.3.1
-      '@ucanto/interface': 10.2.0
-      '@web3-storage/capabilities': 18.0.1
-      carstream: 2.3.0
-      multiformats: 13.3.2
-      uint8arrays: 5.1.0
-
-  '@web3-storage/capabilities@18.0.1':
-    dependencies:
-      '@ucanto/core': 10.3.1
-      '@ucanto/interface': 10.2.0
-      '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.1.1
-      '@ucanto/validator': 9.1.0
-      '@web3-storage/data-segment': 5.3.0
-      uint8arrays: 5.1.0
-
   '@web3-storage/data-segment@5.3.0':
     dependencies:
       '@ipld/dag-cbor': 9.2.2
       multiformats: 13.3.2
       sync-multihash-sha2: 1.0.0
-
-  '@web3-storage/did-mailto@2.1.0': {}
-
-  '@web3-storage/filecoin-client@3.3.5':
-    dependencies:
-      '@ipld/dag-ucan': 3.4.5
-      '@ucanto/client': 9.0.1
-      '@ucanto/core': 10.3.1
-      '@ucanto/interface': 10.2.0
-      '@ucanto/transport': 9.1.1
-      '@web3-storage/capabilities': 18.0.1
-
-  '@web3-storage/upload-client@17.1.3(encoding@0.1.13)':
-    dependencies:
-      '@ipld/car': 5.4.0
-      '@ipld/dag-cbor': 9.2.2
-      '@ipld/dag-ucan': 3.4.5
-      '@ipld/unixfs': 2.2.0
-      '@ucanto/client': 9.0.1
-      '@ucanto/core': 10.3.1
-      '@ucanto/interface': 10.2.0
-      '@ucanto/transport': 9.1.1
-      '@web3-storage/blob-index': 1.0.5
-      '@web3-storage/capabilities': 18.0.1
-      '@web3-storage/data-segment': 5.3.0
-      '@web3-storage/filecoin-client': 3.3.5
-      ipfs-utils: 9.0.14(encoding@0.1.13)
-      multiformats: 12.1.3
-      p-retry: 5.1.2
-      varint: 6.0.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@web3-storage/w3up-client@17.1.2(encoding@0.1.13)':
-    dependencies:
-      '@ipld/dag-ucan': 3.4.5
-      '@ucanto/client': 9.0.1
-      '@ucanto/core': 10.3.1
-      '@ucanto/interface': 10.2.0
-      '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.1.1
-      '@web3-storage/access': 20.1.2
-      '@web3-storage/blob-index': 1.0.5
-      '@web3-storage/capabilities': 18.0.1
-      '@web3-storage/did-mailto': 2.1.0
-      '@web3-storage/filecoin-client': 3.3.5
-      '@web3-storage/upload-client': 17.1.3(encoding@0.1.13)
-    transitivePeerDependencies:
-      - encoding
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -13138,10 +13032,6 @@ snapshots:
 
   ms@2.1.3: {}
 
-  multiformats@11.0.2: {}
-
-  multiformats@12.1.3: {}
-
   multiformats@13.3.2: {}
 
   multiformats@9.9.0: {}
@@ -14525,6 +14415,10 @@ snapshots:
       '@types/react': 18.3.18
 
   use-sync-external-store@1.4.0(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+
+  use-sync-external-store@1.5.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 
