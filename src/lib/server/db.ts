@@ -192,7 +192,10 @@ export interface BBDatabase {
   findScheduledBackups: () => Promise<{ results: Backup[] }>
   addBackup: (input: BackupInput) => Promise<Backup>
   addBlob: (input: ATBlobInput) => Promise<ATBlob>
-  getBlobInBackup: (cid: string, backupId: string) => Promise<{ result: ATBlob | undefined }>
+  getBlobInBackup: (
+    cid: string,
+    backupId: string
+  ) => Promise<{ result: ATBlob | undefined }>
   findBlobsForBackup: (id: string) => Promise<{ results: ATBlob[] }>
   findBlobsForSnapshot: (id: string) => Promise<{ results: ATBlob[] }>
 }
