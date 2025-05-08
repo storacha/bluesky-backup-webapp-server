@@ -138,12 +138,12 @@ function newKvNamespace(table: string): KVNamespace {
   }
 }
 
-interface SqlLock {
+interface SqlSemaphore {
   lock: (key: string) => Promise<string>
   unlock: (key: string, lockId: string) => Promise<void>
 }
 
-function newLock(table: string): SqlLock {
+function newLock(table: string): SqlSemaphore {
   const tableSql = sql(table)
   return {
     lock: async (key: string) => {
@@ -172,13 +172,13 @@ function newLock(table: string): SqlLock {
   }
 }
 
-const lock = newLock('refresh_locks')
+const sem = newLock('refresh_locks')
 export const requestLock: RuntimeLock = async (key, fn) => {
-  const lockId = await lock.lock(key)
+  const lockId = await sem.lock(key)
   try {
     return await fn()
   } finally {
-    await lock.unlock(key, lockId)
+    await sem.unlock(key, lockId)
   }
 }
 
