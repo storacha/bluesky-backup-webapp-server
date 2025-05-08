@@ -51,12 +51,11 @@ class Store<K extends string, V extends Value = Value>
   }
 }
 
-export const blueskyClientMetadata = async ({
+export const blueskyClientMetadata = ({
   account,
 }: {
   account: string
-}): Promise<OAuthClientMetadataInput> => {
-  //const { TOKEN_ENDPOINT_PRIVATE_KEY_JWK } = getConstants()
+}): OAuthClientMetadataInput => {
   return {
     client_id: urlJoin(
       atprotoClientUri,
@@ -75,13 +74,6 @@ export const blueskyClientMetadata = async ({
     scope: 'atproto transition:generic',
     dpop_bound_access_tokens: true,
     jwks_uri: urlJoin(atprotoClientUri, 'atproto', 'oauth', 'jwks'),
-
-    // jwks: {
-    //   keys: [
-    //     (await JoseKey.fromImportable(TOKEN_ENDPOINT_PRIVATE_KEY_JWK))
-    //       .publicJwk!,
-    //   ],
-    // },
   }
 }
 
@@ -89,13 +81,8 @@ export const createClient = async ({ account }: { account: string }) => {
   const { TOKEN_ENDPOINT_PRIVATE_KEY_JWK } = getConstants()
   const { authSessionStore, authStateStore } = getStorageContext()
   const client = new NodeOAuthClient({
-    clientMetadata: await blueskyClientMetadata({ account }),
-
-    // TODO: Keys
-    // Used to authenticate the client to the token endpoint. Will be used to
-    // build the jwks object to be exposed on the "jwks_uri" endpoint.
+    clientMetadata: blueskyClientMetadata({ account }),
     keyset: [await JoseKey.fromImportable(TOKEN_ENDPOINT_PRIVATE_KEY_JWK)],
-
     stateStore: new Store(authStateStore, account, 60 * 60),
     sessionStore: new Store(authSessionStore, account),
 
