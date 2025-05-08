@@ -12,7 +12,7 @@ export async function POST(
   const { account } = await params
 
   if (!isDidMailto(account)) {
-    return new Response(`Account must be a DID, but got: ${account}`, {
+    return new Response(`Account must be a mailto DID, but got: ${account}`, {
       status: 400,
     })
   }
