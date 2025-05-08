@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.2.0...v1.2.1) (2025-05-08)
+
+
+### Bug Fixes
+
+* Create Backup button should show pending state ([f1064d5](https://github.com/storacha/bluesky-backup-webapp-server/commit/f1064d596b3a265569d83175a5cd9667c63aef86))
+
 ## [1.2.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.6...v1.2.0) (2025-05-07)
 
 
