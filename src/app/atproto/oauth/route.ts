@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     return new Response('Missing account', { status: 400 })
   }
 
-  const client = createClient({ account: account })
+  const client = await createClient({ account: account })
   const url = await client.authorize(handle)
   return Response.redirect(url)
 }

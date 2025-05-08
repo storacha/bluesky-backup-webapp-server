@@ -17,9 +17,12 @@ importers:
       '@atproto/crypto':
         specifier: ^0.4.4
         version: 0.4.4
+      '@atproto/jwk-jose':
+        specifier: ^0.1.6
+        version: 0.1.6
       '@atproto/oauth-client-node':
-        specifier: ^0.2.13
-        version: 0.2.13
+        specifier: ^0.2.17
+        version: 0.2.17
       '@aws-sdk/rds-signer':
         specifier: ^3.787.0
         version: 3.787.0
@@ -256,8 +259,8 @@ packages:
       react: ^17.0.0 || ^18.0.0
       react-dom: ^17.0.0 || ^18.0.0
 
-  '@atproto-labs/did-resolver@0.1.11':
-    resolution: {integrity: sha512-qXNzIX2GPQnxT1gl35nv/8ErDdc4Fj/+RlJE7oyE7JGkFAPUyuY03TvKJ79SmWFsWE8wyTXEpLuphr9Da1Vhkw==}
+  '@atproto-labs/did-resolver@0.1.12':
+    resolution: {integrity: sha512-criWN7o21C5TFsauB+bGTlkqqerOU6gT2TbxdQVgZUWqNcfazUmUjT4gJAY02i+O4d3QmZa27fv9CcaRKWkSug==}
 
   '@atproto-labs/fetch-node@0.1.8':
     resolution: {integrity: sha512-OOTIhZNPEDDm7kaYU8iYRgzM+D5n3mP2iiBSyKuLakKTaZBL5WwYlUsJVsqX26SnUXtGEroOJEVJ6f66OcG80w==}
@@ -266,30 +269,36 @@ packages:
   '@atproto-labs/fetch@0.2.2':
     resolution: {integrity: sha512-QyafkedbFeVaN20DYUpnY2hcArYxjdThPXbYMqOSoZhcvkrUqaw4xDND4wZB5TBD9cq2yqe9V6mcw9P4XQKQuQ==}
 
-  '@atproto-labs/handle-resolver-node@0.1.14':
-    resolution: {integrity: sha512-+kOf+xENdxUNrrLoIcp/L4ommIa1SHnwfHIWbxumXnacfurjMOnZhfXeiNsEguaAxDNYpqDNpKsFBtcgjffXvQ==}
+  '@atproto-labs/handle-resolver-node@0.1.15':
+    resolution: {integrity: sha512-krl9KqfCCrGID35VAAHKBIiXOxe3gYxAtOJLYpZc5cOPFwnvPlAdhTYZLIc1dJRKDayi8gh6Q4XZRDv7i8dryg==}
     engines: {node: '>=18.7.0'}
 
-  '@atproto-labs/handle-resolver@0.1.7':
-    resolution: {integrity: sha512-nb4uAOgRVMp2NGVTJnor4ohqySbd1KyB5VzQLaRjMaPwH60Al057eTqiKRbeH/xD7hOBPNj1m0YjgxzvyAnWkg==}
+  '@atproto-labs/handle-resolver@0.1.8':
+    resolution: {integrity: sha512-Y0ckccoCGDo/3g4thPkgp9QcORmc+qqEaCBCYCZYtfLIQp4775u22wd+4fyEyJP4DqoReKacninkICgRGfs3dQ==}
 
-  '@atproto-labs/identity-resolver@0.1.15':
-    resolution: {integrity: sha512-3ABob5iUDoFL85I8/pJE4wncz3148fADoxNVAdksyACxxjpH1GNhSYNyIpRpdMCJ/kjj69DM9rggumTHqnD/Xg==}
+  '@atproto-labs/identity-resolver@0.1.16':
+    resolution: {integrity: sha512-pFrtKT49cYBhCDd2U1t/CcUBiMmQzaNQxh8oSkDUlGs/K3P8rJFTAGAMm8UjokfGEKwF4hX9oo7O8Kn+GkyExw==}
 
   '@atproto-labs/pipe@0.1.0':
     resolution: {integrity: sha512-ghOqHFyJlQVFPESzlVHjKroP0tPzbmG5Jms0dNI9yLDEfL8xp4OFPWLX4f6T8mRq69wWs4nIDM3sSsFbFqLa1w==}
 
-  '@atproto-labs/simple-store-memory@0.1.2':
-    resolution: {integrity: sha512-q6wawjKKXuhUzr2MnkSlgr6zU6VimYkL8eNvLQvkroLnIDyMkoCKO4+EJ885ZD8lGwBo4pX9Lhrg9JJ+ncJI8g==}
+  '@atproto-labs/simple-store-memory@0.1.3':
+    resolution: {integrity: sha512-jkitT9+AtU+0b28DoN92iURLaCt/q/q4yX8q6V+9LSwYlUTqKoj/5NFKvF7x6EBuG+gpUdlcycbH7e60gjOhRQ==}
 
   '@atproto-labs/simple-store@0.1.2':
     resolution: {integrity: sha512-9vTNvyPPBs44tKVFht16wGlilW8u4wpEtKwLkWbuNEh3h9TTQ8zjVhEoGZh/v73G4Otr9JUOSIq+/5+8OZD2mQ==}
+
+  '@atproto-labs/simple-store@0.2.0':
+    resolution: {integrity: sha512-0bRbAlI8Ayh03wRwncAMEAyUKtZ+AuTS1jgPrfym1WVOAOiottI/ZmgccqLl6w5MbxVcClNQF7WYGKvGwGoIhA==}
 
   '@atproto/api@0.14.16':
     resolution: {integrity: sha512-xzUK3KVdp1TDJJ09Di2rvS/fisVctvMHO7Er0XhYviL3V4lxGQPNT3pHwbTbbb22QP7xH/d5ghCgfdIoS5Z8/A==}
 
   '@atproto/common-web@0.4.0':
     resolution: {integrity: sha512-ZYL0P9myHybNgwh/hBY0HaBzqiLR1B5/ie5bJpLQAg0whRzNA28t8/nU2vh99tbsWcAF0LOD29M8++LyENJLNQ==}
+
+  '@atproto/common-web@0.4.2':
+    resolution: {integrity: sha512-vrXwGNoFGogodjQvJDxAeP3QbGtawgZute2ed1XdRO0wMixLk3qewtikZm06H259QDJVu6voKC5mubml+WgQUw==}
 
   '@atproto/crypto@0.4.4':
     resolution: {integrity: sha512-Yq9+crJ7WQl7sxStVpHgie5Z51R05etaK9DLWYG/7bR5T4bhdcIgF6IfklLShtZwLYdVVj+K15s0BqW9a8PSDA==}
@@ -298,33 +307,39 @@ packages:
   '@atproto/did@0.1.5':
     resolution: {integrity: sha512-8+1D08QdGE5TF0bB0vV8HLVrVZJeLNITpRTUVEoABNMRaUS7CoYSVb0+JNQDeJIVmqMjOL8dOjvCUDkp3gEaGQ==}
 
-  '@atproto/jwk-jose@0.1.5':
-    resolution: {integrity: sha512-piYZ3ohKhRiGlD6/bZCV/Ed3lIi7CVd6txbofEHik22EkYWK0nWKoEriCUSTssSylwFzeOq2r31Ut16WcJoghw==}
+  '@atproto/jwk-jose@0.1.6':
+    resolution: {integrity: sha512-r4DGMvvmazy6CxqAcnplpUxvp6Vd8UwKxQBZRpmm1aNsVonf5qj1yeDkECTiwoe/FPbvtdamlzClB3UZc7Yb5w==}
 
-  '@atproto/jwk-webcrypto@0.1.5':
-    resolution: {integrity: sha512-xsX8cJO6rBakLz8zNKenuKIbjoTeaiMi/ETOFFYGtlMlk1grdxDOe6OGpCmUDXaOiYWu3x5K5Hc4J9ooI/4nRg==}
+  '@atproto/jwk-webcrypto@0.1.6':
+    resolution: {integrity: sha512-mxWHOvlg+HGohldfiaon1fNsr7iDvKrTrkV0/ZvymWRzxsDFPCon1hu8OtKLXUVgLh+IzDJT1D79I4fBSo4pog==}
 
-  '@atproto/jwk@0.1.4':
-    resolution: {integrity: sha512-dSRuEi0FbxL5ln6hEFHp5ZW01xbQH9yJi5odZaEYpcA6beZHf/bawlU12CQy/CDsbC3FxSqrBw7Q2t7mvdSBqw==}
+  '@atproto/jwk@0.1.5':
+    resolution: {integrity: sha512-OzZFLhX41TOcMeanP3aZlL5bLeaUIZT15MI4aU5cwflNq/rwpGOpz3uwDjZc8ytgUjuTQ8LabSz5jMmwoTSWFg==}
+
+  '@atproto/lexicon@0.4.11':
+    resolution: {integrity: sha512-btefdnvNz2Ao2I+qbmj0F06HC8IlrM/IBz6qOBS50r0S6uDf5tOO+Mv2tSVdimFkdzyDdLtBI1sV36ONxz2cOw==}
 
   '@atproto/lexicon@0.4.9':
     resolution: {integrity: sha512-/tmEuHQFr51V2V7EAVJzaA40sqJ7ylAZpR962VbOsPtmcdOHvezbjVHYEMXgfb927hS+xqbVyzBTbu5w9v8prA==}
 
-  '@atproto/oauth-client-node@0.2.13':
-    resolution: {integrity: sha512-4p5waYW1ndf1uKOk6PTpyxcM+Q6SSzpYl6sjCMR/1KGExZmPzQ8CDoCumVSqrAgznuaTsaAqS5Ful6mOaL8jxQ==}
+  '@atproto/oauth-client-node@0.2.17':
+    resolution: {integrity: sha512-mPaBEZlsEAhUvhr958tPrQA4T+wDv4I6MLPTF7QNzTG1n/kP2LEIStq1Y63UVDwEqTS16LnpsZodu3QZnrNxXg==}
     engines: {node: '>=18.7.0'}
 
-  '@atproto/oauth-client@0.3.12':
-    resolution: {integrity: sha512-tDQzq/6PNspWeHBrYGZ+LU7t7PM/+0Ealk8V2PUfncGObLz0iPDS4RbWAzy0GH1foee1qIfRdiiKiEymMGIZDw==}
+  '@atproto/oauth-client@0.3.16':
+    resolution: {integrity: sha512-AEtGLOXRJzBcBa8LyUXwFf/M7cZc+CcOBjLsiqmVQriSwccfyTkALgiyM0UcRHJqlwtLPuf9RYtgKPc8rW5F/w==}
 
-  '@atproto/oauth-types@0.2.4':
-    resolution: {integrity: sha512-V2LnlXi1CSmBQWTQgDm8l4oN7xYxlftVwM7hrvYNP+Jxo3Ozfe0QLK1Wy/CH6/ZqzrBBhYvcbf4DJYTUwPA+hw==}
+  '@atproto/oauth-types@0.2.7':
+    resolution: {integrity: sha512-2SlDveiSI0oowC+sfuNd/npV8jw/FhokSS26qyUyldTg1g9ZlhxXUfMP4IZOPeZcVn9EszzQRHs1H9ZJqVQIew==}
 
   '@atproto/syntax@0.4.0':
     resolution: {integrity: sha512-b9y5ceHS8YKOfP3mdKmwAx5yVj9294UN7FG2XzP6V5aKUdFazEYRnR9m5n5ZQFKa3GNvz7de9guZCJ/sUTcOAA==}
 
   '@atproto/xrpc@0.6.11':
     resolution: {integrity: sha512-J2cZP8FjoDN0UkyTYBlCvKvxwBbDm4dld47u6FQK30RJy9YpSiUkdxJJ10NYqpi7JVny3M0qWQgpWJDV94+PdA==}
+
+  '@atproto/xrpc@0.7.0':
+    resolution: {integrity: sha512-SfhP9dGx2qclaScFDb58Jnrmim5nk4geZXCqg6sB0I/KZhZEkr9iIx1hLCp+sxkIfEsmEJjeWO4B0rjUIJW5cw==}
 
   '@aws-crypto/sha256-browser@5.2.0':
     resolution: {integrity: sha512-AXfN/lGotSQwu6HNcEsIASo7kWXZ5HYWvfOmSNKDsEqC4OashTp8alTmaz+F7TC2L083SFv5RdB+qU3Vs1kZqw==}
@@ -6473,12 +6488,12 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@atproto-labs/did-resolver@0.1.11':
+  '@atproto-labs/did-resolver@0.1.12':
     dependencies:
       '@atproto-labs/fetch': 0.2.2
       '@atproto-labs/pipe': 0.1.0
-      '@atproto-labs/simple-store': 0.1.2
-      '@atproto-labs/simple-store-memory': 0.1.2
+      '@atproto-labs/simple-store': 0.2.0
+      '@atproto-labs/simple-store-memory': 0.1.3
       '@atproto/did': 0.1.5
       zod: 3.24.2
 
@@ -6494,33 +6509,35 @@ snapshots:
     dependencies:
       '@atproto-labs/pipe': 0.1.0
 
-  '@atproto-labs/handle-resolver-node@0.1.14':
+  '@atproto-labs/handle-resolver-node@0.1.15':
     dependencies:
       '@atproto-labs/fetch-node': 0.1.8
-      '@atproto-labs/handle-resolver': 0.1.7
+      '@atproto-labs/handle-resolver': 0.1.8
       '@atproto/did': 0.1.5
 
-  '@atproto-labs/handle-resolver@0.1.7':
+  '@atproto-labs/handle-resolver@0.1.8':
     dependencies:
-      '@atproto-labs/simple-store': 0.1.2
-      '@atproto-labs/simple-store-memory': 0.1.2
+      '@atproto-labs/simple-store': 0.2.0
+      '@atproto-labs/simple-store-memory': 0.1.3
       '@atproto/did': 0.1.5
       zod: 3.24.2
 
-  '@atproto-labs/identity-resolver@0.1.15':
+  '@atproto-labs/identity-resolver@0.1.16':
     dependencies:
-      '@atproto-labs/did-resolver': 0.1.11
-      '@atproto-labs/handle-resolver': 0.1.7
+      '@atproto-labs/did-resolver': 0.1.12
+      '@atproto-labs/handle-resolver': 0.1.8
       '@atproto/syntax': 0.4.0
 
   '@atproto-labs/pipe@0.1.0': {}
 
-  '@atproto-labs/simple-store-memory@0.1.2':
+  '@atproto-labs/simple-store-memory@0.1.3':
     dependencies:
-      '@atproto-labs/simple-store': 0.1.2
+      '@atproto-labs/simple-store': 0.2.0
       lru-cache: 10.4.3
 
   '@atproto-labs/simple-store@0.1.2': {}
+
+  '@atproto-labs/simple-store@0.2.0': {}
 
   '@atproto/api@0.14.16':
     dependencies:
@@ -6540,6 +6557,13 @@ snapshots:
       uint8arrays: 3.0.0
       zod: 3.24.2
 
+  '@atproto/common-web@0.4.2':
+    dependencies:
+      graphemer: 1.4.0
+      multiformats: 9.9.0
+      uint8arrays: 3.0.0
+      zod: 3.24.2
+
   '@atproto/crypto@0.4.4':
     dependencies:
       '@noble/curves': 1.8.1
@@ -6550,19 +6574,27 @@ snapshots:
     dependencies:
       zod: 3.24.2
 
-  '@atproto/jwk-jose@0.1.5':
+  '@atproto/jwk-jose@0.1.6':
     dependencies:
-      '@atproto/jwk': 0.1.4
+      '@atproto/jwk': 0.1.5
       jose: 5.9.6
 
-  '@atproto/jwk-webcrypto@0.1.5':
+  '@atproto/jwk-webcrypto@0.1.6':
     dependencies:
-      '@atproto/jwk': 0.1.4
-      '@atproto/jwk-jose': 0.1.5
+      '@atproto/jwk': 0.1.5
+      '@atproto/jwk-jose': 0.1.6
       zod: 3.24.2
 
-  '@atproto/jwk@0.1.4':
+  '@atproto/jwk@0.1.5':
     dependencies:
+      multiformats: 9.9.0
+      zod: 3.24.2
+
+  '@atproto/lexicon@0.4.11':
+    dependencies:
+      '@atproto/common-web': 0.4.2
+      '@atproto/syntax': 0.4.0
+      iso-datestring-validator: 2.2.2
       multiformats: 9.9.0
       zod: 3.24.2
 
@@ -6574,36 +6606,36 @@ snapshots:
       multiformats: 9.9.0
       zod: 3.24.2
 
-  '@atproto/oauth-client-node@0.2.13':
+  '@atproto/oauth-client-node@0.2.17':
     dependencies:
-      '@atproto-labs/did-resolver': 0.1.11
-      '@atproto-labs/handle-resolver-node': 0.1.14
-      '@atproto-labs/simple-store': 0.1.2
+      '@atproto-labs/did-resolver': 0.1.12
+      '@atproto-labs/handle-resolver-node': 0.1.15
+      '@atproto-labs/simple-store': 0.2.0
       '@atproto/did': 0.1.5
-      '@atproto/jwk': 0.1.4
-      '@atproto/jwk-jose': 0.1.5
-      '@atproto/jwk-webcrypto': 0.1.5
-      '@atproto/oauth-client': 0.3.12
-      '@atproto/oauth-types': 0.2.4
+      '@atproto/jwk': 0.1.5
+      '@atproto/jwk-jose': 0.1.6
+      '@atproto/jwk-webcrypto': 0.1.6
+      '@atproto/oauth-client': 0.3.16
+      '@atproto/oauth-types': 0.2.7
 
-  '@atproto/oauth-client@0.3.12':
+  '@atproto/oauth-client@0.3.16':
     dependencies:
-      '@atproto-labs/did-resolver': 0.1.11
+      '@atproto-labs/did-resolver': 0.1.12
       '@atproto-labs/fetch': 0.2.2
-      '@atproto-labs/handle-resolver': 0.1.7
-      '@atproto-labs/identity-resolver': 0.1.15
-      '@atproto-labs/simple-store': 0.1.2
-      '@atproto-labs/simple-store-memory': 0.1.2
+      '@atproto-labs/handle-resolver': 0.1.8
+      '@atproto-labs/identity-resolver': 0.1.16
+      '@atproto-labs/simple-store': 0.2.0
+      '@atproto-labs/simple-store-memory': 0.1.3
       '@atproto/did': 0.1.5
-      '@atproto/jwk': 0.1.4
-      '@atproto/oauth-types': 0.2.4
-      '@atproto/xrpc': 0.6.11
+      '@atproto/jwk': 0.1.5
+      '@atproto/oauth-types': 0.2.7
+      '@atproto/xrpc': 0.7.0
       multiformats: 9.9.0
       zod: 3.24.2
 
-  '@atproto/oauth-types@0.2.4':
+  '@atproto/oauth-types@0.2.7':
     dependencies:
-      '@atproto/jwk': 0.1.4
+      '@atproto/jwk': 0.1.5
       zod: 3.24.2
 
   '@atproto/syntax@0.4.0': {}
@@ -6611,6 +6643,11 @@ snapshots:
   '@atproto/xrpc@0.6.11':
     dependencies:
       '@atproto/lexicon': 0.4.9
+      zod: 3.24.2
+
+  '@atproto/xrpc@0.7.0':
+    dependencies:
+      '@atproto/lexicon': 0.4.11
       zod: 3.24.2
 
   '@aws-crypto/sha256-browser@5.2.0':

@@ -28,7 +28,7 @@ export const createSnapshotForBackup = async (
     throw new Error('Failed to create snapshot')
   }
 
-  const atpClient = createAtprotoClient({
+  const atpClient = await createAtprotoClient({
     account,
   })
   const atpSession = await atpClient.restore(backup.atprotoAccount)

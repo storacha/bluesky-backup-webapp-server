@@ -1,3 +1,4 @@
+import { JoseKey } from '@atproto/jwk-jose'
 import {
   NodeOAuthClient,
   OAuthClientMetadataInput,
@@ -9,6 +10,8 @@ import urlJoin from 'proper-url-join'
 // as any updates happen.
 import { getStorageContext, KVNamespace } from '@/lib/server/db'
 
+import { getConstants } from './server/constants'
+
 import type { SimpleStore, Value } from '@atproto-labs/simple-store'
 
 const atprotoClientUri = process.env.NEXT_PUBLIC_APP_URI
@@ -18,8 +21,7 @@ if (!atprotoClientUri) {
 }
 
 class Store<K extends string, V extends Value = Value>
-  implements SimpleStore<K, V>
-{
+  implements SimpleStore<K, V> {
   constructor(
     private readonly kvStore: KVNamespace,
     private readonly account: string,
@@ -28,62 +30,65 @@ class Store<K extends string, V extends Value = Value>
 
   // `!` seems like a safe delimiter for the account and key, as it shouldn't be
   // in a DID.
-  private makeKey(key: string) {
+  private makeKey (key: string) {
     return `${this.account}!${key}`
   }
 
-  async set(key: K, internalState: V): Promise<void> {
+  async set (key: K, internalState: V): Promise<void> {
     this.kvStore.put(this.makeKey(key), JSON.stringify(internalState), {
       expirationTtl: this.expirationTtl,
     })
   }
-  async get(key: K) {
+  async get (key: K) {
     const jsonValue = await this.kvStore.get(this.makeKey(key))
     if (jsonValue) {
       return JSON.parse(jsonValue)
     }
   }
-  async del(key: K) {
+  async del (key: K) {
     this.kvStore.delete(this.makeKey(key))
   }
 }
 
-export const blueskyClientMetadata = ({
+export const blueskyClientMetadata = async ({
   account,
 }: {
   account: string
-}): OAuthClientMetadataInput => ({
-  client_id: urlJoin(
-    atprotoClientUri,
-    'atproto',
-    'oauth-client-metadata',
-    encodeURIComponent(account)
-  ),
-  client_name: 'Storacha Bluesky Backups',
-  client_uri: atprotoClientUri,
-  application_type: 'web',
-  grant_types: ['authorization_code', 'refresh_token'],
-  response_types: ['code'],
-  redirect_uris: [urlJoin(atprotoClientUri, 'atproto', 'callback')],
-  token_endpoint_auth_method: 'none',
-  scope: 'atproto transition:generic',
-  dpop_bound_access_tokens: true,
-})
+}): Promise<OAuthClientMetadataInput> => {
+  //const { TOKEN_ENDPOINT_PRIVATE_KEY_JWK } = getConstants()
+  return {
+    client_id: urlJoin(atprotoClientUri, 'atproto', 'oauth-client-metadata', encodeURIComponent(account)),
+    client_name: 'Storacha Bluesky Backups',
+    client_uri: atprotoClientUri,
+    application_type: 'web',
+    grant_types: ['authorization_code', 'refresh_token'],
+    response_types: ['code'],
+    redirect_uris: [urlJoin(atprotoClientUri, 'atproto', 'callback')],
+    token_endpoint_auth_method: 'private_key_jwt',
+    token_endpoint_auth_signing_alg: "ES256",
+    scope: 'atproto transition:generic',
+    dpop_bound_access_tokens: true,
+    jwks_uri: urlJoin(atprotoClientUri, 'atproto', 'oauth', 'jwks'),
 
-export const createClient = ({ account }: { account: string }) => {
+    // jwks: {
+    //   keys: [
+    //     (await JoseKey.fromImportable(TOKEN_ENDPOINT_PRIVATE_KEY_JWK))
+    //       .publicJwk!,
+    //   ],
+    // },
+  }
+}
+
+export const createClient = async ({ account }: { account: string }) => {
+  const { TOKEN_ENDPOINT_PRIVATE_KEY_JWK } = getConstants()
   const { authSessionStore, authStateStore } = getStorageContext()
-
   const client = new NodeOAuthClient({
-    clientMetadata: blueskyClientMetadata({ account }),
+    clientMetadata: await blueskyClientMetadata({ account }),
 
     // TODO: Keys
     // Used to authenticate the client to the token endpoint. Will be used to
     // build the jwks object to be exposed on the "jwks_uri" endpoint.
-    // keyset: await Promise.all([
-    //   JoseKey.fromImportable(process.env.PRIVATE_KEY_1),
-    //   JoseKey.fromImportable(process.env.PRIVATE_KEY_2),
-    //   JoseKey.fromImportable(process.env.PRIVATE_KEY_3),
-    // ]),
+    keyset: [await JoseKey.fromImportable(TOKEN_ENDPOINT_PRIVATE_KEY_JWK)],
 
     stateStore: new Store(authStateStore, account, 60 * 60),
     sessionStore: new Store(authSessionStore, account),

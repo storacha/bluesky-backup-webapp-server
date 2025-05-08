@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       status: 400,
     })
   }
-  const client = createClient({ account })
+  const client = await createClient({ account })
 
   const { session } = await client.callback(request.nextUrl.searchParams)
   const agent = new Agent(session)

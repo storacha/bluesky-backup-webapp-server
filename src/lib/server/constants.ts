@@ -1,4 +1,5 @@
 let cachedConstants: {
+  TOKEN_ENDPOINT_PRIVATE_KEY_JWK: string
   SERVER_IDENTITY_PRIVATE_KEY: string
   SESSION_PASSWORD: string
   SESSION_COOKIE_NAME: string
@@ -8,6 +9,10 @@ export const getConstants = () => {
   if (cachedConstants) {
     return cachedConstants
   }
+  if (!process.env.TOKEN_ENDPOINT_PRIVATE_KEY_JWK)
+    throw new Error('TOKEN_ENDPOINT_PRIVATE_KEY_JWK must be set')
+  const TOKEN_ENDPOINT_PRIVATE_KEY_JWK =
+    process.env.TOKEN_ENDPOINT_PRIVATE_KEY_JWK
   if (!process.env.SERVER_IDENTITY_PRIVATE_KEY)
     throw new Error('SERVER_IDENTITY_PRIVATE_KEY must be set')
   const SERVER_IDENTITY_PRIVATE_KEY = process.env.SERVER_IDENTITY_PRIVATE_KEY
@@ -25,6 +30,7 @@ export const getConstants = () => {
     )
   }
   cachedConstants = {
+    TOKEN_ENDPOINT_PRIVATE_KEY_JWK,
     SERVER_IDENTITY_PRIVATE_KEY,
     SESSION_PASSWORD,
     SESSION_COOKIE_NAME,
