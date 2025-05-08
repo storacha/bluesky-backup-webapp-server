@@ -24,6 +24,8 @@ on:
         required: true
       region:
         required: true
+      atproto-jwk:
+        required: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ inputs.workspace }}-${{ github.event.pull_request.number || github.ref }}
