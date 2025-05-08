@@ -192,6 +192,10 @@ export interface BBDatabase {
   findScheduledBackups: () => Promise<{ results: Backup[] }>
   addBackup: (input: BackupInput) => Promise<Backup>
   addBlob: (input: ATBlobInput) => Promise<ATBlob>
+  getBlobInBackup: (
+    cid: string,
+    backupId: string
+  ) => Promise<{ result: ATBlob | undefined }>
   findBlobsForBackup: (id: string) => Promise<{ results: ATBlob[] }>
   findBlobsForSnapshot: (id: string) => Promise<{ results: ATBlob[] }>
 }
@@ -208,9 +212,8 @@ export function getStorageContext(): StorageContext {
     authStateStore: newKvNamespace('auth_states'),
     db: {
       async addBlob(input) {
-        console.log('inserting', input)
         const results = await sql<ATBlob[]>`
-        insert into blobs ${sql(input)}
+        insert into at_blobs ${sql(input)}
         returning *
       `
         if (!results[0]) {
@@ -219,16 +222,21 @@ export function getStorageContext(): StorageContext {
         return results[0]
       },
 
+      async getBlobInBackup(cid: string, backupId: string) {
+        const [result] = await sql<ATBlob[]>`
+          select *
+          from at_blobs
+          where cid = ${cid}
+          and backup_id = ${backupId}
+        `
+        return { result }
+      },
+
       async findBlobsForBackup(id) {
         if (!validateUUID(id)) return { results: [] }
 
         const results = await sql<ATBlob[]>`
-          select
-            cid,
-            backup_id,
-            snapshot_id,
-            created_at
-          from blobs
+          select * from at_blobs
           where backup_id = ${id}
           `
         return {
@@ -240,12 +248,7 @@ export function getStorageContext(): StorageContext {
         if (!validateUUID(id)) return { results: [] }
 
         const results = await sql<ATBlob[]>`
-          select
-            cid,
-            backup_id,
-            snapshot_id,
-            created_at
-          from blobs
+          select * from at_blobs
           where snapshot_id = ${id}
           `
         return {
