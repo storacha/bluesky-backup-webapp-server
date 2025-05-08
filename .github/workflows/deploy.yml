@@ -41,6 +41,7 @@ jobs:
       aws-region: ${{ secrets.STAGING_AWS_REGION }}
       region: ${{ secrets.STAGING_AWS_REGION }}
       private-key: ${{ secrets.STAGING_PRIVATE_KEY }}
+      atproto-jwk: ${{ secrets.STAGING_ATPROTO_JWK }}
 
   # apply prod on successful release, plan otherwise
   production:
@@ -59,3 +60,4 @@ jobs:
       aws-region: ${{ secrets.PROD_AWS_REGION }}
       region: ${{ secrets.PROD_AWS_REGION }}
       private-key: ${{ secrets.PROD_PRIVATE_KEY }}
+      atproto-jwk: ${{ secrets.PROD_ATPROTO_JWK }}

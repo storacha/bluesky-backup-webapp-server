@@ -35,6 +35,7 @@ env:
   ENV: ${{ inputs.env }}
   TF_WORKSPACE: ${{ inputs.workspace }}
   TF_VAR_private_key: ${{ secrets.private-key }}
+  TF_VAR_atproto_jwk: ${{ secrets.atproto-jwk }}
   TF_VAR_did: ${{ inputs.did }}
   TF_VAR_app: bluesky
   TF_VAR_domain_base: bsky.storage
