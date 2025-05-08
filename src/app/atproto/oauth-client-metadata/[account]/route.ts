@@ -5,5 +5,5 @@ export async function GET(
   { params }: { params: Promise<{ account: string }> }
 ) {
   const { account } = await params
-  return Response.json(blueskyClientMetadata({ account }))
+  return Response.json(await blueskyClientMetadata({ account }))
 }
