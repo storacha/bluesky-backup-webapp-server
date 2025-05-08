@@ -1,6 +1,7 @@
 import { Did } from '@atproto/api'
 
 import { useSWR } from '@/lib/swr'
+import { ProfileData } from '@/types'
 
 export const useProfile = (did: Did) => {
   const { data, error, isLoading } = useSWR([
@@ -11,6 +12,6 @@ export const useProfile = (did: Did) => {
   return {
     error,
     isLoading,
-    profile: data,
+    profile: data as unknown as ProfileData,
   }
 }

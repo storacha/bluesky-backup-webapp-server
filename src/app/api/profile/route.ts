@@ -1,6 +1,7 @@
-import { Did } from '@atproto/api'
+import { Agent as AtprotoAgent, Did } from '@atproto/api'
 import { NextRequest, NextResponse } from 'next/server'
 
+import { createClient } from '@/lib/atproto'
 import { ProfileData } from '@/types'
 
 export async function GET(request: NextRequest) {
@@ -41,6 +42,21 @@ async function getPublicProfile(did: Did): Promise<ProfileData | null> {
       )
       const profileHandle = handle ? handle.replace('at://', '') : null
       if (!handle) return { did, handle: 'unknown' }
+
+      try {
+        const client = createClient({ account: did })
+        const atpSession = await client.restore(did)
+        const atpAgent = new AtprotoAgent(atpSession)
+
+        if (!did) throw new Error('No bacKUP DID supplied')
+
+        const profile = await atpAgent.app.bsky.actor.getProfile({ actor: did })
+        console.log('agent profile', profile)
+        // 'session was deleted by another process', circle back to this later
+      } catch (error) {
+        console.error(error)
+      }
+
       return { did, handle: profileHandle }
     } else if (did.startsWith('did:web')) {
       const domain = did.replace('did:web', '').replace(/%3A/g, ':')

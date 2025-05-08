@@ -35,6 +35,9 @@ export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
   right: ${({ $right = '' }) => $right};
   left: ${({ $left = '' }) => $left};
   bottom: ${({ $bottom = '' }) => $bottom};
+  flex-direction: ${({ $flexDirection = '' }) => $flexDirection};
+  border: ${({ $border = '' }) => $border};
+  border-bottom: ${({ $borderBottom = '' }) => $borderBottom};
 `
 
 // export const Flex = styled.div<Partial<StyleProps>>`

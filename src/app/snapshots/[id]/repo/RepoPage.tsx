@@ -23,7 +23,7 @@ export default function RepoPage({ id }: { id: string }) {
         {loading ? (
           <p>Loading repository data...</p>
         ) : (
-          <Stack>
+          <Stack $gap=".8rem">
             <DetailName>Repository Stats</DetailName>
             <Posts repositoryDid={snapshot.atprotoAccount} posts={repo.posts} />
           </Stack>
