@@ -48,8 +48,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
       '@storacha/client':
-        specifier: ^1.2.6
-        version: 1.2.6(encoding@0.1.13)
+        specifier: ^1.2.8
+        version: 1.2.8(encoding@0.1.13)
       '@storacha/ui-react':
         specifier: ^2.6.9
         version: 2.6.9(@types/react@18.3.18)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2833,10 +2833,6 @@ packages:
   '@storacha/capabilities@1.4.0':
     resolution: {integrity: sha512-bwJAYFUHWZV/2oeuu1JX5NhlRmaY2ClOCnz9do1V2Teaa4hg3folOvzygjX7F9xX+jLcTwtrE5oFXlqjuOhKXA==}
 
-  '@storacha/client@1.2.6':
-    resolution: {integrity: sha512-8uB5dPwVBjtY3fg4ENBjLfyTBJy9jFY9w6NTBpvMPBoc40iKgNQq7tmFE7S/FqxMIkizh1UYRq7+uf/Y+7pqdg==}
-    engines: {node: '>=18'}
-
   '@storacha/client@1.2.8':
     resolution: {integrity: sha512-yPRs+p1KsdUtg5CQdgyfKJd3lz6znqjHLzsmasVW4FVvd3+GnEBXzg+4yS3HeujB9wKLCTn8mqWF70q1jyGqmg==}
     engines: {node: '>=18'}
@@ -2858,9 +2854,6 @@ packages:
     resolution: {integrity: sha512-fFV+ElLFO18pZJy6LIM994gLnGKasBB5PoLQUiQ+Jxvn0sCN2bW1sJhmUzxUjWjTMgvpobh7xWigS3QIiKHOVA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
-
-  '@storacha/upload-client@1.0.9':
-    resolution: {integrity: sha512-hW0LwhVb22FfmttuaJ1JK6Zw0/02OVS0TiBtmQCoPEhY3C1e/muZ2OYkzbeK2i+hGUUCI+s2l/JyzOIiVWKsjw==}
 
   '@storacha/upload-client@1.1.1':
     resolution: {integrity: sha512-zUasr64X/SgkWyvyKxZavlPX8CdyTHHtQgrXsFRt68PmrJxs2/3BaJk4JfQ0nJRl/d2c0nxbo/Qbj2Zr5idsug==}
@@ -10157,24 +10150,6 @@ snapshots:
       '@web3-storage/data-segment': 5.3.0
       uint8arrays: 5.1.0
 
-  '@storacha/client@1.2.6(encoding@0.1.13)':
-    dependencies:
-      '@ipld/dag-ucan': 3.4.5
-      '@storacha/access': 1.1.1
-      '@storacha/blob-index': 1.0.5
-      '@storacha/capabilities': 1.4.0
-      '@storacha/did-mailto': 1.0.2
-      '@storacha/filecoin-client': 1.0.6
-      '@storacha/upload-client': 1.0.9(encoding@0.1.13)
-      '@ucanto/client': 9.0.1
-      '@ucanto/core': 10.3.1
-      '@ucanto/interface': 10.2.0
-      '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.2.0
-      environment: 1.1.0
-    transitivePeerDependencies:
-      - encoding
-
   '@storacha/client@1.2.8(encoding@0.1.13)':
     dependencies:
       '@ipld/dag-ucan': 3.4.5
@@ -10230,27 +10205,6 @@ snapshots:
       - '@types/react'
       - encoding
       - react-dom
-
-  '@storacha/upload-client@1.0.9(encoding@0.1.13)':
-    dependencies:
-      '@ipld/car': 5.4.0
-      '@ipld/dag-cbor': 9.2.2
-      '@ipld/dag-ucan': 3.4.5
-      '@ipld/unixfs': 3.0.0
-      '@storacha/blob-index': 1.0.5
-      '@storacha/capabilities': 1.4.0
-      '@storacha/filecoin-client': 1.0.6
-      '@ucanto/client': 9.0.1
-      '@ucanto/core': 10.3.1
-      '@ucanto/interface': 10.2.0
-      '@ucanto/transport': 9.2.0
-      '@web3-storage/data-segment': 5.3.0
-      ipfs-utils: 9.0.14(encoding@0.1.13)
-      multiformats: 13.3.2
-      p-retry: 5.1.2
-      varint: 6.0.0
-    transitivePeerDependencies:
-      - encoding
 
   '@storacha/upload-client@1.1.1(encoding@0.1.13)':
     dependencies:
