@@ -166,7 +166,7 @@ const unlock = async (key: string, lockId: string) => {
   if (lockholder === lockId) {
     await requestLockKv.delete(key)
   }
-  // otherwise we don't have the lock, so fail
+  // otherwise we don't have the lock, so fail silently, it's fine (maybe?)
 }
 export const requestLock: RuntimeLock = async (key, fn) => {
   const lockId = await lock(key)
