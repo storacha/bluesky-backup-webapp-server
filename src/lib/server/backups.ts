@@ -76,6 +76,15 @@ export const createSnapshotForBackup = async (
   return snapshot
 }
 
+async function isBlobAlreadyBackedUp (db: BBDatabase, cid: string, backupId?: string) {
+  if (backupId) {
+    const { result: existingBlob } = await db.getBlobInBackup(cid, backupId)
+    return Boolean(existingBlob)
+  } else {
+    return false
+  }
+}
+
 interface BackupOptions {
   backupId?: string
 }
@@ -134,9 +143,8 @@ const doSnapshot = async (
         })
         // TODO handle blobsRes.success == false
         for (const cid of blobsRes.data.cids) {
-          const { result: existingBlob } = await db.getBlob(cid)
           // only try to sync this blob if we've seen it before
-          if (!existingBlob) {
+          if (!isBlobAlreadyBackedUp(db, cid, options.backupId)) {
             const blobRes = await atpAgent.com.atproto.sync.getBlob({
               did: atpAgent.did,
               cid,
