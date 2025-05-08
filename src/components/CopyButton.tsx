@@ -4,7 +4,7 @@ import {
   ClipboardDocumentIcon,
 } from '@heroicons/react/20/solid'
 import { useEffect, useState } from 'react'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { CopyToClipboard } from 'react-copy-to-clipboard-ts'
 
 interface CopyButtonProps {
   text: string
