@@ -4,7 +4,7 @@ import { Capabilities } from '@ipld/dag-ucan'
 import * as SpaceBlob from '@storacha/capabilities/space/blob'
 import * as SpaceIndex from '@storacha/capabilities/space/index'
 import * as Upload from '@storacha/capabilities/upload'
-import { Client } from '@storacha/client'
+import { type Client } from '@storacha/ui-react'
 import { Delegation } from '@ucanto/core'
 
 import { SERVER_DID } from './constants'

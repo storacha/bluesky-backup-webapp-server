@@ -2,7 +2,7 @@
 
 import { Agent as AtprotoAgent } from '@atproto/api'
 import { AgentData } from '@storacha/access/agent'
-import { Client as StorachaClient } from '@storacha/client'
+import { Client as StorachaClient } from '@storacha/ui-react'
 import { Delegation, DID, Signer } from '@ucanto/interface'
 
 import { receiptsEndpoint, serviceConnection } from '@/components/services'
