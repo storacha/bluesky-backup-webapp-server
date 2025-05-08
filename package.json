@@ -37,7 +37,7 @@
     "@sentry/nextjs": "^9.10.1",
     "@storacha/access": "^1.1.1",
     "@storacha/capabilities": "^1.4.0",
-    "@storacha/client": "^1.2.6",
+    "@storacha/client": "^1.2.8",
     "@storacha/ui-react": "^2.6.9",
     "@ucanto/client": "^9.0.1",
     "@ucanto/core": "^10.3.1",
