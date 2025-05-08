@@ -21,7 +21,8 @@ if (!atprotoClientUri) {
 }
 
 class Store<K extends string, V extends Value = Value>
-  implements SimpleStore<K, V> {
+  implements SimpleStore<K, V>
+{
   constructor(
     private readonly kvStore: KVNamespace,
     private readonly account: string,
@@ -30,22 +31,22 @@ class Store<K extends string, V extends Value = Value>
 
   // `!` seems like a safe delimiter for the account and key, as it shouldn't be
   // in a DID.
-  private makeKey (key: string) {
+  private makeKey(key: string) {
     return `${this.account}!${key}`
   }
 
-  async set (key: K, internalState: V): Promise<void> {
+  async set(key: K, internalState: V): Promise<void> {
     this.kvStore.put(this.makeKey(key), JSON.stringify(internalState), {
       expirationTtl: this.expirationTtl,
     })
   }
-  async get (key: K) {
+  async get(key: K) {
     const jsonValue = await this.kvStore.get(this.makeKey(key))
     if (jsonValue) {
       return JSON.parse(jsonValue)
     }
   }
-  async del (key: K) {
+  async del(key: K) {
     this.kvStore.delete(this.makeKey(key))
   }
 }
@@ -57,7 +58,12 @@ export const blueskyClientMetadata = async ({
 }): Promise<OAuthClientMetadataInput> => {
   //const { TOKEN_ENDPOINT_PRIVATE_KEY_JWK } = getConstants()
   return {
-    client_id: urlJoin(atprotoClientUri, 'atproto', 'oauth-client-metadata', encodeURIComponent(account)),
+    client_id: urlJoin(
+      atprotoClientUri,
+      'atproto',
+      'oauth-client-metadata',
+      encodeURIComponent(account)
+    ),
     client_name: 'Storacha Bluesky Backups',
     client_uri: atprotoClientUri,
     application_type: 'web',
@@ -65,7 +71,7 @@ export const blueskyClientMetadata = async ({
     response_types: ['code'],
     redirect_uris: [urlJoin(atprotoClientUri, 'atproto', 'callback')],
     token_endpoint_auth_method: 'private_key_jwt',
-    token_endpoint_auth_signing_alg: "ES256",
+    token_endpoint_auth_signing_alg: 'ES256',
     scope: 'atproto transition:generic',
     dpop_bound_access_tokens: true,
     jwks_uri: urlJoin(atprotoClientUri, 'atproto', 'oauth', 'jwks'),
