@@ -19,8 +19,8 @@ variable "private_key" {
 }
 
 
-variable "atproto_jwk_key" {
-  description = "atproto_jwk_key to communicate with the atproto token endpoints"
+variable "atproto_jwk" {
+  description = "atproto_jwk to communicate with the atproto token endpoints"
   type = string
 }
 

@@ -75,7 +75,7 @@ module "app" {
 
     "SESSION_PASSWORD" = random_password.session_password.result
     
-    "TOKEN_ENDPOINT_PRIVATE_KEY_JWK" = var.atproto_jwk_key
+    "TOKEN_ENDPOINT_PRIVATE_KEY_JWK" = var.atproto_jwk
   }
   # enter any sqs queues you want to create here
   queues = []
