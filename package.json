@@ -21,6 +21,7 @@
     "build-storybook": "storybook build",
     "db:migrate": "node ./scripts/migrate.mjs",
     "db:dev:console": "psql --username admin --password bsky_backups_dev",
+    "atproto:generate-jwk": "node ./scripts/generate-jwk.mjs",
     "check-all": "pnpm run '/^(format:check|lint|knip|knip:production|typecheck|test|build)$/'"
   },
   "dependencies": {
