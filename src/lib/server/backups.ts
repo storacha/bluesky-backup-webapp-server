@@ -79,14 +79,10 @@ export const createSnapshotForBackup = async (
 async function isBlobAlreadyBackedUp(
   db: BBDatabase,
   cid: string,
-  backupId?: string
+  backupId: string
 ) {
-  if (backupId) {
-    const { result: existingBlob } = await db.getBlobInBackup(cid, backupId)
-    return Boolean(existingBlob)
-  } else {
-    return false
-  }
+  const { result: existingBlob } = await db.getBlobInBackup(cid, backupId)
+  return Boolean(existingBlob)
 }
 
 interface BackupOptions {
@@ -148,7 +144,10 @@ const doSnapshot = async (
         // TODO handle blobsRes.success == false
         for (const cid of blobsRes.data.cids) {
           // only try to sync this blob if we haven't seen it before
-          if (await isBlobAlreadyBackedUp(db, cid, options.backupId)) {
+          if (
+            options.backupId &&
+            (await isBlobAlreadyBackedUp(db, cid, options.backupId))
+          ) {
             console.log(
               `already backed up blob ${cid} for backup ${options.backupId}, skipping `
             )
