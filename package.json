@@ -54,6 +54,7 @@
     "next": "15.1.6",
     "next-yak": "^4.1.1",
     "nuqs": "^2.4.3",
+    "p-retry": "^6.2.1",
     "postgres": "^3.4.5",
     "proper-url-join": "^2.1.2",
     "react": "^18.0.0",
