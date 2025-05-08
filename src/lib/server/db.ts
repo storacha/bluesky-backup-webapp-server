@@ -1,4 +1,8 @@
+import { randomUUID } from 'node:crypto'
+
+import { RuntimeLock } from '@atproto/oauth-client-node'
 import { Signer } from '@aws-sdk/rds-signer'
+import retry from 'p-retry'
 import postgres from 'postgres'
 import { validate as validateUUID } from 'uuid'
 
@@ -131,6 +135,50 @@ function newKvNamespace(table: string): KVNamespace {
     `
       return { keys: results.map((r) => ({ name: r.key })) }
     },
+  }
+}
+
+interface SqlSemaphore {
+  lock: (key: string) => Promise<string>
+  unlock: (key: string, lockId: string) => Promise<void>
+}
+
+function newLock(table: string): SqlSemaphore {
+  const tableSql = sql(table)
+  return {
+    lock: async (key: string) => {
+      const value = randomUUID().toString()
+      await retry(
+        async () => {
+          await sql`
+            insert into ${tableSql} ( key, value )
+            values ( ${key}, ${value} )
+          `
+        },
+        {
+          // try for 30 seconds per the comment in the requestLock docs on
+          // https://www.npmjs.com/package/@atproto/oauth-client-node
+          maxRetryTime: 30 * 1000,
+        }
+      )
+      return value
+    },
+    unlock: async (key: string, lockId: string) => {
+      await sql`
+      delete from ${tableSql}
+      where key = ${key}
+      and value = ${lockId}`
+    },
+  }
+}
+
+const sem = newLock('refresh_locks')
+export const requestLock: RuntimeLock = async (key, fn) => {
+  const lockId = await sem.lock(key)
+  try {
+    return await fn()
+  } finally {
+    await sem.unlock(key, lockId)
   }
 }
 
