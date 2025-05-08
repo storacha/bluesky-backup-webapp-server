@@ -209,7 +209,6 @@ export function getStorageContext(): StorageContext {
     authStateStore: newKvNamespace('auth_states'),
     db: {
       async addBlob(input) {
-        console.log('inserting', input)
         const results = await sql<ATBlob[]>`
         insert into at_blobs ${sql(input)}
         returning *

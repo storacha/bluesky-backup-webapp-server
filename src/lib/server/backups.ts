@@ -144,7 +144,9 @@ const doSnapshot = async (
         // TODO handle blobsRes.success == false
         for (const cid of blobsRes.data.cids) {
           // only try to sync this blob if we've seen it before
-          if (!isBlobAlreadyBackedUp(db, cid, options.backupId)) {
+          if (await isBlobAlreadyBackedUp(db, cid, options.backupId)) {
+            console.log('already backed up blob', cid, 'for backup', options.backupId, ', skipping')
+          } else {
             const blobRes = await atpAgent.com.atproto.sync.getBlob({
               did: atpAgent.did,
               cid,
