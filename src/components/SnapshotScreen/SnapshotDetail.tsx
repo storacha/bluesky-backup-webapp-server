@@ -12,7 +12,7 @@ const Details = styled(Stack)`
   padding-left: 2rem;
 `
 
-export const DetailName = styled(SubHeading)`
+const DetailName = styled(SubHeading)`
   color: black;
 `
 
