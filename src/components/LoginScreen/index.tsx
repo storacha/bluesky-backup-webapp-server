@@ -47,6 +47,7 @@ export function LoginScreen() {
     props: { srcSet },
   } = getImageProps({
     alt: '',
+    // set this to the dimensions of the image itself to avoid scaling
     width: 1200,
     height: 630,
     src: '/bluesky-storacha.webp',
