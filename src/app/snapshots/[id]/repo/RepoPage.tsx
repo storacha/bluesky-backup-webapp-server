@@ -1,10 +1,18 @@
 'use client'
+import { Did } from '@atproto/api'
+import Link from 'next/link'
+import { styled } from 'next-yak'
+
 import { Sidebar } from '@/app/Sidebar'
 import { Posts } from '@/components/Posts'
-import { DetailName } from '@/components/SnapshotScreen/SnapshotDetail'
-import { Box, Stack } from '@/components/ui'
+import { Box, Heading, Stack } from '@/components/ui'
+import { useProfile } from '@/hooks/use-profile'
 import { useRepo } from '@/hooks/use-repo'
 import { useSWR } from '@/lib/swr'
+
+const NoTextTransform = styled.span`
+  text-transform: none;
+`
 
 export default function RepoPage({ id }: { id: string }) {
   const { data: snapshot, error } = useSWR(['api', `/api/snapshots/${id}`])
@@ -12,6 +20,7 @@ export default function RepoPage({ id }: { id: string }) {
   const { repo, loading } = useRepo({
     cid: snapshot?.repositoryCid || '',
   })
+  const { profile } = useProfile(snapshot?.atprotoAccount as Did)
 
   if (error) throw error
   if (!snapshot) return null
@@ -24,8 +33,23 @@ export default function RepoPage({ id }: { id: string }) {
           <p>Loading repository data...</p>
         ) : (
           <Stack $gap=".8rem">
-            <DetailName>Repository Stats</DetailName>
-            <Posts repositoryDid={snapshot.atprotoAccount} posts={repo.posts} />
+            <Heading>
+              Recent Posts
+              {profile && (
+                <>
+                  {' '}
+                  from{' '}
+                  <Link href={`https://bsky.app/profile/${profile?.handle}`} target="_blank">
+                    <NoTextTransform>@{profile?.handle}</NoTextTransform>
+                  </Link>
+                </>
+              )}{' '}
+              In This Snapshot
+            </Heading>
+            <Posts
+              repositoryDid={snapshot.atprotoAccount}
+              posts={repo.posts.slice(0, 20)}
+            />
           </Stack>
         )}
       </Box>
