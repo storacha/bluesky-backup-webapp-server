@@ -39,7 +39,10 @@ export default function RepoPage({ id }: { id: string }) {
                 <>
                   {' '}
                   from{' '}
-                  <Link href={`https://bsky.app/profile/${profile?.handle}`} target="_blank">
+                  <Link
+                    href={`https://bsky.app/profile/${profile?.handle}`}
+                    target="_blank"
+                  >
                     <NoTextTransform>@{profile?.handle}</NoTextTransform>
                   </Link>
                 </>
