@@ -24,6 +24,7 @@ export const Text = styled.p<TextProps>`
   letter-spacing: ${({ $letterSpacing = '' }) => $letterSpacing};
   text-transform: ${({ $textTransform = 'none' }) => $textTransform};
   width: ${({ $width = '' }) => $width};
+  max-width: ${({ $maxWidth = '' }) => $maxWidth};
   border: ${({ $border = '' }) => $border};
 `
 
