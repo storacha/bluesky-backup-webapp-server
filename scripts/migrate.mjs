@@ -55,10 +55,10 @@ export const sql = postgres({
 
 // this is neccesary to make sure ncc picks up the migrations, yet for some reason
 // it generates a bad url
-console.log(new URL('migrations', import.meta.url))
+const migrationsURL = new URL('migrations', import.meta.url)
 shift({
   sql,
-  path: fileURLToPath(import.meta.resolve('./migrations')),
+  path: migrationsURL.protocol === 'file:' ? fileURLToPath(migrationsURL) : migrationsURL.toString(),
   before: ({ migration_id, name }) => {
     console.log('Migrating', migration_id, name)
   },
