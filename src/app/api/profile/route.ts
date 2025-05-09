@@ -62,7 +62,7 @@ async function getPublicProfile(did: Did): Promise<ProfileData | null> {
 
       return { did, handle: profileHandle }
     } else if (did.startsWith('did:web')) {
-      const domain = did.replace('did:web', '').replace(/%3A/g, ':')
+      const domain = decodeURIComponent(did.split(':')[2])
       return {
         did,
         handle: domain.replace('at://', ''),
