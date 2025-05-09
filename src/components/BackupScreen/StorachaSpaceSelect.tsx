@@ -33,7 +33,7 @@ export const StorachaSpaceSelect = (props: {
       return [
         {
           value: props.defaultValue,
-          label: props.defaultValue,
+          label: shortenDID(props.defaultValue),
           icon: '/storacha-red.png',
         },
       ]
@@ -79,6 +79,7 @@ export const StorachaSpaceSelect = (props: {
 
   const StorachaControl = (props: ControlProps<Option>) => {
     const selectedOption = props.getValue()[0]
+    console.log(selectedOption)
     const hasValue = Boolean(selectedOption?.value || options?.[0]?.label)
     return (
       <components.Control {...props}>
