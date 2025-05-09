@@ -11,6 +11,7 @@ const Outside = styled.div`
   border-radius: 0.75rem;
   padding: 2.5rem;
   box-shadow: 0px 8px 26px 0px #63637514;
+  background-color: rgba(256, 256, 256, 0.9);
 `
 
 export const LoginArea = () => {

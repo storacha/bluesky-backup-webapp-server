@@ -88,7 +88,7 @@ export const BackupDetail = ({ backup }: BackupProps) => {
           <Wrapper>
             <StorachaSpaceSelect
               name="storacha_space"
-              defaultValue={backup?.atprotoAccount}
+              defaultValue={backup?.storachaSpace}
               disabled={!!backup}
             />
           </Wrapper>
