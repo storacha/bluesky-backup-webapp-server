@@ -2,7 +2,7 @@ import { Account, useAuthenticator } from '@storacha/ui-react'
 
 import { useSWR } from '@/lib/swr'
 
-export function useStorachaAccount () {
+export function useStorachaAccount() {
   const [{ accounts }] = useAuthenticator()
   const account = accounts[0]
   return account

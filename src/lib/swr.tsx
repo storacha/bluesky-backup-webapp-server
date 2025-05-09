@@ -1,12 +1,12 @@
 'use client'
 
 import { Agent } from '@atproto/api'
+import { Account } from '@storacha/ui-react'
 import React from 'react'
 import useSWRBase, { SWRConfig, SWRResponse } from 'swr'
 import useSWRMutationBase, { MutationFetcher } from 'swr/mutation'
 
 import { ATBlob, Backup, Snapshot } from '../types'
-import { Account } from '@storacha/ui-react'
 
 // This type defines what's fetchable with `useSWR`. It is a union of key/data
 // pairs. The key can match a pattern by being as wide as it needs to be.
@@ -27,7 +27,6 @@ type Fetchable =
   | [['api', `/api/profile?did=${string}`, Record<string, string>?], string[]]
   | [['atproto-handle', string], string]
   | [['storacha-plan', Account], string | undefined]
-
 
 export type Key = Fetchable extends [infer T, unknown] ? T : never
 
@@ -98,10 +97,10 @@ const fetchers: Fetchers = {
     return handle
   },
 
-  async 'storacha-plan' (account) {
+  async 'storacha-plan'(account) {
     const { ok: planName } = await account.plan.get()
     return planName?.product
-  }
+  },
 }
 
 /**
