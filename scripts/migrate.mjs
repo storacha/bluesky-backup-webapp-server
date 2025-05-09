@@ -58,7 +58,10 @@ export const sql = postgres({
 const migrationsURL = new URL('migrations', import.meta.url)
 shift({
   sql,
-  path: migrationsURL.protocol === 'file:' ? fileURLToPath(migrationsURL) : migrationsURL.toString(),
+  path:
+    migrationsURL.protocol === 'file:'
+      ? fileURLToPath(migrationsURL)
+      : migrationsURL.toString(),
   before: ({ migration_id, name }) => {
     console.log('Migrating', migration_id, name)
   },
