@@ -103,7 +103,7 @@ export function Sidebar({
         <Heading>Backups</Heading>
         <Stack $gap="1rem">
           <Backups selectedBackupId={selectedBackupId} />
-          <AddBackup href="/backups/new">Add backup…</AddBackup>
+          <AddBackup href="/">Add backup…</AddBackup>
         </Stack>
       </Stack>
       <Stack $gap="1rem">

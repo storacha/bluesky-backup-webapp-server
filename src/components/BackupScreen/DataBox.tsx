@@ -1,3 +1,4 @@
+import { styled } from 'next-yak'
 import { useId, useRef } from 'react'
 
 import { Box, Stack, Text } from '../ui'
@@ -12,6 +13,10 @@ interface DataBoxProps extends SwitchProps {
   width?: string
 }
 
+const Label = styled.label`
+  display: contents;
+`
+
 export const DataBox = ({
   label,
   description,
@@ -21,27 +26,24 @@ export const DataBox = ({
   const id = useId()
   const switchRef = useRef<HTMLInputElement>(null)
   return (
-    <Box
-      $padding="8px"
-      $display="flex"
-      $justifyContent="space-between"
-      $background="var(--color-white)"
-      $borderStyle="solid"
-      $width={width}
-      onClick={() => {
-        switchRef.current?.click()
-      }}
-      data-testid="data-box"
-    >
-      <Stack>
-        <label htmlFor={id}>
-          <Text $color="var(--color-black)" $textTransform="capitalize">
+    <Label>
+      <Box
+        $padding="8px"
+        $display="flex"
+        $justifyContent="space-between"
+        $background="var(--color-white)"
+        $borderStyle="solid"
+        $width={width}
+        data-testid="data-box"
+      >
+        <Stack>
+          <Text id={id} $color="var(--color-black)" $textTransform="capitalize">
             {label}
           </Text>
-        </label>
-        <Text>{description}</Text>
-      </Stack>
-      <Switch id={id} ref={switchRef} {...switchProps} />
-    </Box>
+          <Text>{description}</Text>
+        </Stack>
+        <Switch aria-labelledby={id} ref={switchRef} {...switchProps} />
+      </Box>
+    </Label>
   )
 }

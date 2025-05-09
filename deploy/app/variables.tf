@@ -18,6 +18,12 @@ variable "private_key" {
   type = string
 }
 
+
+variable "atproto_jwk" {
+  description = "atproto_jwk to communicate with the atproto token endpoints"
+  type = string
+}
+
 variable "did" {
   description = "DID for this deployment (did:web:... for example)"
   type = string

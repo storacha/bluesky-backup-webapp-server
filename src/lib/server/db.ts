@@ -1,4 +1,8 @@
+import { randomUUID } from 'node:crypto'
+
+import { RuntimeLock } from '@atproto/oauth-client-node'
 import { Signer } from '@aws-sdk/rds-signer'
+import retry from 'p-retry'
 import postgres from 'postgres'
 import { validate as validateUUID } from 'uuid'
 
@@ -134,6 +138,50 @@ function newKvNamespace(table: string): KVNamespace {
   }
 }
 
+interface SqlSemaphore {
+  lock: (key: string) => Promise<string>
+  unlock: (key: string, lockId: string) => Promise<void>
+}
+
+function newLock(table: string): SqlSemaphore {
+  const tableSql = sql(table)
+  return {
+    lock: async (key: string) => {
+      const value = randomUUID().toString()
+      await retry(
+        async () => {
+          await sql`
+            insert into ${tableSql} ( key, value )
+            values ( ${key}, ${value} )
+          `
+        },
+        {
+          // try for 30 seconds per the comment in the requestLock docs on
+          // https://www.npmjs.com/package/@atproto/oauth-client-node
+          maxRetryTime: 30 * 1000,
+        }
+      )
+      return value
+    },
+    unlock: async (key: string, lockId: string) => {
+      await sql`
+      delete from ${tableSql}
+      where key = ${key}
+      and value = ${lockId}`
+    },
+  }
+}
+
+const sem = newLock('refresh_locks')
+export const requestLock: RuntimeLock = async (key, fn) => {
+  const lockId = await sem.lock(key)
+  try {
+    return await fn()
+  } finally {
+    await sem.unlock(key, lockId)
+  }
+}
+
 export interface BBDatabase {
   addSnapshot: (input: SnapshotInput) => Promise<Snapshot>
   updateSnapshot: (id: string, input: Partial<Snapshot>) => Promise<Snapshot>
@@ -144,6 +192,10 @@ export interface BBDatabase {
   findScheduledBackups: () => Promise<{ results: Backup[] }>
   addBackup: (input: BackupInput) => Promise<Backup>
   addBlob: (input: ATBlobInput) => Promise<ATBlob>
+  getBlobInBackup: (
+    cid: string,
+    backupId: string
+  ) => Promise<{ result: ATBlob | undefined }>
   findBlobsForBackup: (id: string) => Promise<{ results: ATBlob[] }>
   findBlobsForSnapshot: (id: string) => Promise<{ results: ATBlob[] }>
 }
@@ -160,9 +212,8 @@ export function getStorageContext(): StorageContext {
     authStateStore: newKvNamespace('auth_states'),
     db: {
       async addBlob(input) {
-        console.log('inserting', input)
         const results = await sql<ATBlob[]>`
-        insert into blobs ${sql(input)}
+        insert into at_blobs ${sql(input)}
         returning *
       `
         if (!results[0]) {
@@ -171,16 +222,21 @@ export function getStorageContext(): StorageContext {
         return results[0]
       },
 
+      async getBlobInBackup(cid: string, backupId: string) {
+        const [result] = await sql<ATBlob[]>`
+          select *
+          from at_blobs
+          where cid = ${cid}
+          and backup_id = ${backupId}
+        `
+        return { result }
+      },
+
       async findBlobsForBackup(id) {
         if (!validateUUID(id)) return { results: [] }
 
         const results = await sql<ATBlob[]>`
-          select
-            cid,
-            backup_id,
-            snapshot_id,
-            created_at
-          from blobs
+          select * from at_blobs
           where backup_id = ${id}
           `
         return {
@@ -192,12 +248,7 @@ export function getStorageContext(): StorageContext {
         if (!validateUUID(id)) return { results: [] }
 
         const results = await sql<ATBlob[]>`
-          select
-            cid,
-            backup_id,
-            snapshot_id,
-            created_at
-          from blobs
+          select * from at_blobs
           where snapshot_id = ${id}
           `
         return {

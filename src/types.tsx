@@ -49,14 +49,13 @@ export type SnapshotInput = Input<
 >
 
 export interface ATBlob {
+  id: string
   cid: string
   contentType?: string
   snapshotId: string
   backupId?: string
   createdAt: string
 }
-
-export type ATBlobInput = Input<ATBlob, 'createdAt'>
 
 export interface BlockMap {
   [cid: string]: string
@@ -145,3 +144,5 @@ export type ProfileData = {
   handle: string
   displayName?: string
 }
+
+export type ATBlobInput = Input<ATBlob, 'id' | 'createdAt'>

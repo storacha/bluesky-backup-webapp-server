@@ -1,6 +1,6 @@
 {
   "name": "blusky-backup-app",
-  "version": "1.1.5",
+  "version": "1.2.1",
   "private": true,
   "engines": {
     "node": "~22.5.1"
@@ -21,6 +21,7 @@
     "build-storybook": "storybook build",
     "db:migrate": "node ./scripts/migrate.mjs",
     "db:dev:console": "psql --username admin --password bsky_backups_dev",
+    "atproto:generate-jwk": "node ./scripts/generate-jwk.mjs",
     "check-all": "pnpm run '/^(format:check|lint|knip|knip:production|typecheck|test|build)$/'"
   },
   "dependencies": {
@@ -28,7 +29,8 @@
     "@atproto-labs/simple-store": "^0.1.2",
     "@atproto/api": "^0.14.16",
     "@atproto/crypto": "^0.4.4",
-    "@atproto/oauth-client-node": "^0.2.13",
+    "@atproto/jwk-jose": "^0.1.6",
+    "@atproto/oauth-client-node": "^0.2.17",
     "@aws-sdk/rds-signer": "^3.787.0",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
@@ -38,15 +40,14 @@
     "@sentry/nextjs": "^9.10.1",
     "@storacha/access": "^1.1.1",
     "@storacha/capabilities": "^1.4.0",
-    "@storacha/client": "^1.2.6",
-    "@storacha/ui-react": "^2.5.24",
+    "@storacha/client": "^1.2.8",
+    "@storacha/ui-react": "^2.6.9",
     "@ucanto/client": "^9.0.1",
     "@ucanto/core": "^10.3.1",
     "@ucanto/interface": "^10.2.0",
     "@ucanto/principal": "^9.0.2",
     "@ucanto/transport": "^9.1.1",
     "@ucanto/validator": "^9.1.0",
-    "@w3ui/react": "^2.5.5",
     "dexie": "^4.0.11",
     "dexie-react-hooks": "^1.1.7",
     "iron-session": "^8.0.4",
@@ -54,6 +55,7 @@
     "next": "15.1.6",
     "next-yak": "^4.1.1",
     "nuqs": "^2.4.3",
+    "p-retry": "^6.2.1",
     "postgres": "^3.4.5",
     "proper-url-join": "^2.1.2",
     "react": "^18.0.0",
