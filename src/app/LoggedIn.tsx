@@ -8,7 +8,7 @@ import { toast } from 'sonner'
 
 import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
 import StripePricingTable from '@/components/StripePricingTable'
-import { Center, Spinner, Stack, Text } from '@/components/ui'
+import { Box, Center, Heading, Spinner, Stack, Text } from '@/components/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
 import { usePlan, useStorachaAccount } from '@/hooks/use-plan'
 import { atproto } from '@/lib/capabilities'
@@ -37,7 +37,7 @@ const Outside = styled(Stack)`
   align-items: stretch;
 `
 
-async function createSession(client: Client, account: Account) {
+async function createSession (client: Client, account: Account) {
   const issuer = client.agent.issuer
 
   const delegation = await atproto.delegate({
@@ -59,7 +59,7 @@ async function createSession(client: Client, account: Account) {
   })
 }
 
-function NewBackupForm({
+function NewBackupForm ({
   account,
   children,
 }: {
@@ -68,7 +68,7 @@ function NewBackupForm({
 }) {
   const [{ client }] = useAuthenticator()
 
-  async function generateDelegationAndCreateNewBackup(formData: FormData) {
+  async function generateDelegationAndCreateNewBackup (formData: FormData) {
     formData.append('account', account.did())
     try {
       const space = formData.get('storacha_space') as SpaceDid | undefined
@@ -125,7 +125,12 @@ const CreateBackupButton = () => {
   )
 }
 
-export function LoggedIn() {
+const PricingTableContainer = styled(Stack)`
+  width: 100%;
+  padding-top: 2rem;
+`
+
+export function LoggedIn () {
   const [{ client }] = useAuthenticator()
   const account = useStorachaAccount()
   const { error: sessionDIDError, mutate } = useSWR(['api', '/session/did'])
@@ -133,12 +138,11 @@ export function LoggedIn() {
   const [sessionCreationAttempted, setSessionCreationAttempted] =
     useState(false)
   const { data: plan, isLoading: planIsLoading } = usePlan(account)
-  console.log('plan: ', plan)
   useEffect(() => {
     // if the client & account are loaded, the session DID is erroring and we're
     // not currently creating a session, try to create one
     if (!sessionCreationAttempted && client && account && sessionDIDError) {
-      ;(async () => {
+      ; (async () => {
         try {
           await createSession(client, account)
           await mutate()
@@ -170,8 +174,18 @@ export function LoggedIn() {
           </NewBackupForm>
         </BackupScreen>
       ) : (
-        <StripePricingTable />
-      )}
-    </Outside>
+        <PricingTableContainer $alignItems='center' $gap='1rem'>
+          <Heading>Please Sign Up for a Storacha Storage Plan</Heading>
+          <Text $textAlign='center' $maxWidth='30em' $fontSize='1rem'>
+            To get started backing up your Bluesky and ATProto data, please sign up for a Storacha storage plan. The 5GB of storage from our free tier will be more than enough to back up most Bluesky accounts for a very long time.
+          </Text>
+          <Box $width='100%'>
+
+            <StripePricingTable />
+          </Box>
+        </PricingTableContainer>
+      )
+      }
+    </Outside >
   )
 }
