@@ -9,6 +9,7 @@ import { Heading, Stack, Text } from '@/components/ui'
 import { Backup } from '@/types'
 
 import { DataBox } from './DataBox'
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
 
 interface BackupProps {
   backup?: Backup
@@ -46,6 +47,10 @@ export const AccountLogo = styled.div<{
       $hasAccount && $type === 'original' ? 'grayscale(0)' : 'grayscale(1)'};
     opacity: ${({ $hasAccount }) => ($hasAccount ? '1' : '.5')};
   }
+
+  @media only screen and (min-width: 0px) and (max-width: 576px) {
+    display: none;
+  }
 `
 
 const Section = ({
@@ -69,6 +74,7 @@ const Section = ({
  * To submit the data, wrap this component with a form element.
  */
 export const BackupDetail = ({ backup }: BackupProps) => {
+  const { isMobile } = useMobileScreens();
   return (
     <Stack $gap="2rem">
       {backup ? (
@@ -96,7 +102,11 @@ export const BackupDetail = ({ backup }: BackupProps) => {
       </Section>
 
       <Section title="Data">
-        <Stack $direction="row" $gap="1.25rem" $wrap="wrap">
+        <Stack
+          $direction="row"
+          $gap="1.25rem"
+          $wrap={isMobile ? 'nowrap' : 'wrap'}
+        >
           <DataBox
             name="include_repository"
             label="Repository"

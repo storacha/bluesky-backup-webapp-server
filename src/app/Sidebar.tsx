@@ -3,10 +3,8 @@ import Link from 'next/link'
 import { css, styled } from 'next-yak'
 
 import { Loader } from '@/components/Loader'
-import { Stack } from '@/components/ui/Stack'
-
-import { roundRectStyle } from '../components/ui'
-import { useSWR } from '../lib/swr'
+import { roundRectStyle, Stack } from '@/components/ui'
+import { useSWR } from '@/lib/swr'
 
 import { LogOutButton as BaseLogOutButton } from './authentication'
 
@@ -20,6 +18,10 @@ const SidebarOutside = styled.nav`
   padding: 2rem;
   background-color: var(--color-gray-extra-light);
   border-right: 1px solid var(--color-light-blue);
+
+  @media only screen and (min-width: 0px) and (max-width: 567px) {
+    display: none;
+  }
 `
 
 const Header = styled.header`
@@ -36,10 +38,11 @@ const Heading = styled.h2`
 `
 
 const BackupList = styled.ul`
-  /* display: flex;
-  flex-direction: column;
-  gap: 1rem; */
-  display: contents;
+  display: flex;
+  flex-flow: column;
+  gap: 0.8rem;
+  height: 60vh;
+  overflow-y: auto;
 `
 
 const backupItemLikeStyle = css`

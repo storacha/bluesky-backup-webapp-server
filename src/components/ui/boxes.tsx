@@ -12,6 +12,10 @@ export const roundRectStyle = css`
 
 export const Container = styled.div`
   padding: 3.4rem 3.2em;
+
+  @media only screen and (min-width: 0px) and (max-width: 576px) {
+    padding: 1.2rem 1rem;
+  }
 `
 
 export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`

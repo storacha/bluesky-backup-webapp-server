@@ -4,6 +4,8 @@ import { styled } from 'next-yak'
 import { ReactNode, Suspense } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
+
 import { Container, Heading } from '../ui'
 
 import RightSidebar from './RightSidebar'
@@ -39,9 +41,13 @@ export const BackupScreen = ({
   children: ReactNode
   sidebarContent: ReactNode
 }) => {
+  const { isMobile } = useMobileScreens()
   return (
     <BackupContainer>
-      <PanelGroup autoSaveId="backup-restore-layout" direction="horizontal">
+      <PanelGroup
+        autoSaveId="backup-restore-layout"
+        direction={isMobile ? 'vertical' : 'horizontal'}
+      >
         <Panel defaultSize={60} minSize={45}>
           <Container>
             <Suspense>{children}</Suspense>

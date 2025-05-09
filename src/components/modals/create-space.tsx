@@ -23,6 +23,7 @@ import {
 } from '../ui'
 
 import { SharedModalLayout } from './layout'
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
 
 type SpaceCreationState = 'idle' | 'creating-space' | 'creating-delegation'
 
@@ -37,6 +38,7 @@ export const CreateSpaceModal = ({
   account,
   onSpaceCreated,
 }: CreateSpaceModalProps) => {
+  const { isMobile } = useMobileScreens();
   const [state, setState] = useState<SpaceCreationState>('idle')
   const [spaceName, setSpaceName] = useState<string>('')
   const [spaceCreationStep, setSpaceCreationStep] = useState<
@@ -151,7 +153,7 @@ export const CreateSpaceModal = ({
         onClose={handleClose}
       >
         <Box
-          $width="62%"
+          $width={isMobile ? '100%' : '62%'}
           $height="100%"
           $padding="0.8rem 1rem"
           $borderStyle="solid"

@@ -6,6 +6,7 @@ import { useMemo, useState } from 'react'
 import { components, ControlProps, ValueContainerProps } from 'react-select'
 
 import { useDisclosure } from '@/hooks/use-disclosure'
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { shortenDID } from '@/lib/ui'
 
 import { CreateSpaceModal } from '../modals'
@@ -78,6 +79,7 @@ export const StorachaSpaceSelect = (props: {
   }
 
   const StorachaControl = (props: ControlProps<Option>) => {
+    const { isMobile } = useMobileScreens()
     const selectedOption = props.getValue()[0]
     const hasValue = Boolean(selectedOption?.value || options?.[0]?.label)
     return (
@@ -98,7 +100,11 @@ export const StorachaSpaceSelect = (props: {
               height={18}
             />
           </AccountLogo>
-          <Stack $justifyContent="space-between" $direction="row" $width="85%">
+          <Stack
+            $justifyContent="space-between"
+            $direction="row"
+            $width={isMobile ? '100%' : '85%'}
+          >
             <Stack $gap=".6rem">
               <Text $color="var(--color-black)">Storacha Space</Text>
               <Text>{selectedOption?.label || options?.[0]?.label}</Text>
