@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.2.1...v1.2.2) (2025-05-08)
+
+
+### Bug Fixes
+
+* production deploy issue ([#120](https://github.com/storacha/bluesky-backup-webapp-server/issues/120)) ([0679584](https://github.com/storacha/bluesky-backup-webapp-server/commit/0679584c4de07b6d2bde89a7e28bf41b2de3c1b4))
+
 ## [1.2.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.2.0...v1.2.1) (2025-05-08)
 
 
