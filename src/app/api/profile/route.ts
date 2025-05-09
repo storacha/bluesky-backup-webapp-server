@@ -44,15 +44,18 @@ async function getPublicProfile(did: Did): Promise<ProfileData | null> {
       if (!handle) return { did, handle: 'unknown' }
 
       try {
-        const client = createClient({ account: did })
+        const client = await createClient({ account: did })
         const atpSession = await client.restore(did)
         const atpAgent = new AtprotoAgent(atpSession)
 
         if (!did) throw new Error('No bacKUP DID supplied')
 
         const profile = await atpAgent.app.bsky.actor.getProfile({ actor: did })
-        console.log('agent profile', profile)
-        // 'session was deleted by another process', circle back to this later
+        return {
+          did: profile.data.did,
+          handle: profile.data.handle,
+          displayName: profile.data.displayName,
+        }
       } catch (error) {
         console.error(error)
       }

@@ -39,15 +39,3 @@ export const Box = styled.div<Partial<StyleProps & { $isFocused?: boolean }>>`
   border: ${({ $border = '' }) => $border};
   border-bottom: ${({ $borderBottom = '' }) => $borderBottom};
 `
-
-// export const Flex = styled.div<Partial<StyleProps>>`
-//   height: ${({ $height = '66px' }) => $height};
-//   width: ${({ $width = '100%' }) => $width};
-//   display: flex;
-//   justify-content: ${({ $justifyContent = '' }) => $justifyContent};
-//   align-items: ${({ $alignItems = '' }) => $alignItems};
-//   padding: ${({ $padding = '0 0.6rem' }) => $padding};
-//   gap: ${({ $gap = 0 }) => $gap};
-//   cursor: pointer;
-//   background: ${({ $background = '' }) => $background};
-// `

@@ -1,4 +1,5 @@
 import { iterateAtpRepo } from '@atcute/car'
+import { Did } from '@atproto/api'
 import { useCallback, useEffect, useState } from 'react'
 
 import { loadCid } from '@/lib/storacha'
@@ -10,119 +11,81 @@ export type RepoParams = {
 
 type State = 'loading' | 'idle'
 
-export const useRepo = ({ cid }: RepoParams) => {
-  const [repo, setRepo] = useState<Uint8Array | null>(null)
-  const [parsedRepo, setParsedRepo] = useState<ExtendedRepoEntry[]>([])
-  const [state, setState] = useState<State>('idle')
-  const [authorDid, setAuthorDid] = useState<string | null>(null)
+type ParsedRepo = {
+  posts: ExtendedRepoEntry[]
+  authorDid: Did | null
+}
 
-  const sortByCreatedAtDesc = (entries: ExtendedRepoEntry[]) => {
-    return entries.sort((a, b) => {
-      const dateA = new Date(a.record?.createdAt || 0)
-      const dateB = new Date(b.record?.createdAt || 0)
-      return dateB.getTime() - dateA.getTime()
-    })
-  }
+const parseRepo = (car: Uint8Array): ParsedRepo => {
+  try {
+    const entries = [...iterateAtpRepo(car)] as ExtendedRepoEntry[]
 
-  const posts = sortByCreatedAtDesc(
-    parsedRepo.filter((repo) => repo.collection === 'app.bsky.feed.post')
-  )
-  const likes = sortByCreatedAtDesc(
-    parsedRepo.filter((repo) => repo.collection === 'app.bsky.feed.like')
-  )
-  const follows = sortByCreatedAtDesc(
-    parsedRepo.filter((repo) => repo.collection === 'app.bsky.graph.follow')
-  )
-  const reposts = sortByCreatedAtDesc(
-    parsedRepo.filter((repo) => repo.collection === 'app.bsky.feed.repost')
-  )
+    const posts = entries
+      .filter((entry) => entry.collection === 'app.bsky.feed.post')
+      .sort((a, b) => {
+        const dateA = new Date(a.record.createdAt || 0)
+        const dateB = new Date(b.record.createdAt || 0)
+        return dateB.getTime() - dateA.getTime()
+      })
 
-  const postsWithEmbeds = posts.filter(
-    (post) => post.record && post.record.embed !== undefined
-  )
-  const externalEmbed = postsWithEmbeds.filter(
-    (post) => post.record.embed?.$type === 'app.bsky.embed.external'
-  )
-  const imageEmbeds = postsWithEmbeds.filter(
-    (post) => post.record.embed?.$type === 'app.bsky.embed.images'
-  )
-  const quoteEmbeds = postsWithEmbeds.filter(
-    (post) => post.record.embed?.$type === 'app.bsky.embed.record'
-  )
-
-  useEffect(() => {
-    if (parsedRepo.length === 0) return
-
+    let authorDid: string | null = ''
     for (const post of posts) {
       if (post.uri) {
+        // does a DID look up in the post URI
         const match = post.uri.match(/at:\/\/(did:[^\/]+)/)
         if (match && match[1]) {
-          setAuthorDid(match[1])
-          return
+          authorDid = match[1]
+          break
         }
       }
     }
 
-    for (const follow of follows) {
-      if (follow.record?.creator) {
-        setAuthorDid(follow.record.creator)
-        return
-      }
+    return {
+      posts,
+      authorDid: authorDid as Did,
     }
-  }, [parsedRepo, posts, follows])
+  } catch (error) {
+    console.error(error)
+    return {
+      posts: [],
+      authorDid: null,
+    }
+  }
+}
 
-  useEffect(() => {
-    const parseRepoData = async () => {
-      if (!repo || !cid) return
-      try {
-        setState('loading')
-        const repoData = [...iterateAtpRepo(repo)]
-        setParsedRepo(repoData as ExtendedRepoEntry[])
-      } catch (error) {
-        console.error('Error parsing repo', error)
-      } finally {
-        setState('idle')
-      }
-    }
-    parseRepoData()
-  }, [repo, cid])
+export const useRepo = ({ cid }: RepoParams) => {
+  const [state, setState] = useState<State>('idle')
+  const [parsedRepo, setParsedRepo] = useState<ParsedRepo>({
+    posts: [],
+    authorDid: null,
+  })
 
   const getRepo = useCallback(async (cidToLoad: string) => {
     if (!cidToLoad) {
-      console.log('No CID provided, skipping!')
+      console.log('No CID provided. Skipping!')
       return
     }
+
     try {
       setState('loading')
       const data = await loadCid(cidToLoad)
-      setRepo(new Uint8Array(data))
+      const repoData = new Uint8Array(data)
+      const parsed = parseRepo(repoData)
+      setParsedRepo(parsed)
     } catch (error) {
-      console.error('Error fetching repo:', error)
+      console.error('Error fetching or parsing repo:', error)
     } finally {
       setState('idle')
     }
   }, [])
 
   useEffect(() => {
-    if (cid) {
-      getRepo(cid)
-    }
+    if (cid) getRepo(cid)
   }, [cid, getRepo])
 
   return {
     getRepo,
-    repo: {
-      posts: posts,
-      likes: likes,
-      follows: follows,
-      reposts: reposts,
-      authorDid,
-      embeds: {
-        external: externalEmbed,
-        withImages: imageEmbeds,
-        withQuotes: quoteEmbeds,
-      },
-    },
+    repo: parsedRepo,
     loading: state === 'loading',
   }
 }
