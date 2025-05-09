@@ -17,3 +17,6 @@ jobs:
         uses: chromaui/action@latest
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          # Always accept changes once they've merged to main, to keep baselines
+          # up to date.
+          autoAcceptChanges: main
