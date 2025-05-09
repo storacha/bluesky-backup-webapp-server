@@ -25,6 +25,7 @@
     "check-all": "pnpm run '/^(format:check|lint|knip|knip:production|typecheck|test|build)$/'"
   },
   "dependencies": {
+    "@atcute/car": "^3.0.3",
     "@atproto-labs/simple-store": "^0.1.2",
     "@atproto/api": "^0.14.16",
     "@atproto/crypto": "^0.4.4",

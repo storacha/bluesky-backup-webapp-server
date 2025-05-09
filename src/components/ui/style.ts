@@ -18,6 +18,8 @@ export type StyleProps = {
   $background: Property.Background
   $width: Property.Width
   $border: Property.Border
+  $borderBottom: Property.BorderBottom
+  $flexDirection: Property.FlexDirection
   $position: Property.Position
   $direction: Property.FlexDirection
   $gap: Property.Gap

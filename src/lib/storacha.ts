@@ -24,3 +24,12 @@ export async function uploadCAR(
     )
   return storachaRepoCid
 }
+
+export async function loadCid(
+  cid: string,
+  encryptedWith?: string
+): Promise<ArrayBuffer> {
+  console.log('ignoring encryptedWith for now', encryptedWith)
+  const response = await fetch(cidUrl(cid))
+  return await response.arrayBuffer()
+}

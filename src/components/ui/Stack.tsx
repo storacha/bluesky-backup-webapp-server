@@ -10,6 +10,8 @@ export const Stack = styled.div<{ $even?: boolean } & Partial<StyleProps>>`
   align-items: ${({ $alignItems = '' }) => $alignItems};
   flex-wrap: ${({ $wrap = '' }) => $wrap};
   width: ${({ $width = '' }) => $width};
+  height: ${({ $height = '' }) => $height};
+  border-bottom: ${({ $borderBottom = '' }) => $borderBottom};
 
   ${({ $even }) =>
     $even &&

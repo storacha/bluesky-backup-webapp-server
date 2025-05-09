@@ -6,7 +6,8 @@ import { styled } from 'next-yak'
 import { Sidebar } from '@/app/Sidebar'
 import { BackupScreen } from '@/components/BackupScreen'
 import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
-import { Box, Stack, SubHeading } from '@/components/ui'
+import { Loader } from '@/components/Loader'
+import { Box, Center, Stack, SubHeading } from '@/components/ui'
 import { useSWR } from '@/lib/swr'
 import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
 import { Backup } from '@/types'
@@ -41,7 +42,7 @@ const SnapshotLink = styled(Link)`
 `
 
 const RightSidebarContent = ({ backup }: { backup: Backup }) => {
-  const { data: snapshots } = useSWR([
+  const { data: snapshots, isLoading } = useSWR([
     'api',
     `/api/backups/${backup.id}/snapshots`,
   ])
@@ -65,22 +66,35 @@ const RightSidebarContent = ({ backup }: { backup: Backup }) => {
       </Details>
       <SnapshotContainer $gap="1rem">
         <SubHeading>Snapshots</SubHeading>
-        {snapshots?.map((snapshot) => (
-          <SnapshotSummary key={snapshot.id} $background="var(--color-white)">
-            <SnapshotLink href={`/snapshots/${snapshot.id}`}>
-              <Stack
-                $direction="row"
-                $alignItems="center"
-                $justifyContent="space-between"
-                $width="100%"
-              >
-                <Stack $direction="column" $alignItems="flex-start">
-                  <h3>{formatDate(snapshot.createdAt)} Snapshot</h3>
-                </Stack>
-              </Stack>
-            </SnapshotLink>
-          </SnapshotSummary>
-        ))}
+        <>
+          {isLoading ? (
+            <Center $height="200px">
+              <Loader />
+            </Center>
+          ) : (
+            <>
+              {snapshots?.map((snapshot) => (
+                <SnapshotSummary
+                  key={snapshot.id}
+                  $background="var(--color-white)"
+                >
+                  <SnapshotLink href={`/snapshots/${snapshot.id}`}>
+                    <Stack
+                      $direction="row"
+                      $alignItems="center"
+                      $justifyContent="space-between"
+                      $width="100%"
+                    >
+                      <Stack $direction="column" $alignItems="flex-start">
+                        <h3>{formatDate(snapshot.createdAt)} Snapshot</h3>
+                      </Stack>
+                    </Stack>
+                  </SnapshotLink>
+                </SnapshotSummary>
+              ))}
+            </>
+          )}
+        </>
         <CreateSnapshotButton backup={backup} />
       </SnapshotContainer>
     </>

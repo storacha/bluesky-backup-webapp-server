@@ -1,3 +1,4 @@
+import { DidMailto } from '@storacha/ui-react'
 import * as UcantoClient from '@ucanto/client'
 
 export type DidWeb = `did:web:${string}`
@@ -7,6 +8,9 @@ function isDidWeb(s?: string): s is DidWeb {
 }
 function isDidKey(s?: string): s is DidKey {
   return Boolean(s && s.startsWith('did:key'))
+}
+export function isDidMailto(s?: string): s is DidMailto {
+  return Boolean(s && s.startsWith('did:mailto'))
 }
 
 export const STAGING_UPLOAD_SERVICE_PUBLIC_KEY =

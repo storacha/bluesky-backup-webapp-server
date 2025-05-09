@@ -51,7 +51,7 @@ async function createSession(client: Client, account: Account) {
   }
   const archivedDelegation = result.ok
 
-  await fetch(`/session/create/${account.did()}`, {
+  await fetch(`/session/create/${encodeURIComponent(account.did())}`, {
     method: 'POST',
     body: archivedDelegation,
   })
