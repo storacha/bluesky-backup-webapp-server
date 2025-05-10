@@ -1,18 +1,14 @@
 'use client'
 
-import { styled } from 'next-yak'
 import { ReactNode, Suspense } from 'react'
 
 import { Heading } from '@/components/ui'
 
 import { SharedScreenLayout } from '../SharedScreen'
 
-const RightPanelContainer = styled.div`
-  height: 100%;
-  padding: 2rem;
-  overflow-y: auto;
-  border-left: 1px solid var(--color-light-blue);
-`
+import RightSidebar from './RightSidebar'
+
+const RightPanelContainer = RightSidebar
 
 interface RightSidebarProps {
   children: ReactNode
