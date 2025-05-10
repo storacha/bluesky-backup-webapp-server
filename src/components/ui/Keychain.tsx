@@ -449,7 +449,7 @@ const PublicKey = styled.div`
   font-style: bold;
 `
 
-export function KeychainView({
+function KeychainView({
   keys,
   generateKeyPair,
   importKey,
