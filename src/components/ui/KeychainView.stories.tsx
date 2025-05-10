@@ -3,7 +3,7 @@ import { fn } from '@storybook/test'
 
 import { RotationKey } from '@/types'
 
-import { KeychainView } from './Keychain'
+import KeychainView from './KeychainView'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
