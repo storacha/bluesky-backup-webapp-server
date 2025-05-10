@@ -25,7 +25,10 @@ type Fetchable =
   | [['api', '/api/atproto-accounts', Record<string, string>?], string[]]
   | [['api', '/api/keys', Record<string, string>?], RotationKey[]]
   | [['atproto-handle', string], string]
-  | [['api', `/api/profile?did=${string}`, Record<string, string>?], ProfileData]
+  | [
+      ['api', `/api/profile?did=${string}`, Record<string, string>?],
+      ProfileData,
+    ]
 
 export type Key = Fetchable extends [infer T, unknown] ? T : never
 

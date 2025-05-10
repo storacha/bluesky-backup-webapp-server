@@ -206,11 +206,7 @@ const LoginFormElement = styled.form`
   width: 384px;
 `
 
-function AtprotoLoginForm({
-  login,
-  handle,
-  server,
-}: AtprotoLoginFormProps) {
+function AtprotoLoginForm({ login, handle, server }: AtprotoLoginFormProps) {
   const { register, handleSubmit, reset } = useForm<PwForm>()
   const onSubmit = handleSubmit(async (data) => {
     await login(handle, data.password, { server })
@@ -230,6 +226,10 @@ function AtprotoLoginForm({
     </LoginFormElement>
   )
 }
+
+const PlcOpCode = styled.code`
+  font-size: 0.5em;
+`
 
 function AddRotationKey({
   did,
@@ -321,7 +321,9 @@ function AddRotationKey({
                 You&apos;re ready to add your rotation key! Your PLC data will
                 look like:
               </Text>
-              <code>{JSON.stringify(plcOp, null, 4)}</code>
+              <PlcOpCode>
+                <pre>{JSON.stringify(plcOp, null, 4)}</pre>
+              </PlcOpCode>
               <Button
                 onClick={transferIdentity}
                 disabled={isTransferringIdentity}
