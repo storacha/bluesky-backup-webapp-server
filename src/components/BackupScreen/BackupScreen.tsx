@@ -2,71 +2,50 @@
 
 import { styled } from 'next-yak'
 import { ReactNode, Suspense } from 'react'
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
-import { useMobileScreens } from '@/hooks/use-mobile-screens'
+import { Heading } from '@/components/ui'
 
-import { Container, Heading } from '../ui'
+import { SharedScreenLayout } from '../SharedScreen'
 
-import RightSidebar from './RightSidebar'
-
-const BackupContainer = styled.div`
-  display: flex;
-  width: 100%;
-  background-color: var(--color-light-blue-10);
-  height: 100vh;
+const RightPanelContainer = styled.div`
+  height: 100%;
+  padding: 2rem;
+  overflow-y: auto;
+  border-left: 1px solid var(--color-light-blue);
 `
 
-const ResizeHandleOuter = styled.div`
-  display: flex;
-  align-items: stretch;
-  width: 10px;
-  cursor: col-resize;
-  justify-content: center;
-`
+interface RightSidebarProps {
+  children: ReactNode
+}
 
-const ResizeHandleInner = styled.div`
-  width: 1px;
-  background-color: var(--color-gray-light);
-  &:hover {
-    width: 2px;
-    background-color: var(--color-gray);
-  }
-`
+const RightPanel = ({ children }: RightSidebarProps) => {
+  return <RightPanelContainer>{children}</RightPanelContainer>
+}
+
+interface BackupScreenProps {
+  children: ReactNode
+  rightPanelContent: ReactNode
+  selectedBackupId: string | null
+}
 
 export const BackupScreen = ({
   children,
-  sidebarContent: sidebar,
-}: {
-  children: ReactNode
-  sidebarContent: ReactNode
-}) => {
-  const { isMobile } = useMobileScreens()
+  selectedBackupId,
+  rightPanelContent: rightSidebarContent,
+}: BackupScreenProps) => {
   return (
-    <BackupContainer>
-      <PanelGroup
-        autoSaveId="backup-restore-layout"
-        direction={isMobile ? 'vertical' : 'horizontal'}
-      >
-        <Panel defaultSize={60} minSize={45}>
-          <Container>
-            <Suspense>{children}</Suspense>
-          </Container>
-        </Panel>
-        <PanelResizeHandle>
-          <ResizeHandleOuter>
-            <ResizeHandleInner />
-          </ResizeHandleOuter>
-        </PanelResizeHandle>
-        <Panel defaultSize={40} minSize={40}>
-          <Suspense>
-            <RightSidebar>
-              <Heading>Backup & Restore</Heading>
-              {sidebar}
-            </RightSidebar>
-          </Suspense>
-        </Panel>
-      </PanelGroup>
-    </BackupContainer>
+    <SharedScreenLayout
+      screenName="backups"
+      selectedBackupId={selectedBackupId}
+      mainContent={<Suspense>{children}</Suspense>}
+      rightPanelContent={
+        <Suspense>
+          <RightPanel>
+            <Heading>Backup & Restore</Heading>
+            {rightSidebarContent}
+          </RightPanel>
+        </Suspense>
+      }
+    />
   )
 }

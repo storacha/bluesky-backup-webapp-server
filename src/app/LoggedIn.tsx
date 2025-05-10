@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
 import { Center, Stack, Text } from '@/components/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
 import { delegate } from '@/lib/delegate'
@@ -124,6 +125,7 @@ const CreateBackupButton = () => {
 }
 
 export function LoggedIn() {
+  const { isMobile } = useMobileScreens()
   const [{ accounts, client }] = useAuthenticator()
   const account = accounts[0]
   const { error: sessionDIDError, mutate } = useSWR(['api', '/session/did'])
@@ -150,8 +152,9 @@ export function LoggedIn() {
     <Outside $direction="row">
       <AppLayout selectedBackupId={null}>
         <BackupScreen
-          sidebarContent={
-            <Center $height="90vh">
+          selectedBackupId={null}
+          rightPanelContent={
+            <Center $height={isMobile ? '45vh' : '90vh'}>
               <Text $fontWeight="600">
                 Press &quot;Create Backup&quot; to get started!
               </Text>

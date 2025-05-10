@@ -99,7 +99,10 @@ export default function BackupPage({ id }: { id: string }) {
 
   return (
     <AppLayout selectedBackupId={id}>
-      <BackupScreen sidebarContent={<RightSidebarContent backup={backup} />}>
+      <BackupScreen
+        selectedBackupId={id}
+        rightPanelContent={<RightSidebarContent backup={backup} />}
+      >
         <BackupDetail backup={backup} />
       </BackupScreen>
     </AppLayout>
