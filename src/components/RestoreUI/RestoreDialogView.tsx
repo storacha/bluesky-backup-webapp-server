@@ -470,7 +470,10 @@ const LoginFormElement = styled.form`
   width: 384px;
 `
 
-function AtprotoLoginForm({ login, defaultServer }: AtprotoLoginFormProps) {
+function AtprotoLoginForm({
+  login,
+  defaultServer,
+}: AtprotoLoginFormProps) {
   const { register, handleSubmit, reset } = useForm<LoginForm>()
   const onSubmit = handleSubmit(async (data) => {
     await login(data.handle, data.password, {
@@ -504,7 +507,7 @@ function AtprotoLoginForm({ login, defaultServer }: AtprotoLoginFormProps) {
   )
 }
 
-function PlcTokenForm({
+export function PlcTokenForm({
   setPlcToken,
 }: {
   setPlcToken: (token: string) => void

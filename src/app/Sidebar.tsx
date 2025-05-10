@@ -1,4 +1,5 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
+import { IdentificationBadge } from '@phosphor-icons/react/dist/ssr'
 import Link from 'next/link'
 import { css, styled } from 'next-yak'
 
@@ -91,6 +92,10 @@ const LogOutButton = styled(BaseLogOutButton)`
   ${actionButtonStyle}
 `
 
+const IdentitiesLink = styled(Link)`
+  ${actionButtonStyle}
+`
+
 export function Sidebar({
   selectedBackupId,
 }: {
@@ -107,6 +112,9 @@ export function Sidebar({
         </Stack>
       </Stack>
       <Stack $gap="1rem">
+        <IdentitiesLink href="/identities">
+          Identities <IdentificationBadge />
+        </IdentitiesLink>
         <LogOutButton>
           Log Out <ActionIcon />
         </LogOutButton>

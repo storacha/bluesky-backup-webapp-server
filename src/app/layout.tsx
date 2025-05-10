@@ -3,6 +3,7 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Toaster } from 'sonner'
 
 import StorachaProvider from '@/components/StorachaProvider'
+import { KeychainProvider } from '@/contexts/keychain'
 
 import { SWRConfigProvider } from '../lib/swr'
 
@@ -30,16 +31,18 @@ export default function RootLayout({
             <div id="modal"></div>
             <NuqsAdapter>
               <Authenticator as="div">
-                {children}
-                <Toaster
-                  position="top-center"
-                  toastOptions={{
-                    style: {
-                      background: 'var(--color-black)',
-                      color: 'var(--color-white)',
-                    },
-                  }}
-                />
+                <KeychainProvider>
+                  {children}
+                  <Toaster
+                    position="top-center"
+                    toastOptions={{
+                      style: {
+                        background: 'var(--color-black)',
+                        color: 'var(--color-white)',
+                      },
+                    }}
+                  />
+                </KeychainProvider>
               </Authenticator>
             </NuqsAdapter>
           </body>

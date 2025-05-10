@@ -1,17 +1,22 @@
 'use client'
-import {
-  ClipboardDocumentCheckIcon,
-  ClipboardDocumentIcon,
-} from '@heroicons/react/20/solid'
+import { CheckFat, Copy } from '@phosphor-icons/react'
+import { styled } from 'next-yak'
 import { useEffect, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+
+import { Button } from './ui'
 
 interface CopyButtonProps {
   text: string
   className?: string
 }
 
-export default function CopyButton({ text, className = '' }: CopyButtonProps) {
+const IconButton = styled(Button)`
+  display: inline;
+  background: transparent;
+`
+
+export default function CopyButton({ text }: CopyButtonProps) {
   const [copied, setCopied] = useState(false)
   useEffect(() => {
     if (copied) {
@@ -19,7 +24,7 @@ export default function CopyButton({ text, className = '' }: CopyButtonProps) {
       return () => clearTimeout(timeout)
     }
   }, [copied])
-
+  const iconColor = copied ? 'var(--color-green)' : 'var(--color-gray-medium)'
   return (
     <CopyToClipboard
       text={text}
@@ -27,25 +32,13 @@ export default function CopyButton({ text, className = '' }: CopyButtonProps) {
         setCopied(true)
       }}
     >
-      <button
-        className={`
-          p-1.5 rounded-md transition-all duration-200 outline-none
-          ${
-            copied
-              ? 'bg-red-50 text-[var(--color-storacha-red)] hover:bg-red-100'
-              : 'hover:bg-red-50 hover:text-[var(--color-storacha-red)] text-gray-500'
-          }
-          ${className}
-        `}
-        aria-label={copied ? 'Copied!' : 'Copy to clipboard'}
-        type="button"
-      >
+      <IconButton aria-label={copied ? 'Copied!' : 'Copy to clipboard'}>
         {copied ? (
-          <ClipboardDocumentCheckIcon className="w-4 h-4" />
+          <CheckFat size="16" color={iconColor} />
         ) : (
-          <ClipboardDocumentIcon className="w-4 h-4" />
+          <Copy size="16" color={iconColor} />
         )}
-      </button>
+      </IconButton>
     </CopyToClipboard>
   )
 }
