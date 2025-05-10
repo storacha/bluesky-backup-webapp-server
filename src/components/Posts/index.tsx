@@ -15,7 +15,7 @@ export interface PostsProps {
 }
 
 export const Posts = ({ posts, repositoryDid }: PostsProps) => {
-  const { profile, isLoading } = useProfile(repositoryDid as Did)
+  const { data: profile, isLoading } = useProfile(repositoryDid as Did)
   return (
     <>
       {isLoading ? (

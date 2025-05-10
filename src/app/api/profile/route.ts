@@ -1,8 +1,7 @@
-import { Agent as AtprotoAgent, Did } from '@atproto/api'
+import { Did } from '@atproto/api'
 import { NextRequest, NextResponse } from 'next/server'
 
-import { createClient } from '@/lib/atproto'
-import { ProfileData } from '@/types'
+import { PlcProfile, ProfileData } from '@/types'
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -29,55 +28,56 @@ export async function GET(request: NextRequest) {
   }
 }
 
+async function fetchPlcProfile(did: Did): Promise<PlcProfile> {
+  const response = await fetch(
+    `https://plc.directory/${encodeURIComponent(did)}/data`
+  )
+  if (!response.ok)
+    throw new Error(`Failed to fetch profile: ${response.status}`)
+
+  const { rotationKeys, alsoKnownAs, verificationMethods, services } =
+    await response.json()
+  return {
+    did,
+    rotationKeys,
+    alsoKnownAs,
+    verificationMethods,
+    services,
+  }
+}
+
+interface BskyProfile {
+  did: Did
+  handle: string
+  displayName: string
+}
+
+async function fetchBskyProfile(did: Did): Promise<BskyProfile> {
+  const response = await fetch(
+    `https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor=${encodeURIComponent(did)}`
+  )
+  if (!response.ok)
+    throw new Error(`Failed to fetch profile: ${response.status}`)
+
+  return await response.json()
+}
+
 async function getPublicProfile(did: Did): Promise<ProfileData | null> {
-  try {
-    if (did.startsWith('did:plc')) {
-      const response = await fetch(`https://plc.directory/${did}`)
-      if (!response.ok)
-        throw new Error(`Failed to fetch profile: ${response.status}`)
-
-      const data = await response.json()
-      const handle = data.alsoKnownAs?.find(
-        (aka: string) => aka.startsWith('at://') && aka.includes('.')
-      )
-      const profileHandle = handle ? handle.replace('at://', '') : null
-      if (!handle) return { did, handle: 'unknown' }
-
-      try {
-        const client = await createClient({ account: did })
-        const atpSession = await client.restore(did)
-        const atpAgent = new AtprotoAgent(atpSession)
-
-        if (!did) throw new Error('No bacKUP DID supplied')
-
-        const profile = await atpAgent.app.bsky.actor.getProfile({ actor: did })
-        return {
-          did: profile.data.did,
-          handle: profile.data.handle,
-          displayName: profile.data.displayName,
-        }
-      } catch (error) {
-        console.error(error)
-      }
-
-      return { did, handle: profileHandle }
-    } else if (did.startsWith('did:web')) {
-      const domainPart = did.split(':')[2]
-      if (!domainPart)
-        throw new Error(
-          'got a did:web without a domain part, no idea what to do with that'
-        )
-      const domain = decodeURIComponent(domainPart)
-      return {
-        did,
-        handle: domain.replace('at://', ''),
-        displayName: domain.replace('at://', ''),
-      }
-    } else {
-      return { did, handle: 'unknown' }
+  if (did.startsWith('did:plc')) {
+    const [
+      { rotationKeys, alsoKnownAs, verificationMethods, services },
+      { handle, displayName },
+    ] = await Promise.all([fetchPlcProfile(did), fetchBskyProfile(did)])
+    return {
+      did,
+      handle,
+      displayName,
+      rotationKeys,
+      alsoKnownAs,
+      verificationMethods,
+      services,
     }
-  } catch (error) {
-    console.error(`Error getting public profile for ${did}:`, error)
-    return null
+  } else {
+    throw new Error('Cannot get profile information for a did:web')
   }
 }

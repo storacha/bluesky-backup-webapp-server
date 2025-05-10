@@ -1,5 +1,7 @@
+import { Did } from '@atproto/api'
 import { JoseKey } from '@atproto/jwk-jose'
 import {
+  isDidPlc,
   NodeOAuthClient,
   OAuthClientMetadataInput,
 } from '@atproto/oauth-client-node'
@@ -49,6 +51,25 @@ class Store<K extends string, V extends Value = Value>
   async del(key: K) {
     this.kvStore.delete(this.makeKey(key))
   }
+}
+
+export async function findAuthedBskyAccounts(
+  authSessions: KVNamespace,
+  account: string
+): Promise<Did[]> {
+  const keysResult = await authSessions.list({
+    prefix: `${account}!`,
+  })
+
+  return keysResult.keys.map((key) => {
+    const account = key.name.split('!')[1]
+    if (!account)
+      throw new Error(
+        `Found auth session key ${key.name} without account part, something is wrong!`
+      )
+    if (!isDidPlc(account)) throw new Error(`${account} is not a did:plc`)
+    return account
+  })
 }
 
 export const blueskyClientMetadata = ({
