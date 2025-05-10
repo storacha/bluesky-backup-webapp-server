@@ -2,7 +2,7 @@
 
 import { Agent as AtprotoAgent } from '@atproto/api'
 import { AgentData } from '@storacha/access/agent'
-import { Client as StorachaClient } from '@storacha/ui-react'
+import { Client as StorachaClient } from '@storacha/client'
 import { Delegation, DID, Signer } from '@ucanto/interface'
 
 import { receiptsEndpoint, serviceConnection } from '@/components/services'
@@ -28,7 +28,7 @@ export const createSnapshotForBackup = async (
     throw new Error('Failed to create snapshot')
   }
 
-  const atpClient = createAtprotoClient({
+  const atpClient = await createAtprotoClient({
     account,
   })
   const atpSession = await atpClient.restore(backup.atprotoAccount)
@@ -74,6 +74,15 @@ export const createSnapshotForBackup = async (
     backupId: backup.id,
   })
   return snapshot
+}
+
+async function isBlobAlreadyBackedUp(
+  db: BBDatabase,
+  cid: string,
+  backupId: string
+) {
+  const { result: existingBlob } = await db.getBlobInBackup(cid, backupId)
+  return Boolean(existingBlob)
 }
 
 interface BackupOptions {
@@ -134,25 +143,35 @@ const doSnapshot = async (
         })
         // TODO handle blobsRes.success == false
         for (const cid of blobsRes.data.cids) {
-          const blobRes = await atpAgent.com.atproto.sync.getBlob({
-            did: atpAgent.did,
-            cid,
-          })
-          // TODO handle blobRes.success == false
+          // only try to sync this blob if we haven't seen it before
+          if (
+            options.backupId &&
+            (await isBlobAlreadyBackedUp(db, cid, options.backupId))
+          ) {
+            console.log(
+              `already backed up blob ${cid} for backup ${options.backupId}, skipping `
+            )
+          } else {
+            const blobRes = await atpAgent.com.atproto.sync.getBlob({
+              did: atpAgent.did,
+              cid,
+            })
+            // TODO handle blobRes.success == false
 
-          const uploadCid = await storachaClient.uploadFile(
-            new Blob([blobRes.data])
-          )
-          // TODO: figure out how to fail if cid and uploadCid don't match
-          console.log(
-            `Uploaded blob with CID ${cid} and got ${uploadCid} from Storacha - these should be the same`
-          )
-          await db.addBlob({
-            cid,
-            contentType: blobRes.headers['content-type'],
-            snapshotId: snapshotId,
-            backupId: options.backupId,
-          })
+            const uploadCid = await storachaClient.uploadFile(
+              new Blob([blobRes.data])
+            )
+            // TODO: figure out how to fail if cid and uploadCid don't match
+            console.log(
+              `Uploaded blob with CID ${cid} and got ${uploadCid} from Storacha - these should be the same`
+            )
+            await db.addBlob({
+              cid,
+              contentType: blobRes.headers['content-type'],
+              snapshotId: snapshotId,
+              backupId: options.backupId,
+            })
+          }
         }
       } while (blobsRes.data.cursor)
 

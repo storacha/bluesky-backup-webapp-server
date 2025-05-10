@@ -1,3 +1,4 @@
+import { RepoEntry } from '@atcute/car'
 import { Did } from '@atproto/oauth-client-node'
 
 export type SpaceDid = Did<'key'>
@@ -48,6 +49,7 @@ export type SnapshotInput = Input<
 >
 
 export interface ATBlob {
+  id: string
   cid: string
   contentType?: string
   snapshotId: string
@@ -55,4 +57,92 @@ export interface ATBlob {
   createdAt: string
 }
 
-export type ATBlobInput = Input<ATBlob, 'createdAt'>
+export interface BlockMap {
+  [cid: string]: string
+}
+
+export interface Repo {
+  root: string
+  blocks: BlockMap
+}
+
+export type Post = {
+  createdAt: string
+  text: string
+  $type?: string
+  author?: {
+    handle: string
+    displayName: string
+  }
+  creator?: string
+  embed?: ExternalEmbeds | ImageEmbeds | QuotedEmbeds
+}
+
+export type ExternalEmbeds = {
+  $type: 'app.bsky.embed.external'
+  external: {
+    uri: string
+    title: string
+    description: string
+    thumb: {
+      $type: string
+      mimeType: string
+      ref: {
+        $link: string
+      }
+    }
+  }
+}
+
+export type ImageEmbeds = {
+  $type: 'app.bsky.embed.images'
+  images: {
+    alt?: string
+    image: {
+      $type: string
+      mimeType: string
+      ref: {
+        $link: string
+      }
+      size: number
+    }
+  }[]
+}
+
+export type QuotedEmbeds = {
+  $type: 'app.bsky.embed.record'
+  record: {
+    $type: 'app.bsky.embed.record#viewRecord'
+    uri: string
+    cid: string
+    author: {
+      did: string
+      handle: string
+      displayName?: string
+    }
+  }
+}
+
+export interface ExtendedRepoEntry extends RepoEntry {
+  record: Post
+  uri: string
+}
+
+export type LikedRecord = {
+  $type: 'app.bsky.feed.like'
+  createdAt: string
+  subject: {
+    cid: string
+    uri: string
+  }
+}
+
+export type LikedRecords = LikedRecord[]
+
+export type ProfileData = {
+  did: string
+  handle: string
+  displayName?: string
+}
+
+export type ATBlobInput = Input<ATBlob, 'id' | 'createdAt'>

@@ -1,5 +1,39 @@
 # Changelog
 
+## [1.3.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.2.3...v1.3.0) (2025-05-09)
+
+
+### Features
+
+* add repo explorer ([#88](https://github.com/storacha/bluesky-backup-webapp-server/issues/88)) ([2ce934b](https://github.com/storacha/bluesky-backup-webapp-server/commit/2ce934b9a74c66d9dae3d68f5e494f36aa79563f))
+
+
+### Bug Fixes
+
+* destroy session on logout ([#127](https://github.com/storacha/bluesky-backup-webapp-server/issues/127)) ([fd2aa73](https://github.com/storacha/bluesky-backup-webapp-server/commit/fd2aa73b4b23329179ad051ea1a73935a30bebbf))
+
+## [1.2.3](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.2.2...v1.2.3) (2025-05-09)
+
+
+### Bug Fixes
+
+* migration script ([#122](https://github.com/storacha/bluesky-backup-webapp-server/issues/122)) ([8358bc4](https://github.com/storacha/bluesky-backup-webapp-server/commit/8358bc4482e9548d9764492ead001837ad77e719))
+* various tweaks and polish ([#123](https://github.com/storacha/bluesky-backup-webapp-server/issues/123)) ([8fd3475](https://github.com/storacha/bluesky-backup-webapp-server/commit/8fd3475445fce6a056a3690a8fca23eba8a81944))
+
+## [1.2.2](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.2.1...v1.2.2) (2025-05-08)
+
+
+### Bug Fixes
+
+* production deploy issue ([#120](https://github.com/storacha/bluesky-backup-webapp-server/issues/120)) ([0679584](https://github.com/storacha/bluesky-backup-webapp-server/commit/0679584c4de07b6d2bde89a7e28bf41b2de3c1b4))
+
+## [1.2.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.2.0...v1.2.1) (2025-05-08)
+
+
+### Bug Fixes
+
+* Create Backup button should show pending state ([f1064d5](https://github.com/storacha/bluesky-backup-webapp-server/commit/f1064d596b3a265569d83175a5cd9667c63aef86))
+
 ## [1.2.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.1.6...v1.2.0) (2025-05-07)
 
 

@@ -1,7 +1,7 @@
-import { isDid } from '@atproto/oauth-client-node'
 import { Delegation } from '@ucanto/core'
 import { NextRequest, NextResponse } from 'next/server'
 
+import { isDidMailto } from '@/lib/constants'
 import { authorize } from '@/lib/server/auth'
 import { getSession } from '@/lib/sessions'
 
@@ -11,8 +11,8 @@ export async function POST(
 ) {
   const { account } = await params
 
-  if (!isDid(account)) {
-    return new Response(`Account must be a DID, but got: ${account}`, {
+  if (!isDidMailto(account)) {
+    return new Response(`Account must be a mailto DID, but got: ${account}`, {
       status: 400,
     })
   }

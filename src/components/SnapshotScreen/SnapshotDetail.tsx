@@ -12,11 +12,11 @@ const Details = styled(Stack)`
   padding-left: 2rem;
 `
 
-export const DetailName = styled(SubHeading)`
+const DetailName = styled(SubHeading)`
   color: black;
 `
 
-export const DetailValue = styled.div`
+const DetailValue = styled.div`
   font-family: var(--font-dm-mono);
   font-size: 0.75rem;
 `

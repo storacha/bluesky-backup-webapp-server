@@ -40,17 +40,3 @@ export const SubHeading = styled.h3`
   font-size: 0.75rem;
   text-transform: capitalize;
 `
-
-// we may need this. maybe not now, but later
-// just to bypass knip's warning, i'll leaved it commented out.
-// const Flex = styled.div<Partial<StyleProps>>`
-//   height: ${({ $height = '66px' }) => $height};
-//   width: ${({ $width = '100%' }) => $width};
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: ${({ $alignItems = '' }) => $alignItems};
-//   padding: ${({ $padding = '0 0.6rem' }) => $padding};
-//   gap: ${({ $gap = 0 }) => $gap};
-//   cursor: pointer;
-//   background: ${({ $background = '' }) => $background};
-// `

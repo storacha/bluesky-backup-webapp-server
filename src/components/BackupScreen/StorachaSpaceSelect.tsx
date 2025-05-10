@@ -34,7 +34,7 @@ export const StorachaSpaceSelect = (props: {
       return [
         {
           value: props.defaultValue,
-          label: props.defaultValue,
+          label: shortenDID(props.defaultValue),
           icon: '/storacha-red.png',
         },
       ]

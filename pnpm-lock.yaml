@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@atcute/car':
+        specifier: ^3.0.3
+        version: 3.0.3
       '@atproto-labs/simple-store':
         specifier: ^0.1.2
         version: 0.1.2
@@ -17,9 +20,12 @@ importers:
       '@atproto/crypto':
         specifier: ^0.4.4
         version: 0.4.4
+      '@atproto/jwk-jose':
+        specifier: ^0.1.6
+        version: 0.1.6
       '@atproto/oauth-client-node':
-        specifier: ^0.2.13
-        version: 0.2.13
+        specifier: ^0.2.17
+        version: 0.2.17
       '@aws-sdk/rds-signer':
         specifier: ^3.787.0
         version: 3.787.0
@@ -48,8 +54,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
       '@storacha/client':
-        specifier: ^1.2.6
-        version: 1.2.6(encoding@0.1.13)
+        specifier: ^1.2.8
+        version: 1.2.8(encoding@0.1.13)
       '@storacha/ui-react':
         specifier: ^2.6.9
         version: 2.6.9(@types/react@18.3.18)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -92,6 +98,9 @@ importers:
       nuqs:
         specifier: ^2.4.3
         version: 2.4.3(next@15.1.6(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+      p-retry:
+        specifier: ^6.2.1
+        version: 6.2.1
       postgres:
         specifier: ^3.4.5
         version: 3.4.5
@@ -256,8 +265,26 @@ packages:
       react: ^17.0.0 || ^18.0.0
       react-dom: ^17.0.0 || ^18.0.0
 
-  '@atproto-labs/did-resolver@0.1.11':
-    resolution: {integrity: sha512-qXNzIX2GPQnxT1gl35nv/8ErDdc4Fj/+RlJE7oyE7JGkFAPUyuY03TvKJ79SmWFsWE8wyTXEpLuphr9Da1Vhkw==}
+  '@atcute/car@3.0.3':
+    resolution: {integrity: sha512-TV596HRRl8LgNcO58fqf6zELjYutrpcj3VeM7cnoEQ3GLwH0hJSbPmYlRxF1gxurJhMEE5PUpIDb+dgDxFRLpw==}
+
+  '@atcute/cbor@2.2.2':
+    resolution: {integrity: sha512-UzgoEtgGzWy5p9qcFfirRCCgGl1QF8xQF53ycq5yaZ43o7pJdGsctAHK58rTru9QfQxTZs7V9vTDUIxVEZ0s9g==}
+
+  '@atcute/cid@2.2.1':
+    resolution: {integrity: sha512-tSsVdgx8jj+n6l+MP8IN8rZCR9N4ltJ8EPMiRzo6uduAAygYiZkCRceCOZ57IMtToZcSgm3nxYr4g1aeUbHUcw==}
+
+  '@atcute/multibase@1.1.3':
+    resolution: {integrity: sha512-vQQO0tDuQPguBvHdgV3ryn7R8U6beQ50KA/juYm+dCeT/3hOK2stMbX+IaW8JEuwkT5lJsU8wDIOicQT4mB7Ag==}
+
+  '@atcute/uint8array@1.0.1':
+    resolution: {integrity: sha512-AAnlFKyfDRgb9GNZJbhQ6OuMhbmNPirQyapb8KnmcEhxQZ3+tt+4NcwqekEegY4MpNqSTYeeTdyxq0wGZv1JHg==}
+
+  '@atcute/varint@1.0.2':
+    resolution: {integrity: sha512-0O31hePzzr4O3NGWHUKKOyta6CGSL+AtN8iir8grGxu9jXyI7DBARlw6PbgKA6uTAvsXdpmRmF8MX+p0TsLnNg==}
+
+  '@atproto-labs/did-resolver@0.1.12':
+    resolution: {integrity: sha512-criWN7o21C5TFsauB+bGTlkqqerOU6gT2TbxdQVgZUWqNcfazUmUjT4gJAY02i+O4d3QmZa27fv9CcaRKWkSug==}
 
   '@atproto-labs/fetch-node@0.1.8':
     resolution: {integrity: sha512-OOTIhZNPEDDm7kaYU8iYRgzM+D5n3mP2iiBSyKuLakKTaZBL5WwYlUsJVsqX26SnUXtGEroOJEVJ6f66OcG80w==}
@@ -266,30 +293,36 @@ packages:
   '@atproto-labs/fetch@0.2.2':
     resolution: {integrity: sha512-QyafkedbFeVaN20DYUpnY2hcArYxjdThPXbYMqOSoZhcvkrUqaw4xDND4wZB5TBD9cq2yqe9V6mcw9P4XQKQuQ==}
 
-  '@atproto-labs/handle-resolver-node@0.1.14':
-    resolution: {integrity: sha512-+kOf+xENdxUNrrLoIcp/L4ommIa1SHnwfHIWbxumXnacfurjMOnZhfXeiNsEguaAxDNYpqDNpKsFBtcgjffXvQ==}
+  '@atproto-labs/handle-resolver-node@0.1.15':
+    resolution: {integrity: sha512-krl9KqfCCrGID35VAAHKBIiXOxe3gYxAtOJLYpZc5cOPFwnvPlAdhTYZLIc1dJRKDayi8gh6Q4XZRDv7i8dryg==}
     engines: {node: '>=18.7.0'}
 
-  '@atproto-labs/handle-resolver@0.1.7':
-    resolution: {integrity: sha512-nb4uAOgRVMp2NGVTJnor4ohqySbd1KyB5VzQLaRjMaPwH60Al057eTqiKRbeH/xD7hOBPNj1m0YjgxzvyAnWkg==}
+  '@atproto-labs/handle-resolver@0.1.8':
+    resolution: {integrity: sha512-Y0ckccoCGDo/3g4thPkgp9QcORmc+qqEaCBCYCZYtfLIQp4775u22wd+4fyEyJP4DqoReKacninkICgRGfs3dQ==}
 
-  '@atproto-labs/identity-resolver@0.1.15':
-    resolution: {integrity: sha512-3ABob5iUDoFL85I8/pJE4wncz3148fADoxNVAdksyACxxjpH1GNhSYNyIpRpdMCJ/kjj69DM9rggumTHqnD/Xg==}
+  '@atproto-labs/identity-resolver@0.1.16':
+    resolution: {integrity: sha512-pFrtKT49cYBhCDd2U1t/CcUBiMmQzaNQxh8oSkDUlGs/K3P8rJFTAGAMm8UjokfGEKwF4hX9oo7O8Kn+GkyExw==}
 
   '@atproto-labs/pipe@0.1.0':
     resolution: {integrity: sha512-ghOqHFyJlQVFPESzlVHjKroP0tPzbmG5Jms0dNI9yLDEfL8xp4OFPWLX4f6T8mRq69wWs4nIDM3sSsFbFqLa1w==}
 
-  '@atproto-labs/simple-store-memory@0.1.2':
-    resolution: {integrity: sha512-q6wawjKKXuhUzr2MnkSlgr6zU6VimYkL8eNvLQvkroLnIDyMkoCKO4+EJ885ZD8lGwBo4pX9Lhrg9JJ+ncJI8g==}
+  '@atproto-labs/simple-store-memory@0.1.3':
+    resolution: {integrity: sha512-jkitT9+AtU+0b28DoN92iURLaCt/q/q4yX8q6V+9LSwYlUTqKoj/5NFKvF7x6EBuG+gpUdlcycbH7e60gjOhRQ==}
 
   '@atproto-labs/simple-store@0.1.2':
     resolution: {integrity: sha512-9vTNvyPPBs44tKVFht16wGlilW8u4wpEtKwLkWbuNEh3h9TTQ8zjVhEoGZh/v73G4Otr9JUOSIq+/5+8OZD2mQ==}
+
+  '@atproto-labs/simple-store@0.2.0':
+    resolution: {integrity: sha512-0bRbAlI8Ayh03wRwncAMEAyUKtZ+AuTS1jgPrfym1WVOAOiottI/ZmgccqLl6w5MbxVcClNQF7WYGKvGwGoIhA==}
 
   '@atproto/api@0.14.16':
     resolution: {integrity: sha512-xzUK3KVdp1TDJJ09Di2rvS/fisVctvMHO7Er0XhYviL3V4lxGQPNT3pHwbTbbb22QP7xH/d5ghCgfdIoS5Z8/A==}
 
   '@atproto/common-web@0.4.0':
     resolution: {integrity: sha512-ZYL0P9myHybNgwh/hBY0HaBzqiLR1B5/ie5bJpLQAg0whRzNA28t8/nU2vh99tbsWcAF0LOD29M8++LyENJLNQ==}
+
+  '@atproto/common-web@0.4.2':
+    resolution: {integrity: sha512-vrXwGNoFGogodjQvJDxAeP3QbGtawgZute2ed1XdRO0wMixLk3qewtikZm06H259QDJVu6voKC5mubml+WgQUw==}
 
   '@atproto/crypto@0.4.4':
     resolution: {integrity: sha512-Yq9+crJ7WQl7sxStVpHgie5Z51R05etaK9DLWYG/7bR5T4bhdcIgF6IfklLShtZwLYdVVj+K15s0BqW9a8PSDA==}
@@ -298,33 +331,39 @@ packages:
   '@atproto/did@0.1.5':
     resolution: {integrity: sha512-8+1D08QdGE5TF0bB0vV8HLVrVZJeLNITpRTUVEoABNMRaUS7CoYSVb0+JNQDeJIVmqMjOL8dOjvCUDkp3gEaGQ==}
 
-  '@atproto/jwk-jose@0.1.5':
-    resolution: {integrity: sha512-piYZ3ohKhRiGlD6/bZCV/Ed3lIi7CVd6txbofEHik22EkYWK0nWKoEriCUSTssSylwFzeOq2r31Ut16WcJoghw==}
+  '@atproto/jwk-jose@0.1.6':
+    resolution: {integrity: sha512-r4DGMvvmazy6CxqAcnplpUxvp6Vd8UwKxQBZRpmm1aNsVonf5qj1yeDkECTiwoe/FPbvtdamlzClB3UZc7Yb5w==}
 
-  '@atproto/jwk-webcrypto@0.1.5':
-    resolution: {integrity: sha512-xsX8cJO6rBakLz8zNKenuKIbjoTeaiMi/ETOFFYGtlMlk1grdxDOe6OGpCmUDXaOiYWu3x5K5Hc4J9ooI/4nRg==}
+  '@atproto/jwk-webcrypto@0.1.6':
+    resolution: {integrity: sha512-mxWHOvlg+HGohldfiaon1fNsr7iDvKrTrkV0/ZvymWRzxsDFPCon1hu8OtKLXUVgLh+IzDJT1D79I4fBSo4pog==}
 
-  '@atproto/jwk@0.1.4':
-    resolution: {integrity: sha512-dSRuEi0FbxL5ln6hEFHp5ZW01xbQH9yJi5odZaEYpcA6beZHf/bawlU12CQy/CDsbC3FxSqrBw7Q2t7mvdSBqw==}
+  '@atproto/jwk@0.1.5':
+    resolution: {integrity: sha512-OzZFLhX41TOcMeanP3aZlL5bLeaUIZT15MI4aU5cwflNq/rwpGOpz3uwDjZc8ytgUjuTQ8LabSz5jMmwoTSWFg==}
+
+  '@atproto/lexicon@0.4.11':
+    resolution: {integrity: sha512-btefdnvNz2Ao2I+qbmj0F06HC8IlrM/IBz6qOBS50r0S6uDf5tOO+Mv2tSVdimFkdzyDdLtBI1sV36ONxz2cOw==}
 
   '@atproto/lexicon@0.4.9':
     resolution: {integrity: sha512-/tmEuHQFr51V2V7EAVJzaA40sqJ7ylAZpR962VbOsPtmcdOHvezbjVHYEMXgfb927hS+xqbVyzBTbu5w9v8prA==}
 
-  '@atproto/oauth-client-node@0.2.13':
-    resolution: {integrity: sha512-4p5waYW1ndf1uKOk6PTpyxcM+Q6SSzpYl6sjCMR/1KGExZmPzQ8CDoCumVSqrAgznuaTsaAqS5Ful6mOaL8jxQ==}
+  '@atproto/oauth-client-node@0.2.17':
+    resolution: {integrity: sha512-mPaBEZlsEAhUvhr958tPrQA4T+wDv4I6MLPTF7QNzTG1n/kP2LEIStq1Y63UVDwEqTS16LnpsZodu3QZnrNxXg==}
     engines: {node: '>=18.7.0'}
 
-  '@atproto/oauth-client@0.3.12':
-    resolution: {integrity: sha512-tDQzq/6PNspWeHBrYGZ+LU7t7PM/+0Ealk8V2PUfncGObLz0iPDS4RbWAzy0GH1foee1qIfRdiiKiEymMGIZDw==}
+  '@atproto/oauth-client@0.3.16':
+    resolution: {integrity: sha512-AEtGLOXRJzBcBa8LyUXwFf/M7cZc+CcOBjLsiqmVQriSwccfyTkALgiyM0UcRHJqlwtLPuf9RYtgKPc8rW5F/w==}
 
-  '@atproto/oauth-types@0.2.4':
-    resolution: {integrity: sha512-V2LnlXi1CSmBQWTQgDm8l4oN7xYxlftVwM7hrvYNP+Jxo3Ozfe0QLK1Wy/CH6/ZqzrBBhYvcbf4DJYTUwPA+hw==}
+  '@atproto/oauth-types@0.2.7':
+    resolution: {integrity: sha512-2SlDveiSI0oowC+sfuNd/npV8jw/FhokSS26qyUyldTg1g9ZlhxXUfMP4IZOPeZcVn9EszzQRHs1H9ZJqVQIew==}
 
   '@atproto/syntax@0.4.0':
     resolution: {integrity: sha512-b9y5ceHS8YKOfP3mdKmwAx5yVj9294UN7FG2XzP6V5aKUdFazEYRnR9m5n5ZQFKa3GNvz7de9guZCJ/sUTcOAA==}
 
   '@atproto/xrpc@0.6.11':
     resolution: {integrity: sha512-J2cZP8FjoDN0UkyTYBlCvKvxwBbDm4dld47u6FQK30RJy9YpSiUkdxJJ10NYqpi7JVny3M0qWQgpWJDV94+PdA==}
+
+  '@atproto/xrpc@0.7.0':
+    resolution: {integrity: sha512-SfhP9dGx2qclaScFDb58Jnrmim5nk4geZXCqg6sB0I/KZhZEkr9iIx1hLCp+sxkIfEsmEJjeWO4B0rjUIJW5cw==}
 
   '@aws-crypto/sha256-browser@5.2.0':
     resolution: {integrity: sha512-AXfN/lGotSQwu6HNcEsIASo7kWXZ5HYWvfOmSNKDsEqC4OashTp8alTmaz+F7TC2L083SFv5RdB+qU3Vs1kZqw==}
@@ -2836,10 +2875,6 @@ packages:
   '@storacha/capabilities@1.4.0':
     resolution: {integrity: sha512-bwJAYFUHWZV/2oeuu1JX5NhlRmaY2ClOCnz9do1V2Teaa4hg3folOvzygjX7F9xX+jLcTwtrE5oFXlqjuOhKXA==}
 
-  '@storacha/client@1.2.6':
-    resolution: {integrity: sha512-8uB5dPwVBjtY3fg4ENBjLfyTBJy9jFY9w6NTBpvMPBoc40iKgNQq7tmFE7S/FqxMIkizh1UYRq7+uf/Y+7pqdg==}
-    engines: {node: '>=18'}
-
   '@storacha/client@1.2.8':
     resolution: {integrity: sha512-yPRs+p1KsdUtg5CQdgyfKJd3lz6znqjHLzsmasVW4FVvd3+GnEBXzg+4yS3HeujB9wKLCTn8mqWF70q1jyGqmg==}
     engines: {node: '>=18'}
@@ -2861,9 +2896,6 @@ packages:
     resolution: {integrity: sha512-fFV+ElLFO18pZJy6LIM994gLnGKasBB5PoLQUiQ+Jxvn0sCN2bW1sJhmUzxUjWjTMgvpobh7xWigS3QIiKHOVA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
-
-  '@storacha/upload-client@1.0.9':
-    resolution: {integrity: sha512-hW0LwhVb22FfmttuaJ1JK6Zw0/02OVS0TiBtmQCoPEhY3C1e/muZ2OYkzbeK2i+hGUUCI+s2l/JyzOIiVWKsjw==}
 
   '@storacha/upload-client@1.1.1':
     resolution: {integrity: sha512-zUasr64X/SgkWyvyKxZavlPX8CdyTHHtQgrXsFRt68PmrJxs2/3BaJk4JfQ0nJRl/d2c0nxbo/Qbj2Zr5idsug==}
@@ -3186,6 +3218,9 @@ packages:
 
   '@types/retry@0.12.1':
     resolution: {integrity: sha512-xoDlM2S4ortawSWORYqsdU+2rxdh4LRW9ytc3zmT37RIKQh6IHyKwwtKhKis9ah8ol07DCkZxPt8BBvPjC6v4g==}
+
+  '@types/retry@0.12.2':
+    resolution: {integrity: sha512-XISRgDJ2Tc5q4TRqvgJtzsRkFYNJzZrhTdtMoGVBttwzzQJkPnS3WWTFc7kuDRoPtPakl+T+OfdEUjYJj7Jbow==}
 
   '@types/semver@7.5.8':
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
@@ -4719,6 +4754,10 @@ packages:
     resolution: {integrity: sha512-E+zBKpQ2t6MEo1VsonYmluk9NxGrbzpeeLC2xIViuO2EjU2xsXsBPwTr3Ykv9l08UYEVEdWeRZNouaZqF6RN0w==}
     engines: {node: '>= 0.4'}
 
+  is-network-error@1.1.0:
+    resolution: {integrity: sha512-tUdRRAnhT+OtCZR/LxZelH/C7QtjtFrTu5tXCA8pl55eTUElUHT+GPYV8MBMBvea/j+NxQqVt3LbWMRir7Gx9g==}
+    engines: {node: '>=16'}
+
   is-number-object@1.1.1:
     resolution: {integrity: sha512-lZhclumE1G6VYD8VHe35wFaIif+CTy5SJIi5+3y4psDgWu4wPDoBhF8NxUOinEc7pHgiTsT6MaBb92rKhhD+Xw==}
     engines: {node: '>= 0.4'}
@@ -5281,6 +5320,10 @@ packages:
   p-retry@5.1.2:
     resolution: {integrity: sha512-couX95waDu98NfNZV+i/iLt+fdVxmI7CbrrdC2uDWfPdUAApyxT4wmDlyOtR5KtTDmkDO0zDScDjDou9YHhd9g==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
+  p-retry@6.2.1:
+    resolution: {integrity: sha512-hEt02O4hUct5wtwg4H4KcWgDdm+l1bOaEy/hWzd8xtXB9BqxTWBBhb+2ImAtH4Cv4rPjV76xN3Zumqk3k3AhhQ==}
+    engines: {node: '>=16.17'}
 
   p-try@2.2.0:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
@@ -6466,12 +6509,37 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@atproto-labs/did-resolver@0.1.11':
+  '@atcute/car@3.0.3':
+    dependencies:
+      '@atcute/cbor': 2.2.2
+      '@atcute/cid': 2.2.1
+      '@atcute/varint': 1.0.2
+
+  '@atcute/cbor@2.2.2':
+    dependencies:
+      '@atcute/cid': 2.2.1
+      '@atcute/multibase': 1.1.3
+      '@atcute/uint8array': 1.0.1
+
+  '@atcute/cid@2.2.1':
+    dependencies:
+      '@atcute/multibase': 1.1.3
+      '@atcute/uint8array': 1.0.1
+
+  '@atcute/multibase@1.1.3':
+    dependencies:
+      '@atcute/uint8array': 1.0.1
+
+  '@atcute/uint8array@1.0.1': {}
+
+  '@atcute/varint@1.0.2': {}
+
+  '@atproto-labs/did-resolver@0.1.12':
     dependencies:
       '@atproto-labs/fetch': 0.2.2
       '@atproto-labs/pipe': 0.1.0
-      '@atproto-labs/simple-store': 0.1.2
-      '@atproto-labs/simple-store-memory': 0.1.2
+      '@atproto-labs/simple-store': 0.2.0
+      '@atproto-labs/simple-store-memory': 0.1.3
       '@atproto/did': 0.1.5
       zod: 3.24.2
 
@@ -6487,33 +6555,35 @@ snapshots:
     dependencies:
       '@atproto-labs/pipe': 0.1.0
 
-  '@atproto-labs/handle-resolver-node@0.1.14':
+  '@atproto-labs/handle-resolver-node@0.1.15':
     dependencies:
       '@atproto-labs/fetch-node': 0.1.8
-      '@atproto-labs/handle-resolver': 0.1.7
+      '@atproto-labs/handle-resolver': 0.1.8
       '@atproto/did': 0.1.5
 
-  '@atproto-labs/handle-resolver@0.1.7':
+  '@atproto-labs/handle-resolver@0.1.8':
     dependencies:
-      '@atproto-labs/simple-store': 0.1.2
-      '@atproto-labs/simple-store-memory': 0.1.2
+      '@atproto-labs/simple-store': 0.2.0
+      '@atproto-labs/simple-store-memory': 0.1.3
       '@atproto/did': 0.1.5
       zod: 3.24.2
 
-  '@atproto-labs/identity-resolver@0.1.15':
+  '@atproto-labs/identity-resolver@0.1.16':
     dependencies:
-      '@atproto-labs/did-resolver': 0.1.11
-      '@atproto-labs/handle-resolver': 0.1.7
+      '@atproto-labs/did-resolver': 0.1.12
+      '@atproto-labs/handle-resolver': 0.1.8
       '@atproto/syntax': 0.4.0
 
   '@atproto-labs/pipe@0.1.0': {}
 
-  '@atproto-labs/simple-store-memory@0.1.2':
+  '@atproto-labs/simple-store-memory@0.1.3':
     dependencies:
-      '@atproto-labs/simple-store': 0.1.2
+      '@atproto-labs/simple-store': 0.2.0
       lru-cache: 10.4.3
 
   '@atproto-labs/simple-store@0.1.2': {}
+
+  '@atproto-labs/simple-store@0.2.0': {}
 
   '@atproto/api@0.14.16':
     dependencies:
@@ -6533,6 +6603,13 @@ snapshots:
       uint8arrays: 3.0.0
       zod: 3.24.2
 
+  '@atproto/common-web@0.4.2':
+    dependencies:
+      graphemer: 1.4.0
+      multiformats: 9.9.0
+      uint8arrays: 3.0.0
+      zod: 3.24.2
+
   '@atproto/crypto@0.4.4':
     dependencies:
       '@noble/curves': 1.8.1
@@ -6543,19 +6620,27 @@ snapshots:
     dependencies:
       zod: 3.24.2
 
-  '@atproto/jwk-jose@0.1.5':
+  '@atproto/jwk-jose@0.1.6':
     dependencies:
-      '@atproto/jwk': 0.1.4
+      '@atproto/jwk': 0.1.5
       jose: 5.9.6
 
-  '@atproto/jwk-webcrypto@0.1.5':
+  '@atproto/jwk-webcrypto@0.1.6':
     dependencies:
-      '@atproto/jwk': 0.1.4
-      '@atproto/jwk-jose': 0.1.5
+      '@atproto/jwk': 0.1.5
+      '@atproto/jwk-jose': 0.1.6
       zod: 3.24.2
 
-  '@atproto/jwk@0.1.4':
+  '@atproto/jwk@0.1.5':
     dependencies:
+      multiformats: 9.9.0
+      zod: 3.24.2
+
+  '@atproto/lexicon@0.4.11':
+    dependencies:
+      '@atproto/common-web': 0.4.2
+      '@atproto/syntax': 0.4.0
+      iso-datestring-validator: 2.2.2
       multiformats: 9.9.0
       zod: 3.24.2
 
@@ -6567,36 +6652,36 @@ snapshots:
       multiformats: 9.9.0
       zod: 3.24.2
 
-  '@atproto/oauth-client-node@0.2.13':
+  '@atproto/oauth-client-node@0.2.17':
     dependencies:
-      '@atproto-labs/did-resolver': 0.1.11
-      '@atproto-labs/handle-resolver-node': 0.1.14
-      '@atproto-labs/simple-store': 0.1.2
+      '@atproto-labs/did-resolver': 0.1.12
+      '@atproto-labs/handle-resolver-node': 0.1.15
+      '@atproto-labs/simple-store': 0.2.0
       '@atproto/did': 0.1.5
-      '@atproto/jwk': 0.1.4
-      '@atproto/jwk-jose': 0.1.5
-      '@atproto/jwk-webcrypto': 0.1.5
-      '@atproto/oauth-client': 0.3.12
-      '@atproto/oauth-types': 0.2.4
+      '@atproto/jwk': 0.1.5
+      '@atproto/jwk-jose': 0.1.6
+      '@atproto/jwk-webcrypto': 0.1.6
+      '@atproto/oauth-client': 0.3.16
+      '@atproto/oauth-types': 0.2.7
 
-  '@atproto/oauth-client@0.3.12':
+  '@atproto/oauth-client@0.3.16':
     dependencies:
-      '@atproto-labs/did-resolver': 0.1.11
+      '@atproto-labs/did-resolver': 0.1.12
       '@atproto-labs/fetch': 0.2.2
-      '@atproto-labs/handle-resolver': 0.1.7
-      '@atproto-labs/identity-resolver': 0.1.15
-      '@atproto-labs/simple-store': 0.1.2
-      '@atproto-labs/simple-store-memory': 0.1.2
+      '@atproto-labs/handle-resolver': 0.1.8
+      '@atproto-labs/identity-resolver': 0.1.16
+      '@atproto-labs/simple-store': 0.2.0
+      '@atproto-labs/simple-store-memory': 0.1.3
       '@atproto/did': 0.1.5
-      '@atproto/jwk': 0.1.4
-      '@atproto/oauth-types': 0.2.4
-      '@atproto/xrpc': 0.6.11
+      '@atproto/jwk': 0.1.5
+      '@atproto/oauth-types': 0.2.7
+      '@atproto/xrpc': 0.7.0
       multiformats: 9.9.0
       zod: 3.24.2
 
-  '@atproto/oauth-types@0.2.4':
+  '@atproto/oauth-types@0.2.7':
     dependencies:
-      '@atproto/jwk': 0.1.4
+      '@atproto/jwk': 0.1.5
       zod: 3.24.2
 
   '@atproto/syntax@0.4.0': {}
@@ -6604,6 +6689,11 @@ snapshots:
   '@atproto/xrpc@0.6.11':
     dependencies:
       '@atproto/lexicon': 0.4.9
+      zod: 3.24.2
+
+  '@atproto/xrpc@0.7.0':
+    dependencies:
+      '@atproto/lexicon': 0.4.11
       zod: 3.24.2
 
   '@aws-crypto/sha256-browser@5.2.0':
@@ -10178,24 +10268,6 @@ snapshots:
       '@web3-storage/data-segment': 5.3.0
       uint8arrays: 5.1.0
 
-  '@storacha/client@1.2.6(encoding@0.1.13)':
-    dependencies:
-      '@ipld/dag-ucan': 3.4.5
-      '@storacha/access': 1.1.1
-      '@storacha/blob-index': 1.0.5
-      '@storacha/capabilities': 1.4.0
-      '@storacha/did-mailto': 1.0.2
-      '@storacha/filecoin-client': 1.0.6
-      '@storacha/upload-client': 1.0.9(encoding@0.1.13)
-      '@ucanto/client': 9.0.1
-      '@ucanto/core': 10.3.1
-      '@ucanto/interface': 10.2.0
-      '@ucanto/principal': 9.0.2
-      '@ucanto/transport': 9.2.0
-      environment: 1.1.0
-    transitivePeerDependencies:
-      - encoding
-
   '@storacha/client@1.2.8(encoding@0.1.13)':
     dependencies:
       '@ipld/dag-ucan': 3.4.5
@@ -10251,27 +10323,6 @@ snapshots:
       - '@types/react'
       - encoding
       - react-dom
-
-  '@storacha/upload-client@1.0.9(encoding@0.1.13)':
-    dependencies:
-      '@ipld/car': 5.4.0
-      '@ipld/dag-cbor': 9.2.2
-      '@ipld/dag-ucan': 3.4.5
-      '@ipld/unixfs': 3.0.0
-      '@storacha/blob-index': 1.0.5
-      '@storacha/capabilities': 1.4.0
-      '@storacha/filecoin-client': 1.0.6
-      '@ucanto/client': 9.0.1
-      '@ucanto/core': 10.3.1
-      '@ucanto/interface': 10.2.0
-      '@ucanto/transport': 9.2.0
-      '@web3-storage/data-segment': 5.3.0
-      ipfs-utils: 9.0.14(encoding@0.1.13)
-      multiformats: 13.3.2
-      p-retry: 5.1.2
-      varint: 6.0.0
-    transitivePeerDependencies:
-      - encoding
 
   '@storacha/upload-client@1.1.1(encoding@0.1.13)':
     dependencies:
@@ -10771,6 +10822,8 @@ snapshots:
   '@types/resolve@1.20.6': {}
 
   '@types/retry@0.12.1': {}
+
+  '@types/retry@0.12.2': {}
 
   '@types/semver@7.5.8': {}
 
@@ -12696,6 +12749,8 @@ snapshots:
       call-bind: 1.0.8
       define-properties: 1.2.1
 
+  is-network-error@1.1.0: {}
+
   is-number-object@1.1.1:
     dependencies:
       call-bound: 1.0.3
@@ -13254,6 +13309,12 @@ snapshots:
   p-retry@5.1.2:
     dependencies:
       '@types/retry': 0.12.1
+      retry: 0.13.1
+
+  p-retry@6.2.1:
+    dependencies:
+      '@types/retry': 0.12.2
+      is-network-error: 1.1.0
       retry: 0.13.1
 
   p-try@2.2.0: {}

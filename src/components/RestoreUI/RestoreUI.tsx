@@ -8,7 +8,7 @@ import useSWR from 'swr'
 
 import { ATPROTO_DEFAULT_SINK, ATPROTO_DEFAULT_SOURCE } from '@/lib/constants'
 import db from '@/lib/db'
-import { cidUrl } from '@/lib/storacha'
+import { loadCid } from '@/lib/storacha'
 import { ATBlob, Snapshot } from '@/types'
 
 import {
@@ -197,15 +197,6 @@ export default function RestoreDialog({ snapshotId }: { snapshotId: string }) {
     } else {
       console.warn('not restoring:', blobs, sinkAgent)
     }
-  }
-
-  async function loadCid(
-    cid: string,
-    encryptedWith?: string
-  ): Promise<ArrayBuffer> {
-    console.log('ignoring encryptedWith for now', encryptedWith)
-    const response = await fetch(cidUrl(cid))
-    return await response.arrayBuffer()
   }
 
   async function transferIdentity() {
