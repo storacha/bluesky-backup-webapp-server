@@ -1,6 +1,5 @@
 'use client'
 
-import { Did } from '@atproto/api'
 import { styled } from 'next-yak'
 import { ReactNode } from 'react'
 
@@ -8,7 +7,6 @@ import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSe
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
 import { Heading, Stack, Text } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
-import { shortenDID } from '@/lib/ui'
 import { Backup } from '@/types'
 
 import { DataBox } from './DataBox'
