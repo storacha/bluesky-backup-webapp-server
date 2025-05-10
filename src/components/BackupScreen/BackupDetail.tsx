@@ -1,15 +1,17 @@
 'use client'
 
+import { Did } from '@atproto/api'
 import { styled } from 'next-yak'
 import { ReactNode } from 'react'
 
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
 import { Heading, Stack, Text } from '@/components/ui'
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
+import { shortenDID } from '@/lib/ui'
 import { Backup } from '@/types'
 
 import { DataBox } from './DataBox'
-import { useMobileScreens } from '@/hooks/use-mobile-screens'
 
 interface BackupProps {
   backup?: Backup
@@ -74,7 +76,7 @@ const Section = ({
  * To submit the data, wrap this component with a form element.
  */
 export const BackupDetail = ({ backup }: BackupProps) => {
-  const { isMobile } = useMobileScreens();
+  const { isMobile } = useMobileScreens()
   return (
     <Stack $gap="2rem">
       {backup ? (
@@ -94,7 +96,7 @@ export const BackupDetail = ({ backup }: BackupProps) => {
           <Wrapper>
             <StorachaSpaceSelect
               name="storacha_space"
-              defaultValue={backup?.atprotoAccount}
+              defaultValue={shortenDID(backup?.atprotoAccount as Did)}
               disabled={!!backup}
             />
           </Wrapper>

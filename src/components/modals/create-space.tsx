@@ -9,6 +9,7 @@ import * as CAR from '@ucanto/transport/car'
 import { ChangeEvent, useState } from 'react'
 import { toast } from 'sonner'
 
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { GATEWAY_HOSTNAME, GATEWAY_ID } from '@/lib/constants'
 import { shorten } from '@/lib/ui'
 
@@ -23,7 +24,6 @@ import {
 } from '../ui'
 
 import { SharedModalLayout } from './layout'
-import { useMobileScreens } from '@/hooks/use-mobile-screens'
 
 type SpaceCreationState = 'idle' | 'creating-space' | 'creating-delegation'
 
@@ -38,7 +38,7 @@ export const CreateSpaceModal = ({
   account,
   onSpaceCreated,
 }: CreateSpaceModalProps) => {
-  const { isMobile } = useMobileScreens();
+  const { isMobile } = useMobileScreens()
   const [state, setState] = useState<SpaceCreationState>('idle')
   const [spaceName, setSpaceName] = useState<string>('')
   const [spaceCreationStep, setSpaceCreationStep] = useState<

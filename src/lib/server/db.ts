@@ -265,6 +265,8 @@ export function getStorageContext(): StorageContext {
           select *
           from backups
           where account_did = ${account}
+          order by created_at desc
+          limit 10
         `
         return {
           results,
