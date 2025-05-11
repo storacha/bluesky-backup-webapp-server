@@ -6,7 +6,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
 /* eslint-disable import/no-restricted-paths */
 import { Sidebar } from '@/app/Sidebar'
-import { Container } from '@/components/ui'
+import { Container, StyleProps } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 
 const ScreenContainer = styled.div`
@@ -51,7 +51,7 @@ const HamburgerButton = styled.button`
   padding: 0.25rem;
   z-index: 10;
 
-  @media only screen and (min-width: 0px) and (max-width: 567px) {
+  @media only screen and (min-width: 0px) and (max-width: 992px) {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -71,12 +71,12 @@ const HamburgerLine = styled.span`
   transition: all 0.3s ease;
 `
 
-const MobileSidebar = styled.div<{ $isOpen: boolean }>`
+const MobileSidebar = styled.div<Partial<StyleProps> & { $isOpen: boolean }>`
   display: none;
   position: fixed;
   top: 0;
   left: 0;
-  width: 80%;
+  width: ${({ $width = '70%' }) => $width};
   height: 100vh;
   background-color: var(--color-gray-extra-light);
   z-index: 100;
@@ -86,8 +86,12 @@ const MobileSidebar = styled.div<{ $isOpen: boolean }>`
     props.$isOpen ? '0 0 10px rgba(0, 0, 0, 0.1)' : 'none'};
   overflow-y: auto;
 
-  @media only screen and (min-width: 0px) and (max-width: 567px) {
+  @media only screen and (min-width: 0px) and (max-width: 992px) {
     display: block;
+  }
+
+  @media only screen and (min-width: 576px) and (max-width: 992px) {
+    width: 30%;
   }
 `
 
@@ -104,7 +108,7 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
   pointer-events: ${(props) => (props.$isOpen ? 'auto' : 'none')};
   transition: opacity 0.3s ease;
 
-  @media only screen and (min-width: 0px) and (max-width: 567px) {
+  @media only screen and (min-width: 0px) and (max-width: 992px) {
     display: block;
   }
 `
@@ -122,7 +126,7 @@ export const SharedScreenLayout = ({
   selectedBackupId,
   rightPanelContent,
 }: SharedScreenLayoutProps) => {
-  const { isMobile } = useMobileScreens()
+  const { isMobile, isSmallViewPort } = useMobileScreens()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const toggleMobileSidebar = () => {
@@ -140,7 +144,7 @@ export const SharedScreenLayout = ({
       />
       <PanelGroup
         autoSaveId={`${screenName}-screen-layout`}
-        direction={isMobile ? 'vertical' : 'horizontal'}
+        direction={isSmallViewPort ? 'vertical' : 'horizontal'}
       >
         <Panel defaultSize={isMobile ? 40 : 60} minSize={isMobile ? 30 : 45}>
           <ContentWrapper>

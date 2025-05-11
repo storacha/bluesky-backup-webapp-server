@@ -13,8 +13,16 @@ export const roundRectStyle = css`
 export const Container = styled.div`
   padding: 3.4rem 3.2em;
 
-  @media only screen and (min-width: 0px) and (max-width: 576px) {
+  @media only screen and (min-width: 0px) and (max-width: 575px) {
     padding: 1.2rem 1rem;
+  }
+
+  @media only screen and (min-width: 576px) and (max-width: 992px) {
+    padding: 1rem 2.4rem;
+  }
+
+  @media only screen and (min-width: 993px) and (max-width: 1024px) {
+    padding: 1rem 1rem;
   }
 `
 

@@ -74,7 +74,7 @@ const Section = ({
  * To submit the data, wrap this component with a form element.
  */
 export const BackupDetail = ({ backup }: BackupProps) => {
-  const { isMobile } = useMobileScreens()
+  const { isMobile, isBaseLaptop } = useMobileScreens()
   return (
     <Stack $gap="2rem">
       {backup ? (
@@ -104,7 +104,7 @@ export const BackupDetail = ({ backup }: BackupProps) => {
       <Section title="Data">
         <Stack
           $direction="row"
-          $gap="1.25rem"
+          $gap={isBaseLaptop ? '1rem' : '1.25rem'}
           $wrap={isMobile ? 'nowrap' : 'wrap'}
         >
           <DataBox

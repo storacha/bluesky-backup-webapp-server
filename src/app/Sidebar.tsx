@@ -21,7 +21,7 @@ const SidebarOutside = styled.nav<{ $variant?: 'desktop' | 'mobile' }>`
   ${({ $variant }) =>
     $variant === 'desktop' &&
     css`
-      @media only screen and (min-width: 0px) and (max-width: 567px) {
+      @media only screen and (min-width: 0px) and (max-width: 992px) {
         display: none;
       }
     `}
@@ -33,6 +33,11 @@ const SidebarOutside = styled.nav<{ $variant?: 'desktop' | 'mobile' }>`
       height: 100%;
       border-right: none;
     `}
+
+  @media only screen and (min-width: 993px) and (max-width: 1024px) {
+    width: 13rem;
+    padding: 1rem;
+  }
 `
 
 const Header = styled.header`
