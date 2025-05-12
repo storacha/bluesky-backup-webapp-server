@@ -66,10 +66,10 @@ export const ValueSelected: Story = {
       name: 'Select Bluesky account',
     })
     await userEvent.click(button)
-    const listBox = await body.findByRole('listbox', {
+    const popup = await body.findByRole('dialog', {
       name: 'Select Bluesky account',
     })
-    const option = await within(listBox).findByRole('option', {
+    const option = await within(popup).findByRole('option', {
       name: 'chalametoui.bsky.social',
     })
     await userEvent.click(option)
@@ -81,5 +81,22 @@ export const Open: Story = {
     const canvas = within(canvasElement)
     const button = await canvas.findByRole('button')
     await userEvent.click(button)
+  },
+}
+export const PerformingTheAction: Story = {
+  play: async ({ canvasElement }) => {
+    // Use the entire body to find things in portals outside the canvas element.
+    const body = within(canvasElement.ownerDocument.body)
+    const button = await body.findByRole('button', {
+      name: 'Select Bluesky account',
+    })
+    await userEvent.click(button)
+    const popup = await body.findByRole('dialog', {
+      name: 'Select Bluesky account',
+    })
+    const option = await within(popup).findByRole('button', {
+      name: 'Create New',
+    })
+    await userEvent.click(option)
   },
 }
