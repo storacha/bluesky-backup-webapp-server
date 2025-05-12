@@ -1,5 +1,5 @@
 import { ArrowLeft } from '@phosphor-icons/react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 import { Button } from './ui'
 
