@@ -1,6 +1,8 @@
 import { ArrowLeft } from '@phosphor-icons/react'
 import { ReactNode } from 'react'
 
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
+
 import { Box, ModalProps, Stack, Text } from '../ui'
 
 interface SharedModalLayoutProps extends Pick<ModalProps, 'onClose'> {
@@ -13,9 +15,13 @@ export const SharedModalLayout = ({
   title,
   onClose,
 }: SharedModalLayoutProps) => {
+  const { isMobile } = useMobileScreens()
   return (
-    <Stack $direction="row" $gap="3rem">
-      <Stack $gap="1rem" $width="30%">
+    <Stack $direction={isMobile ? 'column' : 'row'} $gap="3rem">
+      <Stack
+        $gap={isMobile ? '0.2rem' : '1rem'}
+        $width={isMobile ? '100%' : '30%'}
+      >
         <Box
           $width="40px"
           $height="40px"

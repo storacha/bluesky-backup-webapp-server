@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 import { components, ControlProps, ValueContainerProps } from 'react-select'
 
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { useStorachaAccount } from '@/hooks/use-plan'
 import { useSWR } from '@/lib/swr'
 import { shortenDID } from '@/lib/ui'
@@ -93,6 +94,7 @@ export const BlueskyAccountSelect = (props: {
   }
 
   const BskyControl = (props: ControlProps<Option>) => {
+    const { isMobile } = useMobileScreens()
     const selectedOption = props.getValue()[0]
     const hasValue = Boolean(
       (selectedOption?.value &&
@@ -128,7 +130,7 @@ export const BlueskyAccountSelect = (props: {
             <Stack
               $justifyContent="space-between"
               $direction="row"
-              $width="85%"
+              $width={isMobile ? '100%' : '85%'}
             >
               <Stack $gap=".6rem">
                 <Text $color="var(--color-black)">Bluesky Account</Text>

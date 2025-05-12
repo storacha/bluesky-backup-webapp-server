@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
 import { Center, Stack, Text } from '@/components/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
 import { delegate } from '@/lib/delegate'
@@ -18,7 +19,7 @@ import { SpaceDid } from '@/types'
 import { BackupScreen } from '../components/BackupScreen'
 import { useSWR } from '../lib/swr'
 
-import { Sidebar } from './Sidebar'
+import { AppLayout } from './AppLayout'
 
 let createNewBackup: typeof import('./backups/new/createNewBackup').action
 
@@ -124,6 +125,7 @@ const CreateBackupButton = () => {
 }
 
 export function LoggedIn() {
+  const { isMobile } = useMobileScreens()
   const [{ accounts, client }] = useAuthenticator()
   const account = accounts[0]
   const { error: sessionDIDError, mutate } = useSWR(['api', '/session/did'])
@@ -148,21 +150,23 @@ export function LoggedIn() {
   if (!account) return null
   return (
     <Outside $direction="row">
-      <Sidebar selectedBackupId={null} />
-      <BackupScreen
-        sidebarContent={
-          <Center $height="90vh">
-            <Text $fontWeight="600">
-              Press &quot;Create Backup&quot; to get started!
-            </Text>
-          </Center>
-        }
-      >
-        <NewBackupForm account={account}>
-          <BackupDetail />
-          <CreateBackupButton />
-        </NewBackupForm>
-      </BackupScreen>
+      <AppLayout selectedBackupId={null}>
+        <BackupScreen
+          selectedBackupId={null}
+          rightPanelContent={
+            <Center $height={isMobile ? '45vh' : '90vh'}>
+              <Text $fontWeight="600">
+                Press &quot;Create Backup&quot; to get started!
+              </Text>
+            </Center>
+          }
+        >
+          <NewBackupForm account={account}>
+            <BackupDetail />
+            <CreateBackupButton />
+          </NewBackupForm>
+        </BackupScreen>
+      </AppLayout>
     </Outside>
   )
 }
