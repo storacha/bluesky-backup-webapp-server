@@ -8,7 +8,7 @@ import Lightbox from 'yet-another-react-lightbox'
 import { Sidebar } from '@/app/Sidebar'
 import { Loader } from '@/components/Loader'
 import { Box, Center, Stack, Text } from '@/components/ui'
-import { useBlobs } from '@/hooks/use-blobs'
+import { cidUrl } from '@/lib/storacha'
 import { useSWR } from '@/lib/swr'
 import { shortenCID } from '@/lib/ui'
 import { ATBlob } from '@/types'
@@ -16,20 +16,20 @@ import { ATBlob } from '@/types'
 import 'yet-another-react-lightbox/styles.css'
 
 export default function BlobsPage({ id }: { id: string }) {
-  const { data: blobsData, error } = useSWR([
-    'api',
-    `/api/snapshots/${id}/blobs`,
-  ])
+  const {
+    data: blobsData,
+    error,
+    isLoading: loading,
+  } = useSWR(['api', `/api/snapshots/${id}/blobs`])
   const blobs = blobsData as ATBlob[]
-  const { blobs: repoBlobs, loading } = useBlobs(blobs)
 
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   if (error) throw error
-  if (!blobsData) return null
+  if (!blobs) return null
 
-  const slides = repoBlobs?.map((blob) => ({
-    src: blob.imageUrl,
+  const slides = blobs?.map((blob) => ({
+    src: cidUrl(blob.cid),
     alt: `Blob created on ${blob.createdAt}`,
   }))
 
@@ -43,7 +43,7 @@ export default function BlobsPage({ id }: { id: string }) {
           </Center>
         ) : (
           <Stack $direction="row" $gap=".8rem" $wrap="wrap">
-            {repoBlobs?.map((blob, index) => (
+            {blobs?.map((blob, index) => (
               <Stack
                 key={blob.cid}
                 $gap=".4rem"
@@ -54,18 +54,20 @@ export default function BlobsPage({ id }: { id: string }) {
                   height={110}
                   width={160}
                   objectFit="cover"
-                  src={blob.imageUrl}
+                  src={cidUrl(blob.cid)}
                   style={{ borderRadius: '0.75rem' }}
                   alt={`Blob created on ${blob.createdAt}`}
                 />
                 <Stack $gap=".2rem">
-                  <Text
-                    $fontSize="0.625rem"
-                    $fontWeight="700"
-                    $color="var(--color-black)"
-                  >
-                    IMG:{shortenCID(blob.cid)}
-                  </Text>
+                  <Stack $direction="row">
+                    <Text
+                      $fontSize="0.625rem"
+                      $fontWeight="700"
+                      $color="var(--color-black)"
+                    >
+                      {shortenCID(blob.cid)}
+                    </Text>
+                  </Stack>
                   <Text $fontSize="0.6235rem">{blob.createdAt}</Text>
                 </Stack>
               </Stack>
