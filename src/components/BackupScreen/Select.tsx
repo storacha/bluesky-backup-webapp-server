@@ -117,6 +117,7 @@ export const Select = ({
   defaultSelectedKey,
   actionLabel,
   actionOnPress,
+  content,
 }: {
   /** URL of the image to show in the control. */
   imageSrc: string
@@ -126,7 +127,8 @@ export const Select = ({
   actionLabel: string
   /** Handler called when the action button is pressed. */
   actionOnPress: () => void
-} & Pick<SelectProps<Item>, 'name' | 'defaultSelectedKey'> &
+  content?: React.ReactNode
+} & Pick<SelectProps<Item>, 'name' | 'defaultSelectedKey' | 'isDisabled'> &
   Pick<ListBoxProps<Item>, 'items'>) => {
   const prompt = `Select ${label}`
   return (
@@ -157,12 +159,18 @@ export const Select = ({
         </SelectValue>
       </FullButton>
       <Popover aria-label={prompt}>
-        <ListBox items={items}>{({ label }) => <Item>{label}</Item>}</ListBox>
-        {/* Prevent the button from automagically being treated as the trigger
+        {content ?? (
+          <>
+            <ListBox items={items}>
+              {({ label }) => <Item>{label}</Item>}
+            </ListBox>
+            {/* Prevent the button from automagically being treated as the trigger
             button just because it's inside the <Select> component. */}
-        <ButtonContext.Provider value={{}}>
-          <ActionButton onPress={actionOnPress}>{actionLabel}</ActionButton>
-        </ButtonContext.Provider>
+            <ButtonContext.Provider value={{}}>
+              <ActionButton onPress={actionOnPress}>{actionLabel}</ActionButton>
+            </ButtonContext.Provider>
+          </>
+        )}
       </Popover>
     </RACSelect>
   )
