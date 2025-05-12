@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { styled } from 'next-yak'
 
 import { Sidebar } from '@/app/Sidebar'
+import { BackButton } from '@/components/BackButton'
 import { Posts } from '@/components/Posts'
 import { Box, Heading, Stack } from '@/components/ui'
 import { useProfile } from '@/hooks/use-profile'
@@ -32,27 +33,30 @@ export default function RepoPage({ id }: { id: string }) {
         {loading ? (
           <p>Loading repository data...</p>
         ) : (
-          <Stack $gap=".8rem">
-            <Heading>
-              Recent Posts
-              {profile && (
-                <>
-                  {' '}
-                  from{' '}
-                  <Link
-                    href={`https://bsky.app/profile/${profile?.handle}`}
-                    target="_blank"
-                  >
-                    <NoTextTransform>@{profile?.handle}</NoTextTransform>
-                  </Link>
-                </>
-              )}{' '}
-              In This Snapshot
-            </Heading>
-            <Posts
-              repositoryDid={snapshot.atprotoAccount}
-              posts={repo.posts.slice(0, 20)}
-            />
+          <Stack $gap="1rem">
+            <BackButton />
+            <Stack $gap=".8rem">
+              <Heading>
+                Recent Posts
+                {profile && (
+                  <>
+                    {' '}
+                    from{' '}
+                    <Link
+                      href={`https://bsky.app/profile/${profile?.handle}`}
+                      target="_blank"
+                    >
+                      <NoTextTransform>@{profile?.handle}</NoTextTransform>
+                    </Link>
+                  </>
+                )}{' '}
+                In This Snapshot
+              </Heading>
+              <Posts
+                repositoryDid={snapshot.atprotoAccount}
+                posts={repo.posts.slice(0, 20)}
+              />
+            </Stack>
           </Stack>
         )}
       </Box>

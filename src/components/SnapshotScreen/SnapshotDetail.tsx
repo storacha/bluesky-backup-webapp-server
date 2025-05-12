@@ -7,10 +7,7 @@ import { Snapshot } from '@/types'
 import CopyButton from '../CopyButton'
 import { Heading, Stack, SubHeading } from '../ui'
 
-const Details = styled(Stack)`
-  margin-top: 4rem;
-  padding-left: 2rem;
-`
+const Details = styled(Stack)``
 
 const DetailName = styled(SubHeading)`
   color: black;
