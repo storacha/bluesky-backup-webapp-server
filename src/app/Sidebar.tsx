@@ -4,23 +4,41 @@ import Link from 'next/link'
 import { css, styled } from 'next-yak'
 
 import { Loader } from '@/components/Loader'
-import { Stack } from '@/components/ui/Stack'
-
-import { roundRectStyle } from '../components/ui'
-import { useSWR } from '../lib/swr'
+import { roundRectStyle, Stack } from '@/components/ui'
+import { useSWR } from '@/lib/swr'
 
 import { LogOutButton as BaseLogOutButton } from './authentication'
 
-const SidebarOutside = styled.nav`
+const SidebarOutside = styled.nav<{ $variant?: 'desktop' | 'mobile' }>`
   display: flex;
   flex-direction: column;
   gap: 2rem;
   justify-content: space-between;
-
-  width: 20rem;
+  width: ${({ $variant }) => ($variant === 'mobile' ? '13rem' : '20rem')};
   padding: 2rem;
   background-color: var(--color-gray-extra-light);
   border-right: 1px solid var(--color-light-blue);
+
+  ${({ $variant }) =>
+    $variant === 'desktop' &&
+    css`
+      @media only screen and (min-width: 0px) and (max-width: 992px) {
+        display: none;
+      }
+    `}
+
+  ${({ $variant }) =>
+    $variant === 'mobile' &&
+    css`
+      width: 100%;
+      height: 100%;
+      border-right: none;
+    `}
+
+  @media only screen and (min-width: 993px) and (max-width: 1024px) {
+    width: 13rem;
+    padding: 1rem;
+  }
 `
 
 const Header = styled.header`
@@ -37,10 +55,11 @@ const Heading = styled.h2`
 `
 
 const BackupList = styled.ul`
-  /* display: flex;
-  flex-direction: column;
-  gap: 1rem; */
-  display: contents;
+  display: flex;
+  flex-flow: column;
+  gap: 0.8rem;
+  height: 60vh;
+  overflow-y: auto;
 `
 
 const backupItemLikeStyle = css`
@@ -96,13 +115,17 @@ const IdentitiesLink = styled(Link)`
   ${actionButtonStyle}
 `
 
+interface SidebarProps {
+  selectedBackupId: string | null
+  variant?: 'desktop' | 'mobile'
+}
+
 export function Sidebar({
   selectedBackupId,
-}: {
-  selectedBackupId: string | null
-}) {
+  variant = 'desktop',
+}: SidebarProps) {
   return (
-    <SidebarOutside>
+    <SidebarOutside $variant={variant}>
       <Stack>
         <Header>Storacha</Header>
         <Heading>Backups</Heading>

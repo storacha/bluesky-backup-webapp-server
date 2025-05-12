@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { styled } from 'next-yak'
 
-import { Sidebar } from '@/app/Sidebar'
+import { AppLayout } from '@/app/AppLayout'
 import { BackupScreen } from '@/components/BackupScreen'
 import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
 import { Loader } from '@/components/Loader'
@@ -112,11 +112,13 @@ export default function BackupPage({ id }: { id: string }) {
   if (!backup) return null
 
   return (
-    <>
-      <Sidebar selectedBackupId={id} />
-      <BackupScreen sidebarContent={<RightSidebarContent backup={backup} />}>
+    <AppLayout selectedBackupId={id}>
+      <BackupScreen
+        selectedBackupId={id}
+        rightPanelContent={<RightSidebarContent backup={backup} />}
+      >
         <BackupDetail backup={backup} />
       </BackupScreen>
-    </>
+    </AppLayout>
   )
 }

@@ -9,6 +9,7 @@ import * as CAR from '@ucanto/transport/car'
 import { ChangeEvent, useState } from 'react'
 import { toast } from 'sonner'
 
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { GATEWAY_HOSTNAME, GATEWAY_ID } from '@/lib/constants'
 import { shorten } from '@/lib/ui'
 
@@ -37,6 +38,7 @@ export const CreateSpaceModal = ({
   account,
   onSpaceCreated,
 }: CreateSpaceModalProps) => {
+  const { isMobile } = useMobileScreens()
   const [state, setState] = useState<SpaceCreationState>('idle')
   const [spaceName, setSpaceName] = useState<string>('')
   const [spaceCreationStep, setSpaceCreationStep] = useState<
@@ -151,7 +153,7 @@ export const CreateSpaceModal = ({
         onClose={handleClose}
       >
         <Box
-          $width="62%"
+          $width={isMobile ? '100%' : '62%'}
           $height="100%"
           $padding="0.8rem 1rem"
           $borderStyle="solid"
