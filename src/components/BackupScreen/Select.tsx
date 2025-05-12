@@ -18,10 +18,12 @@ import { Stack, Text } from '../ui'
 import { AccountLogo } from './BackupDetail'
 
 const Popover = styled(RACPopover)`
-  border: 1px solid black;
-  border-radius: 8px;
   padding: 0.5rem;
+
   background-color: var(--color-white);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--color-gray-light);
 `
 
 const FullButton = styled(Button)`
@@ -30,10 +32,17 @@ const FullButton = styled(Button)`
 `
 
 const Item = styled(ListBoxItem)`
-  padding: 0.25rem;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  height: 40px;
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.75rem;
+  cursor: default;
 
-  &[data-hovered] {
-    background-color: var(--color-dark-blue);
+  &:focus {
+    background-color: var(--color-gray-medium-light);
   }
 `
 
@@ -65,11 +74,11 @@ const Contents = styled.div<{ $hasValue: boolean }>`
   border-color: var(--color-gray-light);
   border-radius: 12px;
 
-  ${FullButton}[data-focus-visible] &, &:hover {
+  ${FullButton}:focus-visible &, &:hover {
     background-color: var(--color-white);
   }
 
-  ${FullButton}[data-focus-visible] & {
+  ${FullButton}:focus-visible & {
     outline: var(--color-dark-blue) 2px solid;
   }
 `

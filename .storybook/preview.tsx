@@ -6,13 +6,23 @@ import { dmMono, dmSans, epilogue } from '../src/app/globalStyle'
 
 import type { Decorator, Preview } from '@storybook/react'
 
-const withFonts: Decorator = (Story) => (
-  <div
-    className={`${dmSans.className} ${dmSans.variable} ${dmMono.variable} ${epilogue.variable}`}
-  >
-    <Story />
-  </div>
-)
+const withFonts: Decorator = (Story) => {
+  const addFonts = (div: HTMLDivElement | null) => {
+    if (div) {
+      div.ownerDocument.documentElement.classList.add(
+        dmSans.className,
+        dmSans.variable,
+        dmMono.variable,
+        epilogue.variable
+      )
+    }
+  }
+  return (
+    <div ref={addFonts}>
+      <Story />
+    </div>
+  )
+}
 
 const withNuqs: Decorator = (Story) => (
   <NuqsAdapter>
