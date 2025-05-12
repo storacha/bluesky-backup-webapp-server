@@ -1,9 +1,12 @@
-import React from 'react'
-import type { Preview } from '@storybook/react'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import React, { CSSProperties } from 'react'
+
+// eslint-disable-next-line import/no-restricted-paths -- This one we need.
 import { dmMono, dmSans, epilogue } from '../src/app/globalStyle'
 
-const withFonts = (Story) => (
+import type { Decorator, Preview } from '@storybook/react'
+
+const withFonts: Decorator = (Story) => (
   <div
     className={`${dmSans.className} ${dmSans.variable} ${dmMono.variable} ${epilogue.variable}`}
   >
@@ -11,11 +14,28 @@ const withFonts = (Story) => (
   </div>
 )
 
-const withNuqs = (Story) => (
+const withNuqs: Decorator = (Story) => (
   <NuqsAdapter>
     <Story />
   </NuqsAdapter>
 )
+
+declare module '@storybook/react' {
+  interface Parameters {
+    parentSize?: {
+      width?: CSSProperties['width']
+    }
+  }
+}
+
+const withParentSize: Decorator = (Story, { parameters: { parentSize } }) =>
+  parentSize ? (
+    <div style={{ width: parentSize.width }}>
+      <Story />
+    </div>
+  ) : (
+    <Story />
+  )
 
 const preview: Preview = {
   parameters: {
@@ -30,7 +50,7 @@ const preview: Preview = {
       appDirectory: true,
     },
   },
-  decorators: [withFonts, withNuqs],
+  decorators: [withFonts, withNuqs, withParentSize],
 }
 
 export default preview
