@@ -4,7 +4,7 @@ import { styled } from 'next-yak'
 import {
   Button,
   ButtonContext,
-  ListBox,
+  ListBox as RACListBox,
   ListBoxItem,
   ListBoxProps,
   Popover as RACPopover,
@@ -18,12 +18,18 @@ import { Stack, Text } from '../ui'
 import { AccountLogo } from './BackupDetail'
 
 const Popover = styled(RACPopover)`
-  padding: 0.5rem;
-
   background-color: var(--color-white);
   border-radius: 0.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--color-gray-light);
+  font-size: 0.75rem;
+`
+
+const ListBox = styled(RACListBox<Item>)`
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 `
 
 const FullButton = styled(Button)`
@@ -32,17 +38,32 @@ const FullButton = styled(Button)`
 `
 
 const Item = styled(ListBoxItem)`
-  background-color: var(--color-white);
-  color: var(--color-black);
-  height: 40px;
   border-radius: 0.25rem;
   padding: 0.75rem;
-  margin-bottom: 0.25rem;
-  font-size: 0.75rem;
   cursor: default;
 
   &:focus {
     background-color: var(--color-gray-medium-light);
+  }
+
+  &[data-selected] {
+    background-color: var(--color-dark-blue);
+    color: var(--color-white);
+
+    &:focus {
+      outline: var(--color-gray-medium-light) 1px solid;
+      outline-offset: -2px;
+    }
+  }
+`
+
+const ActionButton = styled(FullButton)`
+  border-top: 1px solid var(--color-gray-medium);
+  padding: 0.75rem calc(0.75rem + 0.5rem);
+  background-color: var(--color-gray-medium-light);
+
+  &:focus {
+    background-color: var(--color-gray-light);
   }
 `
 
@@ -94,11 +115,17 @@ export const Select = ({
   label,
   items,
   defaultSelectedKey,
+  actionLabel,
+  actionOnPress,
 }: {
   /** URL of the image to show in the control. */
   imageSrc: string
   /** A noun describing what is selected (eg. "Bluesky Account"). */
   label: string
+  /** The label for an action to place at the bottom of the options. */
+  actionLabel: string
+  /** Handler called when the action button is pressed. */
+  actionOnPress: () => void
 } & Pick<SelectProps<Item>, 'name' | 'defaultSelectedKey'> &
   Pick<ListBoxProps<Item>, 'items'>) => {
   const prompt = `Select ${label}`
@@ -129,16 +156,12 @@ export const Select = ({
           }}
         </SelectValue>
       </FullButton>
-      <Popover>
-        <ListBox aria-label={prompt} items={items}>
-          {({ label }) => <Item>{label}</Item>}
-        </ListBox>
+      <Popover aria-label={prompt}>
+        <ListBox items={items}>{({ label }) => <Item>{label}</Item>}</ListBox>
         {/* Prevent the button from automagically being treated as the trigger
             button just because it's inside the <Select> component. */}
         <ButtonContext.Provider value={{}}>
-          <FullButton onPress={() => console.log('Create New')}>
-            Create New
-          </FullButton>
+          <ActionButton onPress={actionOnPress}>{actionLabel}</ActionButton>
         </ButtonContext.Provider>
       </Popover>
     </RACSelect>
