@@ -31,6 +31,10 @@ const meta: Meta<typeof Select> = {
     label: 'Bluesky account',
     items: [
       {
+        id: 'did:plc:e7qrxsmiso3gz655qknfgoio',
+        label: 'wonkadonk.bsky.social',
+      },
+      {
         id: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
         label: 'chalametoui.bsky.social',
       },
@@ -69,5 +73,13 @@ export const ValueSelected: Story = {
       name: 'chalametoui.bsky.social',
     })
     await userEvent.click(option)
+  },
+}
+
+export const Open: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const button = await canvas.findByRole('button')
+    await userEvent.click(button)
   },
 }
