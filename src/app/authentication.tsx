@@ -41,8 +41,12 @@ export function LogOutButton({
   className?: string
 }): ReactNode {
   const [, { logout }] = useAuthenticator()
+  async function logoutAndDestroySession() {
+    await fetch('/session/destroy', { method: 'POST' })
+    await logout()
+  }
   return (
-    <button className={className} onClick={logout}>
+    <button className={className} onClick={logoutAndDestroySession}>
       {children}
     </button>
   )

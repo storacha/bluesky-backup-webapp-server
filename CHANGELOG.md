@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.2.3...v1.3.0) (2025-05-09)
+
+
+### Features
+
+* add repo explorer ([#88](https://github.com/storacha/bluesky-backup-webapp-server/issues/88)) ([2ce934b](https://github.com/storacha/bluesky-backup-webapp-server/commit/2ce934b9a74c66d9dae3d68f5e494f36aa79563f))
+
+
+### Bug Fixes
+
+* destroy session on logout ([#127](https://github.com/storacha/bluesky-backup-webapp-server/issues/127)) ([fd2aa73](https://github.com/storacha/bluesky-backup-webapp-server/commit/fd2aa73b4b23329179ad051ea1a73935a30bebbf))
+
 ## [1.2.3](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.2.2...v1.2.3) (2025-05-09)
 
 

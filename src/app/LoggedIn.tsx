@@ -10,6 +10,7 @@ import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
 import StripePricingTable from '@/components/StripePricingTable'
 import { Box, Center, Heading, Spinner, Stack, Text } from '@/components/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { usePlan, useStorachaAccount } from '@/hooks/use-plan'
 import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
@@ -20,7 +21,7 @@ import { SpaceDid } from '@/types'
 import { BackupScreen } from '../components/BackupScreen'
 import { useSWR } from '../lib/swr'
 
-import { Sidebar } from './Sidebar'
+import { AppLayout } from './AppLayout'
 
 let createNewBackup: typeof import('./backups/new/createNewBackup').action
 
@@ -131,6 +132,7 @@ const PricingTableContainer = styled(Stack)`
 `
 
 export function LoggedIn() {
+  const { isMobile } = useMobileScreens()
   const [{ client }] = useAuthenticator()
   const account = useStorachaAccount()
   const { error: sessionDIDError, mutate } = useSWR(['api', '/session/did'])
@@ -155,38 +157,40 @@ export function LoggedIn() {
   if (!account) return null
   return (
     <Outside $direction="row">
-      <Sidebar selectedBackupId={null} />
-      {planIsLoading ? (
-        <Spinner />
-      ) : plan ? (
-        <BackupScreen
-          sidebarContent={
-            <Center $height="90vh">
-              <Text $fontWeight="600">
-                Press &quot;Create Backup&quot; to get started!
-              </Text>
-            </Center>
-          }
-        >
-          <NewBackupForm account={account}>
-            <BackupDetail />
-            <CreateBackupButton />
-          </NewBackupForm>
-        </BackupScreen>
-      ) : (
-        <PricingTableContainer $alignItems="center" $gap="1rem">
-          <Heading>Please Sign Up for a Storacha Storage Plan</Heading>
-          <Text $textAlign="center" $maxWidth="30em" $fontSize="1rem">
-            To get started backing up your Bluesky and ATProto data, please sign
-            up for a Storacha storage plan. The 5GB of storage from our free
-            tier will be more than enough to back up most Bluesky accounts for a
-            very long time.
-          </Text>
-          <Box $width="100%">
-            <StripePricingTable />
-          </Box>
-        </PricingTableContainer>
-      )}
+      <AppLayout selectedBackupId={null}>
+        {planIsLoading ? (
+          <Spinner />
+        ) : plan ? (
+          <BackupScreen
+            selectedBackupId={null}
+            rightPanelContent={
+              <Center $height={isMobile ? '45vh' : '90vh'}>
+                <Text $fontWeight="600">
+                  Press &quot;Create Backup&quot; to get started!
+                </Text>
+              </Center>
+            }
+          >
+            <NewBackupForm account={account}>
+              <BackupDetail />
+              <CreateBackupButton />
+            </NewBackupForm>
+          </BackupScreen>
+        ) : (
+          <PricingTableContainer $alignItems="center" $gap="1rem">
+            <Heading>Please Sign Up for a Storacha Storage Plan</Heading>
+            <Text $textAlign="center" $maxWidth="30em" $fontSize="1rem">
+              To get started backing up your Bluesky and ATProto data, please
+              sign up for a Storacha storage plan. The 5GB of storage from our
+              free tier will be more than enough to back up most Bluesky
+              accounts for a very long time.
+            </Text>
+            <Box $width="100%">
+              <StripePricingTable />
+            </Box>
+          </PricingTableContainer>
+        )}
+      </AppLayout>
     </Outside>
   )
 }
