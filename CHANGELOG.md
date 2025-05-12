@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.3.0...v1.4.0) (2025-05-12)
+
+
+### Features
+
+* add blobs page ([#130](https://github.com/storacha/bluesky-backup-webapp-server/issues/130)) ([3139b5b](https://github.com/storacha/bluesky-backup-webapp-server/commit/3139b5b767980b151d3b03deb0cf90f9788c7e33))
+
 ## [1.3.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.2.3...v1.3.0) (2025-05-09)
 
 
