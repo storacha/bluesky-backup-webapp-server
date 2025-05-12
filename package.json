@@ -70,7 +70,8 @@
     "sonner": "^2.0.3",
     "swr": "^2.3.3",
     "the-new-css-reset": "^1.11.3",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "yet-another-react-lightbox": "^3.23.1"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.5",
