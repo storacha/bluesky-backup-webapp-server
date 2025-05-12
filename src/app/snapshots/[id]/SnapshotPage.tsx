@@ -1,6 +1,6 @@
 'use client'
 
-import { Sidebar } from '@/app/Sidebar'
+import { AppLayout } from '@/app/AppLayout'
 import { SnapshotScreen } from '@/components/SnapshotScreen'
 import { useSWR } from '@/lib/swr'
 
@@ -10,9 +10,8 @@ export default function SnapshotPage({ id }: { id: string }) {
   if (!snapshot) return null
 
   return (
-    <>
-      <Sidebar selectedBackupId={null} />
+    <AppLayout selectedBackupId={snapshot.backupId}>
       <SnapshotScreen snapshot={snapshot} />
-    </>
+    </AppLayout>
   )
 }
