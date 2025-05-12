@@ -3,13 +3,11 @@ import { Did } from '@atproto/api'
 import { useCallback, useEffect, useState } from 'react'
 
 import { loadCid } from '@/lib/storacha'
-import { ExtendedRepoEntry } from '@/types'
+import { ExtendedRepoEntry, State } from '@/types'
 
 export type RepoParams = {
   cid: string
 }
-
-type State = 'loading' | 'idle'
 
 type ParsedRepo = {
   posts: ExtendedRepoEntry[]

@@ -51,7 +51,7 @@ export default function SnapshotDetail({ snapshot }: SnapshotDetailArgs) {
       )}
       <Stack $direction="row" $alignItems="center" $gap="1rem">
         <DetailName>Blobs</DetailName>
-        <Link href={`/snapshots/${snapshot.id}/repo`}>
+        <Link href={`/snapshots/${snapshot.id}/blobs`}>
           <DetailValue>View Blobs</DetailValue>
         </Link>
       </Stack>
