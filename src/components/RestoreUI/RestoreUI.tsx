@@ -4,15 +4,15 @@ import { Agent, CredentialSession } from '@atproto/api'
 import { Secp256k1Keypair } from '@atproto/crypto'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useState } from 'react'
-import useSWR from 'swr'
+import { SWRResponse } from 'swr'
 
 import { ATPROTO_DEFAULT_SINK, ATPROTO_DEFAULT_SOURCE } from '@/lib/constants'
 import db from '@/lib/db'
 import { loadCid } from '@/lib/storacha'
-import { ATBlob, Snapshot } from '@/types'
+import { useSWR } from '@/lib/swr'
+import { ATBlob } from '@/types'
 
 import {
-  Blob,
   CreateAccountFn,
   LoginFn,
   Repo,
@@ -20,10 +20,7 @@ import {
 } from './RestoreDialogView'
 
 export default function RestoreDialog({ snapshotId }: { snapshotId: string }) {
-  const { data: snapshot } = useSWR<Snapshot>([
-    'api',
-    `/api/snapshots/${snapshotId}`,
-  ])
+  const { data: snapshot } = useSWR(['api', `/api/snapshots/${snapshotId}`])
   const repo: Repo | undefined = snapshot?.repositoryCid
     ? {
         cid: snapshot.repositoryCid,
@@ -31,14 +28,10 @@ export default function RestoreDialog({ snapshotId }: { snapshotId: string }) {
         createdAt: new Date(snapshot.createdAt),
       }
     : undefined
-  const { data: atBlobs } = useSWR<ATBlob[]>([
+  const { data: blobs } = useSWR([
     'api',
     `/api/snapshots/${snapshotId}/blobs`,
-  ])
-  const blobs: Blob[] =
-    atBlobs?.map((atBlob) => ({
-      ...atBlob,
-    })) ?? []
+  ]) as SWRResponse<ATBlob[]>
   const prefsDoc = useLiveQuery(() =>
     db.prefsDocs.where('backupId').equals(snapshotId).first()
   )
@@ -147,7 +140,7 @@ export default function RestoreDialog({ snapshotId }: { snapshotId: string }) {
 
       const getDidCredentials =
         await sinkAgent.com.atproto.identity.getRecommendedDidCredentials()
-      const rotationKeys = getDidCredentials.data.rotationKeys ?? []
+      const rotationKeys = getDidCredentials.data.rotationKeys
       if (!rotationKeys) {
         throw new Error('No rotation key provided')
       }

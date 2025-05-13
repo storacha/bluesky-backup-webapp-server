@@ -6,7 +6,7 @@ import { getStorageContext } from '@/lib/server/db'
 
 export const action = async (data: FormData) => {
   const { db } = getStorageContext()
-  const atprotoAccount = data.get('atproto_account') as Did
+  const atprotoAccount = data.get('atproto_account') as Did | null
 
   if (!atprotoAccount) {
     throw new Error('ATProto account not provided')

@@ -24,12 +24,14 @@ export default function BlobsPage({ id }: { id: string }) {
     error,
     isLoading: loading,
   } = useSWR(['api', `/api/snapshots/${id}/blobs`])
-  const blobs = blobsData as ATBlob[]
 
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   if (error) throw error
-  if (!blobs) return null
+  if (!blobsData) return null
+
+  // Type assertion because the the `useSWR` types are currently ambiguous.
+  const blobs = blobsData as ATBlob[]
 
   const slides = blobs.map((blob) => ({
     src: cidUrl(blob.cid),
@@ -86,7 +88,7 @@ export default function BlobsPage({ id }: { id: string }) {
         )}
         {openIndex !== null && (
           <Lightbox
-            open={openIndex !== null}
+            open={true}
             close={() => setOpenIndex(null)}
             index={openIndex}
             slides={slides}
