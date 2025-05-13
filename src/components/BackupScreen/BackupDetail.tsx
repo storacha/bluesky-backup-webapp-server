@@ -51,6 +51,7 @@ export const AccountLogo = styled.div<{
   @media only screen and (min-width: 0px) and (max-width: 576px) {
     display: none;
   }
+  flex-shrink: 0;
 `
 
 const Section = ({

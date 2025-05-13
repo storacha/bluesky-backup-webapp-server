@@ -32,8 +32,19 @@ const eslintConfig = [
   importPlugin.flatConfigs.typescript,
   importPlugin.flatConfigs.react,
   {
+    files: ['**/*.ts', '**/*.tsx'],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  {
     rules: {
       'no-useless-rename': 'warn',
+      '@typescript-eslint/no-unnecessary-condition': 'warn',
+      'import/first': 'warn',
       // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
       'import/order': [
         'warn',
