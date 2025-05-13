@@ -116,3 +116,15 @@ export const PerformingTheAction: Story = {
     await expect(args.actionOnPress).toHaveBeenCalled()
   },
 }
+
+export const LongValue: Story = {
+  args: {
+    items: [
+      {
+        id: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
+        label: 'john-jacob-jingleheimer-schmidt.bsky.social',
+      },
+    ],
+    defaultSelectedKey: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
+  },
+}
