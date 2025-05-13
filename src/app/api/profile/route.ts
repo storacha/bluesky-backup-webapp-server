@@ -14,6 +14,8 @@ export async function GET(request: NextRequest) {
       { status: 400 }
     )
 
+  if (!did) throw new Error('No backup DID supplied')
+
   try {
     const profile = await getPublicProfile(did as Did)
     if (!profile)
@@ -47,8 +49,6 @@ async function getPublicProfile(did: Did): Promise<ProfileData | null> {
         const client = await createClient({ account: did })
         const atpSession = await client.restore(did)
         const atpAgent = new AtprotoAgent(atpSession)
-
-        if (!did) throw new Error('No bacKUP DID supplied')
 
         const profile = await atpAgent.app.bsky.actor.getProfile({ actor: did })
         return {

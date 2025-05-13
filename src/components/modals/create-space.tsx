@@ -72,13 +72,11 @@ export const CreateSpaceModal = ({
           authorizeGatewayServices: [storachaGateway],
         })
 
-        if (space) {
-          const key = StorachaSpace.toMnemonic(space)
-          setRecoveryKey(key)
-          setCreatedSpace(space)
-          setSpaceCreationStep('recovery-phase')
-          toast.success(`${shorten(spaceName)} created!`)
-        }
+        const key = StorachaSpace.toMnemonic(space)
+        setRecoveryKey(key)
+        setCreatedSpace(space)
+        setSpaceCreationStep('recovery-phase')
+        toast.success(`${shorten(spaceName)} created!`)
       } catch (error) {
         console.error(error)
         toast.error(`Error ${(error as Error).message}`)

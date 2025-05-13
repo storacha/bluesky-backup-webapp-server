@@ -6,7 +6,7 @@ import React from 'react'
 import useSWRBase, { SWRConfig, SWRResponse } from 'swr'
 import useSWRMutationBase, { MutationFetcher } from 'swr/mutation'
 
-import { ATBlob, Backup, Snapshot } from '../types'
+import { ATBlob, Backup, ProfileData, Snapshot } from '../types'
 
 // This type defines what's fetchable with `useSWR`. It is a union of key/data
 // pairs. The key can match a pattern by being as wide as it needs to be.
@@ -24,7 +24,10 @@ type Fetchable =
       ATBlob[],
     ]
   | [['api', '/api/atproto-accounts', Record<string, string>?], string[]]
-  | [['api', `/api/profile?did=${string}`, Record<string, string>?], string[]]
+  | [
+      ['api', `/api/profile?did=${string}`, Record<string, string>?],
+      ProfileData,
+    ]
   | [['atproto-handle', string], string]
   | [['storacha-plan', Account], string | undefined]
 
@@ -152,7 +155,7 @@ export function SWRConfigProvider({ children }: { children: React.ReactNode }) {
         // the fetching promise even begins. Errors thrown in the fetcher itself
         // will appear as the `error` property of the response.
         fetcher([type, ...args]: Key) {
-          if (!fetchers[type]) {
+          if (type in fetchers) {
             throw new Error(`No fetcher for type "${type}"`)
           }
           const fetcher = fetchers[type]
