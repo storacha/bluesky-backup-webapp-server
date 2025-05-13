@@ -13,9 +13,10 @@ export function shortenDID(did: string) {
 export function shorten(
   text: string,
   front: number = 3,
-  back: number = 3
+  back: number = 3,
+  maxLength: number = 15
 ): string {
-  return `${text?.slice(0, front)}…${text?.slice(-back)}`
+  return `${text?.slice(0, text.length > maxLength ? 8 : front)}…${text?.slice(text.length > maxLength ? -7 : -back)}`
 }
 
 export function formatDate(date: string) {

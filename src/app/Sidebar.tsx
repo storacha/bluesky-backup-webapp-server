@@ -156,9 +156,7 @@ function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
         return (
           <Link key={id} href={`/backups/${id}`}>
             <BackupItem $selected={id === selectedBackupId}>
-              {modifiedName.length > 15
-                ? shorten(modifiedName, 8, 7)
-                : modifiedName}
+             {shorten(modifiedName)}
             </BackupItem>
           </Link>
         )
