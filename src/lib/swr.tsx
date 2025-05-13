@@ -29,7 +29,6 @@ type Fetchable =
       ['api', `/api/profile?did=${string}`, Record<string, string>?],
       ProfileData,
     ]
-  | [['api', `/api/profile?did=${string}`, Record<string, string>?], string[]]
   | [['atproto-handle', string], string]
   | [['storacha-plan', Account], string | undefined]
 
