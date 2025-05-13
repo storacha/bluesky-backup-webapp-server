@@ -5,7 +5,7 @@ import { css, styled } from 'next-yak'
 import { Loader } from '@/components/Loader'
 import { roundRectStyle, Stack } from '@/components/ui'
 import { useSWR } from '@/lib/swr'
-import { shorten } from '@/lib/ui'
+import { shortenIfOver } from '@/lib/ui'
 
 import { LogOutButton as BaseLogOutButton } from './authentication'
 
@@ -156,7 +156,7 @@ function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
         return (
           <Link key={id} href={`/backups/${id}`}>
             <BackupItem $selected={id === selectedBackupId}>
-             {shorten(modifiedName)}
+              {shortenIfOver(modifiedName)}
             </BackupItem>
           </Link>
         )

@@ -13,12 +13,24 @@ export function shortenDID(did: string) {
 export function shorten(
   text: string,
   front: number = 3,
-  back: number = 3,
-  maxLength: number = 15
+  back: number = 3
 ): string {
-  return `${text?.slice(0, text.length > maxLength ? 8 : front)}…${text?.slice(text.length > maxLength ? -7 : -back)}`
+  return `${text?.slice(0, front)}…${text?.slice(-back)}`
 }
 
 export function formatDate(date: string) {
   return new Date(date).toLocaleString()
+}
+
+export function shortenIfOver(
+  text: string,
+  maxLength: number = 15,
+  front: number = 6,
+  back: number = 6
+): string {
+  if (!text || text.length <= maxLength) {
+    return text
+  }
+
+  return `${text.slice(0, front)}…${text.slice(-back)}`
 }
