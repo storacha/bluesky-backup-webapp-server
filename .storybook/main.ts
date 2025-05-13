@@ -27,6 +27,9 @@ const config: StorybookConfig = {
     '@storybook/addon-essentials',
     '@storybook/addon-links',
     '@storybook/addon-interactions',
+    '@storybook/addon-designs',
+    '@storybook/addon-backgrounds',
+    'storybook-addon-pseudo-states',
     '@chromatic-com/storybook',
   ],
   framework: {

@@ -31,7 +31,7 @@ export default function BlobsPage({ id }: { id: string }) {
   if (error) throw error
   if (!blobs) return null
 
-  const slides = blobs?.map((blob) => ({
+  const slides = blobs.map((blob) => ({
     src: cidUrl(blob.cid),
     alt: `Blob backed up on ${blob.createdAt}`,
   }))
@@ -52,7 +52,7 @@ export default function BlobsPage({ id }: { id: string }) {
               $gap={isMobile ? '1.4rem' : '.8rem'}
               $wrap="wrap"
             >
-              {blobs?.map((blob, index) => (
+              {blobs.map((blob, index) => (
                 <Stack
                   key={blob.cid}
                   $gap=".4rem"

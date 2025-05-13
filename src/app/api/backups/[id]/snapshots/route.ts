@@ -37,7 +37,7 @@ export async function POST(
     return new Response('No delegation configured', { status: 400 })
   }
 
-  const delegationResponse = await fetch(cidUrl(backup?.delegationCid))
+  const delegationResponse = await fetch(cidUrl(backup.delegationCid))
 
   if (!delegationResponse.body) {
     return new Response('Could not fetch delegation from Storacha', {
