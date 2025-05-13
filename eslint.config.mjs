@@ -39,7 +39,10 @@ const eslintConfig = [
         tsconfigRootDir: import.meta.dirname,
       },
     },
-    rules: { '@typescript-eslint/no-unnecessary-condition': 'warn' },
+    rules: {
+      // Disabled until a future PR.
+      // '@typescript-eslint/no-unnecessary-condition': 'warn'
+    },
   },
   {
     rules: {
