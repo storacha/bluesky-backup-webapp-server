@@ -25,18 +25,6 @@ const Popover = styled(RACPopover)`
   font-size: 0.75rem;
 `
 
-const ListBox = styled(RACListBox<Item>)`
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`
-
-const FullButton = styled(Button)`
-  display: block;
-  width: 100%;
-`
-
 const Item = styled(ListBoxItem)`
   border-radius: 0.25rem;
   padding: 0.75rem;
@@ -55,6 +43,28 @@ const Item = styled(ListBoxItem)`
       outline-offset: -2px;
     }
   }
+`
+
+// An empty item to show when there are no items in the list.
+const NonItem = styled(ListBoxItem)`
+  display: none;
+`
+
+const ListBox = styled(RACListBox<Item>)`
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  /* Hide entirely when "empty" (actually containing an invisible NonItem) */
+  &:has(> ${NonItem}) {
+    display: none;
+  }
+`
+
+const FullButton = styled(Button)`
+  display: block;
+  width: 100%;
 `
 
 const ActionButton = styled(FullButton)`
@@ -76,10 +86,15 @@ const MainSection = styled(Stack)`
   flex-basis: auto;
   flex-grow: 1;
   flex-shrink: 1;
+  /* Helps it shrink to let the Value truncate. */
+  min-width: 0;
 `
 
 const Value = styled(Text)`
   font-family: var(--font-dm-mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const Contents = styled.div<{ $hasValue: boolean }>`
@@ -131,6 +146,14 @@ export const Select = ({
 } & Pick<SelectProps<Item>, 'name' | 'defaultSelectedKey' | 'isDisabled'> &
   Pick<ListBoxProps<Item>, 'items'>) => {
   const prompt = `Select ${label}`
+  const actionButton = (
+    // Prevent the button from automagically being treated as the trigger
+    // button just because it's inside the <Select> component.
+    <ButtonContext.Provider value={{}}>
+      <ActionButton onPress={actionOnPress}>{actionLabel}</ActionButton>
+    </ButtonContext.Provider>
+  )
+
   return (
     <RACSelect name={name} defaultSelectedKey={defaultSelectedKey}>
       <FullButton>
@@ -161,14 +184,24 @@ export const Select = ({
       <Popover aria-label={prompt}>
         {content ?? (
           <>
-            <ListBox items={items}>
-              {({ label }) => <Item>{label}</Item>}
+            <ListBox
+              items={
+                items && [...items].length === 0
+                  ? [{ id: '', label: '' }]
+                  : items
+              }
+            >
+              {({ id, label }) =>
+                // The Select won't even open if there are no items, so we need
+                // to put a dummy item in the listbox.
+                id === '' ? (
+                  <NonItem aria-hidden></NonItem>
+                ) : (
+                  <Item>{label}</Item>
+                )
+              }
             </ListBox>
-            {/* Prevent the button from automagically being treated as the trigger
-            button just because it's inside the <Select> component. */}
-            <ButtonContext.Provider value={{}}>
-              <ActionButton onPress={actionOnPress}>{actionLabel}</ActionButton>
-            </ButtonContext.Provider>
+            {actionButton}
           </>
         )}
       </Popover>

@@ -85,6 +85,18 @@ export const Open: Story = {
     await userEvent.click(button)
   },
 }
+
+export const WithNoOptions: Story = {
+  args: {
+    items: [],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const button = await canvas.findByRole('button')
+    await userEvent.click(button)
+  },
+}
+
 export const PerformingTheAction: Story = {
   play: async ({ canvasElement, args }) => {
     // Use the entire body to find things in portals outside the canvas element.
@@ -102,5 +114,17 @@ export const PerformingTheAction: Story = {
     await userEvent.click(option)
     // expect the action to be called
     await expect(args.actionOnPress).toHaveBeenCalled()
+  },
+}
+
+export const LongValue: Story = {
+  args: {
+    items: [
+      {
+        id: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
+        label: 'john-jacob-jingleheimer-schmidt.bsky.social',
+      },
+    ],
+    defaultSelectedKey: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
   },
 }
