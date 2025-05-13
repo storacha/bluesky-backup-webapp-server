@@ -7,9 +7,11 @@ import { useFormStatus } from 'react-dom'
 import { toast } from 'sonner'
 
 import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
-import { Center, Stack, Text } from '@/components/ui'
+import StripePricingTable from '@/components/StripePricingTable'
+import { Box, Center, Heading, Spinner, Stack, Text } from '@/components/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
+import { usePlan, useStorachaAccount } from '@/hooks/use-plan'
 import { atproto } from '@/lib/capabilities'
 import { SERVER_DID } from '@/lib/constants'
 import { delegate } from '@/lib/delegate'
@@ -124,15 +126,20 @@ const CreateBackupButton = () => {
   )
 }
 
+const PricingTableContainer = styled(Stack)`
+  width: 100%;
+  padding-top: 2rem;
+`
+
 export function LoggedIn() {
   const { isMobile } = useMobileScreens()
-  const [{ accounts, client }] = useAuthenticator()
-  const account = accounts[0]
+  const [{ client }] = useAuthenticator()
+  const account = useStorachaAccount()
   const { error: sessionDIDError, mutate } = useSWR(['api', '/session/did'])
 
   const [sessionCreationAttempted, setSessionCreationAttempted] =
     useState(false)
-
+  const { data: plan, isLoading: planIsLoading } = usePlan(account)
   useEffect(() => {
     // if the client & account are loaded, the session DID is erroring and we're
     // not currently creating a session, try to create one
@@ -151,21 +158,38 @@ export function LoggedIn() {
   return (
     <Outside $direction="row">
       <AppLayout selectedBackupId={null}>
-        <BackupScreen
-          selectedBackupId={null}
-          rightPanelContent={
-            <Center $height={isMobile ? '45vh' : '90vh'}>
-              <Text $fontWeight="600">
-                Press &quot;Create Backup&quot; to get started!
-              </Text>
-            </Center>
-          }
-        >
-          <NewBackupForm account={account}>
-            <BackupDetail />
-            <CreateBackupButton />
-          </NewBackupForm>
-        </BackupScreen>
+        {planIsLoading ? (
+          <Spinner />
+        ) : plan ? (
+          <BackupScreen
+            selectedBackupId={null}
+            rightPanelContent={
+              <Center $height={isMobile ? '45vh' : '90vh'}>
+                <Text $fontWeight="600">
+                  Press &quot;Create Backup&quot; to get started!
+                </Text>
+              </Center>
+            }
+          >
+            <NewBackupForm account={account}>
+              <BackupDetail />
+              <CreateBackupButton />
+            </NewBackupForm>
+          </BackupScreen>
+        ) : (
+          <PricingTableContainer $alignItems="center" $gap="1rem">
+            <Heading>Please Sign Up for a Storacha Storage Plan</Heading>
+            <Text $textAlign="center" $maxWidth="30em" $fontSize="1rem">
+              To get started backing up your Bluesky and ATProto data, please
+              sign up for a Storacha storage plan. The 5GB of storage from our
+              free tier will be more than enough to back up most Bluesky
+              accounts for a very long time.
+            </Text>
+            <Box $width="100%">
+              <StripePricingTable />
+            </Box>
+          </PricingTableContainer>
+        )}
       </AppLayout>
     </Outside>
   )

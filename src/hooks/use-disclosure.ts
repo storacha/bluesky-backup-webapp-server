@@ -16,17 +16,17 @@ export const useDisclosure = (params: DisclosureParams = {}) => {
 
   const onOpen = useCallback(() => {
     setIsOpen(true)
-    if (params?.component) {
-      updateUiStore({ ui: params?.component })
+    if (params.component) {
+      updateUiStore({ ui: params.component })
     }
-  }, [params?.component, updateUiStore])
+  }, [params.component, updateUiStore])
 
   const onClose = useCallback(() => {
     setIsOpen(false)
-    if (params?.component) {
+    if (params.component) {
       updateUiStore({ ui: '' })
     }
-  }, [params?.component, updateUiStore])
+  }, [params.component, updateUiStore])
 
   const onToggle = useCallback(() => {
     setIsOpen((prev) => !prev)

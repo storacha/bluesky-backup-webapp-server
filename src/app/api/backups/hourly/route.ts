@@ -1,4 +1,4 @@
-import { logAndCaptureError } from '@/app/sentry'
+import { logAndCaptureError } from '@/lib/sentry'
 import { isCronjobAuthed } from '@/lib/server/auth'
 import { getStorageContext } from '@/lib/server/db'
 
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     }
   }
   console.log(
-    `${PREFIX}Hourly snapshotting process started ${backups?.length} jobs`
+    `${PREFIX}Hourly snapshotting process started ${backups.length} jobs`
   )
   return Response.json({})
 }

@@ -213,7 +213,7 @@ export function RestoreDialogView({
                   <div style={{ width: '48px' }}></div>
                   <AtProtoElement>
                     <Stack>
-                      <Text>{sinkSession?.serviceUrl.hostname}</Text>
+                      <Text>{sinkSession.serviceUrl.hostname}</Text>
                       <Text>
                         {sinkSession.did && shortenDID(sinkSession.did)}
                       </Text>
