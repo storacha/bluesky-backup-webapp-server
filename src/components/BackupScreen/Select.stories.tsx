@@ -1,4 +1,4 @@
-import { userEvent, within } from '@storybook/test'
+import { expect, fn, userEvent, within } from '@storybook/test'
 
 import { Select } from './Select'
 
@@ -39,6 +39,8 @@ const meta: Meta<typeof Select> = {
         label: 'chalametoui.bsky.social',
       },
     ],
+    actionLabel: 'Connect Bluesky account…',
+    actionOnPress: fn(),
   },
 }
 
@@ -84,7 +86,7 @@ export const Open: Story = {
   },
 }
 export const PerformingTheAction: Story = {
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, args }) => {
     // Use the entire body to find things in portals outside the canvas element.
     const body = within(canvasElement.ownerDocument.body)
     const button = await body.findByRole('button', {
@@ -95,8 +97,10 @@ export const PerformingTheAction: Story = {
       name: 'Select Bluesky account',
     })
     const option = await within(popup).findByRole('button', {
-      name: 'Create New',
+      name: 'Connect Bluesky account…',
     })
     await userEvent.click(option)
+    // expect the action to be called
+    await expect(args.actionOnPress).toHaveBeenCalled()
   },
 }
