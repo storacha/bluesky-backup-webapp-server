@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     }
   }
   console.log(
-    `${PREFIX}Hourly snapshotting process started ${backups?.length} jobs`
+    `${PREFIX}Hourly snapshotting process started ${backups.length} jobs`
   )
   return Response.json({})
 }
