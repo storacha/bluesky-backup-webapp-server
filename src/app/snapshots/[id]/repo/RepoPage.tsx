@@ -21,7 +21,7 @@ export default function RepoPage({ id }: { id: string }) {
   const { repo, loading } = useRepo({
     cid: snapshot?.repositoryCid || '',
   })
-  const { profile } = useProfile(snapshot?.atprotoAccount as Did)
+  const { profile } = useProfile(snapshot?.atprotoAccount)
 
   if (error) throw error
   if (!snapshot) return null
