@@ -21,3 +21,16 @@ export function shorten(
 export function formatDate(date: string) {
   return new Date(date).toLocaleString()
 }
+
+export function shortenIfOver(
+  text: string,
+  maxLength: number = 15,
+  front: number = 6,
+  back: number = 6
+): string {
+  if (!text || text.length <= maxLength) {
+    return text
+  }
+
+  return `${text.slice(0, front)}…${text.slice(-back)}`
+}

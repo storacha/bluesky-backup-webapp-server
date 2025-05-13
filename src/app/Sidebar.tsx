@@ -5,6 +5,7 @@ import { css, styled } from 'next-yak'
 import { Loader } from '@/components/Loader'
 import { roundRectStyle, Stack } from '@/components/ui'
 import { useSWR } from '@/lib/swr'
+import { shortenIfOver } from '@/lib/ui'
 
 import { LogOutButton as BaseLogOutButton } from './authentication'
 
@@ -150,11 +151,16 @@ function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
 
   return (
     <BackupList>
-      {data.map(({ id, name }) => (
-        <Link key={id} href={`/backups/${id}`}>
-          <BackupItem $selected={id === selectedBackupId}>{name}</BackupItem>
-        </Link>
-      ))}
+      {data.map(({ id, name }) => {
+        const modifiedName = `${name.charAt(0).toUpperCase()}${name.slice(1)}`
+        return (
+          <Link key={id} href={`/backups/${id}`}>
+            <BackupItem $selected={id === selectedBackupId}>
+              {shortenIfOver(modifiedName)}
+            </BackupItem>
+          </Link>
+        )
+      })}
     </BackupList>
   )
 }
