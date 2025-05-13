@@ -14,6 +14,7 @@ export type TextProps = Partial<
     | '$wordSpacing'
     | '$textTransform'
     | '$width'
+    | '$maxWidth'
     | '$border'
   >
 >
