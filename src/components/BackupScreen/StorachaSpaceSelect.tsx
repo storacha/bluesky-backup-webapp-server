@@ -3,7 +3,6 @@
 import { useAuthenticator } from '@storacha/ui-react'
 
 import { useDisclosure } from '@/hooks/use-disclosure'
-import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { shortenDID } from '@/lib/ui'
 
 import { CreateSpaceModal } from '../modals'
