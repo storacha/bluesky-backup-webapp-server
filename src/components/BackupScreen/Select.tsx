@@ -86,10 +86,15 @@ const MainSection = styled(Stack)`
   flex-basis: auto;
   flex-grow: 1;
   flex-shrink: 1;
+  /* Helps it shrink to let the Value truncate. */
+  min-width: 0;
 `
 
 const Value = styled(Text)`
   font-family: var(--font-dm-mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const Contents = styled.div<{ $hasValue: boolean }>`
