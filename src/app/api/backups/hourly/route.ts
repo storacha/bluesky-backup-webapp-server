@@ -1,4 +1,4 @@
-import { logAndCaptureError } from '@/app/sentry'
+import { logAndCaptureError } from '@/lib/sentry'
 import { isCronjobAuthed } from '@/lib/server/auth'
 import { getStorageContext } from '@/lib/server/db'
 
