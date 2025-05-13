@@ -1,6 +1,7 @@
 'use client'
 
 import { Agent } from '@atproto/api'
+import { Account } from '@storacha/ui-react'
 import React from 'react'
 import useSWRBase, { SWRConfig, SWRConfiguration, SWRResponse } from 'swr'
 import useSWRMutationBase, { MutationFetcher } from 'swr/mutation'
@@ -24,11 +25,13 @@ type Fetchable =
     ]
   | [['api', '/api/atproto-accounts', Record<string, string>?], string[]]
   | [['api', '/api/keys', Record<string, string>?], RotationKey[]]
-  | [['atproto-handle', string], string]
   | [
       ['api', `/api/profile?did=${string}`, Record<string, string>?],
       ProfileData,
     ]
+  | [['api', `/api/profile?did=${string}`, Record<string, string>?], string[]]
+  | [['atproto-handle', string], string]
+  | [['storacha-plan', Account], string | undefined]
 
 export type Key = Fetchable extends [infer T, unknown] ? T : never
 
@@ -97,6 +100,11 @@ const fetchers: Fetchers = {
       actor: did,
     })
     return handle
+  },
+
+  async 'storacha-plan'(account) {
+    const { ok: planName } = await account.plan.get()
+    return planName?.product
   },
 }
 

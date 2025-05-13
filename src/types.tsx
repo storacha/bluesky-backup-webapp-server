@@ -49,6 +49,8 @@ export type SnapshotInput = Input<
   | 'preferencesCid'
 >
 
+export type State = 'loading' | 'idle'
+
 export interface ATBlob {
   id: string
   cid: string

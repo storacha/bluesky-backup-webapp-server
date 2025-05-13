@@ -7,10 +7,7 @@ import { Snapshot } from '@/types'
 import CopyButton from '../CopyButton'
 import { Heading, Stack, SubHeading } from '../ui'
 
-const Details = styled(Stack)`
-  margin-top: 4rem;
-  padding-left: 2rem;
-`
+const Details = styled(Stack)``
 
 const DetailName = styled(SubHeading)`
   color: black;
@@ -51,7 +48,7 @@ export default function SnapshotDetail({ snapshot }: SnapshotDetailArgs) {
       )}
       <Stack $direction="row" $alignItems="center" $gap="1rem">
         <DetailName>Blobs</DetailName>
-        <Link href={`/snapshots/${snapshot.id}/repo`}>
+        <Link href={`/snapshots/${snapshot.id}/blobs`}>
           <DetailValue>View Blobs</DetailValue>
         </Link>
       </Stack>
