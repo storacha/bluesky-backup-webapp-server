@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.5.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.4.0...v1.5.0) (2025-05-13)
+
+
+### Features
+
+* add "plan gate"  ([#128](https://github.com/storacha/bluesky-backup-webapp-server/issues/128)) ([e88312f](https://github.com/storacha/bluesky-backup-webapp-server/commit/e88312fb4e56496af9fb58b4d53e8de6e76504a2))
+
+
+### Bug Fixes
+
+* Account selects are clearer and sturdier ([ea630ae](https://github.com/storacha/bluesky-backup-webapp-server/commit/ea630ae55581b797489399b4e68e6c9f077878fd))
+* Empty Selects open ([6194eb5](https://github.com/storacha/bluesky-backup-webapp-server/commit/6194eb5c4343e2c9a5ae5868f8456033356a9ba2))
+* Select values truncate rather than overflow ([#141](https://github.com/storacha/bluesky-backup-webapp-server/issues/141)) ([dda8b05](https://github.com/storacha/bluesky-backup-webapp-server/commit/dda8b059f7b2e5ec91f69d61b80720a7fa0340c5))
+
 ## [1.4.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.3.0...v1.4.0) (2025-05-12)
 
 
