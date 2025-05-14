@@ -1,6 +1,9 @@
 import { keyframes, styled } from 'next-yak'
 import React from 'react'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- For JSDoc
+import type { FullscreenLoader, Loader } from '../Loader'
+
 export type SpinnerSize = 'xs' | 'sm' | 'md' | 'lg'
 
 const sizeToPixels = {
@@ -42,6 +45,11 @@ interface SpinnerProps {
   className?: string
 }
 
+/**
+ * A small spinner, used as an indeterminate progress indicator on buttons which
+ * have been pressed, and potentially other small places. For loading pages and
+ * sections of pages, use {@link Loader} or {@link FullscreenLoader}.
+ */
 export const Spinner: React.FC<SpinnerProps> = ({
   size = 'sm',
   color = 'var(--color-gray-medium)',
