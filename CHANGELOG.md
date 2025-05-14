@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.6.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.5.1...v1.6.0) (2025-05-14)
+
+
+### Features
+
+* Toast copy is more user-oriented ([#149](https://github.com/storacha/bluesky-backup-webapp-server/issues/149)) ([7fda059](https://github.com/storacha/bluesky-backup-webapp-server/commit/7fda05987e31ffa77b32ebbab96357c716a22c54))
+
+
+### Bug Fixes
+
+* a series of fixes and polish ([1c3acef](https://github.com/storacha/bluesky-backup-webapp-server/commit/1c3acefbd3cbf9d13c786996ee95fbaf50ad910c))
+* add footer to login screen ([#142](https://github.com/storacha/bluesky-backup-webapp-server/issues/142)) ([0ac41c0](https://github.com/storacha/bluesky-backup-webapp-server/commit/0ac41c0c9ca05bb0389e2c38dda2bd0504d931ba))
+* add storacha logomark to the sidebar ([8aa05cd](https://github.com/storacha/bluesky-backup-webapp-server/commit/8aa05cd3a9bc8eb9a3c4c606abc1840cac3d954f))
+* give backup name a default value ([b428129](https://github.com/storacha/bluesky-backup-webapp-server/commit/b428129cd88db1d0e5a4980fd7911acc91c5ad34))
+* hide space key by default ([4f16e5f](https://github.com/storacha/bluesky-backup-webapp-server/commit/4f16e5f878f70bc6152d044e64a5687b84ca0a79))
+* make disabled work in the dropdowns ([8029f07](https://github.com/storacha/bluesky-backup-webapp-server/commit/8029f077d2fcc4caeaa2c3d1006f9740325e9f7e))
+* Spinner for buttons, Loader for pages ([#150](https://github.com/storacha/bluesky-backup-webapp-server/issues/150)) ([7b5cd68](https://github.com/storacha/bluesky-backup-webapp-server/commit/7b5cd686a8babe26065b1aa1592e9df88b574b3d))
+
 ## [1.5.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.5.0...v1.5.1) (2025-05-14)
 
 
