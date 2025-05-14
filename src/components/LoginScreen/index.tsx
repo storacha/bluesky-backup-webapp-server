@@ -3,6 +3,7 @@ import { styled } from 'next-yak'
 
 import { LoginArea } from '@/components/LoginScreen/LoginArea'
 import { Stack } from '@/components/ui'
+import wordlogo from '@/images/wordlogo.png'
 
 const Outside = styled.div`
   display: flex;
@@ -56,7 +57,7 @@ export function LoginScreen() {
   return (
     <Outside style={{ height: '100vh', width: '100vw', backgroundImage }}>
       <Header>
-        <Image src="/wordlogo.png" alt="Storacha" width="164" height="57" />
+        <Image src={wordlogo} alt="Storacha" width="164" height="57" />
       </Header>
       <Main>
         <Stack $gap="2.5rem" $direction="row" $even>
