@@ -133,6 +133,7 @@ export const Select = ({
   actionLabel,
   actionOnPress,
   content,
+  isDisabled,
 }: {
   /** URL of the image to show in the control. */
   imageSrc: string
@@ -155,7 +156,11 @@ export const Select = ({
   )
 
   return (
-    <RACSelect name={name} defaultSelectedKey={defaultSelectedKey}>
+    <RACSelect
+      name={name}
+      defaultSelectedKey={defaultSelectedKey}
+      isDisabled={isDisabled}
+    >
       <FullButton>
         <SelectValue<Item>>
           {({ selectedItem }) => {
