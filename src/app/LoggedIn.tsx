@@ -105,7 +105,7 @@ function NewBackupForm({
       toast.error(
         error instanceof Error
           ? error.message === 'NEXT_REDIRECT'
-            ? 'Backup created successfully! Redirecting...'
+            ? 'Backup created!'
             : error.message
           : 'Unknown error'
       )
