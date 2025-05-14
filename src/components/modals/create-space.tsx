@@ -213,7 +213,10 @@ export const CreateSpaceModal = ({
                     <Button
                       $fontSize="0.75rem"
                       $background="var(--color-dark-blue)"
-                      onClick={() => { setShowKey(true) }}>
+                      onClick={() => {
+                        setShowKey(true)
+                      }}
+                    >
                       Show Key
                     </Button>
                   )}
@@ -227,7 +230,11 @@ export const CreateSpaceModal = ({
                   >
                     <Stack $gap="0.5rem">
                       {hasCopiedKey ? (
-                        <CheckCircle weight="fill" size="18" color="lightgreen" />
+                        <CheckCircle
+                          weight="fill"
+                          size="18"
+                          color="lightgreen"
+                        />
                       ) : (
                         <Copy
                           color="var(--color-gray-light)"
@@ -239,7 +246,9 @@ export const CreateSpaceModal = ({
                       <EyeSlash
                         color="var(--color-gray-light)"
                         size="18"
-                        onClick={() => { setShowKey(false) }}
+                        onClick={() => {
+                          setShowKey(false)
+                        }}
                         style={{ cursor: 'pointer' }}
                       />
                     </Stack>
