@@ -25,6 +25,7 @@ const Main = styled.main`
 const Tagline = styled.h2`
   font-size: 60px;
   font-family: var(--font-epilogue);
+  text-shadow: 0px 0px 3px rgba(255, 255, 255, 0.25);
 `
 
 const Footer = styled.footer`
