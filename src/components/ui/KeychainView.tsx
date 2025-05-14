@@ -8,6 +8,7 @@ import {
   EyeSlash,
   Gear,
   IdentificationBadge,
+  Key,
   //  Trash,
 } from '@phosphor-icons/react'
 import { base64pad } from 'multiformats/bases/base64'
@@ -22,9 +23,10 @@ import { ATPROTO_DEFAULT_SOURCE } from '@/lib/constants'
 import * as plc from '@/lib/crypto/plc'
 import { createPlcUpdateOp } from '@/lib/plc'
 import { shortenDID } from '@/lib/ui'
-import { RotationKey } from '@/types'
+import { ProfileData, RotationKey } from '@/types'
 
 import CopyButton from '../CopyButton'
+import { Loader } from '../Loader'
 
 import {
   Button,
@@ -156,9 +158,16 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
 
 function isCurrentRotationKey(
   rotationKey: RotationKey,
-  currentKeys: string[]
+  profile: ProfileData
 ): boolean {
-  return currentKeys.includes(rotationKey.id)
+  return profile.rotationKeys.includes(rotationKey.id)
+}
+
+function isCurrentVerificationKey(
+  rotationKey: RotationKey,
+  profile: ProfileData
+): boolean {
+  return profile.verificationMethods.atproto === rotationKey.id
 }
 
 interface AtprotoLoginFormProps {
@@ -370,11 +379,10 @@ function RotationKeyStatus({
   importKey: KeyImportFn
   onDone: () => void
 }) {
-  const { data: profile } = useProfile(did)
-  const { handle, rotationKeys: existingKeys } = profile || {}
+  const { data: profile, mutate } = useProfile(did)
+  const { handle } = profile || {}
 
-  const isRotationKey =
-    existingKeys && isCurrentRotationKey(rotationKey, existingKeys)
+  const isRotationKey = profile && isCurrentRotationKey(rotationKey, profile)
   const isSignable = Boolean(rotationKey.keypair)
   const isSigningKey = profile?.verificationMethods?.atproto === rotationKey.id
   const [isAddingKey, setIsAddingKey] = useState(false)
@@ -388,9 +396,9 @@ function RotationKeyStatus({
         atproto: rotationKey.id,
       },
     })
-    console.log(op)
     const client = new plc.Client('https://plc.directory')
     await client.sendOperation(profile.did, op)
+    await mutate()
   }
   if (!profile) return null
   return isAddingKey ? (
@@ -399,7 +407,7 @@ function RotationKeyStatus({
     <IdentityTransfer profile={profile} rotationKey={rotationKey} />
   ) : (
     <RotationKeyStack $gap="1rem">
-      <Stack>
+      <Stack $gap="1rem">
         <Heading>
           <NoTextTransform>{shortenDID(rotationKey.id)}</NoTextTransform>
         </Heading>
@@ -408,6 +416,9 @@ function RotationKeyStatus({
         </Text>
         <Text $fontSize="1rem">
           {isSignable ? <>does</> : <>does not</>} have a private key loaded
+        </Text>
+        <Text $fontSize="1rem">
+          {isSigningKey ? <>is</> : <>is not</>} controlling {profile.handle}
         </Text>
         {!isSignable && (
           <KeyImportForm dbKey={rotationKey} importKey={importKey} />
@@ -450,9 +461,7 @@ function RotationKeyStatus({
 
 type KeychainProps = KeychainContextProps & {
   className?: string
-  atprotoAccount: Did
-  handle?: string
-  rotationKeys?: string[]
+  profile?: ProfileData
 }
 
 const KeyItem = styled(Stack)`
@@ -471,10 +480,9 @@ export default function KeychainView({
   generateKeyPair,
   importKey,
   //forgetKey,
-  atprotoAccount,
-  handle,
-  rotationKeys,
+  profile,
 }: KeychainProps) {
+  const { did: atprotoAccount, rotationKeys, handle } = profile ?? {}
   const [generatingKeyPair, setGeneratingKeyPair] = useState(false)
   const [newKey, setNewKey] = useState<RotationKey>()
   const [isKeyDetailsDialogOpen, setIsKeyDetailsDialogOpen] = useState(false)
@@ -484,15 +492,18 @@ export default function KeychainView({
     useState<RotationKey | null>(null)
 
   async function onClickAdd() {
-    if (generateKeyPair) {
-      setGeneratingKeyPair(true)
-      setNewKey(await generateKeyPair(atprotoAccount))
-      setGeneratingKeyPair(false)
-    } else {
-      console.warn(
+    if (!generateKeyPair)
+      throw new Error(
         'could not generate key pair, generator function is not defined'
       )
-    }
+    if (!atprotoAccount)
+      throw new Error(
+        'could not generate key pair, atprotoAccount is not defined'
+      )
+
+    setGeneratingKeyPair(true)
+    setNewKey(await generateKeyPair(atprotoAccount))
+    setGeneratingKeyPair(false)
   }
 
   const openRotationKeyStatus = (key: RotationKey) => {
@@ -518,10 +529,12 @@ export default function KeychainView({
         </Stack>
       ) : (
         <>
-          {myKeys.length === 0 ? (
+          {!profile ? (
+            <Loader />
+          ) : myKeys.length === 0 ? (
             <Text>No recovery keys found for {handle}</Text>
           ) : (
-            <Stack>
+            <Stack $gap="1em">
               {myKeys.map((key) => (
                 <KeyItem
                   key={key.id}
@@ -540,11 +553,29 @@ export default function KeychainView({
                       onClick={() => openRotationKeyStatus(key)}
                       aria-label="Rotation key status"
                     >
+                      <Key
+                        size="16"
+                        color={
+                          rotationKeys
+                            ? isCurrentVerificationKey(key, profile)
+                              ? 'var(--color-green)'
+                              : 'var(--color-dark-red)'
+                            : 'var(--color-gray-medium)'
+                        }
+                      />
+                    </Button>
+
+                    <Button
+                      $variant="outline"
+                      className="p-1"
+                      onClick={() => openRotationKeyStatus(key)}
+                      aria-label="Rotation key status"
+                    >
                       <IdentificationBadge
                         size="16"
                         color={
                           rotationKeys
-                            ? isCurrentRotationKey(key, rotationKeys)
+                            ? isCurrentRotationKey(key, profile)
                               ? 'var(--color-green)'
                               : 'var(--color-dark-red)'
                             : 'var(--color-gray-medium)'
@@ -601,7 +632,7 @@ export default function KeychainView({
         title="Recovery Key Status"
         size="md"
       >
-        {selectedKeyDetails && (
+        {selectedKeyDetails && atprotoAccount && (
           <RotationKeyStatus
             did={atprotoAccount}
             rotationKey={selectedKeyDetails}

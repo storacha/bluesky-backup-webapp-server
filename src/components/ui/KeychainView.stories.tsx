@@ -1,7 +1,7 @@
 import { Secp256k1Keypair } from '@atproto/crypto'
 import { fn } from '@storybook/test'
 
-import { RotationKey } from '@/types'
+import { ProfileData, RotationKey } from '@/types'
 
 import KeychainView from './KeychainView'
 
@@ -11,6 +11,17 @@ const keypair = await Secp256k1Keypair.create()
 
 const demorachaAtprotoDid = 'did:plc:ose56ynjv4ahq763rprzah4k'
 const createdHereAtprotoDid = 'did:plc:ccoxqh6esjow6cwxt4ww466b'
+
+const profile: ProfileData = {
+  handle: 'demoracha.atproto.storacha.network',
+  displayName: 'Demo Racha',
+  did: demorachaAtprotoDid,
+  rotationKeys: [],
+  alsoKnownAs: [],
+  verificationMethods: {},
+  services: {},
+}
+
 
 const key: RotationKey = {
   id: keypair.did(),
@@ -45,7 +56,7 @@ const meta = {
   },
   tags: ['autodocs'],
   args: {
-    atprotoAccount: demorachaAtprotoDid,
+    profile,
     keys,
     generateKeyPair: async () => key,
     setSelectedKey: fn(),

@@ -1,17 +1,19 @@
 import { CredentialSession } from '@atproto/api'
-import {
-  Popover as HPopover,
-  PopoverButton as HPopoverButton,
-  PopoverPanel as HPopoverPanel,
-} from '@headlessui/react'
-import { ArrowCircleRight, IdentificationBadge } from '@phosphor-icons/react'
-import { css, styled } from 'next-yak'
+import { styled } from 'next-yak'
+import { useState } from 'react'
 
 import { ATPROTO_DEFAULT_SINK } from '@/lib/constants'
-import { shortenDID } from '@/lib/ui'
 import { ProfileData } from '@/types'
 
-import { Box, Button, Heading, Stack, SubHeading, Text } from '.'
+import {
+  Box,
+  Button,
+  Heading,
+  NoTextTransform,
+  Stack,
+  SubHeading,
+  Text,
+} from '.'
 
 import {
   AtprotoCreateAccountForm,
@@ -19,58 +21,6 @@ import {
   CreateAccountFn,
   LoginFn,
 } from './atproto'
-
-const Popover = styled(HPopover)`
-  display: relative;
-`
-
-const PopoverButton = styled(HPopoverButton)`
-  outline: none;
-`
-
-const PopoverPanel = styled(HPopoverPanel)`
-  display: flex;
-  background: white;
-  border: 1px solid black;
-  border-radius: 0.75rem;
-  padding: 0.75rem;
-`
-
-const DataTypeHeading = styled(Heading)`
-  width: 112px;
-`
-
-interface DataSinkIconOptions {
-  $restored?: boolean
-}
-
-const flexCenter = css`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
-
-const DataSinkIcon = styled.div<DataSinkIconOptions>`
-  background-color: var(--color-white);
-  color: ${({ $restored }) =>
-    $restored ? 'var(--color-green)' : '--color-gray-medium'};
-  border-color: ${({ $restored }) =>
-    $restored ? 'var(--color-green)' : '--color-gray-medium'};
-  width: 32px;
-  height: 32px;
-  ${flexCenter}
-`
-
-const StorachaElement = styled.div`
-  ${flexCenter}
-  width: 112px;
-`
-
-const AtProtoElement = styled.div`
-  ${flexCenter}
-  width: 112px;
-`
 
 interface IdentityTransferViewProps {
   profile: ProfileData
@@ -94,100 +44,110 @@ export default function IdentityTransferView({
   return (
     <Box $height="100%">
       {sinkSession ? (
-        <Stack $alignItems="center">
-          <Stack $alignItems="center">
-            <Stack $alignItems="start">
-              <Stack
-                $gap="1rem"
-                $direction="row"
-                $alignItems="center"
-                $left="1rem"
-                $right="1rem"
-              >
-                <DataTypeHeading></DataTypeHeading>
-                <StorachaElement>
-                  <Stack>
-                    <Text>{profile.handle}</Text>
-                    <Text>{shortenDID(profile.did)}</Text>
-                  </Stack>
-                </StorachaElement>
-                <div style={{ width: '48px' }}></div>
-                <AtProtoElement>
-                  <Stack>
-                    <Text>{sinkSession.serviceUrl.hostname}</Text>
-                    <Text>
-                      {sinkSession.did && shortenDID(sinkSession.did)}
-                    </Text>
-                  </Stack>
-                </AtProtoElement>
-              </Stack>
-              <Stack
-                $gap="1rem"
-                $direction="row"
-                $alignItems="center"
-                $left="1rem"
-                $right="1rem"
-              >
-                <DataTypeHeading>Identity</DataTypeHeading>
-                <StorachaElement>
-                  <IdentificationBadge
-                    size="16"
-                    color="var(--color-gray-medium)"
-                  />
-                </StorachaElement>
-                <Stack>
-                  <Button
-                    $isLoading={isTransferringIdentity}
-                    onClick={transferIdentity}
-                    disabled={isTransferringIdentity}
-                    $variant="outline"
-                    $leftIcon={
-                      <ArrowCircleRight
-                        size="16"
-                        color="var(--color-gray-medium)"
-                      />
-                    }
-                  />
-                  <Popover>
-                    <PopoverButton></PopoverButton>
-                    <PopoverPanel static anchor="bottom">
-                      <Text>
-                        Identity Transfer is not currently reversible, please
-                        use caution!
-                      </Text>
-                    </PopoverPanel>
-                  </Popover>
-                </Stack>
-
-                <AtProtoElement>
-                  <DataSinkIcon $restored={isIdentityTransferred}>
-                    <IdentificationBadge
-                      size="16"
-                      color="var(--color-gray-medium)"
-                    />
-                  </DataSinkIcon>
-                </AtProtoElement>
-              </Stack>
-            </Stack>
-          </Stack>
+        <Stack $gap="1rem">
+          <Heading>Identity</Heading>
+          <SubHeading>
+            Transfer{' '}
+            <NoTextTransform>
+              {profile.handle} to {sinkSession.serviceUrl.hostname}
+            </NoTextTransform>
+          </SubHeading>
+          <Text>
+            Warning! If you are transferring off of bsky.social you will not be
+            able to transfer back - please make sure you know what you are
+            doing!
+          </Text>
+          {isIdentityTransferred ? (
+            <Text $color="var(--color-black)" $fontSize="1rem">
+              Success! <b>{profile.handle}</b> has been transferred to{' '}
+              <b>{sinkSession.serviceUrl.hostname}</b>
+            </Text>
+          ) : (
+            <Button
+              $isLoading={isTransferringIdentity}
+              onClick={transferIdentity}
+              disabled={isTransferringIdentity}
+            >
+              I understand, make it happen!
+            </Button>
+          )}
         </Stack>
       ) : (
         <Stack $gap="1rem">
           <Stack $gap="0.25rem">
             <Heading>Data Restore</Heading>
-            <SubHeading>Please create a new ATProto account.</SubHeading>
+            <SubHeading>
+              Please login to your new account or create a new ATProto account.
+            </SubHeading>
           </Stack>
+          <LoginOrCreate login={loginToSink} createAccount={createAccount} />
+        </Stack>
+      )}
+    </Box>
+  )
+}
+
+const Tab = styled.div<{ $active: boolean }>`
+  pointer: cursor;
+  padding: 0.1em 1em;
+  border-top-right-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  border: 1px black solid;
+  border-bottom: ${({ $active }) =>
+    $active ? '1px white solid' : '1px black solid'};
+  position: relative;
+  top: 1px;
+`
+
+const AuthFormContainer = styled.div`
+  border: 1px black solid;
+  padding: 1rem;
+  border-bottom-right-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+`
+
+function LoginOrCreate({
+  createAccount,
+  login,
+}: {
+  createAccount: CreateAccountFn
+  login: LoginFn
+}) {
+  const [isCreate, setIsCreate] = useState<boolean>(false)
+  return (
+    <Stack>
+      <Stack $direction="row" $gap="0.1em">
+        <Tab
+          onClick={() => {
+            setIsCreate(false)
+          }}
+          $active={!isCreate}
+        >
+          Login
+        </Tab>
+        <Tab
+          onClick={() => {
+            setIsCreate(true)
+          }}
+          $active={isCreate}
+        >
+          Create
+        </Tab>
+      </Stack>
+      <AuthFormContainer>
+        {isCreate ? (
           <AtprotoCreateAccountForm
             createAccount={createAccount}
             defaultServer={ATPROTO_DEFAULT_SINK}
           />
-          OR
+        ) : (
           <AtprotoLoginForm
-            login={loginToSink}
+            login={login}
             defaultServer={ATPROTO_DEFAULT_SINK}
           />
-        </Stack>
-      )}
-    </Box>
+        )}
+      </AuthFormContainer>
+    </Stack>
   )
 }
