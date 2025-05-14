@@ -31,29 +31,6 @@ const AccountsContainer = styled(Stack)`
   position: relative;
 `
 
-export const AccountLogo = styled.div<{
-  $hasAccount?: boolean
-  $type: 'original' | 'grayscale'
-}>`
-  height: 42px;
-  width: 42px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid var(--color-gray);
-  & img {
-    filter: ${({ $hasAccount, $type }) =>
-      $hasAccount && $type === 'original' ? 'grayscale(0)' : 'grayscale(1)'};
-    opacity: ${({ $hasAccount }) => ($hasAccount ? '1' : '.5')};
-  }
-
-  @media only screen and (min-width: 0px) and (max-width: 576px) {
-    display: none;
-  }
-  flex-shrink: 0;
-`
-
 const BackupNameInput = styled.input`
   border-radius: 8px;
   border: none;
