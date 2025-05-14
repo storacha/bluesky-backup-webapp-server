@@ -20,6 +20,7 @@ const Popover = styled(RACPopover)`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--color-gray-light);
   font-size: 0.75rem;
+  overflow-y: auto;
 `
 
 const Item = styled(ListBoxItem)`
