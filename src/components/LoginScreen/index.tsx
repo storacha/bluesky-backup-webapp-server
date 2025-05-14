@@ -342,7 +342,7 @@ export function LoginScreen() {
     >
       <MainContainer>
         <Header>
-          <Image src="/wordlogo.png" alt="Storacha" width="164" height="57" />
+          <Image src={wordlogo} alt="Storacha" width="164" height="57" />
         </Header>
         <Main>
           <MainStack $gap="2.5rem" $direction="row" $even>
