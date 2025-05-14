@@ -25,6 +25,9 @@ import {
 
 import { SharedModalLayout } from './layout'
 
+const toWebDID = (input?: string) =>
+  UcantoClient.Schema.DID.match({ method: 'web' }).from(input)
+
 type SpaceCreationState = 'idle' | 'creating-space' | 'creating-delegation'
 
 interface CreateSpaceModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
@@ -71,6 +74,14 @@ export const CreateSpaceModal = ({
         const space = await client.createSpace(spaceName, {
           authorizeGatewayServices: [storachaGateway],
         })
+        const provider = toWebDID(process.env.NEXT_PUBLIC_STORACHA_PROVIDER)
+        const provisionResult = await account.provision(space.did(), {
+          provider,
+        })
+        if (provisionResult.error)
+          throw new Error(provisionResult.error.message, {
+            cause: provisionResult.error,
+          })
 
         if (space) {
           const key = StorachaSpace.toMnemonic(space)
