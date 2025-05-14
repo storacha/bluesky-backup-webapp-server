@@ -17,6 +17,7 @@ const LayoutContainer = styled.div`
 const MainContent = styled.main`
   flex: 1;
   min-width: 0;
+  display: flex;
 `
 
 export const AppLayout = ({ children, selectedBackupId }: AppLayoutProps) => {

@@ -7,8 +7,9 @@ import { useFormStatus } from 'react-dom'
 import { toast } from 'sonner'
 
 import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
+import { FullscreenLoader } from '@/components/Loader'
 import StripePricingTable from '@/components/StripePricingTable'
-import { Box, Center, Heading, Spinner, Stack, Text } from '@/components/ui'
+import { Box, Center, Heading, Stack, Text } from '@/components/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { usePlan, useStorachaAccount } from '@/hooks/use-plan'
@@ -159,7 +160,7 @@ export function LoggedIn() {
     <Outside $direction="row">
       <AppLayout selectedBackupId={null}>
         {planIsLoading ? (
-          <Spinner />
+          <FullscreenLoader />
         ) : plan ? (
           <BackupScreen
             selectedBackupId={null}
