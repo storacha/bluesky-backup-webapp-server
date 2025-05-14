@@ -63,21 +63,22 @@ async function fetchBskyProfile(did: Did): Promise<BskyProfile> {
 }
 
 async function getPublicProfile(did: Did): Promise<ProfileData | null> {
-  if (did.startsWith('did:plc')) {
-    const [
-      { rotationKeys, alsoKnownAs, verificationMethods, services },
-      { handle, displayName },
-    ] = await Promise.all([fetchPlcProfile(did), fetchBskyProfile(did)])
-    return {
-      did,
-      handle,
-      displayName,
-      rotationKeys,
-      alsoKnownAs,
-      verificationMethods,
-      services,
-    }
-  } else {
-    throw new Error('Cannot get profile information for a did:web')
+  if (!did.startsWith('did:plc'))
+    throw new Error(
+      `Cannot get profile information for ${did} - only did:plc supported`
+    )
+
+  const [
+    { rotationKeys, alsoKnownAs, verificationMethods, services },
+    { handle, displayName },
+  ] = await Promise.all([fetchPlcProfile(did), fetchBskyProfile(did)])
+  return {
+    did,
+    handle,
+    displayName,
+    rotationKeys,
+    alsoKnownAs,
+    verificationMethods,
+    services,
   }
 }

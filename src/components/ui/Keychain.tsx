@@ -8,11 +8,12 @@ import KeychainView from './KeychainView'
 export default function Keychain({ atprotoAccount }: { atprotoAccount: Did }) {
   const props = useKeychainContext()
   const { data: profile } = useProfile(atprotoAccount)
-  const { handle, rotationKeys } = profile || {}
+  const { handle, rotationKeys } = profile ?? {}
 
   return (
     <KeychainView
       {...props}
+      {...profile}
       handle={handle}
       rotationKeys={rotationKeys}
       atprotoAccount={atprotoAccount}

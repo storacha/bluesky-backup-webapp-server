@@ -16,7 +16,7 @@ async function bskyAccountConnectedToStorachaAccount(
     authSessions,
     storachaAccount
   )
-  return Boolean(bskyAccounts.includes(bskyAccount))
+  return bskyAccounts.includes(bskyAccount)
 }
 
 export default async function Identity({
@@ -27,7 +27,7 @@ export default async function Identity({
   const { id } = await params
   const atprotoDid = decodeURIComponent(id)
   if (!isDidPlc(atprotoDid))
-    return new Response('id must be a value atproto DID', { status: 400 })
+    return new Response('id must be a did:plc', { status: 400 })
   const { authSessionStore } = getStorageContext()
   const { did: storachaAccount } = await getSession()
   if (

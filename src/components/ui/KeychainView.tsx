@@ -114,7 +114,7 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
     }
   }
 
-  const did = dbKey?.id || keypair?.did()
+  const did = dbKey?.id ?? keypair?.did()
 
   return (
     <Stack>

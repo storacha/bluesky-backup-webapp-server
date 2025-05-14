@@ -1,5 +1,10 @@
 import { styled } from 'next-yak'
-import { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react'
+import {
+  InputHTMLAttributes,
+  ReactNode,
+  TextareaHTMLAttributes,
+  useId,
+} from 'react'
 
 import { StyleProps } from './style'
 
@@ -91,11 +96,15 @@ export const TextAreaField = ({
   ...inputProps
 }: TextAreaProps) => {
   const hasIcon = !!icon
-
+  const id = useId()
   return (
     <Field $hasIcon={hasIcon}>
-      {label && <Label>{label}</Label>}
-      <TextAreaWrapper $hasIcon={hasIcon} {...inputProps} />
+      {label && (
+        <Label>
+          <label htmlFor={id}>{label}</label>
+        </Label>
+      )}
+      <TextAreaWrapper id={id} $hasIcon={hasIcon} {...inputProps} />
       {icon && <IconWrapper>{icon}</IconWrapper>}
     </Field>
   )
