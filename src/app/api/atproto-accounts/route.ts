@@ -1,3 +1,4 @@
+import { findAuthedBskyAccounts } from '@/lib/atproto'
 import { getStorageContext } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
 
@@ -9,9 +10,5 @@ export async function GET() {
     return new Response('Not authorized', { status: 401 })
   }
 
-  const keysResult = await authSessionStore.list({
-    prefix: `${account}!`,
-  })
-
-  return Response.json(keysResult.keys.map((key) => key.name.split('!')[1]))
+  return Response.json(await findAuthedBskyAccounts(authSessionStore, account))
 }

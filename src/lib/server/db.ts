@@ -11,6 +11,8 @@ import {
   ATBlobInput,
   Backup,
   BackupInput,
+  RotationKey,
+  RotationKeyInput,
   Snapshot,
   SnapshotInput,
 } from '@/types'
@@ -198,6 +200,10 @@ export interface BBDatabase {
   ) => Promise<{ result: ATBlob | undefined }>
   findBlobsForBackup: (id: string) => Promise<{ results: ATBlob[] }>
   findBlobsForSnapshot: (id: string) => Promise<{ results: ATBlob[] }>
+  addRotationKey: (input: RotationKeyInput) => Promise<RotationKey>
+  findRotationKeys: (
+    storachaAccount: string
+  ) => Promise<{ results: RotationKey[] }>
 }
 
 interface StorageContext {
@@ -345,6 +351,26 @@ export function getStorageContext(): StorageContext {
         `
         return {
           result,
+        }
+      },
+      async addRotationKey(input: RotationKeyInput) {
+        const results = await sql<RotationKey[]>`
+          insert into rotation_keys ${sql(input)}
+          returning *
+        `
+        if (!results[0]) {
+          throw new Error('error inserting rotation key')
+        }
+        return results[0]
+      },
+      async findRotationKeys(storachaAccount: string) {
+        const results = await sql<RotationKey[]>`
+          select *
+          from rotation_keys
+          where storacha_account = ${storachaAccount}
+        `
+        return {
+          results,
         }
       },
     },

@@ -3,10 +3,10 @@
 import { Agent } from '@atproto/api'
 import { Account } from '@storacha/ui-react'
 import React from 'react'
-import useSWRBase, { SWRConfig, SWRResponse } from 'swr'
+import useSWRBase, { SWRConfig, SWRConfiguration, SWRResponse } from 'swr'
 import useSWRMutationBase, { MutationFetcher } from 'swr/mutation'
 
-import { ATBlob, Backup, Snapshot } from '../types'
+import { ATBlob, Backup, ProfileData, RotationKey, Snapshot } from '@/types'
 
 // This type defines what's fetchable with `useSWR`. It is a union of key/data
 // pairs. The key can match a pattern by being as wide as it needs to be.
@@ -24,7 +24,11 @@ type Fetchable =
       ATBlob[],
     ]
   | [['api', '/api/atproto-accounts', Record<string, string>?], string[]]
-  | [['api', `/api/profile?did=${string}`, Record<string, string>?], string[]]
+  | [['api', '/api/keys', Record<string, string>?], RotationKey[]]
+  | [
+      ['api', `/api/profile?did=${string}`, Record<string, string>?],
+      ProfileData,
+    ]
   | [['atproto-handle', string], string]
   | [['storacha-plan', Account], string | undefined]
 
@@ -108,9 +112,10 @@ const fetchers: Fetchers = {
  * our fetchers and config. Also, logs any errors to the console.
  */
 export const useSWR = <K extends Key>(
-  key: K | null | undefined
+  key: K | null | undefined,
+  config?: SWRConfiguration
 ): SWRResponse<FetchedData<K>> => {
-  const swrResponse = useSWRBase(key)
+  const swrResponse = useSWRBase(key, config)
   if (swrResponse.error) {
     console.error('SWR error:', swrResponse.error)
   }

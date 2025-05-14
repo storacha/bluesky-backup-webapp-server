@@ -504,7 +504,7 @@ function AtprotoLoginForm({ login, defaultServer }: AtprotoLoginFormProps) {
   )
 }
 
-function PlcTokenForm({
+export function PlcTokenForm({
   setPlcToken,
 }: {
   setPlcToken: (token: string) => void

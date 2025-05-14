@@ -1,7 +1,8 @@
 import { RepoEntry } from '@atcute/car'
-import { Did } from '@atproto/oauth-client-node'
+import { Did } from '@atproto/api'
+import { Secp256k1Keypair } from '@atproto/crypto'
 
-export type SpaceDid = Did<'key'>
+export type SpaceDid = `did:key:${string}`
 
 export type Backup = {
   id: string
@@ -141,10 +142,37 @@ export type LikedRecord = {
 
 export type LikedRecords = LikedRecord[]
 
-export type ProfileData = {
-  did: string
-  handle: string
-  displayName?: string
+export interface PlcProfile {
+  did: Did
+  rotationKeys: string[]
+  alsoKnownAs: string[]
+  services: {
+    atproto_pds: {
+      endpoint: string
+      type: string
+    }
+  }
+  verificationMethods: Record<string, unknown>
 }
 
+export interface BskyProfile {
+  did: Did
+  handle: string
+  displayName: string
+}
+
+export type ProfileData = PlcProfile & BskyProfile
+
 export type ATBlobInput = Input<ATBlob, 'id' | 'createdAt'>
+
+export interface RotationKey {
+  id: string
+  keypair?: Secp256k1Keypair
+  storachaAccount: string
+  atprotoAccount: string
+  createdAt: string
+}
+
+export type RotationKeyInput = Input<RotationKey, 'createdAt' | 'keypair'>
+
+export type RotationKeyClientInput = Input<RotationKeyInput, 'storachaAccount'>

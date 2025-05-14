@@ -1,6 +1,7 @@
 // all the known CSS properties so we don't have to always duplicate
 // them when we make components accepting custom props with yak
 import { Property } from 'csstype'
+import { styled } from 'next-yak'
 import { ReactNode } from 'react'
 
 export type StyleProps = {
@@ -51,3 +52,7 @@ export interface BtnProps extends StyleProps {
   $leftIcon?: ReactNode
   $disabled?: boolean
 }
+
+export const NoTextTransform = styled.span`
+  text-transform: none;
+`

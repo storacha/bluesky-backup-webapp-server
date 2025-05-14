@@ -1,19 +1,14 @@
 'use client'
 import { Did } from '@atproto/api'
 import Link from 'next/link'
-import { styled } from 'next-yak'
 
 import { Sidebar } from '@/app/Sidebar'
 import { BackButton } from '@/components/BackButton'
 import { Posts } from '@/components/Posts'
-import { Box, Heading, Stack } from '@/components/ui'
+import { Box, Heading, NoTextTransform, Stack } from '@/components/ui'
 import { useProfile } from '@/hooks/use-profile'
 import { useRepo } from '@/hooks/use-repo'
 import { useSWR } from '@/lib/swr'
-
-const NoTextTransform = styled.span`
-  text-transform: none;
-`
 
 export default function RepoPage({ id }: { id: string }) {
   const { data: snapshot, error } = useSWR(['api', `/api/snapshots/${id}`])
@@ -21,7 +16,7 @@ export default function RepoPage({ id }: { id: string }) {
   const { repo, loading } = useRepo({
     cid: snapshot?.repositoryCid || '',
   })
-  const { profile } = useProfile(snapshot?.atprotoAccount as Did)
+  const { data: profile } = useProfile(snapshot?.atprotoAccount as Did)
 
   if (error) throw error
   if (!snapshot) return null
