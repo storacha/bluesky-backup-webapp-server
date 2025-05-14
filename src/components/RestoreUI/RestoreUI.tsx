@@ -1,4 +1,4 @@
-// 'use client'
+'use client'
 
 import { Agent, CredentialSession } from '@atproto/api'
 import { Secp256k1Keypair } from '@atproto/crypto'
@@ -10,6 +10,8 @@ import { ATPROTO_DEFAULT_SINK, ATPROTO_DEFAULT_SOURCE } from '@/lib/constants'
 import db from '@/lib/db'
 import { loadCid } from '@/lib/storacha'
 import { ATBlob, Snapshot } from '@/types'
+
+import { Box } from '../ui'
 
 import {
   Blob,
@@ -216,28 +218,30 @@ export default function RestoreDialog({ snapshotId }: { snapshotId: string }) {
   }
 
   return (
-    <RestoreDialogView
-      sourceSession={sourceSession}
-      sinkSession={sinkSession}
-      loginToSink={loginToSink}
-      loginToSource={loginToSource}
-      createAccount={createAccount}
-      restoreRepo={restoreRepo}
-      restoreBlobs={restoreBlobs}
-      transferIdentity={transferIdentity}
-      sendPlcRestoreAuthorizationEmail={sendPlcRestoreAuthorizationEmail}
-      isPlcRestoreAuthorizationEmailSent={plceRestoreAuthorizationEmailSent}
-      setupPlcRestore={setupPlcRestore}
-      isPlcRestoreSetup={!!plcOp}
-      repo={repo}
-      blobs={blobs}
-      prefsDoc={prefsDoc}
-      isRestoringRepo={isRestoringRepo}
-      isRestoringBlobs={isRestoringBlobs}
-      isTransferringIdentity={isTransferringIdentity}
-      isRepoRestored={isRepoRestored}
-      areBlobsRestored={areBlobsRestored}
-      isIdentityTransferred={isIdentityTransferred}
-    />
+    <Box $padding="16px">
+      <RestoreDialogView
+        sourceSession={sourceSession}
+        sinkSession={sinkSession}
+        loginToSink={loginToSink}
+        loginToSource={loginToSource}
+        createAccount={createAccount}
+        restoreRepo={restoreRepo}
+        restoreBlobs={restoreBlobs}
+        transferIdentity={transferIdentity}
+        sendPlcRestoreAuthorizationEmail={sendPlcRestoreAuthorizationEmail}
+        isPlcRestoreAuthorizationEmailSent={plceRestoreAuthorizationEmailSent}
+        setupPlcRestore={setupPlcRestore}
+        isPlcRestoreSetup={!!plcOp}
+        repo={repo}
+        blobs={blobs}
+        prefsDoc={prefsDoc}
+        isRestoringRepo={isRestoringRepo}
+        isRestoringBlobs={isRestoringBlobs}
+        isTransferringIdentity={isTransferringIdentity}
+        isRepoRestored={isRepoRestored}
+        areBlobsRestored={areBlobsRestored}
+        isIdentityTransferred={isIdentityTransferred}
+      />
+    </Box>
   )
 }
