@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.5.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.5.0...v1.5.1) (2025-05-14)
+
+
+### Bug Fixes
+
+* Actually set the name on the `Select` 🤦‍♀️ ([2767c73](https://github.com/storacha/bluesky-backup-webapp-server/commit/2767c7355213f311b5f7fbe90c6e28e1688c80bf))
+* provision spaces on creation ([08db9f9](https://github.com/storacha/bluesky-backup-webapp-server/commit/08db9f9c536648c534caef4c8fb3622abda3ec4d))
+* provision spaces on creation ([34d2337](https://github.com/storacha/bluesky-backup-webapp-server/commit/34d2337115400a62a296f914d81a39aedd103e4f))
+
 ## [1.5.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.4.0...v1.5.0) (2025-05-13)
 
 
