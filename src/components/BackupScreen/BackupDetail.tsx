@@ -44,7 +44,7 @@ export const AccountLogo = styled.div<{
   border: 1px solid var(--color-gray);
   & img {
     filter: ${({ $hasAccount, $type }) =>
-      $hasAccount && $type === 'original' ? 'grayscale(0)' : 'grayscale(1)'};
+    $hasAccount && $type === 'original' ? 'grayscale(0)' : 'grayscale(1)'};
     opacity: ${({ $hasAccount }) => ($hasAccount ? '1' : '.5')};
   }
 
@@ -97,6 +97,7 @@ export const BackupDetail = ({ backup }: BackupProps) => {
           type="text"
           name="name"
           placeholder="New Backup"
+          defaultValue="New Backup"
           required
         />
       )}
