@@ -5,6 +5,7 @@ import { styled } from 'next-yak'
 import { LoginArea } from '@/components/LoginScreen/LoginArea'
 import { Stack } from '@/components/ui'
 import wordmark from '@/images/storacha-wm.svg'
+import wordlogo from '@/images/wordlogo.png'
 
 const Outside = styled.div`
   display: flex;
