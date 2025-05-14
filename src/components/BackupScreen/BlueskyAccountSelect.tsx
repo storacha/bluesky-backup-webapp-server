@@ -7,16 +7,19 @@ import { Loader } from '../Loader'
 
 import { Select } from './Select'
 
-export const BlueskyAccountSelect = (props: {
+export const BlueskyAccountSelect = ({
+  name,
+  defaultValue,
+  disabled = false,
+}: {
   name: string
   defaultValue?: string
-  onChange?: (value: string) => void
   disabled?: boolean
 }) => {
   const account = useStorachaAccount()
 
   const { data: atprotoAccounts, isLoading } = useSWR(
-    props.disabled ? null : account && ['api', '/api/atproto-accounts']
+    disabled ? null : account && ['api', '/api/atproto-accounts']
   )
 
   const connectNewAccount = () => {
@@ -33,12 +36,14 @@ export const BlueskyAccountSelect = (props: {
   }
   return (
     <Select
+      name={name}
       label="Bluesky account"
       imageSrc="/bluesky.png"
       items={atprotoAccounts?.map((did) => ({ id: did, label: did }))}
       content={isLoading ? <Loader /> : undefined}
       actionLabel="Connect Bluesky account…"
       actionOnPress={connectNewAccount}
+      defaultSelectedKey={defaultValue}
     />
   )
 }
