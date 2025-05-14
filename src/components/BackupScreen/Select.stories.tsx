@@ -75,6 +75,11 @@ export const ValueSelected: Story = {
       name: 'chalametoui.bsky.social',
     })
     await userEvent.click(option)
+
+    const htmlSelect = canvasElement.querySelector(
+      'select[name="atproto_account"]'
+    ) as HTMLSelectElement | null
+    expect(htmlSelect?.value).toBe('did:plc:ro3eio7zgqosf5gnxsq6ik5m')
   },
 }
 
