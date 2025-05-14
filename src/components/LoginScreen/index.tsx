@@ -27,6 +27,10 @@ const Main = styled.main`
 const Tagline = styled.h2`
   font-size: 60px;
   font-family: var(--font-epilogue);
+
+  @media only screen and (min-width: 0px) and (max-width: 992px) {
+    font-size: 35px;
+  }
 `
 
 const Footer = styled.footer`
@@ -180,7 +184,14 @@ const socialNetworks = [
   },
 ]
 
-const AppLink = styled(Link)``
+const AppLink = styled(Link)`
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`
 
 const ButtonLink = styled.a`
   display: block;
@@ -194,7 +205,12 @@ const MailingListButtonLink = styled(ButtonLink)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
+  width: fit-content;
+  height: fit-content;
+  padding: 0.75rem 1.25rem;
+  border-radius: 2rem;
+  font-weight: 500;
 `
 
 function MailingListSignup() {
@@ -208,31 +224,100 @@ function MailingListSignup() {
 
 const WordmarkContainer = styled.div`
   margin-top: 8rem;
-
   height: 8rem;
   position: relative;
+
+  @media only screen and (min-width: 0px) and (max-width: 600px) {
+    margin-top: 2rem;
+    height: 3rem;
+  }
 `
 
 const FooterGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1rem;
+  align-items: flex-start;
+
+  @media only screen and (min-width: 0px) and (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+
+  @media only screen and (min-width: 601px) and (max-width: 992px) {
+    grid-template-columns: 1fr 1fr;
+    & > *:nth-child(3) {
+      grid-column: span 2;
+    }
+  }
 `
 
 const LinksGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem;
+
+  @media only screen and (max-width: 992px) {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
 `
 
 const FooterHeading = styled.h5`
   font-weight: 500;
   text-wrap: pretty;
   font-size: 1.125rem;
+  margin-bottom: 1rem;
 `
 
-const SocialStack = styled(Stack)`
-  font-size: 1.2em;
+const SocialIconsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+
+  @media only screen and (min-width: 0px) and (max-width: 600px) {
+    align-items: left;
+    justify-content: flex-start;
+  }
+
+  @media only screen and (min-width: 601px) and (max-width: 992px) {
+    margin-top: 1.1rem;
+  }
+`
+
+const FooterLinks = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  @media only screen and (max-width: 600px) {
+    & li {
+      font-size: 0.75rem;
+    }
+  }
+`
+
+const FooterSection = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const MainStack = styled(Stack)`
+  @media only screen and (min-width: 0px) and (max-width: 576px) {
+    flex-flow: column;
+  }
+
+  @media only screen and (min-width: 600px) and (max-width: 992px) {
+    gap: 0.4rem;
+  }
+`
+
+const MainContainer = styled.section`
+  @media only screen and (min-width: 1440px) {
+    padding: 0 12rem;
+  }
 `
 
 export function LoginScreen() {
@@ -247,69 +332,74 @@ export function LoginScreen() {
   })
   const backgroundImage = getBackgroundImage(srcSet)
   return (
-    <Outside style={{ height: '100vh', width: '100vw', backgroundImage }}>
-      <Header>
-        <Image src="/wordlogo.png" alt="Storacha" width="164" height="57" />
-      </Header>
-      <Main>
-        <Stack $gap="2.5rem" $direction="row" $even>
-          <div>
-            <Tagline>Backup & Restore your Bluesky Account</Tagline>
-          </div>
-          <div>
-            <LoginArea />
-          </div>
-        </Stack>
-      </Main>
-      <Footer>
-        <FooterContainer>
-          <FooterGrid>
-            <Stack $direction="row" $justifyContent="start">
-              <MailingListSignup />
-            </Stack>
-            <SocialStack $direction="row" $gap="0.5em">
-              {socialNetworks.map((network) => (
-                <div key={network.name}>
-                  <AppLink href={network.href} target="_blank">
+    <Outside
+      style={{
+        height: '100vh',
+        width: '100vw',
+        backgroundImage,
+      }}
+    >
+      <MainContainer>
+        <Header>
+          <Image src="/wordlogo.png" alt="Storacha" width="164" height="57" />
+        </Header>
+        <Main>
+          <MainStack $gap="2.5rem" $direction="row" $even>
+            <div>
+              <Tagline>Backup & Restore your Bluesky Account</Tagline>
+            </div>
+            <div>
+              <LoginArea />
+            </div>
+          </MainStack>
+        </Main>
+        <Footer>
+          <FooterContainer>
+            <FooterGrid>
+              <div>
+                <MailingListSignup />
+              </div>
+              <SocialIconsContainer>
+                {socialNetworks.map((network) => (
+                  <AppLink
+                    key={network.name}
+                    href={network.href}
+                    target="_blank"
+                    title={network.description}
+                  >
                     {network.icon ? network.icon : network.name}
                   </AppLink>
-                </div>
-              ))}
-            </SocialStack>
-            <LinksGrid>
-              <div>
-                <div className="header align-middle">
-                  <FooterHeading className="font-medium">
-                    Resources
-                  </FooterHeading>
-                </div>
-                <ul>
-                  {footerLinks.resources.map((link) => (
-                    <li key={link.href}>
-                      <AppLink href={link.href}>{link.text}</AppLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <div className="header">
+                ))}
+              </SocialIconsContainer>
+              <LinksGrid>
+                <FooterSection>
+                  <FooterHeading>Resources</FooterHeading>
+                  <FooterLinks>
+                    {footerLinks.resources.map((link) => (
+                      <li key={link.href}>
+                        <AppLink href={link.href}>{link.text}</AppLink>
+                      </li>
+                    ))}
+                  </FooterLinks>
+                </FooterSection>
+                <FooterSection>
                   <FooterHeading>Getting Started</FooterHeading>
-                </div>
-                <ul>
-                  {footerLinks.getStarted.map((link) => (
-                    <li key={link.href}>
-                      <AppLink href={link.href}>{link.text}</AppLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </LinksGrid>
-          </FooterGrid>
-          <WordmarkContainer>
-            <Image src={wordmark} alt="Storacha" height="204" width="1360" />
-          </WordmarkContainer>
-        </FooterContainer>
-      </Footer>
+                  <FooterLinks>
+                    {footerLinks.getStarted.map((link) => (
+                      <li key={link.href}>
+                        <AppLink href={link.href}>{link.text}</AppLink>
+                      </li>
+                    ))}
+                  </FooterLinks>
+                </FooterSection>
+              </LinksGrid>
+            </FooterGrid>
+            <WordmarkContainer>
+              <Image src={wordmark} alt="Storacha" height="204" width="1360" />
+            </WordmarkContainer>
+          </FooterContainer>
+        </Footer>
+      </MainContainer>
     </Outside>
   )
 }
