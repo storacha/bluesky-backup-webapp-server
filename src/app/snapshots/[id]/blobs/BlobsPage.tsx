@@ -2,8 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
-/* eslint-disable import/no-named-as-default */
-import Lightbox from 'yet-another-react-lightbox'
+import { Lightbox } from 'yet-another-react-lightbox'
 
 import { Sidebar } from '@/app/Sidebar'
 import { BackButton } from '@/components/BackButton'

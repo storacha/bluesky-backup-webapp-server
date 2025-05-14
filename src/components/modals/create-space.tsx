@@ -1,4 +1,4 @@
-import { CheckCircle, Copy } from '@phosphor-icons/react'
+import { CheckCircle, Copy, EyeSlash } from '@phosphor-icons/react'
 import * as Client from '@storacha/client'
 import * as Storacha from '@storacha/client/account'
 import * as StorachaSpace from '@storacha/client/space'
@@ -15,6 +15,7 @@ import { shorten } from '@/lib/ui'
 
 import {
   Box,
+  Button,
   InputField,
   Modal,
   ModalProps,
@@ -24,6 +25,9 @@ import {
 } from '../ui'
 
 import { SharedModalLayout } from './layout'
+
+const toWebDID = (input?: string) =>
+  UcantoClient.Schema.DID.match({ method: 'web' }).from(input)
 
 type SpaceCreationState = 'idle' | 'creating-space' | 'creating-delegation'
 
@@ -48,6 +52,7 @@ export const CreateSpaceModal = ({
   const [createdSpace, setCreatedSpace] =
     useState<StorachaSpace.OwnedSpace | null>(null)
   const [hasCopiedKey, setHasCopiedKey] = useState<boolean>(false)
+  const [showKey, setShowKey] = useState<boolean>(false)
   const [{ client }] = useAuthenticator()
 
   const createSpace = async () => {
@@ -71,6 +76,14 @@ export const CreateSpaceModal = ({
         const space = await client.createSpace(spaceName, {
           authorizeGatewayServices: [storachaGateway],
         })
+        const provider = toWebDID(process.env.NEXT_PUBLIC_STORACHA_PROVIDER)
+        const provisionResult = await account.provision(space.did(), {
+          provider,
+        })
+        if (provisionResult.error)
+          throw new Error(provisionResult.error.message, {
+            cause: provisionResult.error,
+          })
 
         if (space) {
           const key = StorachaSpace.toMnemonic(space)
@@ -192,9 +205,21 @@ export const CreateSpaceModal = ({
               </Text>
               <Stack $gap="1rem">
                 <Box $position="relative">
-                  <Text $fontWeight="500" $color="var(--color-black)">
-                    {recoveryKey}
-                  </Text>
+                  {showKey ? (
+                    <Text $fontWeight="500" $color="var(--color-black)">
+                      {recoveryKey}
+                    </Text>
+                  ) : (
+                    <Button
+                      $fontSize="0.75rem"
+                      $background="var(--color-dark-blue)"
+                      onClick={() => {
+                        setShowKey(true)
+                      }}
+                    >
+                      Show Key
+                    </Button>
+                  )}
                   <Box
                     $position="absolute"
                     $top="2px"
@@ -203,15 +228,30 @@ export const CreateSpaceModal = ({
                     $width="fit-content"
                     $height="fit-content"
                   >
-                    {hasCopiedKey ? (
-                      <CheckCircle weight="fill" size="18" color="lightgreen" />
-                    ) : (
-                      <Copy
+                    <Stack $gap="0.5rem">
+                      {hasCopiedKey ? (
+                        <CheckCircle
+                          weight="fill"
+                          size="18"
+                          color="lightgreen"
+                        />
+                      ) : (
+                        <Copy
+                          color="var(--color-gray-light)"
+                          size="18"
+                          onClick={copyRecoveryKey}
+                          style={{ cursor: 'pointer' }}
+                        />
+                      )}
+                      <EyeSlash
                         color="var(--color-gray-light)"
                         size="18"
-                        onClick={copyRecoveryKey}
+                        onClick={() => {
+                          setShowKey(false)
+                        }}
+                        style={{ cursor: 'pointer' }}
                       />
-                    )}
+                    </Stack>
                   </Box>
                 </Box>
                 <StatefulButton

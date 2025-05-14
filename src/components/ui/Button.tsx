@@ -23,7 +23,7 @@ const ButtonElement = styled.button<Partial<BtnProps>>`
   padding: ${({ $py = '0.75rem', $px = '1rem' }) => `${$py} ${$px}`};
   border-radius: ${({ $borderRadius = '0.75rem' }) => $borderRadius};
   background-color: ${({
-    $background = 'var(--color-black)',
+    $background = 'var(--color-dark-blue)',
     $disabled,
     $variant,
   }) => buttonBackgroundColor($background, $disabled, $variant)};

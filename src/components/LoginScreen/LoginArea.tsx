@@ -12,6 +12,10 @@ const Outside = styled.div`
   padding: 2.5rem;
   box-shadow: 0px 8px 26px 0px #63637514;
   background-color: rgba(256, 256, 256, 0.9);
+
+  @media only screen and (min-width: 0px) and (max-width: 992px) {
+    padding: 1.6rem;
+  }
 `
 
 export const LoginArea = () => {

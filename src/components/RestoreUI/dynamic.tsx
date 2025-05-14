@@ -2,11 +2,11 @@
 
 import dynamic from 'next/dynamic'
 
-import { Spinner } from '../ui'
+import { FullscreenLoader } from '../Loader'
 
 export default function Restore({ snapshotId }: { snapshotId: string }) {
   const RestoreUI = dynamic(() => import('./RestoreUI'), {
-    loading: () => <Spinner />,
+    loading: () => <FullscreenLoader />,
     ssr: false,
   })
   return <RestoreUI snapshotId={snapshotId} />

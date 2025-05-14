@@ -54,6 +54,18 @@ export const AccountLogo = styled.div<{
   flex-shrink: 0;
 `
 
+const BackupNameInput = styled.input`
+  border-radius: 8px;
+  border: none;
+  width: 100%;
+  font-weight: 700;
+  font-size: 1.125rem;
+
+  &:focus {
+    outline-color: var(--color-dark-blue);
+  }
+`
+
 const Section = ({
   title,
   children,
@@ -81,7 +93,13 @@ export const BackupDetail = ({ backup }: BackupProps) => {
       {backup ? (
         <Heading>{backup.name}</Heading>
       ) : (
-        <Heading>New Backup</Heading>
+        <BackupNameInput
+          type="text"
+          name="name"
+          placeholder="New Backup"
+          defaultValue="New Backup"
+          required
+        />
       )}
       <Section title="Accounts">
         <AccountsContainer $direction="row">
@@ -101,7 +119,6 @@ export const BackupDetail = ({ backup }: BackupProps) => {
           </Wrapper>
         </AccountsContainer>
       </Section>
-
       <Section title="Data">
         <Stack
           $direction="row"

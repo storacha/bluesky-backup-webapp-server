@@ -1,33 +1,25 @@
 import { styled } from 'next-yak'
 
-import { Loader } from '@/components/Loader'
+import { FullscreenLoader } from '@/components/Loader'
+import { Stack } from '@/components/ui'
 
 import { LoginScreen } from '../components/LoginScreen'
 
 import { Authenticated } from './authentication'
 import { LoggedIn } from './LoggedIn'
 
-const FullscreenForLoader = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background-color: var(--color-gray-light);
+const Outside = styled(Stack)`
+  min-height: 100vh;
+  align-items: stretch;
 `
 
 export default function Home() {
   return (
     <Authenticated
       loading={
-        <FullscreenForLoader>
-          <Loader />
-        </FullscreenForLoader>
+        <Outside>
+          <FullscreenLoader />
+        </Outside>
       }
       unauthenticated={<LoginScreen />}
     >
