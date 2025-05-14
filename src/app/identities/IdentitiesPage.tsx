@@ -2,11 +2,9 @@
 
 import { Did } from '@atproto/api'
 import { Gear } from '@phosphor-icons/react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { styled } from 'next-yak'
 
-import { AccountLogo } from '@/components/BackupScreen/BackupDetail'
 import { Box, Button, Heading, Stack, Text } from '@/components/ui'
 import { useProfile } from '@/hooks/use-profile'
 
@@ -19,6 +17,39 @@ const IdentitiesStack = styled(Stack)`
 
 const IdentityLink = styled(Link)`
   display: block;
+`
+
+// TODO: Dedupe with `AccountLogo` in `Select`
+const AccountLogo = styled.div<{
+  $imageSrc: string
+}>`
+  --account-logo-border-color: var(--color-gray-light);
+  --account-logo-image: ${({ $imageSrc }) => `url(${$imageSrc})`};
+  --account-logo-size: 25px 25px;
+  --account-logo-position: center;
+  --account-logo-repeat: no-repeat;
+
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 42px;
+  width: 42px;
+  border-radius: 8px;
+  border: 1px solid var(--account-logo-border-color);
+
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  overflow: hidden;
+
+  background-color: var(--color-gray-light);
+  background-image: var(--account-logo-image);
+  background-size: var(--account-logo-size);
+  background-position: var(--account-logo-position);
+  background-repeat: var(--account-logo-repeat);
 `
 
 function ATProtoHandle({ did }: { did: Did }) {
@@ -46,14 +77,7 @@ export default function IdentitiesPage({ accounts }: { accounts: Did[] }) {
             $background="var(--color-white)"
           >
             <Stack $gap="1rem" $direction="row" $alignItems="center">
-              <AccountLogo $type="original" $hasAccount={true}>
-                <Image
-                  src="/bluesky.png"
-                  alt="Bluesky Logo"
-                  width={25}
-                  height={25}
-                />
-              </AccountLogo>
+              <AccountLogo $imageSrc="/bluesky.png" />
               <Stack $alignItems="start">
                 <Stack $direction="row" $alignItems="baseline" $gap="0.5rem">
                   <Text
