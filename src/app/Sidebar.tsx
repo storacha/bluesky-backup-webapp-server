@@ -1,9 +1,11 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
+import Image from 'next/image'
 import Link from 'next/link'
 import { css, styled } from 'next-yak'
 
 import { Loader } from '@/components/Loader'
 import { roundRectStyle, Stack } from '@/components/ui'
+import wordlogo from '@/images/wordlogo.png'
 import { useSWR } from '@/lib/swr'
 import { shortenIfOver } from '@/lib/ui'
 
@@ -123,7 +125,11 @@ export function Sidebar({
   return (
     <SidebarOutside $variant={variant}>
       <Stack>
-        <Header>Storacha</Header>
+        <Header>
+          <Link href="/">
+            <Image src={wordlogo} alt="Storacha" width="164" height="57" />
+          </Link>
+        </Header>
         <Heading>Backups</Heading>
         <Stack $gap="1rem">
           <Backups selectedBackupId={selectedBackupId} />

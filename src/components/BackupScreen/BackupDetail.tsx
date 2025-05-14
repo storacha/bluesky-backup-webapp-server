@@ -97,6 +97,7 @@ export const BackupDetail = ({ backup }: BackupProps) => {
           type="text"
           name="name"
           placeholder="New Backup"
+          defaultValue="New Backup"
           required
         />
       )}

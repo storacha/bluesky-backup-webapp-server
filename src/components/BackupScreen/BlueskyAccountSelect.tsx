@@ -34,12 +34,15 @@ export const BlueskyAccountSelect = ({
       `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
     )
   }
+  const items = disabled
+    ? [{ id: defaultValue || '', label: defaultValue || '' }]
+    : atprotoAccounts?.map((did) => ({ id: did, label: did }))
   return (
     <Select
       name={name}
       label="Bluesky account"
       imageSrc="/bluesky.png"
-      items={atprotoAccounts?.map((did) => ({ id: did, label: did }))}
+      items={items}
       content={isLoading ? <Loader /> : undefined}
       actionLabel="Connect Bluesky account…"
       actionOnPress={connectNewAccount}
