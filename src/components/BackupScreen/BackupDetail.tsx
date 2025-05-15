@@ -3,13 +3,13 @@
 import { styled } from 'next-yak'
 import { ReactNode } from 'react'
 
-import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
-import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
 import { Heading, Stack, Text } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { Backup } from '@/types'
 
+import { BlueskyAccountSelect } from './BlueskyAccountSelect'
 import { DataBox } from './DataBox'
+import { StorachaSpaceSelect } from './StorachaSpaceSelect'
 
 interface BackupProps {
   backup?: Backup
@@ -29,29 +29,6 @@ const AccountsContainer = styled(Stack)`
   gap: 1rem;
   align-items: center;
   position: relative;
-`
-
-export const AccountLogo = styled.div<{
-  $hasAccount?: boolean
-  $type: 'original' | 'grayscale'
-}>`
-  height: 42px;
-  width: 42px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid var(--color-gray);
-  & img {
-    filter: ${({ $hasAccount, $type }) =>
-      $hasAccount && $type === 'original' ? 'grayscale(0)' : 'grayscale(1)'};
-    opacity: ${({ $hasAccount }) => ($hasAccount ? '1' : '.5')};
-  }
-
-  @media only screen and (min-width: 0px) and (max-width: 576px) {
-    display: none;
-  }
-  flex-shrink: 0;
 `
 
 const BackupNameInput = styled.input`

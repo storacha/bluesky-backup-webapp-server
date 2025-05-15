@@ -45,7 +45,7 @@ export default function BlobsPage({ id }: { id: string }) {
           </Center>
         ) : (
           <Stack $gap="1rem">
-            <BackButton />
+            <BackButton path={`/snapshots/${id}`} />
             <Stack
               $direction="row"
               $gap={isMobile ? '1.4rem' : '.8rem'}

@@ -34,9 +34,17 @@ export const BlueskyAccountSelect = ({
       `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
     )
   }
-  const items = disabled
-    ? [{ id: defaultValue || '', label: defaultValue || '' }]
-    : atprotoAccounts?.map((did) => ({ id: did, label: did }))
+
+  const items =
+    // The accounts loaded from the API, or if they're not loaded...
+    atprotoAccounts?.map((did) => ({ id: did, label: did })) ??
+    [
+      !!defaultValue && {
+        id: defaultValue,
+        label: defaultValue,
+      },
+    ].filter((a) => !!a)
+
   return (
     <Select
       name={name}
@@ -47,6 +55,7 @@ export const BlueskyAccountSelect = ({
       actionLabel="Connect Bluesky account…"
       actionOnPress={connectNewAccount}
       defaultSelectedKey={defaultValue}
+      isDisabled={disabled}
     />
   )
 }

@@ -29,7 +29,7 @@ export default function RepoPage({ id }: { id: string }) {
           <p>Loading repository data...</p>
         ) : (
           <Stack $gap="1rem">
-            <BackButton />
+            <BackButton path={`/snapshots/${id}`} />
             <Stack $gap=".8rem">
               <Heading>
                 Recent Posts

@@ -1,6 +1,5 @@
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import Image from 'next/image'
-import { styled } from 'next-yak'
+import { css, styled } from 'next-yak'
 import {
   Button,
   ButtonContext,
@@ -14,9 +13,7 @@ import {
   SelectValue,
 } from 'react-aria-components'
 
-import { Stack, Text } from '../ui'
-
-import { AccountLogo } from './BackupDetail'
+import { Stack } from '../ui'
 
 const Popover = styled(RACPopover)`
   background-color: var(--color-white);
@@ -81,6 +78,10 @@ const ActionButton = styled(FullButton)`
 const DisclosureIcon = styled(ChevronDownIcon)`
   color: var(--color-gray-1);
   width: 1rem;
+
+  ${FullButton}[data-disabled] & {
+    display: none;
+  }
 `
 
 const MainSection = styled(Stack)`
@@ -91,11 +92,30 @@ const MainSection = styled(Stack)`
   min-width: 0;
 `
 
-const Value = styled(Text)`
+const Label = styled.div`
+  font-size: 0.75rem;
+
+  ${FullButton}[data-disabled] & {
+    color: var(--color-gray-medium-medium-light);
+  }
+`
+
+const Value = styled.div`
+  font-size: 0.75rem;
   font-family: var(--font-dm-mono);
+  color: var(--color-gray-medium);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  ${FullButton}[data-disabled] & {
+    color: var(--color-gray-medium-medium-light);
+  }
+`
+
+const Prompt = styled.div`
+  font-size: 0.75rem;
+  color: var(--color-gray-medium);
 `
 
 const Contents = styled.div<{ $hasValue: boolean }>`
@@ -107,16 +127,83 @@ const Contents = styled.div<{ $hasValue: boolean }>`
   justify-content: flex-start;
 
   border-width: 1px;
-  border-style: dashed;
+  border-style: ${({ $hasValue }) => ($hasValue ? 'solid' : 'dashed')};
   border-color: var(--color-gray-light);
   border-radius: 12px;
 
-  ${FullButton}:focus-visible &, &:hover {
+  ${FullButton}:focus-visible &, ${FullButton}:not([data-disabled]) &:hover {
     background-color: var(--color-white);
   }
 
   ${FullButton}:focus-visible & {
     outline: var(--color-dark-blue) 2px solid;
+  }
+`
+
+const withLogoSilhouette = css`
+  /* Rather than use the image as a background, use the color as a background
+    and the image as a mask. Pseudo-element so the main element can still
+    display a border without being hidden by the mask. */
+  &::after {
+    content: '';
+    flex-grow: 1;
+    background-color: var(--account-logo-color);
+    mask-image: var(--account-logo-image);
+    mask-size: var(--account-logo-size);
+    mask-position: var(--account-logo-position);
+    mask-repeat: var(--account-logo-repeat);
+  }
+`
+
+const AccountLogo = styled.div<{
+  $imageSrc: string
+  $hasValue?: boolean
+}>`
+  --account-logo-border-color: var(--color-gray-light);
+  --account-logo-image: ${({ $imageSrc }) => `url(${$imageSrc})`};
+  --account-logo-size: 25px 25px;
+  --account-logo-position: center;
+  --account-logo-repeat: no-repeat;
+
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 42px;
+  width: 42px;
+  border-radius: 8px;
+  border: 1px solid var(--account-logo-border-color);
+
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  overflow: hidden;
+
+  ${({ $hasValue }) =>
+    $hasValue
+      ? css`
+          ${FullButton}:not([data-disabled]) & {
+            background-color: var(--color-gray-light);
+            background-image: var(--account-logo-image);
+            background-size: var(--account-logo-size);
+            background-position: var(--account-logo-position);
+            background-repeat: var(--account-logo-repeat);
+          }
+        `
+      : css`
+          --account-logo-color: var(--color-gray-1);
+          ${withLogoSilhouette};
+        `}
+
+  ${FullButton}[data-disabled] & {
+    --account-logo-color: var(--color-gray-medium-medium-light);
+    ${withLogoSilhouette};
+  }
+
+  @media only screen and (min-width: 0px) and (max-width: 576px) {
+    display: none;
   }
 `
 
@@ -175,18 +262,15 @@ export const Select = ({
           {({ selectedItem }) => {
             return (
               <Contents $hasValue={!!selectedItem}>
-                <AccountLogo $type="original" $hasAccount={true}>
-                  <Image src={imageSrc} alt="" width={25} height={25} />
-                </AccountLogo>
-
+                <AccountLogo $hasValue={!!selectedItem} $imageSrc={imageSrc} />
                 <MainSection>
                   {selectedItem || selectedKey ? (
                     <>
-                      <Text $color="var(--color-black)">{label}</Text>
+                      <Label>{label}</Label>
                       <Value>{selectedKey || selectedItem?.label}</Value>
                     </>
                   ) : (
-                    <Text>{prompt}</Text>
+                    <Prompt>{prompt}</Prompt>
                   )}
                 </MainSection>
                 <DisclosureIcon />
