@@ -133,3 +133,15 @@ export const LongValue: Story = {
     defaultSelectedKey: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
   },
 }
+
+export const Disabled: Story = {
+  args: {
+    isDisabled: true,
+    defaultSelectedKey: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const button = await canvas.findByRole('button')
+    expect(button).toBeDisabled()
+  },
+}

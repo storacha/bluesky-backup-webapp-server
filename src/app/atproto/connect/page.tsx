@@ -15,9 +15,21 @@ import { useStorachaAccount } from '@/hooks/use-plan'
 const ConnectStack = styled(Stack)`
   padding: 0 2rem;
 `
+
 const ConnectPage: React.FC = () => {
   const account = useStorachaAccount()
   if (!account) return null
+
+  const handleAppend = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleInput = e.currentTarget.elements.namedItem(
+      'handle'
+    ) as HTMLInputElement
+    const handle = handleInput.value.trim()
+
+    if (!handle.includes('.')) {
+      handleInput.value = `${handle}.bsky.social`
+    }
+  }
 
   return (
     <Center $height="100vh">
@@ -29,7 +41,7 @@ const ConnectPage: React.FC = () => {
             To get started, please log in to your Bluesky account.{' '}
           </SubHeading>
         </Stack>
-        <form action="/atproto/oauth" method="POST">
+        <form action="/atproto/oauth" method="POST" onSubmit={handleAppend}>
           <input type="hidden" name="account" value={account.did()} />
           <Stack $gap="1rem">
             <InputField

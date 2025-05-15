@@ -83,6 +83,7 @@ function supportCssModules(webpackConfig: WebpackConfig) {
             {
               loader: require.resolve('css-loader'),
               options: {
+                url: false,
                 importLoaders: 1,
                 esModule: false,
                 modules: {
