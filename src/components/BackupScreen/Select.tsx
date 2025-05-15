@@ -4,6 +4,7 @@ import { styled } from 'next-yak'
 import {
   Button,
   ButtonContext,
+  Key,
   ListBox as RACListBox,
   ListBoxItem,
   ListBoxProps,
@@ -133,7 +134,9 @@ export const Select = ({
   actionLabel,
   actionOnPress,
   content,
+  selectedKey,
   isDisabled,
+  onChange,
 }: {
   /** URL of the image to show in the control. */
   imageSrc: string
@@ -143,8 +146,12 @@ export const Select = ({
   actionLabel: string
   /** Handler called when the action button is pressed. */
   actionOnPress: () => void
+  onChange?: (key: Key) => void
   content?: React.ReactNode
-} & Pick<SelectProps<Item>, 'name' | 'defaultSelectedKey' | 'isDisabled'> &
+} & Pick<
+  SelectProps<Item>,
+  'name' | 'defaultSelectedKey' | 'isDisabled' | 'selectedKey'
+> &
   Pick<ListBoxProps<Item>, 'items'>) => {
   const prompt = `Select ${label}`
   const actionButton = (
@@ -158,8 +165,10 @@ export const Select = ({
   return (
     <RACSelect
       name={name}
+      selectedKey={selectedKey}
       defaultSelectedKey={defaultSelectedKey}
       isDisabled={isDisabled}
+      onSelectionChange={onChange}
     >
       <FullButton>
         <SelectValue<Item>>
@@ -171,10 +180,10 @@ export const Select = ({
                 </AccountLogo>
 
                 <MainSection>
-                  {selectedItem ? (
+                  {selectedItem || selectedKey ? (
                     <>
                       <Text $color="var(--color-black)">{label}</Text>
-                      <Value>{selectedItem.label}</Value>
+                      <Value>{selectedKey || selectedItem?.label}</Value>
                     </>
                   ) : (
                     <Text>{prompt}</Text>

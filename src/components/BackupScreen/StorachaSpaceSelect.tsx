@@ -1,6 +1,7 @@
 'use client'
-
 import { useAuthenticator } from '@storacha/ui-react'
+import { useState } from 'react'
+import { Key } from 'react-aria'
 
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { shortenDID } from '@/lib/ui'
@@ -20,23 +21,25 @@ export const StorachaSpaceSelect = ({
 }) => {
   const [{ spaces, accounts }] = useAuthenticator()
   const account = accounts[0]
-
+  const [selectedSpace, setSelectedSpace] = useState<Key>(defaultValue || '')
   const storachaSpaces = spaces.map((space) => ({
     id: space.did(),
     label: `${space.name} (${shortenDID(space.did())})`,
   }))
-
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const handleSpaceCreated = () => {
-    onClose()
+  const handleSpaceCreated = (spaceId: string) => {
+    const label = `(${shortenDID(spaceId)})`
+    setSelectedSpace(label)
   }
 
   return (
     <>
       <Select
-        defaultSelectedKey={defaultValue}
+        defaultSelectedKey={selectedSpace}
+        selectedKey={selectedSpace}
         isDisabled={disabled}
+        onChange={(key) => setSelectedSpace(key)}
         name={name}
         label="Storacha space"
         imageSrc="/storacha-red.png"
