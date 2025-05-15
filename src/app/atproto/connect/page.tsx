@@ -20,7 +20,9 @@ const ConnectPage: React.FC = () => {
   if (!account) return null
 
   const handleAppend = (e: React.FormEvent<HTMLFormElement>) => {
-    const handleInput = e.currentTarget.elements.namedItem('handle') as HTMLInputElement
+    const handleInput = e.currentTarget.elements.namedItem(
+      'handle'
+    ) as HTMLInputElement
     let handle = handleInput.value.trim()
 
     if (!handle.includes('.')) {
