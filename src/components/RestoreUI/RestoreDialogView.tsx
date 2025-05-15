@@ -240,7 +240,7 @@ export function RestoreDialogView({
         <Stack $gap="1rem">
           <Stack $gap="0.25rem">
             <Heading>Data Restore</Heading>
-            <SubHeading>Please create a new ATProto account.</SubHeading>
+            <SubHeading>Please log in to your ATProto account.</SubHeading>
           </Stack>
           <AtprotoLoginForm
             login={loginToSink}

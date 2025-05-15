@@ -17,6 +17,12 @@ import { CreateAccountFn, LoginFn } from '../ui/atproto'
 
 import IdentityTransferView from './IdentityTransferView'
 
+const isHttpUrl = (maybeUrl: string) =>
+  maybeUrl.startsWith('https://') || maybeUrl.startsWith('http://')
+
+const httpsify = (maybeUrl: string) =>
+  isHttpUrl(maybeUrl) ? maybeUrl : `https://${maybeUrl}`
+
 export function IdentityTransfer({
   profile,
   rotationKey,
@@ -36,7 +42,7 @@ export function IdentityTransfer({
     password,
     { server = ATPROTO_DEFAULT_SINK } = { server: ATPROTO_DEFAULT_SINK }
   ) => {
-    const session = new CredentialSession(new URL(server))
+    const session = new CredentialSession(new URL(httpsify(server)))
     await session.login({ identifier, password })
     const agent = new Agent(session)
     setSinkSession(session)
@@ -56,7 +62,7 @@ export function IdentityTransfer({
         'cannot create account - rotation key private key is not loaded'
       )
 
-    const session = new CredentialSession(new URL(server))
+    const session = new CredentialSession(new URL(httpsify(server)))
     const agent = new Agent(session)
 
     const describeRes = await agent.com.atproto.server.describeServer()

@@ -88,7 +88,7 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
   const did = dbKey?.id ?? keypair?.did()
 
   return (
-    <Stack>
+    <Stack $gap="1rem">
       {did && (
         <Stack>
           <SubHeading>
@@ -106,9 +106,14 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
           <KeyImportForm dbKey={dbKey} importKey={importAndClose} />
         </div>
       ) : secret ? (
-        <Stack>
-          <SubHeading>Secret Key</SubHeading>
-          <SecretText>{secret}</SecretText>
+        <Stack $gap="1rem">
+          <Stack>
+            <SubHeading>Secret Key</SubHeading>
+            <Stack $direction="row" $gap="0.5rem" $alignItems="center">
+              <SecretText>{secret}</SecretText>
+              <CopyButton text={secret} />
+            </Stack>
+          </Stack>
           <Stack $direction="row" $gap="0.5rem">
             <Button
               $variant="secondary"
@@ -117,13 +122,17 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
                 <EyeSlash size="16" color="var(--color-gray-medium)" />
               }
             >
-              Hide
+              Hide Secret
             </Button>
-            <CopyButton text={secret} />
+            {onDone && (
+              <Button $variant="primary" onClick={onDone}>
+                Done
+              </Button>
+            )}
           </Stack>
         </Stack>
       ) : (
-        <Stack $direction="row">
+        <Stack $direction="row" $gap="0.5rem">
           {!keypair && (
             <Button
               $variant="secondary"
@@ -542,7 +551,11 @@ export default function KeychainView({
                   $alignItems="center"
                   $justifyContent="space-between"
                 >
-                  <Stack $direction="row">
+                  <Stack
+                    $direction="row"
+                    $justifyContent="space-between"
+                    $width="12em"
+                  >
                     <PublicKey>{shortenDID(key.id)}</PublicKey>
                     <CopyButton text={key.id} />
                   </Stack>
@@ -618,7 +631,7 @@ export default function KeychainView({
         title="Key Details"
         size="md"
       >
-        {selectedKeyDetails && (
+        {selectedKeyDetails && isKeyDetailsDialogOpen && (
           <KeyDetails
             dbKey={selectedKeyDetails}
             importKey={importKey}
@@ -632,7 +645,7 @@ export default function KeychainView({
         title="Recovery Key Status"
         size="md"
       >
-        {selectedKeyDetails && atprotoAccount && (
+        {selectedKeyDetails && atprotoAccount && isRotationKeyDialogOpen && (
           <RotationKeyStatus
             did={atprotoAccount}
             rotationKey={selectedKeyDetails}

@@ -22,7 +22,6 @@ const profile: ProfileData = {
   services: {},
 }
 
-
 const key: RotationKey = {
   id: keypair.did(),
   storachaAccount: 'did:mailto:travis:example.com',

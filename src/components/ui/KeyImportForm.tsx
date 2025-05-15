@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form'
 
 import { RotationKey } from '@/types'
 
-import { Button, InputField } from '.'
+import { Button, InputField, Stack } from '.'
 
 import type { KeyImportFn } from '@/contexts/keychain'
 
@@ -22,20 +22,22 @@ export default function KeyImportForm({
     await importKey(dbKey, data.keyMaterial)
   }
   return (
-    <form onSubmit={handleSubmit(submit)} className="flex flex-col space-y-2">
-      <InputField
-        type="password"
-        className="w-full whitespace-pre"
-        placeholder="Private Key"
-        {...register('keyMaterial')}
-      />
-      <Button
-        type="submit"
-        $variant="primary"
-        className="text-xs uppercase font-bold"
-      >
-        Confirm
-      </Button>
+    <form onSubmit={handleSubmit(submit)}>
+      <Stack $direction="row" $gap="0.5rem">
+        <InputField
+          type="password"
+          placeholder="M..."
+          label="Private Key"
+          {...register('keyMaterial')}
+        />
+        <Button
+          type="submit"
+          $variant="primary"
+          className="text-xs uppercase font-bold"
+        >
+          Load&nbsp;Key
+        </Button>
+      </Stack>
     </form>
   )
 }

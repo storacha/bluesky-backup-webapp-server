@@ -20,7 +20,8 @@ const buttonBackgroundColor = (
 const ButtonElement = styled.button<Partial<BtnProps>>`
   font-family: ${({ $fontFamily = 'var(--font-dm-mono)' }) => $fontFamily};
   font-weight: ${({ $fontWeight = '300' }) => $fontWeight};
-  padding: ${({ $py = '0.75rem', $px = '1rem' }) => `${$py} ${$px}`};
+  padding: ${({ $py = '0.75rem', $px = '1rem', $padding }) =>
+    $padding ?? `${$py} ${$px}`};
   border-radius: ${({ $borderRadius = '0.75rem' }) => $borderRadius};
   background-color: ${({
     $background = 'var(--color-dark-blue)',
