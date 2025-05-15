@@ -1,5 +1,5 @@
 import { styled } from 'next-yak'
-import { useId, useRef } from 'react'
+import { Ref, useId } from 'react'
 
 import { Box, Stack, Text } from '../ui'
 
@@ -11,6 +11,8 @@ interface DataBoxProps extends SwitchProps {
   /** A slightly longer description */
   description: string
   width?: string
+  /** A ref which will attach to the switch's input element. */
+  switchRef?: Ref<HTMLInputElement>
 }
 
 const Label = styled.label`
@@ -21,10 +23,10 @@ export const DataBox = ({
   label,
   description,
   width = '48%',
+  switchRef,
   ...switchProps
 }: DataBoxProps) => {
   const id = useId()
-  const switchRef = useRef<HTMLInputElement>(null)
   return (
     <Label>
       <Box
