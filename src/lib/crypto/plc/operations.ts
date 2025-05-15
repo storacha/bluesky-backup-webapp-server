@@ -7,17 +7,11 @@
 // Except as otherwise noted in individual files, this software is licensed under the MIT license(<http://opensource.org/licenses/MIT>), or the Apache License, Version 2.0 (<http://www.apache.org/licenses/LICENSE-2.0>), at your option.
 
 import { check } from '@atproto/common-web'
-import { Keypair, sha256, verifySignature } from '@atproto/crypto'
+import { Keypair, sha256 } from '@atproto/crypto'
 import * as cbor from '@ipld/dag-cbor'
 import { CID } from 'multiformats/cid'
 import * as uint8arrays from 'uint8arrays'
 
-import {
-  GenesisHashError,
-  ImproperOperationError,
-  InvalidSignatureError,
-  MisorderedOperationError,
-} from './error'
 import { cidForCbor } from './ipld'
 import * as t from './types'
 
@@ -31,7 +25,7 @@ export const didForCreateOp = async (op: t.CompatibleOp) => {
 // Operations formatting
 // ---------------------------
 
-export const formatAtprotoOp = (opts: {
+const formatAtprotoOp = (opts: {
   signingKey: string
   handle: string
   pds: string
@@ -66,18 +60,6 @@ export const atprotoOp = async (opts: {
   return addSignature(formatAtprotoOp(opts), opts.signer)
 }
 
-export const createOp = async (opts: {
-  signingKey: string
-  handle: string
-  pds: string
-  rotationKeys: string[]
-  signer: Keypair
-}): Promise<{ op: t.Operation; did: string }> => {
-  const op = await atprotoOp({ ...opts, prev: null })
-  const did = await didForCreateOp(op)
-  return { op, did }
-}
-
 export const createUpdateOp = async (
   lastOp: t.CompatibleOp,
   signer: Keypair,
@@ -97,7 +79,7 @@ export const createUpdateOp = async (
   )
 }
 
-export const createAtprotoUpdateOp = async (
+const createAtprotoUpdateOp = async (
   lastOp: t.CompatibleOp,
   signer: Keypair,
   opts: Partial<{
@@ -195,7 +177,7 @@ export const tombstoneOp = async (
 // Signing operations
 // ---------------------------
 
-export const addSignature = async <T extends Record<string, unknown>>(
+const addSignature = async <T extends Record<string, unknown>>(
   object: T,
   key: Keypair
 ): Promise<T & { sig: string }> => {
@@ -207,24 +189,10 @@ export const addSignature = async <T extends Record<string, unknown>>(
   }
 }
 
-export const signOperation = async (
-  op: t.UnsignedOperation,
-  signingKey: Keypair
-): Promise<t.Operation> => {
-  return addSignature(op, signingKey)
-}
-
 // Backwards compatibility
 // ---------------------------
 
-export const deprecatedSignCreate = async (
-  op: t.UnsignedCreateOpV1,
-  signingKey: Keypair
-): Promise<t.CreateOpV1> => {
-  return addSignature(op, signingKey)
-}
-
-export const normalizeOp = (op: t.CompatibleOp): t.Operation => {
+const normalizeOp = (op: t.CompatibleOp): t.Operation => {
   if (check.is(op, t.def.operation)) {
     return op
   }
@@ -246,60 +214,17 @@ export const normalizeOp = (op: t.CompatibleOp): t.Operation => {
   }
 }
 
-// Verifying operations/signatures
-// ---------------------------
-
-export const assureValidCreationOp = async (
-  did: string,
-  op: t.CompatibleOpOrTombstone
-): Promise<t.DocumentData> => {
-  if (check.is(op, t.def.tombstone)) {
-    throw new MisorderedOperationError()
-  }
-  const normalized = normalizeOp(op)
-  await assureValidSig(normalized.rotationKeys, op)
-  const expectedDid = await didForCreateOp(op)
-  if (expectedDid !== did) {
-    throw new GenesisHashError(expectedDid)
-  }
-  if (op.prev !== null) {
-    throw new ImproperOperationError('expected null prev on create', op)
-  }
-  const { verificationMethods, rotationKeys, alsoKnownAs, services } =
-    normalized
-  return { did, verificationMethods, rotationKeys, alsoKnownAs, services }
-}
-
-export const assureValidSig = async (
-  allowedDidKeys: string[],
-  op: t.CompatibleOpOrTombstone
-): Promise<string> => {
-  const { sig, ...opData } = op
-  if (sig.endsWith('=')) {
-    throw new InvalidSignatureError(op)
-  }
-  const sigBytes = uint8arrays.fromString(sig, 'base64url')
-  const dataBytes = new Uint8Array(cbor.encode(opData))
-  for (const didKey of allowedDidKeys) {
-    const isValid = await verifySignature(didKey, dataBytes, sigBytes)
-    if (isValid) {
-      return didKey
-    }
-  }
-  throw new InvalidSignatureError(op)
-}
-
 // Util
 // ---------------------------
 
-export const ensureHttpPrefix = (str: string): string => {
+const ensureHttpPrefix = (str: string): string => {
   if (str.startsWith('http://') || str.startsWith('https://')) {
     return str
   }
   return `https://${str}`
 }
 
-export const ensureAtprotoPrefix = (str: string): string => {
+const ensureAtprotoPrefix = (str: string): string => {
   if (str.startsWith('at://')) {
     return str
   }

@@ -24,7 +24,7 @@ type ServiceJwtParams = {
   keypair: crypto.Keypair
 }
 
-export const utf8ToB64Url = (utf8: string): string => {
+const utf8ToB64Url = (utf8: string): string => {
   return ui8.toString(ui8.fromString(utf8, 'utf8'), 'base64url')
 }
 

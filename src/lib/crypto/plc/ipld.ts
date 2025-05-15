@@ -13,10 +13,7 @@ import * as Block from 'multiformats/block'
 import { CID } from 'multiformats/cid'
 import { sha256 } from 'multiformats/hashes/sha2'
 
-export const cborEncode = cborCodec.encode
-export const cborDecode = cborCodec.decode
-
-export const dataToCborBlock = async (data: unknown) => {
+const dataToCborBlock = async (data: unknown) => {
   return Block.encode({
     value: data,
     codec: cborCodec,

@@ -149,7 +149,7 @@ export class Client {
   }
 }
 
-export class PlcClientError extends Error {
+class PlcClientError extends Error {
   constructor(
     public status: number,
     public data: unknown,
@@ -166,5 +166,3 @@ export class PlcClientError extends Error {
     )
   }
 }
-
-export default Client
