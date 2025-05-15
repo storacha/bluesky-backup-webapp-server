@@ -44,6 +44,10 @@ grant all privileges on database bsky_backups_dev to admin;
 
 These names and credentials match the examples in `.env.tpl` and should be customized for your setup.
 
+When you start the dev server for ths first time, be sure to use this command, `pnpm run atproto:generate-jwk` to generate the JWK endpoint key so you don't encounter this:
+
+> missing endpoint error TOKEN_ENDPOINT_PRIVATE_KEY_JWK
+
 ### Set up `ngrok`
 
 1. Run `pnpm dev`.
