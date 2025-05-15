@@ -415,55 +415,61 @@ function RotationKeyStatus({
   ) : isTransferringIdentity ? (
     <IdentityTransfer profile={profile} rotationKey={rotationKey} />
   ) : (
-    <RotationKeyStack $gap="1rem">
-      <Stack $gap="1rem">
+    <RotationKeyStack $gap="2rem">
+      <Stack $gap="2rem">
         <Heading>
           <NoTextTransform>{shortenDID(rotationKey.id)}</NoTextTransform>
         </Heading>
-        <Text $fontSize="1rem">
-          {isRotationKey ? <>is</> : <>is not</>} currently a recovery key
-        </Text>
-        <Text $fontSize="1rem">
-          {isSignable ? <>does</> : <>does not</>} have a private key loaded
-        </Text>
-        <Text $fontSize="1rem">
-          {isSigningKey ? <>is</> : <>is not</>} controlling {profile.handle}
-        </Text>
-        {!isSignable && (
-          <KeyImportForm dbKey={rotationKey} importKey={importKey} />
-        )}
-        {isSignable && isRotationKey && (
-          <Stack $direction="row">
-            {isSigningKey ? (
-              <Button
-                onClick={() => {
-                  setIsTransferringIdentity(true)
-                }}
-              >
-                Transfer Identity
-              </Button>
-            ) : (
-              <Button
-                onClick={() => {
-                  takeControl()
-                }}
-              >
-                Take Control
-              </Button>
-            )}
-          </Stack>
-        )}
+        <Stack $gap="1rem">
+          <Text $fontSize="1rem" $color="var(--color-black)">
+            {isSignable ? <>Does</> : <>Does not</>} have a private key loaded.
+          </Text>
+          {!isSignable && (
+            <KeyImportForm dbKey={rotationKey} importKey={importKey} />
+          )}
+        </Stack>
+        <Stack $gap="1rem">
+          <Text $fontSize="1rem" $color="var(--color-black)">
+            {isRotationKey ? <>Is</> : <>Is not</>} currently a recovery key.
+          </Text>
+          {!isRotationKey && (
+            <Button
+              onClick={() => {
+                setIsAddingKey(true)
+              }}
+            >
+              Add This Key To {handle}
+            </Button>
+          )}
+        </Stack>
+        <Stack $gap="1rem">
+          <Text $fontSize="1rem" $color="var(--color-black)">
+            {isSigningKey ? <>Is</> : <>Is not</>} controlling {profile.handle}.
+          </Text>
+          {isRotationKey && !isSigningKey && (
+            <Button
+              onClick={() => {
+                takeControl()
+              }}
+            >
+              Take Control
+            </Button>
+          )}
+        </Stack>
       </Stack>
-      {!isRotationKey && (
-        <Button
-          onClick={() => {
-            setIsAddingKey(true)
-          }}
-        >
-          Add This Key To {handle}
-        </Button>
-      )}
-      <Button onClick={onDone}>Done</Button>
+      <Stack $direction="row" $gap="1rem">
+        {isSigningKey && (
+          <Button
+            onClick={() => {
+              setIsTransferringIdentity(true)
+            }}
+          >
+            Transfer Identity
+          </Button>
+        )}
+
+        <Button onClick={onDone}>Done</Button>
+      </Stack>
     </RotationKeyStack>
   )
 }
@@ -518,11 +524,6 @@ export default function KeychainView({
   const openRotationKeyStatus = (key: RotationKey) => {
     setSelectedKeyDetails(key)
     setIsRotationKeyDialogOpen(true)
-  }
-
-  const openKeyDetails = (key: RotationKey) => {
-    setSelectedKeyDetails(key)
-    setIsKeyDetailsDialogOpen(true)
   }
 
   const myKeys = keys.filter((key) => key.atprotoAccount === atprotoAccount)
@@ -599,7 +600,7 @@ export default function KeychainView({
                     <Button
                       $variant="outline"
                       className="p-1"
-                      onClick={() => openKeyDetails(key)}
+                      onClick={() => openRotationKeyStatus(key)}
                       aria-label="View key details"
                     >
                       <Gear size="16" color="var(--color-gray-medium)" />

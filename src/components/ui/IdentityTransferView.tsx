@@ -5,15 +5,7 @@ import { useState } from 'react'
 import { ATPROTO_DEFAULT_SINK } from '@/lib/constants'
 import { ProfileData } from '@/types'
 
-import {
-  Box,
-  Button,
-  Heading,
-  NoTextTransform,
-  Stack,
-  SubHeading,
-  Text,
-} from '.'
+import { Box, Button, Heading, Stack, SubHeading, Text } from '.'
 
 import {
   AtprotoCreateAccountForm,
@@ -46,17 +38,11 @@ export default function IdentityTransferView({
       {sinkSession ? (
         <Stack $gap="1rem">
           <Heading>Identity</Heading>
-          <SubHeading>
-            Transfer{' '}
-            <NoTextTransform>
-              {profile.handle} to {sinkSession.serviceUrl.hostname}
-            </NoTextTransform>
-          </SubHeading>
           <Text>
-            Warning! If you are transferring off of bsky.social you will not be
-            able to transfer back - please make sure you know what you are
-            doing!
+            You are going to transfer control over {profile.handle} to{' '}
+            {sinkSession.serviceUrl.hostname}.
           </Text>
+          <Text>Are you sure you want to do this?</Text>
           {isIdentityTransferred ? (
             <Text $color="var(--color-black)" $fontSize="1rem">
               Success! <b>{profile.handle}</b> has been transferred to{' '}
@@ -68,7 +54,7 @@ export default function IdentityTransferView({
               onClick={transferIdentity}
               disabled={isTransferringIdentity}
             >
-              I understand, make it happen!
+              Yes, make it happen!
             </Button>
           )}
         </Stack>
