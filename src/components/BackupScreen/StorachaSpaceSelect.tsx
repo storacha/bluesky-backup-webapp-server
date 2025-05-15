@@ -35,14 +35,14 @@ export const StorachaSpaceSelect = ({
   return (
     <>
       <Select
-        defaultSelectedKey={defaultValue}
-        isDisabled={disabled}
         name={name}
         label="Storacha space"
         imageSrc="/storacha-red.png"
         items={storachaSpaces}
         actionLabel="Create new space…"
         actionOnPress={onOpen}
+        defaultSelectedKey={defaultValue}
+        isDisabled={disabled}
       />
       <CreateSpaceModal
         isOpen={isOpen}
