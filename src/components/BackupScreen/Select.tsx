@@ -241,7 +241,6 @@ export const Select = ({
       <ActionButton onPress={actionOnPress}>{actionLabel}</ActionButton>
     </ButtonContext.Provider>
   )
-  console.log({ isDisabled })
 
   return (
     <RACSelect
