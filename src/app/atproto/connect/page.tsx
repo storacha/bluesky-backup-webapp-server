@@ -15,6 +15,7 @@ import { useStorachaAccount } from '@/hooks/use-plan'
 const ConnectStack = styled(Stack)`
   padding: 0 2rem;
 `
+
 const ConnectPage: React.FC = () => {
   const account = useStorachaAccount()
   if (!account) return null
@@ -23,7 +24,7 @@ const ConnectPage: React.FC = () => {
     const handleInput = e.currentTarget.elements.namedItem(
       'handle'
     ) as HTMLInputElement
-    let handle = handleInput.value.trim()
+    const handle = handleInput.value.trim()
 
     if (!handle.includes('.')) {
       handleInput.value = `${handle}.bsky.social`
