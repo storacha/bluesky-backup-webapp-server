@@ -1,7 +1,7 @@
 'use client'
 
 import { styled } from 'next-yak'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
@@ -56,6 +56,9 @@ const Section = ({
   </Stack>
 )
 
+type BackupDatas = 'include_repository' | 'include_blobs'
+// | 'include_preferences'
+
 /**
  * A detail view/form for a Backup. If {@link Backup} is provided, its values
  * will be displayed, and the form elements will be disabled. Otherwise, the
@@ -65,6 +68,35 @@ const Section = ({
  */
 export const BackupDetail = ({ backup }: BackupProps) => {
   const { isMobile, isBaseLaptop } = useMobileScreens()
+
+  const [dataBoxState, setDataBoxState] = useState<
+    Record<BackupDatas, boolean>
+  >({
+    include_repository: backup?.includeRepository ?? true,
+    include_blobs: backup?.includeBlobs ?? true,
+  })
+  const handleDataBoxChange = (name: string) => (value: boolean) => {
+    setDataBoxState((prev) => {
+      const updatedState = {
+        ...prev,
+        [name]: value,
+      }
+      const otherEntries = Object.entries(dataBoxState).filter(
+        ([key]) => key !== name
+      )
+      // If all other entries are false,
+      if (otherEntries.every(([, value]) => !value)) {
+        return {
+          ...updatedState,
+          // Set the first other entry to true (or the current one back if it's the only one)
+          [otherEntries[0]?.[0] ?? name]: true,
+        }
+      } else {
+        return updatedState
+      }
+    })
+  }
+
   return (
     <Stack $gap="2rem">
       {backup ? (
@@ -106,15 +138,17 @@ export const BackupDetail = ({ backup }: BackupProps) => {
             name="include_repository"
             label="Repository"
             description="Posts, Follows..."
-            defaultSelected={backup?.includeRepository}
+            isSelected={dataBoxState.include_repository}
             isDisabled={!!backup}
+            onChange={handleDataBoxChange('include_repository')}
           />
           <DataBox
             name="include_blobs"
             label="Blobs"
             description="Images, Profile Picture..."
-            defaultSelected={backup?.includeBlobs}
+            isSelected={dataBoxState.include_blobs}
             isDisabled={!!backup}
+            onChange={handleDataBoxChange('include_blobs')}
           />
         </Stack>
       </Section>
