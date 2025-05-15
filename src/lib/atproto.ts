@@ -7,9 +7,6 @@ import {
 } from '@atproto/oauth-client-node'
 import urlJoin from 'proper-url-join'
 
-// Note: This is from `@atproto-labs/`, so it's subject to breaking changes.
-// That should be okay, as we're only depending on the types, and we can adjust
-// as any updates happen.
 import { getStorageContext, KVNamespace, requestLock } from '@/lib/server/db'
 
 import { getConstants } from './server/constants'

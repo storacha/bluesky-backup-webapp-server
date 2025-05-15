@@ -8,6 +8,7 @@ import {
   EyeSlash,
   Gear,
   IdentificationBadge,
+  Key,
   //  Trash,
 } from '@phosphor-icons/react'
 import { base64pad } from 'multiformats/bases/base64'
@@ -19,11 +20,13 @@ import { mutate } from 'swr'
 import { KeychainContextProps } from '@/contexts/keychain'
 import { useProfile } from '@/hooks/use-profile'
 import { ATPROTO_DEFAULT_SOURCE } from '@/lib/constants'
+import * as plc from '@/lib/crypto/plc'
+import { createPlcUpdateOp } from '@/lib/plc'
 import { shortenDID } from '@/lib/ui'
-import { RotationKey } from '@/types'
+import { ProfileData, RotationKey } from '@/types'
 
 import CopyButton from '../CopyButton'
-import { LoginFn, PlcTokenForm } from '../RestoreUI/RestoreDialogView'
+import { Loader } from '../Loader'
 
 import {
   Button,
@@ -36,46 +39,14 @@ import {
   Stack,
   SubHeading,
   Text,
-  TextAreaField,
 } from '.'
 
+import { LoginFn, PlcTokenForm } from './atproto'
 import { CreateButton } from './CreateButton'
+import { IdentityTransfer } from './IdentityTransfer'
+import KeyImportForm from './KeyImportForm'
 
 import type { KeyImportFn } from '@/contexts/keychain'
-
-interface KeyImportFormParams {
-  keyMaterial: string
-}
-
-function KeyImportForm({
-  dbKey,
-  importKey,
-}: {
-  dbKey: RotationKey
-  importKey: KeyImportFn
-}) {
-  const { register, handleSubmit } = useForm<KeyImportFormParams>()
-  async function submit(data: KeyImportFormParams) {
-    await importKey(dbKey, data.keyMaterial)
-  }
-  return (
-    <form onSubmit={handleSubmit(submit)} className="flex flex-col space-y-2">
-      <TextAreaField
-        rows={4}
-        className="w-full whitespace-pre"
-        {...register('keyMaterial')}
-        placeholder="Private Key"
-      />
-      <Button
-        type="submit"
-        $variant="primary"
-        className="text-xs uppercase font-bold"
-      >
-        Confirm
-      </Button>
-    </form>
-  )
-}
 
 const SecretText = styled(Text)`
   font-family: var(--font-dm-mono);
@@ -117,7 +88,7 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
   const did = dbKey?.id ?? keypair?.did()
 
   return (
-    <Stack>
+    <Stack $gap="1rem">
       {did && (
         <Stack>
           <SubHeading>
@@ -135,9 +106,14 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
           <KeyImportForm dbKey={dbKey} importKey={importAndClose} />
         </div>
       ) : secret ? (
-        <Stack>
-          <SubHeading>Secret Key</SubHeading>
-          <SecretText>{secret}</SecretText>
+        <Stack $gap="1rem">
+          <Stack>
+            <SubHeading>Secret Key</SubHeading>
+            <Stack $direction="row" $gap="0.5rem" $alignItems="center">
+              <SecretText>{secret}</SecretText>
+              <CopyButton text={secret} />
+            </Stack>
+          </Stack>
           <Stack $direction="row" $gap="0.5rem">
             <Button
               $variant="secondary"
@@ -146,13 +122,17 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
                 <EyeSlash size="16" color="var(--color-gray-medium)" />
               }
             >
-              Hide
+              Hide Secret
             </Button>
-            <CopyButton text={secret} />
+            {onDone && (
+              <Button $variant="primary" onClick={onDone}>
+                Done
+              </Button>
+            )}
           </Stack>
         </Stack>
       ) : (
-        <Stack $direction="row">
+        <Stack $direction="row" $gap="0.5rem">
           {!keypair && (
             <Button
               $variant="secondary"
@@ -187,9 +167,16 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
 
 function isCurrentRotationKey(
   rotationKey: RotationKey,
-  currentKeys: string[]
+  profile: ProfileData
 ): boolean {
-  return currentKeys.includes(rotationKey.id)
+  return profile.rotationKeys.includes(rotationKey.id)
+}
+
+function isCurrentVerificationKey(
+  rotationKey: RotationKey,
+  profile: ProfileData
+): boolean {
+  return profile.verificationMethods.atproto === rotationKey.id
 }
 
 interface AtprotoLoginFormProps {
@@ -285,7 +272,7 @@ function AddRotationKey({
       const plcOpResponse =
         await sourceAgent.com.atproto.identity.signPlcOperation({
           token: plcToken,
-          rotationKeys: [rotationKey.id, ...existingKeys],
+          rotationKeys: [...existingKeys, rotationKey.id],
           alsoKnownAs,
           services,
           verificationMethods,
@@ -310,7 +297,7 @@ function AddRotationKey({
       console.warn('not transferring identity: ', sourceAgent, plcOp)
     }
   }
-  const server = services?.atproto_pds.endpoint
+  const server = services?.atproto_pds?.endpoint
   return (
     <Stack $gap="1rem">
       {sourceAgent ? (
@@ -318,7 +305,7 @@ function AddRotationKey({
           isPlcRestoreSetup ? (
             <Stack $gap="1rem">
               <Text>
-                You&apos;re ready to add your rotation key! Your PLC data will
+                You&apos;re ready to add your recovery key! Your PLC data will
                 look like:
               </Text>
               <PlcOpCode>
@@ -334,7 +321,7 @@ function AddRotationKey({
                   />
                 }
               >
-                Add my rotation key
+                Add my recovery key
               </Button>
               <Popover>
                 <PopoverButton></PopoverButton>
@@ -347,8 +334,8 @@ function AddRotationKey({
         ) : (
           <Stack $gap="1rem">
             <Text>
-              To transfer your identity you must provide a confirmation code
-              sent to the email registered with your current PDS host.
+              To register your new recovery key you must provide a confirmation
+              code sent to the`` email registered with your current PDS host.
             </Text>
             <Button
               onClick={sendPlcRestoreAuthorizationEmail}
@@ -393,49 +380,103 @@ const RotationKeyStack = styled(Stack)`
 function RotationKeyStatus({
   did,
   rotationKey,
+  importKey,
   onDone,
 }: {
   did: Did
   rotationKey: RotationKey
+  importKey: KeyImportFn
   onDone: () => void
 }) {
-  const { data: profile } = useProfile(did)
-  const { handle, rotationKeys: existingKeys } = profile || {}
+  const { data: profile, mutate } = useProfile(did)
+  const { handle } = profile || {}
 
-  const isCurrentKey =
-    existingKeys && isCurrentRotationKey(rotationKey, existingKeys)
+  const isRotationKey = profile && isCurrentRotationKey(rotationKey, profile)
+  const isSignable = Boolean(rotationKey.keypair)
+  const isSigningKey = profile?.verificationMethods?.atproto === rotationKey.id
   const [isAddingKey, setIsAddingKey] = useState(false)
+  const [isTransferringIdentity, setIsTransferringIdentity] = useState(false)
+  async function takeControl() {
+    if (!profile) throw new Error('profile not defined, cannot take control')
+
+    const op = await createPlcUpdateOp(profile, rotationKey, {
+      verificationMethods: {
+        ...profile.verificationMethods,
+        atproto: rotationKey.id,
+      },
+    })
+    const client = new plc.Client('https://plc.directory')
+    await client.sendOperation(profile.did, op)
+    await mutate()
+  }
+  if (!profile) return null
   return isAddingKey ? (
     <AddRotationKey did={did} rotationKey={rotationKey} onDone={onDone} />
+  ) : isTransferringIdentity ? (
+    <IdentityTransfer profile={profile} rotationKey={rotationKey} />
   ) : (
-    <RotationKeyStack $gap="1rem">
-      <Stack>
+    <RotationKeyStack $gap="2rem">
+      <Stack $gap="2rem">
         <Heading>
           <NoTextTransform>{shortenDID(rotationKey.id)}</NoTextTransform>
         </Heading>
-        <Text $fontSize="1rem">
-          {isCurrentKey ? <>is</> : <>is not</>} currently a rotation key
-        </Text>
+        <Stack $gap="1rem">
+          <Text $fontSize="1rem" $color="var(--color-black)">
+            {isSignable ? <>Does</> : <>Does not</>} have a private key loaded.
+          </Text>
+          {!isSignable && (
+            <KeyImportForm dbKey={rotationKey} importKey={importKey} />
+          )}
+        </Stack>
+        <Stack $gap="1rem">
+          <Text $fontSize="1rem" $color="var(--color-black)">
+            {isRotationKey ? <>Is</> : <>Is not</>} currently a recovery key.
+          </Text>
+          {!isRotationKey && (
+            <Button
+              onClick={() => {
+                setIsAddingKey(true)
+              }}
+            >
+              Add This Key To {handle}
+            </Button>
+          )}
+        </Stack>
+        <Stack $gap="1rem">
+          <Text $fontSize="1rem" $color="var(--color-black)">
+            {isSigningKey ? <>Is</> : <>Is not</>} controlling {profile.handle}.
+          </Text>
+          {isRotationKey && !isSigningKey && (
+            <Button
+              onClick={() => {
+                takeControl()
+              }}
+            >
+              Take Control
+            </Button>
+          )}
+        </Stack>
       </Stack>
-      {!isCurrentKey && (
-        <Button
-          onClick={() => {
-            setIsAddingKey(true)
-          }}
-        >
-          Add This Key To {handle}
-        </Button>
-      )}
-      <Button onClick={onDone}>Done</Button>
+      <Stack $direction="row" $gap="1rem">
+        {isSigningKey && (
+          <Button
+            onClick={() => {
+              setIsTransferringIdentity(true)
+            }}
+          >
+            Transfer Identity
+          </Button>
+        )}
+
+        <Button onClick={onDone}>Done</Button>
+      </Stack>
     </RotationKeyStack>
   )
 }
 
 type KeychainProps = KeychainContextProps & {
   className?: string
-  atprotoAccount: Did
-  handle?: string
-  rotationKeys?: string[]
+  profile?: ProfileData
 }
 
 const KeyItem = styled(Stack)`
@@ -454,10 +495,9 @@ export default function KeychainView({
   generateKeyPair,
   importKey,
   //forgetKey,
-  atprotoAccount,
-  handle,
-  rotationKeys,
+  profile,
 }: KeychainProps) {
+  const { did: atprotoAccount, rotationKeys, handle } = profile ?? {}
   const [generatingKeyPair, setGeneratingKeyPair] = useState(false)
   const [newKey, setNewKey] = useState<RotationKey>()
   const [isKeyDetailsDialogOpen, setIsKeyDetailsDialogOpen] = useState(false)
@@ -467,15 +507,18 @@ export default function KeychainView({
     useState<RotationKey | null>(null)
 
   async function onClickAdd() {
-    if (generateKeyPair) {
-      setGeneratingKeyPair(true)
-      setNewKey(await generateKeyPair(atprotoAccount))
-      setGeneratingKeyPair(false)
-    } else {
-      console.warn(
+    if (!generateKeyPair)
+      throw new Error(
         'could not generate key pair, generator function is not defined'
       )
-    }
+    if (!atprotoAccount)
+      throw new Error(
+        'could not generate key pair, atprotoAccount is not defined'
+      )
+
+    setGeneratingKeyPair(true)
+    setNewKey(await generateKeyPair(atprotoAccount))
+    setGeneratingKeyPair(false)
   }
 
   const openRotationKeyStatus = (key: RotationKey) => {
@@ -483,16 +526,11 @@ export default function KeychainView({
     setIsRotationKeyDialogOpen(true)
   }
 
-  const openKeyDetails = (key: RotationKey) => {
-    setSelectedKeyDetails(key)
-    setIsKeyDetailsDialogOpen(true)
-  }
-
   const myKeys = keys.filter((key) => key.atprotoAccount === atprotoAccount)
 
   return (
     <Stack $gap="1rem">
-      <Heading>Rotation Keys</Heading>
+      <Heading>Recovery Keys</Heading>
 
       {generatingKeyPair ? (
         <Stack>
@@ -501,10 +539,12 @@ export default function KeychainView({
         </Stack>
       ) : (
         <>
-          {myKeys.length === 0 ? (
-            <Text>No rotation keys found for {handle}</Text>
+          {!profile ? (
+            <Loader />
+          ) : myKeys.length === 0 ? (
+            <Text>No recovery keys found for {handle}</Text>
           ) : (
-            <Stack>
+            <Stack $gap="1em">
               {myKeys.map((key) => (
                 <KeyItem
                   key={key.id}
@@ -512,7 +552,11 @@ export default function KeychainView({
                   $alignItems="center"
                   $justifyContent="space-between"
                 >
-                  <Stack $direction="row">
+                  <Stack
+                    $direction="row"
+                    $justifyContent="space-between"
+                    $width="12em"
+                  >
                     <PublicKey>{shortenDID(key.id)}</PublicKey>
                     <CopyButton text={key.id} />
                   </Stack>
@@ -523,11 +567,11 @@ export default function KeychainView({
                       onClick={() => openRotationKeyStatus(key)}
                       aria-label="Rotation key status"
                     >
-                      <IdentificationBadge
+                      <Key
                         size="16"
                         color={
                           rotationKeys
-                            ? isCurrentRotationKey(key, rotationKeys)
+                            ? isCurrentVerificationKey(key, profile)
                               ? 'var(--color-green)'
                               : 'var(--color-dark-red)'
                             : 'var(--color-gray-medium)'
@@ -538,7 +582,25 @@ export default function KeychainView({
                     <Button
                       $variant="outline"
                       className="p-1"
-                      onClick={() => openKeyDetails(key)}
+                      onClick={() => openRotationKeyStatus(key)}
+                      aria-label="Rotation key status"
+                    >
+                      <IdentificationBadge
+                        size="16"
+                        color={
+                          rotationKeys
+                            ? isCurrentRotationKey(key, profile)
+                              ? 'var(--color-green)'
+                              : 'var(--color-dark-red)'
+                            : 'var(--color-gray-medium)'
+                        }
+                      />
+                    </Button>
+
+                    <Button
+                      $variant="outline"
+                      className="p-1"
+                      onClick={() => openRotationKeyStatus(key)}
                       aria-label="View key details"
                     >
                       <Gear size="16" color="var(--color-gray-medium)" />
@@ -570,7 +632,7 @@ export default function KeychainView({
         title="Key Details"
         size="md"
       >
-        {selectedKeyDetails && (
+        {selectedKeyDetails && isKeyDetailsDialogOpen && (
           <KeyDetails
             dbKey={selectedKeyDetails}
             importKey={importKey}
@@ -581,13 +643,14 @@ export default function KeychainView({
       <Modal
         isOpen={isRotationKeyDialogOpen}
         onClose={() => setIsRotationKeyDialogOpen(false)}
-        title="Rotation Key Status"
+        title="Recovery Key Status"
         size="md"
       >
-        {selectedKeyDetails && (
+        {selectedKeyDetails && atprotoAccount && isRotationKeyDialogOpen && (
           <RotationKeyStatus
             did={atprotoAccount}
             rotationKey={selectedKeyDetails}
+            importKey={importKey}
             onDone={() => setIsRotationKeyDialogOpen(false)}
           />
         )}

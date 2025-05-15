@@ -76,8 +76,14 @@ export const KeychainProvider = ({
       base64pad.decode(keyMaterial),
       { exportable: true }
     )
-    key.keypair = keypair
-    setSelectedKey(key)
+    if (keypair.did() === key.id) {
+      key.keypair = keypair
+      setSelectedKey(key)
+    } else {
+      throw new Error(
+        `tried to import private key for ${keypair.did()} to the rotation key ${key.id}`
+      )
+    }
   }
   async function forgetKey(key: RotationKey) {
     // TODO implement this
