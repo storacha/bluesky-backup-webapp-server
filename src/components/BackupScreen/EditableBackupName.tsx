@@ -142,4 +142,4 @@ export const EditableBackupName = ({ backup }: EditableBackupNameProps) => {
       )}
     </EditableBackupNameWrapper>
   )
-} 
+}

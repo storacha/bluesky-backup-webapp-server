@@ -7,7 +7,7 @@ import { getSession } from '@/lib/sessions'
 export const updateBackupName = async (backupId: string, newName: string) => {
   const { db } = getStorageContext()
   const { did: account } = await getSession()
-  
+
   if (!account) {
     throw new Error('Not authorized')
   }
@@ -23,4 +23,4 @@ export const updateBackupName = async (backupId: string, newName: string) => {
 
   await db.updateBackup(backupId, { name: newName })
   return { success: true }
-} 
+}

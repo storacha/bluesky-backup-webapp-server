@@ -80,7 +80,9 @@ type BackupDatas = 'include_repository' | 'include_blobs'
 export const BackupDetail = ({ backup }: BackupProps) => {
   const { isMobile, isBaseLaptop } = useMobileScreens()
 
-  const [dataBoxState, setDataBoxState] = useState<Record<BackupDatas, boolean>>({
+  const [dataBoxState, setDataBoxState] = useState<
+    Record<BackupDatas, boolean>
+  >({
     include_repository: backup?.includeRepository ?? true,
     include_blobs: backup?.includeBlobs ?? true,
   })
