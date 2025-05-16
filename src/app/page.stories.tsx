@@ -1,7 +1,7 @@
 import { Account } from '@storacha/ui-react'
 import { linkTo } from '@storybook/addon-links'
 
-import { withAuthContext } from '@/../.storybook/decorators'
+import { withAuthContext, withData } from '@/../.storybook/decorators'
 
 import { modes } from '../../.storybook/modes'
 
@@ -36,6 +36,11 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
+const timothy = {
+  did: () => 'did:mailto:gmail.com:timothy-chalamet',
+  toEmail: () => 'timothy-chalamet@gmail.com',
+} as unknown as Account
+
 export const Loading: Story = {
   decorators: [
     withAuthContext({
@@ -53,16 +58,11 @@ export const LoggedOut: Story = {
   ],
 }
 
-export const LoggedIn: Story = {
+export const LoggedInNoPlan: Story = {
   decorators: [
     withAuthContext(
       {
-        accounts: [
-          {
-            did: () => 'did:mailto:gmail.com:timothy-chalamet',
-            toEmail: () => 'timothy-chalamet@gmail.com',
-          } as unknown as Account,
-        ],
+        accounts: [timothy],
       },
       {
         async logout() {
@@ -70,5 +70,22 @@ export const LoggedIn: Story = {
         },
       }
     ),
+    withData(['storacha-plan', timothy], undefined),
+  ],
+}
+
+export const LoggedInWithPlan: Story = {
+  decorators: [
+    withAuthContext(
+      {
+        accounts: [timothy],
+      },
+      {
+        async logout() {
+          linkTo('Pages/∕', 'Logged Out')()
+        },
+      }
+    ),
+    withData(['storacha-plan', timothy], 'the-super-awesome-plan'),
   ],
 }
