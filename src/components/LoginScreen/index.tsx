@@ -37,11 +37,12 @@ const Footer = styled.footer`
 `
 
 const FooterContainer = styled.div`
-  padding: 3rem 1.5rem 1.5rem;
+  padding: 1.25rem 1.5rem;
   border: 3px solid;
   border-radius: 2.5rem;
 
-  @media (min-width: 600px) {
+  @media (min-width: 601px) {
+    padding-top: 3rem;
     border-radius: 5rem;
   }
 `
@@ -101,8 +102,8 @@ const SvgIcon = ({
   height?: string
   width?: string
 }) => (
-  <svg height={height} width={width}>
-    <path fill="currentColor" d={path} viewBox={`0 0 ${width} ${height}`} />
+  <svg height={height} width={width} viewBox={`0 0 ${width} ${height}`}>
+    <path fill="currentColor" d={path} />
   </svg>
 )
 
@@ -208,10 +209,16 @@ const MailingListButtonLink = styled(ButtonLink)`
   gap: 0.5rem;
   width: fit-content;
   height: fit-content;
-  padding: 0.75rem 1.25rem;
+  padding: 1rem 2rem;
   border-radius: 2rem;
   font-weight: 500;
   text-transform: uppercase;
+  line-height: 1rem;
+
+  & > svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
 `
 
 function MailingListSignup() {
@@ -266,12 +273,16 @@ const LinksGrid = styled.div`
 `
 
 const FooterHeading = styled.h5`
-  height: 3.25rem;
-  line-height: 3.25rem;
   font-weight: 500;
   text-wrap: pretty;
   font-size: 1.125rem;
-  margin-bottom: 1rem;
+  line-height: 1.75rem;
+
+  @media only screen and (min-width: 601px) {
+    height: 3.25rem;
+    line-height: 3.25rem;
+    margin-bottom: 1rem;
+  }
 `
 
 const SocialIconsContainer = styled.div`
@@ -279,7 +290,6 @@ const SocialIconsContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
 
   @media only screen and (min-width: 0px) and (max-width: 600px) {
     align-items: left;
@@ -297,11 +307,13 @@ const FooterLinks = styled.ul`
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 
-  @media only screen and (max-width: 600px) {
-    & li {
+  & li {
+    line-height: 1.5rem;
+
+    @media only screen and (max-width: 600px) {
       font-size: 0.75rem;
+      line-height: 1rem;
     }
   }
 `
@@ -316,7 +328,7 @@ const MainStack = styled(Stack)`
     flex-flow: column;
   }
 
-  @media only screen and (min-width: 600px) and (max-width: 992px) {
+  @media only screen and (min-width: 601px) and (max-width: 992px) {
     gap: 0.4rem;
   }
 `
