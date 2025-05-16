@@ -12,26 +12,9 @@ import { CreateSpaceModal } from '../modals'
 
 import { Select } from './Select'
 
-const CreateNewSpaceButton = ({ account }: { account: Storacha.Account }) => {
-  const state = useContext(SelectStateContext)
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const handleSpaceCreated = (spaceId: string) => {
-    onClose()
-    const label = `(${shortenDID(spaceId)})`
-    state?.setSelectedKey(label)
-  }
-
+const CreateNewSpaceButton = ({ onOpen }: { onOpen: () => void }) => {
   return (
-    <>
-      <ActionButton actionLabel="Create new space..." actionOnPress={onOpen} />
-      <CreateSpaceModal
-        isOpen={isOpen}
-        onClose={onClose}
-        account={account as Storacha.Account}
-        onSpaceCreated={handleSpaceCreated}
-      />
-    </>
+    <ActionButton actionLabel="Create new space..." actionOnPress={onOpen} />
   )
 }
 
@@ -50,18 +33,32 @@ export const StorachaSpaceSelect = ({
     id: space.did(),
     label: `${space.name} (${shortenDID(space.did())})`,
   }))
+  const state = useContext(SelectStateContext)
+  const { isOpen, onClose, onOpen } = useDisclosure()
+
+  const handleSpaceCreated = (spaceId: string) => {
+    onClose()
+    const label = `${shortenDID(spaceId)}`
+    state?.setSelectedKey(label)
+  }
 
   return (
-    <Select
-      defaultSelectedKey={defaultValue}
-      isDisabled={disabled}
-      name={name}
-      label="Storacha space"
-      imageSrc="/storacha-red.png"
-      items={storachaSpaces}
-      actionButton={
-        <CreateNewSpaceButton account={account as Storacha.Account} />
-      }
-    />
+    <>
+      <Select
+        defaultSelectedKey={defaultValue}
+        isDisabled={disabled}
+        name={name}
+        label="Storacha space"
+        imageSrc="/storacha-red.png"
+        items={storachaSpaces}
+        actionButton={<CreateNewSpaceButton onOpen={onOpen} />}
+      />
+      <CreateSpaceModal
+        isOpen={isOpen}
+        onClose={onClose}
+        account={account as Storacha.Account}
+        onSpaceCreated={handleSpaceCreated}
+      />
+    </>
   )
 }
