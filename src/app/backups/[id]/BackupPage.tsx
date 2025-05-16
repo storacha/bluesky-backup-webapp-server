@@ -39,6 +39,18 @@ const SnapshotSummary = styled(Box)`
 const SnapshotLink = styled(Link)`
   width: 100%;
   height: 100%;
+  padding: 1rem;
+`
+
+const SnapshotsLink = styled(Link)`
+  display: block;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-dark-blue);
+  font-family: var(--font-dm-mono);
+  font-size: 0.75rem;
+  color: var(--color-white);
+  text-align: center;
 `
 
 const RightSidebarContent = ({ backup }: { backup: Backup }) => {
@@ -65,7 +77,13 @@ const RightSidebarContent = ({ backup }: { backup: Backup }) => {
         </Stack>
       </Details>
       <SnapshotContainer $gap="1rem">
-        <SubHeading>Snapshots</SubHeading>
+        <Stack $gap="0.5em" $direction="row" $alignItems="center">
+          <CreateSnapshotButton backup={backup} />
+          <SnapshotsLink href={`/backups/${backup.id}/snapshots`}>
+            All Snapshots
+          </SnapshotsLink>
+        </Stack>
+        <SubHeading>Recent Snapshots</SubHeading>
         <>
           {isLoading ? (
             <Center $height="200px">
@@ -73,7 +91,7 @@ const RightSidebarContent = ({ backup }: { backup: Backup }) => {
             </Center>
           ) : (
             <>
-              {snapshots?.map((snapshot) => (
+              {snapshots?.slice(0, 5).map((snapshot) => (
                 <SnapshotSummary
                   key={snapshot.id}
                   $background="var(--color-white)"
@@ -95,7 +113,6 @@ const RightSidebarContent = ({ backup }: { backup: Backup }) => {
             </>
           )}
         </>
-        <CreateSnapshotButton backup={backup} />
       </SnapshotContainer>
     </>
   )

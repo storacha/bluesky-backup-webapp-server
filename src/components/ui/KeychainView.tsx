@@ -446,7 +446,7 @@ function RotationKeyStatus({
           <Text $fontSize="1rem" $color="var(--color-black)">
             {isSigningKey ? <>Is</> : <>Is not</>} controlling {profile.handle}.
           </Text>
-          {isRotationKey && !isSigningKey && (
+          {isRotationKey && isSignable && !isSigningKey && (
             <Button
               onClick={() => {
                 takeControl()
@@ -458,7 +458,7 @@ function RotationKeyStatus({
         </Stack>
       </Stack>
       <Stack $direction="row" $gap="1rem">
-        {isSigningKey && (
+        {isSigningKey && isSignable && (
           <Button
             onClick={() => {
               setIsTransferringIdentity(true)
@@ -623,7 +623,11 @@ export default function KeychainView({
           )}
         </>
       )}
-      <CreateButton onClick={onClickAdd} disabled={generatingKeyPair}>
+      <CreateButton
+        onClick={onClickAdd}
+        disabled={generatingKeyPair}
+        $mt="1.4rem"
+      >
         New Key
       </CreateButton>
       <Modal

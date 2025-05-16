@@ -303,7 +303,6 @@ export function getStorageContext(): StorageContext {
           from snapshots
           where backup_id = ${backupId}
           order by created_at desc
-          limit 10
         `
         return {
           results,
