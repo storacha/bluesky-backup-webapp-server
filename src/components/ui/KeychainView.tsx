@@ -58,12 +58,12 @@ interface KeyDetailsProps {
   onDone?: () => unknown
 }
 
-function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
+function KeyDetails ({ dbKey, onDone, importKey }: KeyDetailsProps) {
   const [secret, setSecret] = useState<string>()
   const [showImport, setShowImport] = useState<boolean>(false)
   const keypair = dbKey?.keypair
 
-  async function showSecret() {
+  async function showSecret () {
     const secret = await keypair?.export()
     if (secret) {
       setSecret(base64pad.encode(secret))
@@ -72,11 +72,11 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
     }
   }
 
-  function hideSecret() {
+  function hideSecret () {
     setSecret(undefined)
   }
 
-  async function importAndClose(key: RotationKey, keyMaterial: string) {
+  async function importAndClose (key: RotationKey, keyMaterial: string) {
     if (importKey) {
       await importKey(key, keyMaterial)
       setShowImport(false)
@@ -165,14 +165,14 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
   )
 }
 
-function isCurrentRotationKey(
+function isCurrentRotationKey (
   rotationKey: RotationKey,
   profile: ProfileData
 ): boolean {
   return profile.rotationKeys.includes(rotationKey.id)
 }
 
-function isCurrentVerificationKey(
+function isCurrentVerificationKey (
   rotationKey: RotationKey,
   profile: ProfileData
 ): boolean {
@@ -193,7 +193,7 @@ const LoginFormElement = styled.form`
   width: 384px;
 `
 
-function AtprotoLoginForm({ login, handle, server }: AtprotoLoginFormProps) {
+function AtprotoLoginForm ({ login, handle, server }: AtprotoLoginFormProps) {
   const { register, handleSubmit, reset } = useForm<PwForm>()
   const onSubmit = handleSubmit(async (data) => {
     await login(handle, data.password, { server })
@@ -218,7 +218,7 @@ const PlcOpCode = styled.code`
   font-size: 0.5em;
 `
 
-function AddRotationKey({
+function AddRotationKey ({
   did,
   rotationKey,
   onDone,
@@ -244,7 +244,7 @@ function AddRotationKey({
     setIsPlcRestoreAuthorizationEmailSent,
   ] = useState<boolean>(false)
 
-  async function sendPlcRestoreAuthorizationEmail() {
+  async function sendPlcRestoreAuthorizationEmail () {
     if (sourceAgent) {
       await sourceAgent.com.atproto.identity.requestPlcOperationSignature()
       setIsPlcRestoreAuthorizationEmailSent(true)
@@ -264,7 +264,7 @@ function AddRotationKey({
     const agent = new Agent(session)
     setSourceAgent(agent)
   }
-  async function setupPlcRestore(plcToken: string) {
+  async function setupPlcRestore (plcToken: string) {
     if (sourceAgent) {
       if (!existingKeys) {
         throw new Error('No rotation key provided')
@@ -284,7 +284,7 @@ function AddRotationKey({
   }
   const isPlcRestoreSetup = !!plcOp
 
-  async function transferIdentity() {
+  async function transferIdentity () {
     if (sourceAgent && plcOp) {
       setIsTransferringIdentity(true)
       await sourceAgent.com.atproto.identity.submitPlcOperation({
@@ -377,7 +377,7 @@ const RotationKeyStack = styled(Stack)`
   margin-top: 1rem;
 `
 
-function RotationKeyStatus({
+function RotationKeyStatus ({
   did,
   rotationKey,
   importKey,
@@ -396,7 +396,7 @@ function RotationKeyStatus({
   const isSigningKey = profile?.verificationMethods?.atproto === rotationKey.id
   const [isAddingKey, setIsAddingKey] = useState(false)
   const [isTransferringIdentity, setIsTransferringIdentity] = useState(false)
-  async function takeControl() {
+  async function takeControl () {
     if (!profile) throw new Error('profile not defined, cannot take control')
 
     const op = await createPlcUpdateOp(profile, rotationKey, {
@@ -446,7 +446,7 @@ function RotationKeyStatus({
           <Text $fontSize="1rem" $color="var(--color-black)">
             {isSigningKey ? <>Is</> : <>Is not</>} controlling {profile.handle}.
           </Text>
-          {isRotationKey && !isSigningKey && (
+          {isRotationKey && isSignable && !isSigningKey && (
             <Button
               onClick={() => {
                 takeControl()
@@ -458,7 +458,7 @@ function RotationKeyStatus({
         </Stack>
       </Stack>
       <Stack $direction="row" $gap="1rem">
-        {isSigningKey && (
+        {isSigningKey && isSignable && (
           <Button
             onClick={() => {
               setIsTransferringIdentity(true)
@@ -490,7 +490,7 @@ const PublicKey = styled.div`
   font-style: bold;
 `
 
-export default function KeychainView({
+export default function KeychainView ({
   keys,
   generateKeyPair,
   importKey,
@@ -506,7 +506,7 @@ export default function KeychainView({
   const [selectedKeyDetails, setSelectedKeyDetails] =
     useState<RotationKey | null>(null)
 
-  async function onClickAdd() {
+  async function onClickAdd () {
     if (!generateKeyPair)
       throw new Error(
         'could not generate key pair, generator function is not defined'
