@@ -224,9 +224,12 @@ function MailingListSignup() {
 }
 
 const WordmarkContainer = styled.div`
-  margin-top: 8rem;
-  height: 8rem;
-  position: relative;
+  margin-top: 4rem;
+
+  & > img {
+    width: 100%;
+    height: auto;
+  }
 
   @media only screen and (min-width: 0px) and (max-width: 600px) {
     margin-top: 2rem;
@@ -316,6 +319,9 @@ const MainStack = styled(Stack)`
 `
 
 const MainContainer = styled.section`
+  max-width: 1280px;
+  margin: 0 auto;
+
   @media only screen and (min-width: 1440px) {
     padding: 0 12rem;
   }
@@ -396,7 +402,7 @@ export function LoginScreen() {
               </LinksGrid>
             </FooterGrid>
             <WordmarkContainer>
-              <Image src={wordmark} alt="Storacha" height="204" width="1360" />
+              <Image src={wordmark} alt="" />
             </WordmarkContainer>
           </FooterContainer>
         </Footer>
