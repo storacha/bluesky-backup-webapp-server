@@ -227,9 +227,13 @@ export const Select = ({
   imageSrc: string
   /** A noun describing what is selected (eg. "Bluesky Account"). */
   label: string
+  /** The label for an action to place at the bottom of the options */
+  actionLabel?: string
+  /** Handler called when the action button is pressed. */
+  actionOnPress?: () => void
   onChange?: (key: Key) => void
   content?: React.ReactNode
-  actionButton: React.ReactNode
+  actionButton?: React.ReactNode
 } & Pick<SelectProps<Item>, 'name' | 'defaultSelectedKey' | 'isDisabled'> &
   Pick<ListBoxProps<Item>, 'items'>) => {
   const prompt = `Select ${label}`

@@ -1,16 +1,10 @@
 import { expect, fn, userEvent, within } from '@storybook/test'
-import { ComponentProps } from 'react'
-
-import { ActionButtonProps } from '../ActionButton'
 
 import { Select } from './Select'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-type ExtendedSelectProps = ComponentProps<typeof Select> &
-  Pick<ActionButtonProps, 'actionLabel' | 'actionOnPress'>
-
-const meta: Meta<ExtendedSelectProps> = {
+const meta: Meta<typeof Select> = {
   title: 'Components/Select',
   component: Select,
   parameters: {
