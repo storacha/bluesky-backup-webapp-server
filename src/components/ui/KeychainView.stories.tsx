@@ -7,8 +7,6 @@ import KeychainView from './KeychainView'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-const keypair = await Secp256k1Keypair.create()
-
 const demorachaAtprotoDid = 'did:plc:ose56ynjv4ahq763rprzah4k'
 const createdHereAtprotoDid = 'did:plc:ccoxqh6esjow6cwxt4ww466b'
 
@@ -22,27 +20,36 @@ const profile: ProfileData = {
   services: {},
 }
 
+const keypair = await Secp256k1Keypair.import(
+  'abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd'
+)
 const key: RotationKey = {
   id: keypair.did(),
   storachaAccount: 'did:mailto:travis:example.com',
   atprotoAccount: demorachaAtprotoDid,
   createdAt: new Date().toLocaleDateString(),
-  keypair,
+  keypair: keypair,
 }
 
+const metaOnlyKeypair = await Secp256k1Keypair.import(
+  '1234123412341234123412341234123412341234123412341234123412341234'
+)
 const metaOnlyKey = {
-  id: keypair.did(),
+  id: metaOnlyKeypair.did(),
   storachaAccount: 'did:mailto:travis:example.com',
   atprotoAccount: demorachaAtprotoDid,
   createdAt: new Date().toLocaleDateString(),
 }
 
+const createdHereKeypair = await Secp256k1Keypair.import(
+  '5678567856785678567856785678567856785678567856785678567856785678'
+)
 const createdHereKey: RotationKey = {
-  id: keypair.did(),
+  id: createdHereKeypair.did(),
   storachaAccount: 'did:mailto:travis:example.com',
   atprotoAccount: createdHereAtprotoDid,
   createdAt: new Date().toLocaleDateString(),
-  keypair,
+  keypair: createdHereKeypair,
 }
 
 const keys = [key, metaOnlyKey, createdHereKey]
