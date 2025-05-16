@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.7.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.7.0...v1.7.1) (2025-05-16)
+
+
+### Bug Fixes
+
+* add very barebones snapshots page ([0cc002c](https://github.com/storacha/bluesky-backup-webapp-server/commit/0cc002c5b4380f73a1c418ed35848ed84d15f1ff))
+* two small tweaks to the identity manager ([f07061c](https://github.com/storacha/bluesky-backup-webapp-server/commit/f07061c713758f0f29c933759cea6bf9db95d045))
+* two small tweaks to the identity manager ([ce465b5](https://github.com/storacha/bluesky-backup-webapp-server/commit/ce465b568a2b084aec8212865deafa055da1a4eb))
+
 ## [1.7.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.6.0...v1.7.0) (2025-05-15)
 
 
