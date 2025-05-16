@@ -16,13 +16,10 @@ const Outside = styled.div`
   background-size: cover;
 `
 
-const Header = styled.header`
-  padding: 2rem;
-`
+const Header = styled.header``
 
 const Main = styled.main`
   flex: 1 0 auto;
-  padding: 2rem;
 `
 
 const Tagline = styled.h2`
@@ -37,14 +34,16 @@ const Tagline = styled.h2`
 const Footer = styled.footer`
   border-color: var(--color-dark-blue);
   color: var(--color-dark-blue);
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
 `
 
 const FooterContainer = styled.div`
-  padding: 3rem 1.25rem 1.5rem;
+  padding: 3rem 1.5rem 1.5rem;
   border: 3px solid;
   border-radius: 2.5rem;
+
+  @media (min-width: 600px) {
+    border-radius: 5rem;
+  }
 `
 
 function getBackgroundImage(srcSet = '') {
@@ -212,6 +211,7 @@ const MailingListButtonLink = styled(ButtonLink)`
   padding: 0.75rem 1.25rem;
   border-radius: 2rem;
   font-weight: 500;
+  text-transform: uppercase;
 `
 
 function MailingListSignup() {
@@ -240,7 +240,7 @@ const WordmarkContainer = styled.div`
 const FooterGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  gap: 1rem;
+  gap: 1.5rem;
   align-items: flex-start;
 
   @media only screen and (min-width: 0px) and (max-width: 600px) {
@@ -266,6 +266,8 @@ const LinksGrid = styled.div`
 `
 
 const FooterHeading = styled.h5`
+  height: 3.25rem;
+  line-height: 3.25rem;
   font-weight: 500;
   text-wrap: pretty;
   font-size: 1.125rem;
@@ -273,6 +275,7 @@ const FooterHeading = styled.h5`
 `
 
 const SocialIconsContainer = styled.div`
+  height: 3.25rem;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -321,6 +324,10 @@ const MainStack = styled(Stack)`
 const MainContainer = styled.section`
   max-width: 1280px;
   margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
 `
 
 export function LoginScreen() {
