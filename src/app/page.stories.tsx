@@ -3,6 +3,8 @@ import { linkTo } from '@storybook/addon-links'
 
 import { withAuthContext } from '@/../.storybook/decorators'
 
+import { modes } from '../../.storybook/modes'
+
 import Page from './page'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -13,6 +15,9 @@ const meta = {
   component: Page,
   parameters: {
     layout: 'fullscreen',
+    chromatic: {
+      modes: modes(['default', 'iphone16']),
+    },
   },
   decorators: [
     (Story) => (
