@@ -1,7 +1,8 @@
-import { Did } from '@atproto/api'
+import { AppBskyActorGetProfile, Did } from '@atproto/api'
+import { DocumentData } from '@did-plc/lib'
 import { NextRequest, NextResponse } from 'next/server'
 
-import { PlcProfile, ProfileData } from '@/types'
+import { ProfileData } from '@/types'
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-async function fetchPlcProfile(did: Did): Promise<PlcProfile> {
+async function fetchPlcProfile(did: Did) {
   const response = await fetch(
     `https://plc.directory/${encodeURIComponent(did)}/data`
   )
@@ -36,7 +37,7 @@ async function fetchPlcProfile(did: Did): Promise<PlcProfile> {
     throw new Error(`Failed to fetch profile: ${response.status}`)
 
   const { rotationKeys, alsoKnownAs, verificationMethods, services } =
-    await response.json()
+    (await response.json()) as DocumentData
   return {
     did,
     rotationKeys,
@@ -46,20 +47,14 @@ async function fetchPlcProfile(did: Did): Promise<PlcProfile> {
   }
 }
 
-interface BskyProfile {
-  did: Did
-  handle: string
-  displayName: string
-}
-
-async function fetchBskyProfile(did: Did): Promise<BskyProfile> {
+async function fetchBskyProfile(did: Did) {
   const response = await fetch(
     `https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor=${encodeURIComponent(did)}`
   )
   if (!response.ok)
     throw new Error(`Failed to fetch profile: ${response.status}`)
 
-  return await response.json()
+  return (await response.json()) as AppBskyActorGetProfile.OutputSchema
 }
 
 async function getPublicProfile(did: Did): Promise<ProfileData | null> {
