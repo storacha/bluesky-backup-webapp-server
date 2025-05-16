@@ -52,16 +52,6 @@ const AccountLogo = styled.div<{
   background-repeat: var(--account-logo-repeat);
 `
 
-function ATProtoHandle({ did }: { did: Did }) {
-  const { data: profile } = useProfile(did)
-  return profile?.handle
-}
-
-function ATProtoName({ did }: { did: Did }) {
-  const { data: profile } = useProfile(did)
-  return profile?.displayName
-}
-
 export default function IdentitiesPage({ accounts }: { accounts: Did[] }) {
   return (
     <>
@@ -69,37 +59,45 @@ export default function IdentitiesPage({ accounts }: { accounts: Did[] }) {
       <IdentitiesStack $gap="1rem">
         <Heading>Bluesky Identities</Heading>
         {accounts.map((account) => (
-          <Box
-            key={account}
-            $gap="1rem"
-            $display="flex"
-            $justifyContent="space-between"
-            $background="var(--color-white)"
-          >
-            <Stack $gap="1rem" $direction="row" $alignItems="center">
-              <AccountLogo $imageSrc="/bluesky.png" />
-              <Stack $alignItems="start">
-                <Stack $direction="row" $alignItems="baseline" $gap="0.5rem">
-                  <Text
-                    $color="var(--color-black)"
-                    $fontSize="0.9rem"
-                    $fontWeight="bold"
-                  >
-                    <ATProtoName did={account} /> -{' '}
-                    <ATProtoHandle did={account} />
-                  </Text>
-                </Stack>
-                <Text>{account}</Text>
-              </Stack>
-            </Stack>
-            <IdentityLink href={`/identities/${encodeURIComponent(account)}`}>
-              <Button $variant="outline" $color="var(--color-black)">
-                <Gear />
-              </Button>
-            </IdentityLink>
-          </Box>
+          <Account key={account} account={account} />
         ))}
       </IdentitiesStack>
     </>
+  )
+}
+
+const Account = ({ account }: { account: Did }) => {
+  const { data: profile } = useProfile(account)
+
+  return (
+    <Box
+      key={account}
+      $gap="1rem"
+      $display="flex"
+      $justifyContent="space-between"
+      $background="var(--color-white)"
+    >
+      <Stack $gap="1rem" $direction="row" $alignItems="center">
+        <AccountLogo $imageSrc="/bluesky.png" />
+        <Stack $alignItems="start">
+          <Stack $direction="row" $alignItems="baseline" $gap="0.5rem">
+            <Text
+              $color="var(--color-black)"
+              $fontSize="0.9rem"
+              $fontWeight="bold"
+            >
+              {profile?.displayName && <>{profile?.displayName} &ndash;</>}{' '}
+              {profile?.handle}
+            </Text>
+          </Stack>
+          <Text>{account}</Text>
+        </Stack>
+      </Stack>
+      <IdentityLink href={`/identities/${encodeURIComponent(account)}`}>
+        <Button $variant="outline" $color="var(--color-black)">
+          <Gear />
+        </Button>
+      </IdentityLink>
+    </Box>
   )
 }
