@@ -142,17 +142,17 @@ export type LikedRecord = {
 
 export type LikedRecords = LikedRecord[]
 
+export type ATRotationKeys = string[]
+export type ATAlsoKnownAs = string[]
+export type ATServices = Record<string, { type: string; endpoint: string }>
+export type ATVerificationMethods = Record<string, string>
+
 export interface PlcProfile {
   did: Did
-  rotationKeys: string[]
-  alsoKnownAs: string[]
-  services: {
-    atproto_pds: {
-      endpoint: string
-      type: string
-    }
-  }
-  verificationMethods: Record<string, unknown>
+  rotationKeys: ATRotationKeys
+  alsoKnownAs: ATAlsoKnownAs
+  services: ATServices
+  verificationMethods: ATVerificationMethods
 }
 
 export interface BskyProfile {
