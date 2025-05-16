@@ -158,7 +158,8 @@ export interface PlcProfile {
 export interface BskyProfile {
   did: Did
   handle: string
-  displayName: string
+  displayName?: string
+  avatar?: string
 }
 
 export type ProfileData = PlcProfile & BskyProfile
