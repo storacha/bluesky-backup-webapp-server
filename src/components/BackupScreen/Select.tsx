@@ -3,6 +3,7 @@ import { css, styled } from 'next-yak'
 import {
   Button,
   ButtonContext,
+  Key,
   ListBox as RACListBox,
   ListBoxItem,
   ListBoxProps,
@@ -65,7 +66,7 @@ const FullButton = styled(Button)`
   width: 100%;
 `
 
-const ActionButton = styled(FullButton)`
+export const ActionButton = styled(FullButton)`
   border-top: 1px solid var(--color-gray-medium);
   padding: 0.75rem calc(0.75rem + 0.5rem);
   background-color: var(--color-gray-medium-light);
@@ -218,30 +219,24 @@ export const Select = ({
   label,
   items,
   defaultSelectedKey,
-  actionLabel,
-  actionOnPress,
   content,
   isDisabled,
+  actionButton,
 }: {
   /** URL of the image to show in the control. */
   imageSrc: string
   /** A noun describing what is selected (eg. "Bluesky Account"). */
   label: string
-  /** The label for an action to place at the bottom of the options. */
-  actionLabel: string
+  /** The label for an action to place at the bottom of the options */
+  actionLabel?: string
   /** Handler called when the action button is pressed. */
-  actionOnPress: () => void
+  actionOnPress?: () => void
+  onChange?: (key: Key) => void
   content?: React.ReactNode
+  actionButton?: React.ReactNode
 } & Pick<SelectProps<Item>, 'name' | 'defaultSelectedKey' | 'isDisabled'> &
   Pick<ListBoxProps<Item>, 'items'>) => {
   const prompt = `Select ${label}`
-  const actionButton = (
-    // Prevent the button from automagically being treated as the trigger
-    // button just because it's inside the <Select> component.
-    <ButtonContext.Provider value={{}}>
-      <ActionButton onPress={actionOnPress}>{actionLabel}</ActionButton>
-    </ButtonContext.Provider>
-  )
 
   return (
     <RACSelect
@@ -259,7 +254,7 @@ export const Select = ({
                   {selectedItem ? (
                     <>
                       <Label>{label}</Label>
-                      <Value>{selectedItem.label}</Value>
+                      <Value>{selectedItem?.label}</Value>
                     </>
                   ) : (
                     <Prompt>{prompt}</Prompt>
@@ -291,7 +286,11 @@ export const Select = ({
                 )
               }
             </ListBox>
-            {actionButton}
+            {/* Prevent the button from automagically being treated as the trigger
+             * button just because it's inside the <Select> component. */}
+            <ButtonContext.Provider value={{}}>
+              {actionButton}
+            </ButtonContext.Provider>
           </>
         )}
       </Popover>

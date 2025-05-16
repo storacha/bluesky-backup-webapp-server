@@ -3,13 +3,13 @@
 import { styled } from 'next-yak'
 import { ReactNode, useState } from 'react'
 
-import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
-import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
 import { Heading, Stack, Text } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { Backup } from '@/types'
 
+import { BlueskyAccountSelect } from './BlueskyAccountSelect'
 import { DataBox } from './DataBox'
+import { StorachaSpaceSelect } from './StorachaSpaceSelect'
 
 interface BackupProps {
   backup?: Backup
