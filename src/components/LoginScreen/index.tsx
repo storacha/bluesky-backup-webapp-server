@@ -16,13 +16,10 @@ const Outside = styled.div`
   background-size: cover;
 `
 
-const Header = styled.header`
-  padding: 2rem;
-`
+const Header = styled.header``
 
 const Main = styled.main`
   flex: 1 0 auto;
-  padding: 2rem;
 `
 
 const Tagline = styled.h2`
@@ -37,14 +34,17 @@ const Tagline = styled.h2`
 const Footer = styled.footer`
   border-color: var(--color-dark-blue);
   color: var(--color-dark-blue);
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
 `
 
 const FooterContainer = styled.div`
-  padding: 1.5rem 1.25rem;
+  padding: 1.25rem 1.5rem;
   border: 3px solid;
   border-radius: 2.5rem;
+
+  @media (min-width: 601px) {
+    padding-top: 3rem;
+    border-radius: 5rem;
+  }
 `
 
 function getBackgroundImage(srcSet = '') {
@@ -102,8 +102,8 @@ const SvgIcon = ({
   height?: string
   width?: string
 }) => (
-  <svg height={height} width={width}>
-    <path fill="currentColor" d={path} viewBox={`0 0 ${width} ${height}`} />
+  <svg height={height} width={width} viewBox={`0 0 ${width} ${height}`}>
+    <path fill="currentColor" d={path} />
   </svg>
 )
 
@@ -209,9 +209,16 @@ const MailingListButtonLink = styled(ButtonLink)`
   gap: 0.5rem;
   width: fit-content;
   height: fit-content;
-  padding: 0.75rem 1.25rem;
+  padding: 1rem 2rem;
   border-radius: 2rem;
   font-weight: 500;
+  text-transform: uppercase;
+  line-height: 1rem;
+
+  & > svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
 `
 
 function MailingListSignup() {
@@ -224,9 +231,12 @@ function MailingListSignup() {
 }
 
 const WordmarkContainer = styled.div`
-  margin-top: 8rem;
-  height: 8rem;
-  position: relative;
+  margin-top: 4rem;
+
+  & > img {
+    width: 100%;
+    height: auto;
+  }
 
   @media only screen and (min-width: 0px) and (max-width: 600px) {
     margin-top: 2rem;
@@ -237,7 +247,7 @@ const WordmarkContainer = styled.div`
 const FooterGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  gap: 1rem;
+  gap: 1.5rem;
   align-items: flex-start;
 
   @media only screen and (min-width: 0px) and (max-width: 600px) {
@@ -266,14 +276,20 @@ const FooterHeading = styled.h5`
   font-weight: 500;
   text-wrap: pretty;
   font-size: 1.125rem;
-  margin-bottom: 1rem;
+  line-height: 1.75rem;
+
+  @media only screen and (min-width: 601px) {
+    height: 3.25rem;
+    line-height: 3.25rem;
+    margin-bottom: 1rem;
+  }
 `
 
 const SocialIconsContainer = styled.div`
+  height: 3.25rem;
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
 
   @media only screen and (min-width: 0px) and (max-width: 600px) {
     align-items: left;
@@ -291,11 +307,13 @@ const FooterLinks = styled.ul`
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 
-  @media only screen and (max-width: 600px) {
-    & li {
+  & li {
+    line-height: 1.5rem;
+
+    @media only screen and (max-width: 600px) {
       font-size: 0.75rem;
+      line-height: 1rem;
     }
   }
 `
@@ -310,15 +328,18 @@ const MainStack = styled(Stack)`
     flex-flow: column;
   }
 
-  @media only screen and (min-width: 600px) and (max-width: 992px) {
+  @media only screen and (min-width: 601px) and (max-width: 992px) {
     gap: 0.4rem;
   }
 `
 
 const MainContainer = styled.section`
-  @media only screen and (min-width: 1440px) {
-    padding: 0 12rem;
-  }
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
 `
 
 export function LoginScreen() {
@@ -396,7 +417,7 @@ export function LoginScreen() {
               </LinksGrid>
             </FooterGrid>
             <WordmarkContainer>
-              <Image src={wordmark} alt="Storacha" height="204" width="1360" />
+              <Image src={wordmark} alt="" />
             </WordmarkContainer>
           </FooterContainer>
         </Footer>
