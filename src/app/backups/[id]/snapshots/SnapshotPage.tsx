@@ -24,7 +24,7 @@ const SnapshotLink = styled(Link)`
   padding: 1rem;
 `
 
-export default function SnapshotPage ({ backupId }: { backupId: string }) {
+export default function SnapshotPage({ backupId }: { backupId: string }) {
   const { data: snapshots, isLoading } = useSWR([
     'api',
     `/api/backups/${backupId}/snapshots`,
@@ -32,38 +32,38 @@ export default function SnapshotPage ({ backupId }: { backupId: string }) {
 
   return (
     <AppLayout selectedBackupId={backupId}>
-        <SnapshotContainer $gap="1rem">
-          <Heading>Snapshots</Heading>
-          <>
-            {isLoading ? (
-              <Center $height="200px">
-                <Loader />
-              </Center>
-            ) : (
-              <>
-                {snapshots?.map((snapshot) => (
-                  <SnapshotSummary
-                    key={snapshot.id}
-                    $background="var(--color-white)"
-                  >
-                    <SnapshotLink href={`/snapshots/${snapshot.id}`}>
-                      <Stack
-                        $direction="row"
-                        $alignItems="center"
-                        $justifyContent="space-between"
-                        $width="100%"
-                      >
-                        <Stack $direction="column" $alignItems="flex-start">
-                          <h3>{formatDate(snapshot.createdAt)} Snapshot</h3>
-                        </Stack>
+      <SnapshotContainer $gap="1rem">
+        <Heading>Snapshots</Heading>
+        <>
+          {isLoading ? (
+            <Center $height="200px">
+              <Loader />
+            </Center>
+          ) : (
+            <>
+              {snapshots?.map((snapshot) => (
+                <SnapshotSummary
+                  key={snapshot.id}
+                  $background="var(--color-white)"
+                >
+                  <SnapshotLink href={`/snapshots/${snapshot.id}`}>
+                    <Stack
+                      $direction="row"
+                      $alignItems="center"
+                      $justifyContent="space-between"
+                      $width="100%"
+                    >
+                      <Stack $direction="column" $alignItems="flex-start">
+                        <h3>{formatDate(snapshot.createdAt)} Snapshot</h3>
                       </Stack>
-                    </SnapshotLink>
-                  </SnapshotSummary>
-                ))}
-              </>
-            )}
-          </>
-        </SnapshotContainer>
+                    </Stack>
+                  </SnapshotLink>
+                </SnapshotSummary>
+              ))}
+            </>
+          )}
+        </>
+      </SnapshotContainer>
     </AppLayout>
   )
 }
