@@ -42,7 +42,7 @@ const Footer = styled.footer`
 `
 
 const FooterContainer = styled.div`
-  padding: 1.5rem 1.25rem;
+  padding: 3rem 1.25rem 1.5rem;
   border: 3px solid;
   border-radius: 2.5rem;
 `
@@ -321,10 +321,6 @@ const MainStack = styled(Stack)`
 const MainContainer = styled.section`
   max-width: 1280px;
   margin: 0 auto;
-
-  @media only screen and (min-width: 1440px) {
-    padding: 0 12rem;
-  }
 `
 
 export function LoginScreen() {
