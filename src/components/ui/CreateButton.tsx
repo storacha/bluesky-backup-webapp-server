@@ -14,7 +14,7 @@ export const CreateButton = ({
   disabled = false,
   children,
   $isLoading = false,
-  $mt = '1.4rem',
+  $mt = '0',
   ...rest
 }: Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'> & {
   disabled?: boolean
