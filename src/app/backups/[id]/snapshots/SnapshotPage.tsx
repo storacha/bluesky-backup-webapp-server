@@ -2,12 +2,9 @@
 
 import Link from 'next/link'
 import { styled } from 'next-yak'
-import { ReactNode, Suspense } from 'react'
 
 import { AppLayout } from '@/app/AppLayout'
-import RightSidebar from '@/components/BackupScreen/RightSidebar'
 import { Loader } from '@/components/Loader'
-import { SharedScreenLayout } from '@/components/SharedScreen'
 import { Box, Center, Heading, Stack } from '@/components/ui'
 import { useSWR } from '@/lib/swr'
 import { formatDate } from '@/lib/ui'
