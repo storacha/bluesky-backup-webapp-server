@@ -27,39 +27,7 @@ const SnapshotLink = styled(Link)`
   padding: 1rem;
 `
 
-interface SnapshotScreenProps {
-  children: ReactNode
-  rightPanelContent: ReactNode
-  selectedBackupId: string | null
-}
-
-const RightPanel = ({ children }: { children: ReactNode }) => {
-  return <RightSidebar>{children}</RightSidebar>
-}
-
-export const SapshotScreen = ({
-  children,
-  selectedBackupId,
-  rightPanelContent: rightSidebarContent,
-}: SnapshotScreenProps) => {
-  return (
-    <SharedScreenLayout
-      screenName="backups"
-      selectedBackupId={selectedBackupId}
-      mainContent={<Suspense>{children}</Suspense>}
-      rightPanelContent={
-        <Suspense>
-          <RightPanel>
-            <Heading>Backup & Restore</Heading>
-            {rightSidebarContent}
-          </RightPanel>
-        </Suspense>
-      }
-    />
-  )
-}
-
-export default function SnapshotPage({ backupId }: { backupId: string }) {
+export default function SnapshotPage ({ backupId }: { backupId: string }) {
   const { data: snapshots, isLoading } = useSWR([
     'api',
     `/api/backups/${backupId}/snapshots`,
@@ -67,38 +35,38 @@ export default function SnapshotPage({ backupId }: { backupId: string }) {
 
   return (
     <AppLayout selectedBackupId={backupId}>
-      <SnapshotContainer $gap="1rem">
-        <Heading>Snapshots</Heading>
-        <>
-          {isLoading ? (
-            <Center $height="200px">
-              <Loader />
-            </Center>
-          ) : (
-            <>
-              {snapshots?.map((snapshot) => (
-                <SnapshotSummary
-                  key={snapshot.id}
-                  $background="var(--color-white)"
-                >
-                  <SnapshotLink href={`/snapshots/${snapshot.id}`}>
-                    <Stack
-                      $direction="row"
-                      $alignItems="center"
-                      $justifyContent="space-between"
-                      $width="100%"
-                    >
-                      <Stack $direction="column" $alignItems="flex-start">
-                        <h3>{formatDate(snapshot.createdAt)} Snapshot</h3>
+        <SnapshotContainer $gap="1rem">
+          <Heading>Snapshots</Heading>
+          <>
+            {isLoading ? (
+              <Center $height="200px">
+                <Loader />
+              </Center>
+            ) : (
+              <>
+                {snapshots?.map((snapshot) => (
+                  <SnapshotSummary
+                    key={snapshot.id}
+                    $background="var(--color-white)"
+                  >
+                    <SnapshotLink href={`/snapshots/${snapshot.id}`}>
+                      <Stack
+                        $direction="row"
+                        $alignItems="center"
+                        $justifyContent="space-between"
+                        $width="100%"
+                      >
+                        <Stack $direction="column" $alignItems="flex-start">
+                          <h3>{formatDate(snapshot.createdAt)} Snapshot</h3>
+                        </Stack>
                       </Stack>
-                    </Stack>
-                  </SnapshotLink>
-                </SnapshotSummary>
-              ))}
-            </>
-          )}
-        </>
-      </SnapshotContainer>
+                    </SnapshotLink>
+                  </SnapshotSummary>
+                ))}
+              </>
+            )}
+          </>
+        </SnapshotContainer>
     </AppLayout>
   )
 }
