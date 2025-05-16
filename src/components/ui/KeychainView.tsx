@@ -480,7 +480,7 @@ type KeychainProps = KeychainContextProps & {
 const KeyItem = styled(Stack)`
   ${roundRectStyle}
   background: var(--color-white);
-  border: 1px solid var(--color-gray-medium)'};
+  border: 1px solid var(--color-gray-medium);
   padding: 1rem;
 `
 
