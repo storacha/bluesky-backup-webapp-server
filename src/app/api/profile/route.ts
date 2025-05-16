@@ -65,12 +65,13 @@ async function getPublicProfile(did: Did): Promise<ProfileData | null> {
 
   const [
     { rotationKeys, alsoKnownAs, verificationMethods, services },
-    { handle, displayName },
+    { handle, displayName, avatar },
   ] = await Promise.all([fetchPlcProfile(did), fetchBskyProfile(did)])
   return {
     did,
     handle,
     displayName,
+    avatar,
     rotationKeys,
     alsoKnownAs,
     verificationMethods,

@@ -5,7 +5,7 @@ import { Gear } from '@phosphor-icons/react'
 import Link from 'next/link'
 import { styled } from 'next-yak'
 
-import { Box, Button, Heading, Stack, Text } from '@/components/ui'
+import { Box, Button, Heading, Spinner, Stack, Text } from '@/components/ui'
 import { useProfile } from '@/hooks/use-profile'
 
 import { Sidebar } from '../Sidebar'
@@ -21,10 +21,11 @@ const IdentityLink = styled(Link)`
 
 // TODO: Dedupe with `AccountLogo` in `Select`
 const AccountLogo = styled.div<{
-  $imageSrc: string
+  $imageSrc?: string
 }>`
   --account-logo-border-color: var(--color-gray-light);
-  --account-logo-image: ${({ $imageSrc }) => `url(${$imageSrc})`};
+  --account-logo-image: ${({ $imageSrc }) =>
+    $imageSrc ? `url(${$imageSrc})` : 'unset'};
   --account-logo-size: 25px 25px;
   --account-logo-position: center;
   --account-logo-repeat: no-repeat;
@@ -39,11 +40,6 @@ const AccountLogo = styled.div<{
   width: 42px;
   border-radius: 8px;
   border: 1px solid var(--account-logo-border-color);
-
-  display: flex;
-  justify-content: stretch;
-  align-items: stretch;
-  overflow: hidden;
 
   background-color: var(--color-gray-light);
   background-image: var(--account-logo-image);
@@ -78,7 +74,9 @@ const Account = ({ account }: { account: Did }) => {
       $background="var(--color-white)"
     >
       <Stack $gap="1rem" $direction="row" $alignItems="center">
-        <AccountLogo $imageSrc="/bluesky.png" />
+        <AccountLogo $imageSrc={profile?.avatar}>
+          {!profile && <Spinner />}
+        </AccountLogo>
         <Stack $alignItems="start">
           <Stack $direction="row" $alignItems="baseline" $gap="0.5rem">
             <Text
