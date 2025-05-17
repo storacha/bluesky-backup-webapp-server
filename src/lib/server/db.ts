@@ -193,6 +193,7 @@ export interface BBDatabase {
   findBackup: (id: string) => Promise<{ result: Backup | undefined }>
   findScheduledBackups: () => Promise<{ results: Backup[] }>
   addBackup: (input: BackupInput) => Promise<Backup>
+  deleteBackup: (id: string) => void
   addBlob: (input: ATBlobInput) => Promise<ATBlob>
   getBlobInBackup: (
     cid: string,
@@ -317,6 +318,13 @@ export function getStorageContext(): StorageContext {
           throw new Error('error inserting backup')
         }
         return results[0]
+      },
+      async deleteBackup(id: string) {
+        if (!validateUUID(id)) return
+        await sql<Backup[]>`
+          delete from backups
+          where id = ${id}
+        `
       },
       async findBackups(account: string) {
         const results = await sql<Backup[]>`
