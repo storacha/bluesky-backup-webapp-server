@@ -17,7 +17,9 @@ const buttonBackgroundColor = (
   }
 }
 
-const ButtonElement = styled.button<Partial<BtnProps & { $noPadding: boolean }>>`
+const ButtonElement = styled.button<
+  Partial<BtnProps & { $noPadding: boolean }>
+>`
   font-family: ${({ $fontFamily = 'var(--font-dm-mono)' }) => $fontFamily};
   font-weight: ${({ $fontWeight = '300' }) => $fontWeight};
   padding: ${({ $py, $px, $noPadding }) =>
