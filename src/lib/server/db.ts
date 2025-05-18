@@ -19,6 +19,8 @@ import {
   SnapshotInput,
 } from '@/types'
 
+import { PAGINATED_RESULTS_LIMIT } from '../constants'
+
 // will use psql environment variables
 // https://github.com/porsager/postgres?tab=readme-ov-file#environmental-variables
 
@@ -301,7 +303,7 @@ export function getStorageContext(): StorageContext {
         return results[0]
       },
       async findSnapshots(backupId, options?: Partial<PaginatedResultParams>) {
-        const { limit = 10, page = 1 } = options ?? {}
+        const { limit = PAGINATED_RESULTS_LIMIT, page = 1 } = options ?? {}
         const offset = (page - 1) * limit
 
         if (!validateUUID(backupId))

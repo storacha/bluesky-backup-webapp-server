@@ -1,13 +1,14 @@
 'use client'
 
-import { CaretLeft, CaretRight } from '@phosphor-icons/react'
 import Link from 'next/link'
 import { styled } from 'next-yak'
 import { useState } from 'react'
 
 import { AppLayout } from '@/app/AppLayout'
 import { Loader } from '@/components/Loader'
+import { PaginationControls } from '@/components/Pagination'
 import { Box, Center, Heading, Stack } from '@/components/ui'
+import { PAGINATED_RESULTS_LIMIT } from '@/lib/constants'
 import { useSWR } from '@/lib/swr'
 import { formatDate } from '@/lib/ui'
 import { Snapshot } from '@/types'
@@ -71,13 +72,6 @@ function Snapshots({ snapshots, loading }: SnapshotPageProps) {
   )
 }
 
-const PaginationControls = styled.div`
-  display: flex;
-  gap: 1.4rem;
-  padding: 0 2rem;
-  align-items: center;
-`
-
 export default function SnapshotPage({
   backupId,
 }: Pick<SnapshotPageProps, 'backupId'>) {
@@ -89,7 +83,8 @@ export default function SnapshotPage({
     { page: pageNumber.toString() },
   ])
 
-  const totalPages = snapshots && Math.ceil(snapshots?.count / 10)
+  const totalPages =
+    snapshots && Math.ceil(snapshots?.count / PAGINATED_RESULTS_LIMIT)
 
   return (
     <AppLayout selectedBackupId={backupId}>
@@ -100,35 +95,11 @@ export default function SnapshotPage({
           loading={isLoading}
           snapshots={snapshots?.results as Snapshot[]}
         />
-        <PaginationControls>
-          <button
-            onClick={() => setPageNumber((p) => Math.max(1, p - 1))}
-            disabled={pageNumber === 1}
-          >
-            <CaretLeft size={19} />
-          </button>
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            {Array.from({ length: Number(totalPages) }, (_, index) => {
-              return (
-                <button
-                  key={index}
-                  onClick={() => setPageNumber(index + 1)}
-                  style={{
-                    color: index + 1 === pageNumber ? 'var(--color-dark-blue' : ''
-                  }}
-                >
-                  {index + 1}
-                </button>
-              )
-            })}
-          </div>
-          <button
-            onClick={() => setPageNumber((p) => p + 1)}
-            disabled={pageNumber >= Number(totalPages)}
-          >
-            <CaretRight size={19} />
-          </button>
-        </PaginationControls>
+        <PaginationControls
+          totalPages={totalPages ?? 1}
+          currentPage={pageNumber}
+          onChange={(newPage) => setPageNumber(newPage)}
+        />
         <div style={{ display: 'none' }}>
           <Snapshots
             backupId={backupId}
