@@ -11,6 +11,8 @@ import {
   ATBlobInput,
   Backup,
   BackupInput,
+  PaginatedResult,
+  PaginatedResultParams,
   RotationKey,
   RotationKeyInput,
   Snapshot,
@@ -187,7 +189,10 @@ export const requestLock: RuntimeLock = async (key, fn) => {
 export interface BBDatabase {
   addSnapshot: (input: SnapshotInput) => Promise<Snapshot>
   updateSnapshot: (id: string, input: Partial<Snapshot>) => Promise<Snapshot>
-  findSnapshots: (backupId: string) => Promise<{ results: Snapshot[] }>
+  findSnapshots: (
+    backupId: string,
+    options?: Partial<PaginatedResultParams>
+  ) => Promise<PaginatedResult<Snapshot>>
   findSnapshot: (id: string) => Promise<{ result: Snapshot | undefined }>
   findBackups: (account: string) => Promise<{ results: Backup[] }>
   findBackup: (id: string) => Promise<{ result: Backup | undefined }>
@@ -295,16 +300,41 @@ export function getStorageContext(): StorageContext {
         }
         return results[0]
       },
-      async findSnapshots(backupId) {
-        if (!validateUUID(backupId)) return { results: [] }
+      async findSnapshots(backupId, options?: Partial<PaginatedResultParams>) {
+        const { limit = 10, page = 1 } = options ?? {}
+        const offset = (page - 1) * limit
+
+        if (!validateUUID(backupId))
+          return {
+            count: 0,
+            next: null,
+            prev: null,
+            results: [],
+          }
+
+        const total = await sql<{ count: number }[]>`
+          select count(*) as count
+          from snapshots
+          where backup_id = ${backupId}
+        `
 
         const results = await sql<Snapshot[]>`
           select *
           from snapshots
           where backup_id = ${backupId}
           order by created_at desc
+          limit ${limit}
+          offset ${offset}
         `
+
+        const count = Number(total[0]?.count) ?? 0
+        const totalPages = Math.ceil(count / limit)
+        const getPageUrl = (pageNumber: number) =>
+          `${process.env.NEXT_PUBLIC_APP_URI!}/api/backups/${backupId}/snapshots?page=${pageNumber}&limit=${limit}`
         return {
+          count: count,
+          next: page < totalPages ? getPageUrl(page + 1) : null,
+          prev: page > 1 ? getPageUrl(page - 1) : null,
           results,
         }
       },

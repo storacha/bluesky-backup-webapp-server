@@ -176,3 +176,15 @@ export interface RotationKey {
 export type RotationKeyInput = Input<RotationKey, 'createdAt' | 'keypair'>
 
 export type RotationKeyClientInput = Input<RotationKeyInput, 'storachaAccount'>
+
+export type PaginatedResult<T> = {
+  count: number
+  results: T[]
+  next: string | null
+  prev: string | null
+}
+
+export type PaginatedResultParams = {
+  limit: number
+  page: number
+}

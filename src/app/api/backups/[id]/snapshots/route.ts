@@ -1,4 +1,5 @@
 import { Delegation } from '@ucanto/core'
+import { NextRequest } from 'next/server'
 
 import { backupOwnedByAccount, isCronjobAuthed } from '@/lib/server/auth'
 import { createSnapshotForBackup } from '@/lib/server/backups'
@@ -7,18 +8,22 @@ import { getSession } from '@/lib/sessions'
 import { cidUrl } from '@/lib/storacha'
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
   const { db } = getStorageContext()
   const { did: account } = await getSession()
+
+  const searchParams = request.nextUrl.searchParams
+  const limit = Number(searchParams.get('limit') ?? 10)
+  const page = Number(searchParams.get('page') ?? 1)
   if (!(await backupOwnedByAccount(db, id, account))) {
     return new Response('Not authorized', { status: 401 })
   }
-  const { results } = await db.findSnapshots(id)
+  const data = await db.findSnapshots(id, { limit, page })
 
-  return Response.json(results)
+  return Response.json(data)
 }
 
 export async function POST(

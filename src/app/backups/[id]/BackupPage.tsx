@@ -84,14 +84,14 @@ const RightSidebarContent = ({ backup }: { backup: Backup }) => {
           </SnapshotsLink>
         </Stack>
         <SubHeading>Recent Snapshots</SubHeading>
-        <>
+        <Stack $gap="0.6rem">
           {isLoading ? (
             <Center $height="200px">
               <Loader />
             </Center>
           ) : (
             <>
-              {snapshots?.slice(0, 5).map((snapshot) => (
+              {snapshots?.results.slice(0, 5).map((snapshot) => (
                 <SnapshotSummary
                   key={snapshot.id}
                   $background="var(--color-white)"
@@ -112,7 +112,7 @@ const RightSidebarContent = ({ backup }: { backup: Backup }) => {
               ))}
             </>
           )}
-        </>
+        </Stack>
       </SnapshotContainer>
     </>
   )

@@ -43,6 +43,9 @@ export type StyleProps = {
   $py: `${Property.PaddingTop} ${Property.PaddingBottom}`
   $my: `${Property.MarginTop} ${Property.MarginBottom}`
   $pt: `${Property.PaddingTop}`
+  $overflow: Property.Overflow
+  $overflowX: Property.OverflowX
+  $overflowY: Property.OverflowY
 }
 
 export interface BtnProps extends StyleProps {
