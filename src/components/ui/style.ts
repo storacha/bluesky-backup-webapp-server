@@ -46,6 +46,7 @@ export type StyleProps = {
   $overflow: Property.Overflow
   $overflowX: Property.OverflowX
   $overflowY: Property.OverflowY
+  $textDecor: Property.TextDecoration
 }
 
 export interface BtnProps extends StyleProps {

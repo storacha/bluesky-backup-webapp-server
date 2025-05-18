@@ -5,6 +5,7 @@ import { styled } from 'next-yak'
 import { useState } from 'react'
 
 import { AppLayout } from '@/app/AppLayout'
+import { BackButton } from '@/components/BackButton'
 import { Loader } from '@/components/Loader'
 import { PaginationControls } from '@/components/Pagination'
 import { Box, Center, Heading, Stack } from '@/components/ui'
@@ -35,10 +36,13 @@ interface SnapshotPageProps {
   loading: boolean
 }
 
-function Snapshots({ snapshots, loading }: SnapshotPageProps) {
+function Snapshots({ snapshots, loading, backupId }: SnapshotPageProps) {
   return (
     <SnapshotContainer $gap="1rem">
-      <Heading>Snapshots</Heading>
+      <Stack $direction="row" $gap="1rem">
+        <BackButton path={`/backups/${backupId}`} />
+        <Heading>Snapshots</Heading>
+      </Stack>
       <>
         {loading ? (
           <Center $height="200px">

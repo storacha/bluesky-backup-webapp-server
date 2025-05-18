@@ -1,13 +1,13 @@
 import { CaretLeft, CaretRight } from '@phosphor-icons/react'
 import { styled } from 'next-yak'
 
-import { Stack } from './ui'
+import { Button, Stack } from './ui'
 
 const PaginationContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem 2rem;
+  padding: 0.3rem 2rem;
 `
 
 interface PaginationProps {
@@ -53,37 +53,42 @@ export const PaginationControls = ({
 
   return (
     <PaginationContainer>
-      <button
+      <Button
+        $background="var(--color-white)"
+        $color="var(--color-black)"
         onClick={() => onChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
         <CaretLeft size={20} />
-      </button>
-      <Stack $gap="1rem" $direction="row" $height="fit-content">
+      </Button>
+      <Stack $gap="0.6rem" $direction="row" $height="fit-content">
         {range.map((value, idx) =>
           value === 'dots' ? (
             <span key={`dots-${idx}`}>...</span>
           ) : (
-            <button
+            <Button
               key={value}
               onClick={() => onChange(value)}
+              $background="none"
+              $color={value === currentPage ? 'var(--color-dark-blue)' : ''}
+              $fontWeight={value === currentPage ? '600' : 'normal'}
               style={{
-                color: value === currentPage ? 'var(--color-dark-blue)' : '',
-                fontWeight: value === currentPage ? 'bold' : 'normal',
                 textDecoration: value === currentPage ? 'underline' : 'none',
               }}
             >
               {value}
-            </button>
+            </Button>
           )
         )}
       </Stack>
-      <button
+      <Button
+        $background="var(--color-white)"
+        $color="var(--color-black)"
         onClick={() => onChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
       >
         <CaretRight size={20} />
-      </button>
+      </Button>
     </PaginationContainer>
   )
 }
