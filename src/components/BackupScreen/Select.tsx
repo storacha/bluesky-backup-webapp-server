@@ -246,7 +246,7 @@ export const Select = ({
   onChange?: (key: Key) => void
   content?: React.ReactNode
   actionButton?: React.ReactNode
-  isRequired: boolean
+  isRequired?: boolean
 } & Pick<
   SelectProps<Item>,
   'name' | 'defaultSelectedKey' | 'isDisabled' | 'isRequired'
