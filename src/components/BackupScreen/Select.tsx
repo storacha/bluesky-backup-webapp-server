@@ -119,6 +119,12 @@ const Prompt = styled.div`
   color: var(--color-gray-medium);
 `
 
+// Trivially styled solely to let this element be targeted with parent
+// selectors.
+const Outside = styled(RACSelect)`
+  color: currentColor;
+`
+
 const Contents = styled.div<{ $hasValue: boolean }>`
   display: flex;
   flex-direction: row;
@@ -138,6 +144,11 @@ const Contents = styled.div<{ $hasValue: boolean }>`
 
   ${FullButton}:focus-visible & {
     outline: var(--color-dark-blue) 2px solid;
+  }
+
+  ${Outside}[data-invalid] & {
+    border-color: var(--color-dark-red);
+    outline-color: var(--color-dark-red);
   }
 `
 
@@ -234,15 +245,19 @@ export const Select = ({
   onChange?: (key: Key) => void
   content?: React.ReactNode
   actionButton?: React.ReactNode
-} & Pick<SelectProps<Item>, 'name' | 'defaultSelectedKey' | 'isDisabled'> &
+} & Pick<
+  SelectProps<Item>,
+  'name' | 'defaultSelectedKey' | 'isDisabled' | 'isRequired'
+> &
   Pick<ListBoxProps<Item>, 'items'>) => {
   const prompt = `Select ${label}`
 
   return (
-    <RACSelect
+    <Outside
       name={name}
       defaultSelectedKey={defaultSelectedKey}
       isDisabled={isDisabled}
+      isRequired={isRequired}
     >
       <FullButton>
         <SelectValue<Item>>
@@ -294,6 +309,6 @@ export const Select = ({
           </>
         )}
       </Popover>
-    </RACSelect>
+    </Outside>
   )
 }
