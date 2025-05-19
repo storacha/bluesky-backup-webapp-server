@@ -1,13 +1,19 @@
 'use client'
 
+import { Trash } from '@phosphor-icons/react'
+import { useRouter } from 'next/navigation'
 import { styled } from 'next-yak'
-import { ReactNode, useState } from 'react'
+import { MouseEvent, ReactNode, useState } from 'react'
+import { toast } from 'sonner'
+import { mutate } from 'swr'
 
+/* eslint-disable import/no-restricted-paths */
+import { deleteBackup } from '@/app/backups/deleteBackup'
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
-import { Heading, Stack, Text } from '@/components/ui'
+import { Button, Heading, Spinner, Stack, Text } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
-import { Backup } from '@/types'
+import { Backup, State } from '@/types'
 
 import { DataBox } from './DataBox'
 
@@ -67,7 +73,9 @@ type BackupDatas = 'include_repository' | 'include_blobs'
  * To submit the data, wrap this component with a form element.
  */
 export const BackupDetail = ({ backup }: BackupProps) => {
+  const router = useRouter()
   const { isMobile, isBaseLaptop } = useMobileScreens()
+  const [state, setState] = useState<State>('idle')
 
   const [dataBoxState, setDataBoxState] = useState<
     Record<BackupDatas, boolean>
@@ -97,10 +105,54 @@ export const BackupDetail = ({ backup }: BackupProps) => {
     })
   }
 
+  const handleDelete = async (e: MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!backup) return
+
+    if (confirm(`Are you sure you want to delete ${backup.name}?`)) {
+      setState('deleting')
+      try {
+        const result = await deleteBackup(backup.id)
+        if (result.success) {
+          toast.success('Backup deleted!')
+          mutate(['api', '/api/backups'])
+          router.push('/')
+        } else {
+          toast.error(`Failed to delete ${backup.name}`)
+          console.error(result.error)
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setState('idle')
+      }
+    }
+  }
+
   return (
     <Stack $gap="2rem">
       {backup ? (
-        <Heading>{backup.name}</Heading>
+        <Stack
+          $direction="row"
+          $alignItems="center"
+          $gap={isMobile ? '1.4rem' : ''}
+          $justifyContent={isMobile ? 'flex-start' : 'space-between'}
+        >
+          <Heading>{backup.name}</Heading>
+          {state === 'deleting' ? (
+            <Spinner />
+          ) : (
+            <Button
+              $background="none"
+              $noPadding
+              $border="1px solid red"
+              onClick={(e: MouseEvent) => handleDelete(e)}
+            >
+              <Trash size={18} color="var(--color-black)" />
+            </Button>
+          )}
+        </Stack>
       ) : (
         <BackupNameInput
           type="text"

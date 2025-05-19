@@ -1,22 +1,16 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
-import { Trash } from '@phosphor-icons/react'
 import { IdentificationBadge } from '@phosphor-icons/react/dist/ssr'
 import Image from 'next/image'
 import Link from 'next/link'
 import { css, styled } from 'next-yak'
-import { MouseEvent, useState } from 'react'
-import { toast } from 'sonner'
-import { mutate } from 'swr'
 
 import { Loader } from '@/components/Loader'
-import { Button, roundRectStyle, Spinner, Stack } from '@/components/ui'
+import { roundRectStyle, Stack } from '@/components/ui'
 import wordlogo from '@/images/wordlogo.png'
 import { useSWR } from '@/lib/swr'
 import { shortenIfOver } from '@/lib/ui'
-import { Backup, State } from '@/types'
 
 import { LogOutButton as BaseLogOutButton } from './authentication'
-import { deleteBackup } from './backups/deleteBackup'
 
 const SidebarOutside = styled.nav<{ $variant?: 'desktop' | 'mobile' }>`
   display: flex;
@@ -170,37 +164,7 @@ const BackupsLoader = styled(Loader)`
 
 function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
   const { data } = useSWR(['api', '/api/backups'])
-  const [state, setState] = useState<State>('idle')
-  const [backup, setBackup] = useState<Backup>()
-
   if (!data) return <BackupsLoader />
-
-  const handleDelete = async (id: string, e: MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    const backup = data.find((backup) => backup.id === id)
-    setBackup(backup)
-    const backupName = backup?.name
-
-    if (confirm(`Are you sure you want to delete ${backupName}?`)) {
-      setState('deleting')
-      try {
-        const result = await deleteBackup(id)
-        if (result.success) {
-          toast.success('Backup deleted!')
-          mutate(['api', '/api/backups'])
-        } else {
-          toast.error(`Failed to delete ${backupName}`)
-          console.error(result.error)
-        }
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setState('idle')
-      }
-    }
-  }
 
   return (
     <BackupList>
@@ -210,18 +174,6 @@ function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
           <Link key={id} href={`/backups/${id}`}>
             <BackupItem $selected={id === selectedBackupId}>
               {shortenIfOver(modifiedName)}
-              {state === 'deleting' && id === backup?.id ? (
-                <Spinner />
-              ) : (
-                <Button
-                  $background="none"
-                  $noPadding
-                  $border="1px solid red"
-                  onClick={(e: MouseEvent) => handleDelete(id, e)}
-                >
-                  <Trash size={18} color="var(--color-black)" />
-                </Button>
-              )}
             </BackupItem>
           </Link>
         )
