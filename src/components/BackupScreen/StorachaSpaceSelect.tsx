@@ -63,7 +63,7 @@ export const StorachaSpaceSelect = ({
         label="Storacha space"
         imageSrc="/storacha-red.png"
         items={storachaSpaces}
-        actionButton={
+        externalButton={
           <CreateNewSpaceButton onOpenNewSpaceModal={setModalSession} />
         }
       />

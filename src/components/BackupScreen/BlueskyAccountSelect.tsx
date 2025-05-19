@@ -2,8 +2,6 @@
 
 import { Did, isDid } from '@atproto/api'
 
-import { ActionButton } from '../ActionButton'
-import { Loader } from '../Loader'
 import { useSWR } from '@/lib/swr'
 
 import { Select } from './Select'
@@ -63,12 +61,6 @@ export const BlueskyAccountSelect = ({
       actionOnPress={connectNewAccount}
       defaultSelectedKey={defaultValue}
       isDisabled={disabled}
-      actionButton={
-        <ActionButton
-          actionLabel="Connect Bluesky account..."
-          actionOnPress={connectNewAccount}
-        />
-      }
       renderItemValue={(item) => {
         return <ATHandle did={item.id} />
       }}
