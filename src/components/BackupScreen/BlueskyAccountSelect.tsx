@@ -3,6 +3,7 @@
 import { useStorachaAccount } from '@/hooks/use-plan'
 import { useSWR } from '@/lib/swr'
 
+import { ActionButton } from '../ActionButton'
 import { Loader } from '../Loader'
 
 import { Select } from './Select'
@@ -56,6 +57,12 @@ export const BlueskyAccountSelect = ({
       actionOnPress={connectNewAccount}
       defaultSelectedKey={defaultValue}
       isDisabled={disabled}
+      actionButton={
+        <ActionButton
+          actionLabel="Connect Bluesky account..."
+          actionOnPress={connectNewAccount}
+        />
+      }
     />
   )
 }
