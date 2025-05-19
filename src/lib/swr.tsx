@@ -127,7 +127,7 @@ const fetchers: Fetchers = {
  * our fetchers and config. Also, logs any errors to the console.
  */
 export const useSWR = <K extends Key>(
-  key: K | null | undefined,
+  key: K | null | undefined | false,
   config?: SWRConfiguration
 ): SWRResponse<FetchedData<K>> => {
   const swrResponse = useSWRBase(key, config)

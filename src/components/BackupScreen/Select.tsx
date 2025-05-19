@@ -1,5 +1,6 @@
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { css, styled } from 'next-yak'
+import { ReactNode } from 'react'
 import {
   Button,
   ButtonContext,
@@ -231,9 +232,9 @@ export const Select = ({
   defaultSelectedKey,
   actionLabel,
   actionOnPress,
-  content,
   isDisabled,
   isRequired,
+  renderItemValue = (item: Item) => item.label,
 }: {
   /** URL of the image to show in the control. */
   imageSrc: string
@@ -243,7 +244,8 @@ export const Select = ({
   actionLabel: string
   /** Handler called when the action button is pressed. */
   actionOnPress: () => void
-  content?: React.ReactNode
+  /** Renders the value of an item as text or similar inline content. */
+  renderItemValue?: (item: Item) => ReactNode
 } & Pick<
   SelectProps<Item>,
   'name' | 'defaultSelectedKey' | 'isDisabled' | 'isRequired'
@@ -275,7 +277,7 @@ export const Select = ({
                   {selectedItem ? (
                     <>
                       <Label>{label}</Label>
-                      <Value>{selectedItem.label}</Value>
+                      <Value>{renderItemValue(selectedItem)}</Value>
                     </>
                   ) : (
                     <Prompt>{prompt}</Prompt>
@@ -288,7 +290,7 @@ export const Select = ({
         </SelectValue>
       </FullButton>
       <Popover aria-label={prompt}>
-        {content ?? (
+        {
           <>
             <ListBox
               items={
@@ -297,19 +299,19 @@ export const Select = ({
                   : items
               }
             >
-              {({ id, label }) =>
+              {(item) =>
                 // The Select won't even open if there are no items, so we need
                 // to put a dummy item in the listbox.
-                id === '' ? (
+                item.id === '' ? (
                   <NonItem aria-hidden></NonItem>
                 ) : (
-                  <Item>{label}</Item>
+                  <Item>{renderItemValue(item)}</Item>
                 )
               }
             </ListBox>
             {actionButton}
           </>
-        )}
+        }
       </Popover>
     </Outside>
   )
