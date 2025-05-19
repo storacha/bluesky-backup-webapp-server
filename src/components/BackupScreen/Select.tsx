@@ -233,6 +233,7 @@ export const Select = ({
   content,
   isDisabled,
   actionButton,
+  isRequired
 }: {
   /** URL of the image to show in the control. */
   imageSrc: string
@@ -244,7 +245,8 @@ export const Select = ({
   actionOnPress?: () => void
   onChange?: (key: Key) => void
   content?: React.ReactNode
-  actionButton?: React.ReactNode
+  actionButton?: React.ReactNode,
+  isRequired: boolean
 } & Pick<
   SelectProps<Item>,
   'name' | 'defaultSelectedKey' | 'isDisabled' | 'isRequired'
