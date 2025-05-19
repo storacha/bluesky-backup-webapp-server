@@ -10,6 +10,8 @@ import {
   RotationKey,
 } from '@/types'
 
+export const newClient = () => new plc.Client('https://plc.directory')
+
 interface PlcUpdateInput {
   rotationKeys?: ATRotationKeys
   alsoKnownAs?: ATAlsoKnownAs
@@ -26,7 +28,7 @@ export async function createPlcUpdateOp(
   if (!rotationKey.keypair) {
     throw new Error('keypair is undefined')
   }
-  const client = new plc.Client('https://plc.directory')
+  const client = newClient()
   const lastOp = await client.getLastOp(profile.did)
   if (check.is(lastOp, plc.def.tombstone)) {
     throw new Error('Did is tombstoned')
