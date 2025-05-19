@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { styled } from 'next-yak'
 import { ReactNode, useState } from 'react'
 
@@ -7,7 +8,8 @@ import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSe
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
 import { Heading, Stack, Text } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
-import { Backup } from '@/types'
+import { useSWR } from '@/lib/swr'
+import { ATBlob, Backup } from '@/types'
 
 import { DataBox } from './DataBox'
 
@@ -56,6 +58,26 @@ const Section = ({
   </Stack>
 )
 
+const BlobsLink = styled(Link)`
+  display: block;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-dark-blue);
+  font-family: var(--font-dm-mono);
+  font-size: 0.75rem;
+  color: var(--color-white);
+  text-align: center;
+  width: fit-content;
+
+  @media only screen and (max-width: 600px) {
+    margin-top: -0.4rem;
+  }
+
+  @media only screen and (min-width: 601px) and (max-width: 992px) {
+    margin-top: -0.8rem;
+  }
+`
+
 type BackupDatas = 'include_repository' | 'include_blobs'
 // | 'include_preferences'
 
@@ -68,6 +90,11 @@ type BackupDatas = 'include_repository' | 'include_blobs'
  */
 export const BackupDetail = ({ backup }: BackupProps) => {
   const { isMobile, isBaseLaptop } = useMobileScreens()
+  const { data: blobsData } = useSWR([
+    'api',
+    `/api/backups/${backup?.id}/blobs`,
+  ])
+  const blobs = blobsData as ATBlob[]
 
   const [dataBoxState, setDataBoxState] = useState<
     Record<BackupDatas, boolean>
@@ -152,6 +179,9 @@ export const BackupDetail = ({ backup }: BackupProps) => {
           />
         </Stack>
       </Section>
+      {blobs?.length > 0 && (
+        <BlobsLink href={`/backups/${backup?.id}/blobs`}>All blobs</BlobsLink>
+      )}
     </Stack>
   )
 }
