@@ -180,11 +180,11 @@ export type RotationKeyClientInput = Input<RotationKeyInput, 'storachaAccount'>
 export type PaginatedResult<T> = {
   count: number
   results: T[]
-  next: string | null
-  prev: string | null
+  next?: string | null
+  prev?: string | null
 }
 
 export type PaginatedResultParams = {
-  limit: number
-  page: number
+  limit?: number
+  page?: number
 }

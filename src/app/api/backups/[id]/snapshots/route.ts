@@ -1,7 +1,6 @@
 import { Delegation } from '@ucanto/core'
 import { NextRequest } from 'next/server'
 
-import { PAGINATED_RESULTS_LIMIT } from '@/lib/constants'
 import { backupOwnedByAccount, isCronjobAuthed } from '@/lib/server/auth'
 import { createSnapshotForBackup } from '@/lib/server/backups'
 import { getStorageContext } from '@/lib/server/db'
@@ -17,14 +16,23 @@ export async function GET(
   const { did: account } = await getSession()
 
   const searchParams = request.nextUrl.searchParams
-  const limit = Number(searchParams.get('limit') ?? PAGINATED_RESULTS_LIMIT)
-  const page = Number(searchParams.get('page') ?? 1)
+  const limit = Number(searchParams.get('limit'))
+  const page = Number(searchParams.get('page'))
   if (!(await backupOwnedByAccount(db, id, account))) {
     return new Response('Not authorized', { status: 401 })
   }
   const data = await db.findSnapshots(id, { limit, page })
+  const count = data.count
+  const totalPages = Math.ceil(count / limit)
 
-  return Response.json(data)
+  const getPageUrl = (pageNumber: number) =>
+    `${process.env.NEXT_PUBLIC_APP_URI!}/api/backups/${id}/snapshots?page=${pageNumber}&limit=${limit}`
+
+  return Response.json({
+    ...data,
+    next: page < totalPages ? getPageUrl(page + 1) : null,
+    prev: page > 1 ? getPageUrl(page - 1) : null,
+  })
 }
 
 export async function POST(

@@ -1,7 +1,7 @@
 import { CaretLeft, CaretRight } from '@phosphor-icons/react'
 import { styled } from 'next-yak'
 
-import { Button, Stack } from './ui'
+import { Box, Button, Stack } from './ui'
 
 const PaginationContainer = styled.div`
   display: flex;
@@ -61,10 +61,10 @@ export const PaginationControls = ({
       >
         <CaretLeft size={20} />
       </Button>
-      <Stack $gap="0.6rem" $direction="row" $height="fit-content">
+      <Stack $gap="0.6rem" $direction="row" $height="fit-content" $alignItems='center'>
         {range.map((value, idx) =>
           value === 'dots' ? (
-            <span key={`dots-${idx}`}>...</span>
+            <Box $height="100%" key={`dots-${idx}`}>...</Box>
           ) : (
             <Button
               key={value}

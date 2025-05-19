@@ -302,7 +302,7 @@ export function getStorageContext(): StorageContext {
         }
         return results[0]
       },
-      async findSnapshots(backupId, options?: Partial<PaginatedResultParams>) {
+      async findSnapshots(backupId, options?: PaginatedResultParams) {
         const { limit = PAGINATED_RESULTS_LIMIT, page = 1 } = options ?? {}
         const offset = (page - 1) * limit
 
@@ -330,14 +330,10 @@ export function getStorageContext(): StorageContext {
         `
 
         const count = Number(total[0]?.count) ?? 0
-        const totalPages = Math.ceil(count / limit)
-        const getPageUrl = (pageNumber: number) =>
-          `${process.env.NEXT_PUBLIC_APP_URI!}/api/backups/${backupId}/snapshots?page=${pageNumber}&limit=${limit}`
+
         return {
           count: count,
-          next: page < totalPages ? getPageUrl(page + 1) : null,
-          prev: page > 1 ? getPageUrl(page - 1) : null,
-          results,
+          results: results || [],
         }
       },
       async addBackup(input) {

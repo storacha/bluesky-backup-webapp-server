@@ -8,7 +8,7 @@ import { AppLayout } from '@/app/AppLayout'
 import { BackButton } from '@/components/BackButton'
 import { Loader } from '@/components/Loader'
 import { PaginationControls } from '@/components/Pagination'
-import { Box, Center, Heading, Stack } from '@/components/ui'
+import { Box, Center, Heading, Stack, Text } from '@/components/ui'
 import { PAGINATED_RESULTS_LIMIT } from '@/lib/constants'
 import { useSWR } from '@/lib/swr'
 import { formatDate } from '@/lib/ui'
@@ -43,35 +43,30 @@ function Snapshots({ snapshots, loading, backupId }: SnapshotPageProps) {
         <BackButton path={`/backups/${backupId}`} />
         <Heading>Snapshots</Heading>
       </Stack>
-      <>
-        {loading ? (
-          <Center $height="200px">
-            <Loader />
-          </Center>
-        ) : (
-          <>
-            {snapshots?.map((snapshot) => (
-              <SnapshotSummary
-                key={snapshot.id}
-                $background="var(--color-white)"
-              >
-                <SnapshotLink href={`/snapshots/${snapshot.id}`}>
-                  <Stack
-                    $direction="row"
-                    $alignItems="center"
-                    $justifyContent="space-between"
-                    $width="100%"
-                  >
-                    <Stack $direction="column" $alignItems="flex-start">
-                      <h3>{formatDate(snapshot.createdAt)} Snapshot</h3>
-                    </Stack>
+      {loading ? (
+        <Center $height="200px">
+          <Loader />
+        </Center>
+      ) : (
+        <>
+          {snapshots?.map((snapshot) => (
+            <SnapshotSummary key={snapshot.id} $background="var(--color-white)">
+              <SnapshotLink href={`/snapshots/${snapshot.id}`}>
+                <Stack
+                  $direction="row"
+                  $alignItems="center"
+                  $justifyContent="space-between"
+                  $width="100%"
+                >
+                  <Stack $direction="column" $alignItems="flex-start">
+                    <h3>{formatDate(snapshot.createdAt)} Snapshot</h3>
                   </Stack>
-                </SnapshotLink>
-              </SnapshotSummary>
-            ))}
-          </>
-        )}
-      </>
+                </Stack>
+              </SnapshotLink>
+            </SnapshotSummary>
+          ))}
+        </>
+      )}
     </SnapshotContainer>
   )
 }
@@ -90,6 +85,8 @@ export default function SnapshotPage({
   const totalPages =
     snapshots && Math.ceil(snapshots?.count / PAGINATED_RESULTS_LIMIT)
 
+  if (!snapshots && !isLoading) return <Text>No Snapshots found</Text>
+
   return (
     <AppLayout selectedBackupId={backupId}>
       <Stack $gap="0.8rem">
@@ -97,7 +94,7 @@ export default function SnapshotPage({
           backupId={backupId}
           pageNumber={pageNumber}
           loading={isLoading}
-          snapshots={snapshots?.results as Snapshot[]}
+          snapshots={snapshots?.results || []}
         />
         <PaginationControls
           totalPages={totalPages ?? 1}
@@ -109,7 +106,7 @@ export default function SnapshotPage({
             backupId={backupId}
             pageNumber={pageNumber}
             loading={isLoading}
-            snapshots={snapshots?.results as Snapshot[]}
+            snapshots={snapshots?.results || []}
           />
         </div>
       </Stack>
