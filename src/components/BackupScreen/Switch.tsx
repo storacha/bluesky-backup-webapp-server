@@ -1,4 +1,3 @@
-import { ToggleStateOptions, useToggleState } from '@react-stately/toggle'
 import { css, styled } from 'next-yak'
 import { forwardRef, useRef } from 'react'
 import {
@@ -8,6 +7,7 @@ import {
   VisuallyHidden,
 } from 'react-aria'
 import { mergeRefs } from 'react-merge-refs'
+import { ToggleProps, useToggleState } from 'react-stately'
 
 const SWITCH_WIDTH = 30
 const NOB_DIAMETER = 16
@@ -64,7 +64,7 @@ const SwitchWrapper = styled.div<{ $isDisabled?: boolean }>`
   opacity: ${({ $isDisabled }) => ($isDisabled ? 0.4 : 1)};
 `
 
-export type SwitchProps = ToggleStateOptions & AriaSwitchProps
+export type SwitchProps = ToggleProps & AriaSwitchProps
 
 export const Switch = forwardRef<HTMLInputElement>(function Switch(
   props: SwitchProps,
