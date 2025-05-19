@@ -1,10 +1,10 @@
 'use client'
 
-import { useStorachaAccount } from '@/hooks/use-plan'
-import { useSWR } from '@/lib/swr'
+import { Did, isDid } from '@atproto/api'
 
 import { ActionButton } from '../ActionButton'
 import { Loader } from '../Loader'
+import { useSWR } from '@/lib/swr'
 
 import { Select } from './Select'
 
@@ -14,13 +14,11 @@ export const BlueskyAccountSelect = ({
   disabled = false,
 }: {
   name: string
-  defaultValue?: string
+  defaultValue?: Did
   disabled?: boolean
 }) => {
-  const account = useStorachaAccount()
-
-  const { data: atprotoAccounts, isLoading } = useSWR(
-    disabled ? null : account && ['api', '/api/atproto-accounts']
+  const { data: atprotoAccounts } = useSWR(
+    disabled ? null : ['api', '/api/atproto-accounts']
   )
 
   const connectNewAccount = () => {
@@ -38,7 +36,16 @@ export const BlueskyAccountSelect = ({
 
   const items =
     // The accounts loaded from the API, or if they're not loaded...
-    atprotoAccounts?.map((did) => ({ id: did, label: did })) ??
+    atprotoAccounts?.map((did) => {
+      if (!isDid(did)) {
+        throw new Error(`Invalid DID: ${did}`)
+      }
+      return {
+        id: did,
+        label: did,
+      }
+    }) ??
+    // ...the default value, so at least that's visible.
     [
       !!defaultValue && {
         id: defaultValue,
@@ -52,7 +59,6 @@ export const BlueskyAccountSelect = ({
       label="Bluesky account"
       imageSrc="/bluesky.png"
       items={items}
-      content={isLoading ? <Loader /> : undefined}
       actionLabel="Connect Bluesky account…"
       actionOnPress={connectNewAccount}
       defaultSelectedKey={defaultValue}
@@ -63,6 +69,14 @@ export const BlueskyAccountSelect = ({
           actionOnPress={connectNewAccount}
         />
       }
+      renderItemValue={(item) => {
+        return <ATHandle did={item.id} />
+      }}
     />
   )
+}
+
+const ATHandle = ({ did }: { did: string }) => {
+  const { data: profile } = useSWR(isDid(did) && ['atproto-profile', did])
+  return profile?.handle ? `@${profile.handle}` : did
 }

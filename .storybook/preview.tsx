@@ -59,6 +59,14 @@ const preview: Preview = {
       // Use the (stub) App Router.
       appDirectory: true,
     },
+    backgrounds: {
+      values: [
+        {
+          name: 'Backup',
+          value: 'var(--color-light-blue-10)',
+        },
+      ],
+    },
   },
   decorators: [withFonts, withNuqs, withParentSize],
 }
