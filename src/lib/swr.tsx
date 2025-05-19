@@ -1,12 +1,14 @@
 'use client'
 
-import { Agent } from '@atproto/api'
+import { Agent, Did } from '@atproto/api'
 import { Account } from '@storacha/ui-react'
 import React from 'react'
 import useSWRBase, { SWRConfig, SWRConfiguration, SWRResponse } from 'swr'
 import useSWRMutationBase, { MutationFetcher } from 'swr/mutation'
 
 import { ATBlob, Backup, ProfileData, RotationKey, Snapshot } from '@/types'
+
+import { newClient } from './plc'
 
 // This type defines what's fetchable with `useSWR`. It is a union of key/data
 // pairs. The key can match a pattern by being as wide as it needs to be.
@@ -29,7 +31,7 @@ type Fetchable =
       ['api', `/api/profile?did=${string}`, Record<string, string>?],
       ProfileData,
     ]
-  | [['atproto-handle', string], string]
+  | [['atproto-profile', Did], ProfileData | undefined]
   | [['storacha-plan', Account], string | undefined]
 
 export type Key = Fetchable extends [infer T, unknown] ? T : never
@@ -86,19 +88,32 @@ const fetchers: Fetchers = {
   },
 
   /**
-   * Fetches the Bluesky handle for a given DID.
-   * @param did The DID to fetch the handle for.
+   * Fetches the Bluesky profile for a given DID.
+   * @param did The DID to fetch the profile for.
    */
-  async 'atproto-handle'(did) {
-    const agent = new Agent({
+  async 'atproto-profile'(did) {
+    const atAgent = new Agent({
       service: 'https://public.api.bsky.app/',
     })
     const {
-      data: { handle },
-    } = await agent.app.bsky.actor.getProfile({
+      data: { handle, displayName },
+    } = await atAgent.app.bsky.actor.getProfile({
       actor: did,
     })
-    return handle
+
+    const plcClient = newClient()
+    const { alsoKnownAs, rotationKeys, verificationMethods, services } =
+      await plcClient.getDocumentData(did)
+
+    return {
+      did,
+      handle,
+      displayName,
+      alsoKnownAs,
+      verificationMethods,
+      rotationKeys,
+      services,
+    }
   },
 
   async 'storacha-plan'(account) {
