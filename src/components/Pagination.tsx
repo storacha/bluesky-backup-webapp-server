@@ -61,10 +61,17 @@ export const PaginationControls = ({
       >
         <CaretLeft size={20} />
       </Button>
-      <Stack $gap="0.6rem" $direction="row" $height="fit-content" $alignItems='center'>
+      <Stack
+        $gap="0.6rem"
+        $direction="row"
+        $height="fit-content"
+        $alignItems="center"
+      >
         {range.map((value, idx) =>
           value === 'dots' ? (
-            <Box $height="100%" key={`dots-${idx}`}>...</Box>
+            <Box $height="100%" key={`dots-${idx}`}>
+              ...
+            </Box>
           ) : (
             <Button
               key={value}
