@@ -1,10 +1,9 @@
 'use client'
-import * as Storacha from '@storacha/client/account'
 import { useAuthenticator } from '@storacha/ui-react'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { SelectStateContext } from 'react-aria-components'
+import { SelectState } from 'react-stately'
 
-import { useDisclosure } from '@/hooks/use-disclosure'
 import { shortenDID } from '@/lib/ui'
 
 import { ActionButton } from '../ActionButton'
@@ -12,9 +11,25 @@ import { CreateSpaceModal } from '../modals'
 
 import { Select } from './Select'
 
-const CreateNewSpaceButton = ({ onOpen }: { onOpen: () => void }) => {
+const CreateNewSpaceButton = ({
+  onOpenNewSpaceModal,
+}: {
+  onOpenNewSpaceModal: (newSession: {
+    selectState: SelectState<unknown>
+  }) => void
+}) => {
+  const state = useContext(SelectStateContext)
   return (
-    <ActionButton actionLabel="Create new space..." actionOnPress={onOpen} />
+    // Until there's a select state, we can't show the button, because we
+    // wouldn't be able to handle the click.
+    state && (
+      <ActionButton
+        actionLabel="Create new space..."
+        actionOnPress={() => {
+          onOpenNewSpaceModal({ selectState: state })
+        }}
+      />
+    )
   )
 }
 
@@ -33,14 +48,11 @@ export const StorachaSpaceSelect = ({
     id: space.did(),
     label: `${space.name} (${shortenDID(space.did())})`,
   }))
-  const state = useContext(SelectStateContext)
-  const { isOpen, onClose, onOpen } = useDisclosure()
 
-  const handleSpaceCreated = (spaceId: string) => {
-    onClose()
-    const label = `${shortenDID(spaceId)}`
-    state?.setSelectedKey(label)
-  }
+  /** `null` means "no modal session", ie, "closed". */
+  const [modalSession, setModalSession] = useState<{
+    selectState: SelectState<unknown>
+  } | null>(null)
 
   return (
     <>
@@ -51,14 +63,25 @@ export const StorachaSpaceSelect = ({
         label="Storacha space"
         imageSrc="/storacha-red.png"
         items={storachaSpaces}
-        actionButton={<CreateNewSpaceButton onOpen={onOpen} />}
+        actionButton={
+          <CreateNewSpaceButton onOpenNewSpaceModal={setModalSession} />
+        }
       />
-      <CreateSpaceModal
-        isOpen={isOpen}
-        onClose={onClose}
-        account={account as Storacha.Account}
-        onSpaceCreated={handleSpaceCreated}
-      />
+      {account && (
+        <CreateSpaceModal
+          isOpen={!!modalSession}
+          onClose={() => {
+            setModalSession(null)
+          }}
+          account={account}
+          onSpaceCreated={(spaceId: string) => {
+            // TS doesn't know this, but `modalSession` is always present here;
+            // if it weren't, the modal wouldn't be open.
+            modalSession?.selectState.setSelectedKey(spaceId)
+            setModalSession(null)
+          }}
+        />
+      )}
     </>
   )
 }
