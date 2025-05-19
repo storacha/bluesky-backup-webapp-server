@@ -31,7 +31,6 @@ const SnapshotLink = styled(Link)`
 
 interface SnapshotPageProps {
   backupId: string
-  pageNumber: number
   snapshots: Snapshot[]
   loading: boolean
 }
@@ -92,7 +91,6 @@ export default function SnapshotPage({
       <Stack $gap="0.8rem">
         <Snapshots
           backupId={backupId}
-          pageNumber={pageNumber}
           loading={isLoading}
           snapshots={snapshots?.results || []}
         />
@@ -101,14 +99,6 @@ export default function SnapshotPage({
           currentPage={pageNumber}
           onChange={(newPage) => setPageNumber(newPage)}
         />
-        <div style={{ display: 'none' }}>
-          <Snapshots
-            backupId={backupId}
-            pageNumber={pageNumber}
-            loading={isLoading}
-            snapshots={snapshots?.results || []}
-          />
-        </div>
       </Stack>
     </AppLayout>
   )
