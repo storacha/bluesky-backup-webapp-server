@@ -34,6 +34,7 @@ export type BackupInput = z.infer<typeof backupInputSchema>
 export const backupInputUpdateSchema = backupInputSchema
   .pick({
     name: true,
+    paused: true,
   })
   .partial()
 

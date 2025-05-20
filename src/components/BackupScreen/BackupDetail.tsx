@@ -1,15 +1,15 @@
 'use client'
 
-import { Pause } from '@phosphor-icons/react'
 import { styled } from 'next-yak'
 import { ReactNode, useState } from 'react'
 
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
-import { Button, Stack, Text } from '@/components/ui'
+import { Stack, Text } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { Backup } from '@/types'
 
+import { BackupPauseButton } from './BackupPauseButton'
 import { DataBox } from './DataBox'
 import { EditableBackupName } from './EditableBackupName'
 
@@ -115,36 +115,7 @@ export const BackupDetail = ({ backup }: BackupProps) => {
       {backup ? (
         <Stack $direction="row" $gap="1rem">
           <EditableBackupName backup={backup} />
-          <Stack $direction="row" $gap="0.5rem" $alignItems="center">
-            {backup.paused && (
-              <Text $color="var(--color-dark-red)" $lineHeight="1">
-                Paused
-              </Text>
-            )}
-            <Button
-              $px="0.25rem"
-              $py="0.25rem"
-              $borderRadius="0.5rem"
-              onClick={() => {
-                console.log('Pause!')
-              }}
-              {...(backup.paused
-                ? {
-                    $background: 'var(--color-dark-red)',
-                    $color: 'var(--color-white)',
-                    title: 'Resume backup',
-                    'aria-label': 'Resume backup',
-                  }
-                : {
-                    $background: 'var(--color-gray-light)',
-                    $color: 'var(--color-gray-medium)',
-                    title: 'Pause backup',
-                    'aria-label': 'Pause backup',
-                  })}
-            >
-              <Pause weight="fill" size="14" display="block" />
-            </Button>
-          </Stack>
+          <BackupPauseButton backup={backup} />
         </Stack>
       ) : (
         <BackupNameInput
