@@ -1,5 +1,7 @@
 import { expect, fn, userEvent, within } from '@storybook/test'
 
+import { ActionButton } from '../ActionButton'
+
 import { Select } from './Select'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -33,8 +35,12 @@ const meta: Meta<typeof Select> = {
         label: 'chalametoui.bsky.social',
       },
     ],
-    actionLabel: 'Connect Bluesky account…',
-    actionOnPress: fn(),
+    actionButton: (
+      <ActionButton
+        actionLabel="Connect Bluesky account..."
+        actionOnPress={fn()}
+      />
+    ),
   },
 }
 
