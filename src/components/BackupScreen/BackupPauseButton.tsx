@@ -2,6 +2,7 @@
 
 import { Pause } from '@phosphor-icons/react'
 import { styled } from 'next-yak'
+import { toast } from 'sonner'
 
 import { Button, Spinner, Stack, Text } from '@/components/ui'
 import { useSWRMutation } from '@/lib/swr'
@@ -26,6 +27,8 @@ export const BackupPauseButton = ({ backup }: { backup: Backup }) => {
       if (!response.ok) {
         throw new Error(`Failed to ${newPaused ? 'pause' : 'resume'} backup`)
       }
+
+      toast.success(`Backup ${newPaused ? 'paused' : 'resumed'}`)
     }
   )
 
