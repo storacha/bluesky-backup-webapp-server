@@ -6,7 +6,6 @@ import 'yet-another-react-lightbox/styles.css'
 
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { cidUrl } from '@/lib/storacha'
-import { Fetchable, useSWR } from '@/lib/swr'
 import { shortenCID } from '@/lib/ui'
 import { ATBlob } from '@/types'
 
@@ -15,24 +14,16 @@ import { Loader } from './Loader'
 import { Box, Center, Heading, Stack, Text } from './ui'
 
 interface BlobProps {
-  /** the backup or snapshot id */
-  id: string
-  /** the type of blobs to get. defaults to 'snapshots' if it is not provided. */
-  type?: 'snapshots' | 'backup'
+  blobs: ATBlob[]
+  backPath: string
+  loading: boolean
+  /** where is this blob from */
+  location: 'Snapshot' | 'Backup'
 }
 
-export const Blobs = ({ type = 'snapshots', id }: BlobProps) => {
+export const Blobs = ({ blobs, backPath, loading, location }: BlobProps) => {
   const { isMobile } = useMobileScreens()
-  const key =
-    type === 'backup'
-      ? (['api', `/api/backups/${id}/blobs`] satisfies Fetchable[0])
-      : (['api', `/api/snapshots/${id}/blobs`] satisfies Fetchable[0])
-  const { data: blobsData, error, isLoading: loading } = useSWR(key)
-  const blobs = blobsData as ATBlob[]
-
   const [openIndex, setOpenIndex] = useState<number | null>(null)
-
-  if (error) throw error
   if (!blobs) return null
 
   const slides = blobs.map((blob) => ({
@@ -50,10 +41,10 @@ export const Blobs = ({ type = 'snapshots', id }: BlobProps) => {
         <Stack $gap="1rem">
           <Stack $direction="row" $gap="1rem">
             <BackButton
-              path={`/${type === 'backup' ? 'backups' : 'snapshots'}/${id}`}
+              path={backPath}
             />
             <Heading>
-              Blobs in this {type === 'snapshots' ? 'Snapshot' : 'Backup'}
+              Blobs in this {location}
             </Heading>
           </Stack>
           <Stack
@@ -63,7 +54,7 @@ export const Blobs = ({ type = 'snapshots', id }: BlobProps) => {
           >
             {blobs.map((blob, index) => (
               <Stack
-                key={blob.cid}
+                key={`${blob.cid}-${crypto.randomUUID()}`}
                 $gap=".4rem"
                 style={{ cursor: 'pointer' }}
                 onClick={() => setOpenIndex(index)}
