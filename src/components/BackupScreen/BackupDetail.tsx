@@ -116,6 +116,11 @@ export const BackupDetail = ({ backup }: BackupProps) => {
         <Stack $direction="row" $gap="1rem">
           <EditableBackupName backup={backup} />
           <Stack $direction="row" $gap="0.5rem" $alignItems="center">
+            {backup.paused && (
+              <Text $color="var(--color-dark-red)" $lineHeight="1">
+                Paused
+              </Text>
+            )}
             <Button
               $px="0.25rem"
               $py="0.25rem"
@@ -139,11 +144,6 @@ export const BackupDetail = ({ backup }: BackupProps) => {
             >
               <Pause weight="fill" size="14" display="block" />
             </Button>
-            {backup.paused && (
-              <Text $color="var(--color-dark-red)" $lineHeight="1">
-                Paused
-              </Text>
-            )}
           </Stack>
         </Stack>
       ) : (
