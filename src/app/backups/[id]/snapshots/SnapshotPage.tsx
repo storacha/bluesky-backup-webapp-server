@@ -8,7 +8,7 @@ import { AppLayout } from '@/app/AppLayout'
 import { BackButton } from '@/components/BackButton'
 import { Loader } from '@/components/Loader'
 import { PaginationControls } from '@/components/Pagination'
-import { Box, Center, Heading, Stack, Text } from '@/components/ui'
+import { Box, Center, Heading, Stack } from '@/components/ui'
 import { PAGINATED_RESULTS_LIMIT } from '@/lib/constants'
 import { useSWR } from '@/lib/swr'
 import { formatDate } from '@/lib/ui'
@@ -84,7 +84,7 @@ export default function SnapshotPage({
   const totalPages =
     snapshots && Math.ceil(snapshots?.count / PAGINATED_RESULTS_LIMIT)
 
-  if (!snapshots && !isLoading) return <Text>No Snapshots found</Text>
+  if (!snapshots) return null
 
   return (
     <AppLayout selectedBackupId={backupId}>
