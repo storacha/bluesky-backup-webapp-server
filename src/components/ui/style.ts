@@ -49,10 +49,12 @@ export type StyleProps = {
   $textDecor: Property.TextDecoration
 }
 
+export type BtnVariant = 'primary' | 'secondary' | 'outline'
+
 export interface BtnProps extends StyleProps {
   $isLoading?: boolean
   $hideLoadingText?: boolean
-  $variant?: string
+  $variant?: BtnVariant
   $leftIcon?: ReactNode
   $disabled?: boolean
 }
