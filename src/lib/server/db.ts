@@ -11,6 +11,7 @@ import {
   ATBlobInput,
   Backup,
   BackupInput,
+  BackupInputUpdate,
   PaginatedResult,
   PaginatedResultParams,
   RotationKey,
@@ -217,7 +218,7 @@ export interface BBDatabase {
   findRotationKeys: (
     storachaAccount: string
   ) => Promise<{ results: RotationKey[] }>
-  updateBackup: (id: string, data: Partial<Backup>) => Promise<Backup>
+  updateBackup: (id: string, data: BackupInputUpdate) => Promise<Backup>
 }
 
 interface StorageContext {

@@ -31,6 +31,14 @@ export const backupInputSchema = backupSchema
 
 export type BackupInput = z.infer<typeof backupInputSchema>
 
+export const backupInputUpdateSchema = backupInputSchema
+  .pick({
+    name: true,
+  })
+  .partial()
+
+export type BackupInputUpdate = z.infer<typeof backupInputUpdateSchema>
+
 export const snapshotStatusSchema = z.enum([
   'not-started',
   'in-progress',
