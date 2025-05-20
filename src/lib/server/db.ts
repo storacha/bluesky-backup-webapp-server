@@ -407,6 +407,7 @@ export function getStorageContext(): StorageContext {
           select *
           from backups
           where delegation_cid is not null
+          and paused = false
         `
         return {
           results,
