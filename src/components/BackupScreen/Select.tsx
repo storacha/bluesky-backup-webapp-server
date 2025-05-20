@@ -230,41 +230,24 @@ export const Select = ({
   label,
   items,
   defaultSelectedKey,
-  actionLabel,
-  actionOnPress,
   isDisabled,
   isRequired,
-  externalButton,
+  actionButton,
   renderItemValue = (item: Item) => item.label,
 }: {
   /** URL of the image to show in the control. */
   imageSrc: string
   /** A noun describing what is selected (eg. "Bluesky Account"). */
   label: string
-  /** The label for an action to place at the bottom of the options. */
-  actionLabel?: string
-  /** Handler called when the action button is pressed. */
-  actionOnPress?: () => void
   /** Renders the value of an item as text or similar inline content. */
   renderItemValue?: (item: Item) => ReactNode
-  externalButton?: ReactNode
+  actionButton?: ReactNode
 } & Pick<
   SelectProps<Item>,
   'name' | 'defaultSelectedKey' | 'isDisabled' | 'isRequired'
 > &
   Pick<ListBoxProps<Item>, 'items'>) => {
   const prompt = `Select ${label}`
-  const actionButton = (
-    // Prevent the button from automagically being treated as the trigger
-    // button just because it's inside the <Select> component.
-    <ButtonContext.Provider value={{}}>
-      {externalButton ? (
-        externalButton
-      ) : (
-        <ActionButton onPress={actionOnPress}>{actionLabel}</ActionButton>
-      )}
-    </ButtonContext.Provider>
-  )
 
   return (
     <Outside
@@ -315,7 +298,11 @@ export const Select = ({
                 )
               }
             </ListBox>
-            {actionButton}
+            {/* Prevent the button from automagically being treated as the trigger
+             * button just because it's inside the <Select> component. */}
+            <ButtonContext.Provider value={{}}>
+              {actionButton}
+            </ButtonContext.Provider>
           </>
         }
       </Popover>
