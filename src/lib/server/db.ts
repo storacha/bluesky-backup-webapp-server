@@ -333,7 +333,7 @@ export function getStorageContext(): StorageContext {
 
         return {
           count: count,
-          results: results || [],
+          results: results,
         }
       },
       async addBackup(input) {
