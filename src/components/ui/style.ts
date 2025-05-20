@@ -38,11 +38,11 @@ export type StyleProps = {
   $borderRadius: Property.BorderRadius
   $fontFamily: Property.FontFamily
   $mt: Property.MarginTop
-  $mx: `${Property.MarginLeft} ${Property.MarginRight}`
-  $px: `${Property.PaddingLeft} ${Property.PaddingRight}`
-  $py: `${Property.PaddingTop} ${Property.PaddingBottom}`
-  $my: `${Property.MarginTop} ${Property.MarginBottom}`
-  $pt: `${Property.PaddingTop}`
+  $mx: Property.MarginLeft
+  $px: Property.PaddingLeft
+  $py: Property.PaddingTop
+  $my: Property.MarginTop
+  $pt: Property.PaddingTop
   $overflow: Property.Overflow
   $overflowX: Property.OverflowX
   $overflowY: Property.OverflowY
