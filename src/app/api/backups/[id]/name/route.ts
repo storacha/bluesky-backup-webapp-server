@@ -4,8 +4,9 @@ import { getSession } from '@/lib/sessions'
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const { did: account } = await getSession()
     if (!account) {
@@ -18,11 +19,11 @@ export async function PATCH(
     }
 
     const { db } = getStorageContext()
-    if (!(await backupOwnedByAccount(db, params.id, account))) {
+    if (!(await backupOwnedByAccount(db, id, account))) {
       return new Response('Unauthorized', { status: 401 })
     }
 
-    const backup = await db.updateBackup(params.id, { name })
+    const backup = await db.updateBackup(id, { name })
     return Response.json(backup)
   } catch (error) {
     console.error('Failed to update backup name:', error)
