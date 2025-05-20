@@ -14,6 +14,7 @@ export type Backup = {
   includeBlobs: boolean
   includePreferences: boolean
   delegationCid: string | null
+  paused: boolean
 }
 
 type Input<
@@ -23,7 +24,7 @@ type Input<
 > = Omit<Omit<T, NoInput>, OptionalInput> &
   Partial<Omit<Pick<T, OptionalInput>, NoInput>>
 
-export type BackupInput = Input<Backup, 'id'>
+export type BackupInput = Input<Backup, 'id', 'paused'>
 
 type SnapshotStatus = 'not-started' | 'in-progress' | 'failed' | 'success'
 
