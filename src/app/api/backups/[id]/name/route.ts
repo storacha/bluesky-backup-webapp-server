@@ -28,4 +28,4 @@ export async function PATCH(
     console.error('Failed to update backup name:', error)
     return new Response('Internal Server Error', { status: 500 })
   }
-} 
+}
