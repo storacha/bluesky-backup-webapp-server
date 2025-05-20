@@ -59,10 +59,6 @@ const meta = {
       preferencesStatus: 'not-started',
       createdAt: '2025-04-07 19:51:56',
     }),
-    withData(
-      ['atproto-handle', 'did:plc:ro3eio7zgqosf5gnxsq6ik5m'],
-      'chalametoui.bsky.social'
-    ),
   ],
 } satisfies Meta<typeof Page>
 

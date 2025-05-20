@@ -11,11 +11,12 @@ import { mutate } from 'swr'
 import { deleteBackup } from '@/app/backups/deleteBackup'
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
-import { Button, Heading, Spinner, Stack, Text } from '@/components/ui'
+import { Button, Spinner, Stack, Text } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { Backup, State } from '@/types'
 
 import { DataBox } from './DataBox'
+import { EditableBackupName } from './EditableBackupName'
 
 interface BackupProps {
   backup?: Backup
@@ -39,13 +40,24 @@ const AccountsContainer = styled(Stack)`
 
 const BackupNameInput = styled.input`
   border-radius: 8px;
-  border: none;
+  border: 2px solid var(--color-gray-light);
   width: 100%;
   font-weight: 700;
   font-size: 1.125rem;
+  padding: 0.5rem;
+  transition: border-color 0.2s ease;
+
+  &::placeholder {
+    color: var(--color-gray-medium);
+  }
+
+  &:hover {
+    border-color: var(--color-gray);
+  }
 
   &:focus {
-    outline-color: var(--color-dark-blue);
+    outline: none;
+    border-color: var(--color-dark-blue);
   }
 `
 
@@ -63,7 +75,6 @@ const Section = ({
 )
 
 type BackupDatas = 'include_repository' | 'include_blobs'
-// | 'include_preferences'
 
 /**
  * A detail view/form for a Backup. If {@link Backup} is provided, its values
@@ -83,6 +94,7 @@ export const BackupDetail = ({ backup }: BackupProps) => {
     include_repository: backup?.includeRepository ?? true,
     include_blobs: backup?.includeBlobs ?? true,
   })
+
   const handleDataBoxChange = (name: string) => (value: boolean) => {
     setDataBoxState((prev) => {
       const updatedState = {
@@ -139,7 +151,7 @@ export const BackupDetail = ({ backup }: BackupProps) => {
           $gap={isMobile ? '1.4rem' : ''}
           $justifyContent={isMobile ? 'flex-start' : 'space-between'}
         >
-          <Heading>{backup.name}</Heading>
+          <EditableBackupName backup={backup} />
           {state === 'deleting' ? (
             <Spinner />
           ) : (
