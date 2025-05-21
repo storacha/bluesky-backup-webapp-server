@@ -17,11 +17,13 @@ const buttonBackgroundColor = (
   }
 }
 
-const ButtonElement = styled.button<Partial<BtnProps & { noPadding: boolean }>>`
+const ButtonElement = styled.button<
+  Partial<BtnProps & { $noPadding: boolean }>
+>`
   font-family: ${({ $fontFamily = 'var(--font-dm-mono)' }) => $fontFamily};
   font-weight: ${({ $fontWeight = '300' }) => $fontWeight};
-  padding: ${({ $py, $px, noPadding }) =>
-    `${$py || (noPadding ? '0' : '0.75rem')} ${$px || (noPadding ? '0' : '1rem')}`};
+  padding: ${({ $py, $px, $noPadding }) =>
+    `${$py || ($noPadding ? '0' : '0.75rem')} ${$px || ($noPadding ? '0' : '1rem')}`};
   border-radius: ${({ $borderRadius = '0.75rem' }) => $borderRadius};
   background-color: ${({
     $background = 'var(--color-dark-blue)',
@@ -42,6 +44,7 @@ const ButtonElement = styled.button<Partial<BtnProps & { noPadding: boolean }>>`
   transition: background-color 0.2s ease;
   border: none;
   outline: none;
+  align-items: center;
   &:disabled {
     background-color: var(--color-gray-light);
     color: var(--color-gray-medium);
@@ -56,7 +59,7 @@ export const Button = ({
   children,
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> &
-  Partial<BtnProps & { noPadding: boolean }>) => (
+  Partial<BtnProps & { $noPadding: boolean }>) => (
   <ButtonElement {...props}>
     {props.$leftIcon}
     {children}
