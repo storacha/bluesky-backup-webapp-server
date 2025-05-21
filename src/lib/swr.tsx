@@ -6,7 +6,7 @@ import React from 'react'
 import useSWRBase, { SWRConfig, SWRConfiguration, SWRResponse } from 'swr'
 import useSWRMutationBase, { MutationFetcher } from 'swr/mutation'
 
-import { ATBlob, Backup, ProfileData, RotationKey, Snapshot } from '@/types'
+import { ATBlob, Backup, ProfileData, RotationKey, Snapshot, Identity } from '@/types'
 
 import { newClient } from './plc'
 
@@ -31,6 +31,7 @@ type Fetchable =
       ['api', `/api/profile?did=${string}`, Record<string, string>?],
       ProfileData,
     ]
+  | [['api', '/api/identities', Record<string, string>?], Identity[]]
   | [['atproto-profile', Did], ProfileData | undefined]
   | [['storacha-plan', Account], string | undefined]
 

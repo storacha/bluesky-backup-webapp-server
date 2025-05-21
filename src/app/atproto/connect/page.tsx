@@ -1,5 +1,6 @@
 'use client'
 import { styled } from 'next-yak'
+import { useSearchParams } from 'next/navigation'
 import React from 'react'
 
 import {
@@ -18,6 +19,9 @@ const ConnectStack = styled(Stack)`
 
 const ConnectPage: React.FC = () => {
   const account = useStorachaAccount()
+  const searchParams = useSearchParams()
+  const handleParam = searchParams.get('handle')
+
   if (!account) return null
 
   const handleAppend = (e: React.FormEvent<HTMLFormElement>) => {
@@ -49,6 +53,7 @@ const ConnectPage: React.FC = () => {
               required
               label="Bluesky Handle"
               placeholder="Enter your handle"
+              defaultValue={handleParam || ''}
             />
             <Button
               $background="var(--color-dark-blue)"

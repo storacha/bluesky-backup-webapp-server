@@ -16,6 +16,10 @@ export type Backup = {
   delegationCid: string | null
 }
 
+export type Identity = Backup & {
+  isConnected: boolean
+}
+
 type Input<
   T,
   NoInput extends keyof T,
