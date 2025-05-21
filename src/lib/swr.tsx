@@ -19,7 +19,7 @@ import { newClient } from './plc'
 
 // This type defines what's fetchable with `useSWR`. It is a union of key/data
 // pairs. The key can match a pattern by being as wide as it needs to be.
-type Fetchable =
+export type Fetchable =
   | [['api', '/session/did', Record<never, string>?], string]
   | [['api', '/api/backups', Record<string, string>?], Backup[]]
   | [
@@ -31,11 +31,24 @@ type Fetchable =
       ],
       PaginatedResult<Snapshot>,
     ]
-  | [['api', `/api/backups/${string}/blobs`, Record<string, string>?], ATBlob[]]
+  | [
+      [
+        'api',
+        `/api/backups/${string}/blobs`,
+        { page?: string; limit?: string },
+        Record<string, string>?,
+      ],
+      PaginatedResult<ATBlob>,
+    ]
   | [['api', `/api/snapshots/${string}`, Record<string, string>?], Snapshot]
   | [
-      ['api', `/api/snapshots/${string}/blobs`, Record<string, string>?],
-      ATBlob[],
+      [
+        'api',
+        `/api/snapshots/${string}/blobs`,
+        { page?: string; limit?: string },
+        Record<string, string>?,
+      ],
+      PaginatedResult<ATBlob>,
     ]
   | [['api', '/api/atproto-accounts', Record<string, string>?], string[]]
   | [['api', '/api/keys', Record<string, string>?], RotationKey[]]

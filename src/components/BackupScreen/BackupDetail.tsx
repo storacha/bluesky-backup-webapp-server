@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { styled } from 'next-yak'
 import { ReactNode, useState } from 'react'
 
@@ -67,6 +68,26 @@ const Section = ({
     {children}
   </Stack>
 )
+
+const BlobsLink = styled(Link)`
+  display: block;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-dark-blue);
+  font-family: var(--font-dm-mono);
+  font-size: 0.75rem;
+  color: var(--color-white);
+  text-align: center;
+  width: fit-content;
+
+  @media only screen and (max-width: 600px) {
+    margin-top: -0.4rem;
+  }
+
+  @media only screen and (min-width: 601px) and (max-width: 992px) {
+    margin-top: -0.8rem;
+  }
+`
 
 type BackupDatas = 'include_repository' | 'include_blobs'
 
@@ -164,6 +185,9 @@ export const BackupDetail = ({ backup }: BackupProps) => {
           />
         </Stack>
       </Section>
+      {backup && (
+        <BlobsLink href={`/backups/${backup?.id}/blobs`}>All blobs</BlobsLink>
+      )}
     </Stack>
   )
 }
