@@ -3,11 +3,11 @@
 import { styled } from 'next-yak'
 import { ReactNode, useState } from 'react'
 
+import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { Stack, Text } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { Backup } from '@/types'
 
-import { BlueskyAccountSelect } from './BlueskyAccountSelect'
 import { DataBox } from './DataBox'
 import { EditableBackupName } from './EditableBackupName'
 import { StorachaSpaceSelect } from './StorachaSpaceSelect'
