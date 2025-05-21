@@ -79,19 +79,21 @@ const RightSidebarContent = ({ backup }: { backup: Backup }) => {
       <SnapshotContainer $gap="1rem">
         <Stack $gap="0.5em" $direction="row" $alignItems="center">
           <CreateSnapshotButton backup={backup} />
-          <SnapshotsLink href={`/backups/${backup.id}/snapshots`}>
-            All Snapshots
-          </SnapshotsLink>
+          {snapshots && snapshots?.count > 5 && (
+            <SnapshotsLink href={`/backups/${backup.id}/snapshots`}>
+              All Snapshots
+            </SnapshotsLink>
+          )}
         </Stack>
         <SubHeading>Recent Snapshots</SubHeading>
-        <>
+        <Stack $gap="0.6rem">
           {isLoading ? (
             <Center $height="200px">
               <Loader />
             </Center>
           ) : (
             <>
-              {snapshots?.slice(0, 5).map((snapshot) => (
+              {snapshots?.results.slice(0, 5).map((snapshot) => (
                 <SnapshotSummary
                   key={snapshot.id}
                   $background="var(--color-white)"
@@ -112,7 +114,7 @@ const RightSidebarContent = ({ backup }: { backup: Backup }) => {
               ))}
             </>
           )}
-        </>
+        </Stack>
       </SnapshotContainer>
     </>
   )

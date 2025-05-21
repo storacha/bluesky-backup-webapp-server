@@ -48,10 +48,6 @@ const meta = {
         },
       ]
     ),
-    withData(
-      ['atproto-handle', 'did:plc:ro3eio7zgqosf5gnxsq6ik5m'],
-      'chalametoui.bsky.social'
-    ),
   ],
 } satisfies Meta<typeof Page>
 
@@ -62,9 +58,11 @@ export const WithNoSnapshots: Story = {}
 
 export const WithSnapshots: Story = {
   decorators: [
-    withData(
-      ['api', '/api/backups/abc/snapshots'],
-      [
+    withData(['api', '/api/backups/abc/snapshots'], {
+      count: 2,
+      next: null,
+      prev: null,
+      results: [
         {
           id: 'abc',
           backupId: 'abc',
@@ -87,7 +85,7 @@ export const WithSnapshots: Story = {
             'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy552pref',
           createdAt: '2025-04-07 20:51:56',
         },
-      ]
-    ),
+      ],
+    }),
   ],
 }
