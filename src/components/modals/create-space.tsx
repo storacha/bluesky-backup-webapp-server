@@ -115,7 +115,7 @@ export const CreateSpaceModal = ({
         delegations: [recovery],
       })
 
-      if (onSpaceCreated) {
+      if (onSpaceCreated && createdSpace) {
         onSpaceCreated(createdSpace.did())
         toast.success('Recovery delegation successful!')
       }

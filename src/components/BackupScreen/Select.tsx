@@ -66,7 +66,7 @@ const FullButton = styled(Button)`
   width: 100%;
 `
 
-const ActionButton = styled(FullButton)`
+export const ActionButton = styled(FullButton)`
   border-top: 1px solid var(--color-gray-medium);
   padding: 0.75rem calc(0.75rem + 0.5rem);
   background-color: var(--color-gray-medium-light);
@@ -230,35 +230,24 @@ export const Select = ({
   label,
   items,
   defaultSelectedKey,
-  actionLabel,
-  actionOnPress,
   isDisabled,
   isRequired,
+  actionButton,
   renderItemValue = (item: Item) => item.label,
 }: {
   /** URL of the image to show in the control. */
   imageSrc: string
   /** A noun describing what is selected (eg. "Bluesky Account"). */
   label: string
-  /** The label for an action to place at the bottom of the options. */
-  actionLabel: string
-  /** Handler called when the action button is pressed. */
-  actionOnPress: () => void
   /** Renders the value of an item as text or similar inline content. */
   renderItemValue?: (item: Item) => ReactNode
+  actionButton?: ReactNode
 } & Pick<
   SelectProps<Item>,
   'name' | 'defaultSelectedKey' | 'isDisabled' | 'isRequired'
 > &
   Pick<ListBoxProps<Item>, 'items'>) => {
   const prompt = `Select ${label}`
-  const actionButton = (
-    // Prevent the button from automagically being treated as the trigger
-    // button just because it's inside the <Select> component.
-    <ButtonContext.Provider value={{}}>
-      <ActionButton onPress={actionOnPress}>{actionLabel}</ActionButton>
-    </ButtonContext.Provider>
-  )
 
   return (
     <Outside
@@ -309,7 +298,11 @@ export const Select = ({
                 )
               }
             </ListBox>
-            {actionButton}
+            {/* Prevent the button from automagically being treated as the trigger
+             * button just because it's inside the <Select> component. */}
+            <ButtonContext.Provider value={{}}>
+              {actionButton}
+            </ButtonContext.Provider>
           </>
         }
       </Popover>
