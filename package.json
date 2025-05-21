@@ -77,7 +77,6 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.5",
-    "@did-plc/lib": "^0.0.4",
     "@dotenvx/dotenvx": "^1.40.1",
     "@eslint/eslintrc": "^3",
     "@storybook/addon-backgrounds": "^8.6.12",
