@@ -1,35 +1,45 @@
 'use client'
+import Form from 'next/form'
 import { styled } from 'next-yak'
 import React from 'react'
+import { useFormStatus } from 'react-dom'
 
 import {
-  Button,
   Center,
   Heading,
   InputField,
   Stack,
+  StatefulButton,
   SubHeading,
 } from '@/components/ui'
 import { useStorachaAccount } from '@/hooks/use-plan'
 
-const ConnectStack = styled(Stack)`
+import connectHandle from './connectHandle'
+
+export const ConnectStack = styled(Stack)`
   padding: 0 2rem;
 `
+
+const ConnectButton = () => {
+  const { pending } = useFormStatus()
+  console.log('CONPEND', pending)
+  return (
+    <StatefulButton
+      isLoading={pending}
+      disabled={pending}
+      $background="var(--color-dark-blue)"
+      $height="fit-content"
+      $fontSize="0.75rem"
+      type="submit"
+    >
+      Connect
+    </StatefulButton>
+  )
+}
 
 const ConnectPage: React.FC = () => {
   const account = useStorachaAccount()
   if (!account) return null
-
-  const handleAppend = (e: React.FormEvent<HTMLFormElement>) => {
-    const handleInput = e.currentTarget.elements.namedItem(
-      'handle'
-    ) as HTMLInputElement
-    const handle = handleInput.value.trim()
-
-    if (!handle.includes('.')) {
-      handleInput.value = `${handle}.bsky.social`
-    }
-  }
 
   return (
     <Center $height="100vh">
@@ -40,7 +50,7 @@ const ConnectPage: React.FC = () => {
             To get started, please log in to your Bluesky account.
           </SubHeading>
         </Stack>
-        <form action="/atproto/oauth" method="POST" onSubmit={handleAppend}>
+        <Form action={connectHandle}>
           <input type="hidden" name="account" value={account.did()} />
           <Stack $gap="1rem">
             <InputField
@@ -49,16 +59,9 @@ const ConnectPage: React.FC = () => {
               label="Bluesky Handle"
               placeholder="Enter your handle"
             />
-            <Button
-              $background="var(--color-dark-blue)"
-              $height="fit-content"
-              $fontSize="0.75rem"
-              type="submit"
-            >
-              Connect
-            </Button>
+            <ConnectButton />
           </Stack>
-        </form>
+        </Form>
       </ConnectStack>
     </Center>
   )
