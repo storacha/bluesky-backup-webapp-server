@@ -1,6 +1,5 @@
 'use client'
 import Form from 'next/form'
-import { styled } from 'next-yak'
 import React from 'react'
 import { useFormStatus } from 'react-dom'
 
@@ -15,10 +14,7 @@ import {
 import { useStorachaAccount } from '@/hooks/use-plan'
 
 import connectHandle from './connectHandle'
-
-export const ConnectStack = styled(Stack)`
-  padding: 0 2rem;
-`
+import { ConnectStack } from './ui'
 
 const ConnectButton = () => {
   const { pending } = useFormStatus()

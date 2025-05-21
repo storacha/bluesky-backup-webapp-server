@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { Box, Button, Center, Heading, Stack, Text } from '@/components/ui'
 import { logAndCaptureError } from '@/lib/sentry'
 
-import { ConnectStack } from './page'
+import { ConnectStack } from './ui'
 
 export default function Error({
   error,
