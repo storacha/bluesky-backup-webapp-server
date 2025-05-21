@@ -26,7 +26,11 @@ export default function RepoPage({ id }: { id: string }) {
 
   return (
     <AppLayout selectedBackupId={snapshot.backupId}>
-      <Box $padding={isMobile ? "1rem" : "2rem"} $borderStyle="none" $height="100%">
+      <Box
+        $padding={isMobile ? '1rem' : '2rem'}
+        $borderStyle="none"
+        $height="100%"
+      >
         {loading ? (
           <Center $height="80vh">
             <Loader />

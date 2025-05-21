@@ -1,7 +1,7 @@
 'use client'
 
-import { FeedViewPost } from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import { Agent, Did } from '@atproto/api'
+import { FeedViewPost } from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import { Account } from '@storacha/ui-react'
 import React from 'react'
 import useSWRBase, { SWRConfig, SWRConfiguration, SWRResponse } from 'swr'
