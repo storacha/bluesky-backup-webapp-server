@@ -37,8 +37,7 @@ const ConnectPage: React.FC = () => {
         <Stack>
           <Heading>Connect your Bluesky Account</Heading>
           <SubHeading>
-            {' '}
-            To get started, please log in to your Bluesky account.{' '}
+            To get started, please log in to your Bluesky account.
           </SubHeading>
         </Stack>
         <form action="/atproto/oauth" method="POST" onSubmit={handleAppend}>

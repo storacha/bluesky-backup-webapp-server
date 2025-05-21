@@ -22,9 +22,7 @@ export default function IdentityPage({ atprotoDid }: { atprotoDid: Did }) {
         <Heading>
           Bluesky Account <NoTextTransform>{profile?.handle}</NoTextTransform>
         </Heading>
-        <SubHeading>
-          <NoTextTransform>{atprotoDid}</NoTextTransform>
-        </SubHeading>
+        <SubHeading>{atprotoDid}</SubHeading>
         <Keychain atprotoAccount={atprotoDid} />
       </IdentityStack>
     </>
