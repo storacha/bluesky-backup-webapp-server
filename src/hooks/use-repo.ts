@@ -1,5 +1,5 @@
 import { iterateAtpRepo } from '@atcute/car'
-import { Did } from '@atproto/api'
+import { FeedViewPost } from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import { useCallback, useEffect, useState } from 'react'
 
 import { loadCid } from '@/lib/storacha'
@@ -11,42 +11,62 @@ export type RepoParams = {
 
 type ParsedRepo = {
   posts: ExtendedRepoEntry[]
-  authorDid: Did | null
 }
 
-const parseRepo = (car: Uint8Array): ParsedRepo => {
+// reposted records do not have the same data shape as the normal ones (from the repo CAR) in
+// the app.bsky.feed.post collection so we need to get it using the ATUri
+const getRecord = async (uri: string): Promise<FeedViewPost | null> => {
+  try {
+    const response = await fetch(`/api/record?uri=${uri}`)
+    const record = await response.json()
+    return record.posts?.[0]
+  } catch (error) {
+    console.error(error)
+    return null
+  }
+}
+
+const parseRepo = async (car: Uint8Array): Promise<ParsedRepo> => {
   try {
     const entries = [...iterateAtpRepo(car)] as ExtendedRepoEntry[]
 
-    const posts = entries
-      .filter((entry) => entry.collection === 'app.bsky.feed.post')
+    const filteredEntries = entries
+      .filter(
+        (entry) =>
+          entry.collection === 'app.bsky.feed.post' ||
+          entry.collection === 'app.bsky.feed.repost'
+      )
       .sort((a, b) => {
         const dateA = new Date(a.record.createdAt || 0)
         const dateB = new Date(b.record.createdAt || 0)
         return dateB.getTime() - dateA.getTime()
       })
 
-    let authorDid: string | null = ''
-    for (const post of posts) {
-      if (post.uri) {
-        // does a DID look up in the post URI
-        const match = post.uri.match(/at:\/\/(did:[^\/]+)/)
-        if (match && match[1]) {
-          authorDid = match[1]
-          break
+    const processedPosts = await Promise.all(
+      filteredEntries.map(async (entry) => {
+        if (entry.collection === 'app.bsky.feed.repost') {
+          const repostedRecord = await getRecord(
+            String(entry.record.subject?.uri)
+          )
+          if (repostedRecord) {
+            return {
+              ...entry,
+              ...repostedRecord,
+              isRepost: true,
+            }
+          }
         }
-      }
-    }
+        return entry
+      })
+    )
 
     return {
-      posts,
-      authorDid: authorDid as Did,
+      posts: processedPosts.filter(Boolean) as ExtendedRepoEntry[],
     }
   } catch (error) {
-    console.error(error)
+    console.error('Error parsing repo:', error)
     return {
       posts: [],
-      authorDid: null,
     }
   }
 }
@@ -55,7 +75,6 @@ export const useRepo = ({ cid }: RepoParams) => {
   const [state, setState] = useState<State>('idle')
   const [parsedRepo, setParsedRepo] = useState<ParsedRepo>({
     posts: [],
-    authorDid: null,
   })
 
   const getRepo = useCallback(async (cidToLoad: string) => {
@@ -68,7 +87,7 @@ export const useRepo = ({ cid }: RepoParams) => {
       setState('loading')
       const data = await loadCid(cidToLoad)
       const repoData = new Uint8Array(data)
-      const parsed = parseRepo(repoData)
+      const parsed = await parseRepo(repoData)
       setParsedRepo(parsed)
     } catch (error) {
       console.error('Error fetching or parsing repo:', error)

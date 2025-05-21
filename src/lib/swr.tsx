@@ -1,6 +1,7 @@
 'use client'
 
 import { Agent } from '@atproto/api'
+import { FeedViewPost } from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import { Account } from '@storacha/ui-react'
 import React from 'react'
 import useSWRBase, { SWRConfig, SWRConfiguration, SWRResponse } from 'swr'
@@ -28,6 +29,10 @@ type Fetchable =
   | [
       ['api', `/api/profile?did=${string}`, Record<string, string>?],
       ProfileData,
+    ]
+  | [
+      ['api', `/api/record?uri=${string}`, Record<string, string>?],
+      FeedViewPost[],
     ]
   | [['atproto-handle', string], string]
   | [['storacha-plan', Account], string | undefined]

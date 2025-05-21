@@ -1,17 +1,16 @@
-import { RepoEntry } from '@atcute/car'
 import { Did } from '@atproto/api'
-import { FeedViewPost } from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 
 import { useProfile } from '@/hooks/use-profile'
+import { cidUrl } from '@/lib/storacha'
 import { formatDate } from '@/lib/ui'
-import { Post } from '@/types'
+import { ExtendedRepoEntry } from '@/types'
 
 import { Loader } from '../Loader'
 import { Box, Center, Stack, Text } from '../ui'
 
 export interface PostsProps {
   repositoryDid?: string
-  posts: RepoEntry[] | FeedViewPost[]
+  posts: ExtendedRepoEntry[]
 }
 
 export const Posts = ({ posts, repositoryDid }: PostsProps) => {
@@ -19,7 +18,7 @@ export const Posts = ({ posts, repositoryDid }: PostsProps) => {
   return (
     <>
       {isLoading ? (
-        <Center $height="100vh">
+        <Center $height="80vh">
           <Loader />
         </Center>
       ) : (
@@ -29,56 +28,48 @@ export const Posts = ({ posts, repositoryDid }: PostsProps) => {
           $gap="1em"
           $height="100%"
           $padding="0"
-          $borderStyle="solid"
         >
           {posts.map((post, index) => {
             try {
-              let record: Post
-              let author = { displayName: '', handle: '' }
-              if ('post' in post) {
-                const feedViewPost = post as FeedViewPost
-                record = {
-                  text: String(feedViewPost.post.record.text),
-                  $type: String(feedViewPost.post.record.$type),
-                  embed: feedViewPost.post.embed as Post['embed'],
-                  createdAt: String(feedViewPost.post.record.createdAt),
-                }
-                author = {
-                  handle: feedViewPost.post.author.handle,
-                  displayName:
-                    feedViewPost.post.author.displayName ||
-                    feedViewPost.post.author.handle,
-                }
-              } else {
-                record = post.record as Post
-                if (profile) {
-                  author = {
-                    handle: profile.handle,
-                    displayName: profile.displayName || profile.handle,
+              const record = post.record
+              const author = post.isRepost
+                ? {
+                    handle: post.author.handle,
+                    displayName: post.author?.displayName,
                   }
-                }
-              }
+                : {
+                    handle: profile?.handle,
+                    displayName: profile?.displayName || profile?.handle,
+                  }
+
               const formattedDate = record.createdAt
                 ? formatDate(record.createdAt)
                 : ''
+              const displayAuthor = author
 
               return (
                 <Box
-                  $padding=".2rem 0"
+                  $padding=".6rem .8rem"
                   $gap=".4rem"
                   $alignItems="normal"
                   $height="fit-content"
                   $borderStyle="solid"
-                  $borderBottom="1px solid var(--color-light-gray)"
+                  $background="white"
                   key={`post-${index}-${record.createdAt || crypto.randomUUID()}`}
                 >
-                  <Stack $direction="row" $gap="1rem" $alignItems="center">
-                    <Stack $direction="row" $gap=".2rem">
+                  {post.isRepost && (
+                    <Text $fontSize="0.7rem" $color="var(--color-black-50)">
+                      Reposted by you
+                    </Text>
+                  )}
+
+                  <Stack $direction="row" $gap=".7rem" $alignItems="center">
+                    <Stack $direction="row" $gap=".2rem" $width="fit-content">
                       <Text $fontWeight="700" $color="var(--color-black)">
-                        {author.displayName}
+                        {displayAuthor.displayName}
                       </Text>
                       <Text $fontWeight="400" $color="var(--color-black-50)">
-                        @{author.handle}
+                        @{displayAuthor.handle}
                       </Text>
                     </Stack>
                     <Text $fontWeight="400" color="var(--color-black-50)">
@@ -86,14 +77,66 @@ export const Posts = ({ posts, repositoryDid }: PostsProps) => {
                     </Text>
                   </Stack>
                   <Text $color="var(--color-black-50)">{record.text}</Text>
+
+                  {record.embed &&
+                    record?.embed.$type === 'app.bsky.embed.external' &&
+                    'external' in record.embed && (
+                      <Stack
+                        $gap=".4rem"
+                        $borderRadius="0.25rem"
+                        $border="1px solid var(--color-light-gray)"
+                      >
+                        <Stack>
+                          {/* eslint-disable @next/next/no-img-element  */}
+                          <img
+                            key={index}
+                            src={cidUrl(record.embed.external.thumb.ref.$link)}
+                            alt={record.embed.external.title}
+                            style={{
+                              width: '100%',
+                              height: 'auto',
+                              borderRadius: '0.5rem',
+                              objectFit: 'cover',
+                            }}
+                          />
+                        </Stack>
+                        <Text $fontWeight="700" $textAlign="left">
+                          {record.embed.external?.title || ''}
+                        </Text>
+                        <Text $fontSize="0.9rem">
+                          {record.embed.external?.description || ''}
+                        </Text>
+                      </Stack>
+                    )}
+
+                  {record.embed &&
+                    record.embed.$type === 'app.bsky.embed.images' &&
+                    'images' in record.embed && (
+                      <Stack $direction="row" $gap="0.6rem">
+                        {record.embed.images.map((image, index) => {
+                          return (
+                            // next/image is pretty annoying to style
+                            /* eslint-disable @next/next/no-img-element */
+                            <img
+                              key={index}
+                              src={cidUrl(image.image.ref.$link)}
+                              alt={image.alt || 'Post image'}
+                              style={{
+                                width: '100%',
+                                maxWidth: '48%',
+                                height: 'auto',
+                                borderRadius: '0.5rem',
+                                objectFit: 'cover',
+                              }}
+                            />
+                          )
+                        })}
+                      </Stack>
+                    )}
                 </Box>
               )
             } catch (error) {
-              return (
-                <Box $borderStyle="none">
-                  <Text>Error: {`${(error as Error).message}`}</Text>
-                </Box>
-              )
+              console.error(error)
             }
           })}
         </Box>

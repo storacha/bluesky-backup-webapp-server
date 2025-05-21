@@ -43,6 +43,7 @@ export type StyleProps = {
   $py: `${Property.PaddingTop} ${Property.PaddingBottom}`
   $my: `${Property.MarginTop} ${Property.MarginBottom}`
   $pt: `${Property.PaddingTop}`
+  $whiteSpace: Property.WhiteSpace
 }
 
 export interface BtnProps extends StyleProps {
