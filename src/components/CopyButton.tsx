@@ -31,7 +31,8 @@ export default function CopyButton({ text }: CopyButtonProps) {
   }
   return (
     <IconButton
-      aria-label={copied ? 'Copied!' : 'Copy to clipboard'}
+      title={copied ? 'Copied!' : 'Copy to clipboard'}
+      aria-label="Copy to clipboard"
       onClick={copy}
     >
       {copied ? (

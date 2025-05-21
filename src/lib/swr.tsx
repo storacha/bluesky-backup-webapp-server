@@ -6,7 +6,14 @@ import React from 'react'
 import useSWRBase, { SWRConfig, SWRConfiguration, SWRResponse } from 'swr'
 import useSWRMutationBase, { MutationFetcher } from 'swr/mutation'
 
-import { ATBlob, Backup, ProfileData, RotationKey, Snapshot } from '@/types'
+import {
+  ATBlob,
+  Backup,
+  PaginatedResult,
+  ProfileData,
+  RotationKey,
+  Snapshot,
+} from '@/types'
 
 import { newClient } from './plc'
 
@@ -16,8 +23,13 @@ type Fetchable =
   | [['api', '/session/did', Record<never, string>?], string]
   | [['api', '/api/backups', Record<string, string>?], Backup[]]
   | [
-      ['api', `/api/backups/${string}/snapshots`, Record<string, string>?],
-      Snapshot[],
+      [
+        'api',
+        `/api/backups/${string}/snapshots`,
+        { page?: string; limit?: string }?,
+        Record<string, string>?,
+      ],
+      PaginatedResult<Snapshot>,
     ]
   | [['api', `/api/backups/${string}/blobs`, Record<string, string>?], ATBlob[]]
   | [['api', `/api/snapshots/${string}`, Record<string, string>?], Snapshot]
@@ -96,7 +108,7 @@ const fetchers: Fetchers = {
       service: 'https://public.api.bsky.app/',
     })
     const {
-      data: { handle, displayName },
+      data: { handle, displayName, avatar },
     } = await atAgent.app.bsky.actor.getProfile({
       actor: did,
     })
@@ -108,6 +120,7 @@ const fetchers: Fetchers = {
     return {
       did,
       handle,
+      avatar,
       displayName,
       alsoKnownAs,
       verificationMethods,

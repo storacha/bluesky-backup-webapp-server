@@ -3,13 +3,14 @@
 import { styled } from 'next-yak'
 import { ReactNode, useState } from 'react'
 
-import { Heading, Stack, Text } from '@/components/ui'
+import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
+import EditableBackupName from '@/components/BackupScreen/EditableBackupName'
+import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
+import { Stack, Text } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { Backup } from '@/types'
 
-import { BlueskyAccountSelect } from './BlueskyAccountSelect'
 import { DataBox } from './DataBox'
-import { StorachaSpaceSelect } from './StorachaSpaceSelect'
 
 interface BackupProps {
   backup?: Backup
@@ -33,13 +34,24 @@ const AccountsContainer = styled(Stack)`
 
 const BackupNameInput = styled.input`
   border-radius: 8px;
-  border: none;
+  border: 2px solid var(--color-gray-light);
   width: 100%;
   font-weight: 700;
   font-size: 1.125rem;
+  padding: 0.5rem;
+  transition: border-color 0.2s ease;
+
+  &::placeholder {
+    color: var(--color-gray-medium);
+  }
+
+  &:hover {
+    border-color: var(--color-gray);
+  }
 
   &:focus {
-    outline-color: var(--color-dark-blue);
+    outline: none;
+    border-color: var(--color-dark-blue);
   }
 `
 
@@ -57,7 +69,6 @@ const Section = ({
 )
 
 type BackupDatas = 'include_repository' | 'include_blobs'
-// | 'include_preferences'
 
 /**
  * A detail view/form for a Backup. If {@link Backup} is provided, its values
@@ -75,6 +86,7 @@ export const BackupDetail = ({ backup }: BackupProps) => {
     include_repository: backup?.includeRepository ?? true,
     include_blobs: backup?.includeBlobs ?? true,
   })
+
   const handleDataBoxChange = (name: string) => (value: boolean) => {
     setDataBoxState((prev) => {
       const updatedState = {
@@ -100,7 +112,7 @@ export const BackupDetail = ({ backup }: BackupProps) => {
   return (
     <Stack $gap="2rem">
       {backup ? (
-        <Heading>{backup.name}</Heading>
+        <EditableBackupName backup={backup} />
       ) : (
         <BackupNameInput
           type="text"
