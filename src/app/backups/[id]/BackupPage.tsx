@@ -75,6 +75,12 @@ const RightSidebarContent = ({ backup }: { backup: Backup }) => {
               : 'No delegation set'}
           </DetailValue>
         </Stack>
+        <Stack $direction="row" $alignItems="center" $gap="1rem">
+          <DetailName>Blobs</DetailName>
+          <Link href={`/backups/${backup.id}/blobs`}>
+            <DetailValue>View Blobs</DetailValue>
+          </Link>
+        </Stack>
       </Details>
       <SnapshotContainer $gap="1rem">
         <Stack $gap="0.5em" $direction="row" $alignItems="center">

@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 
+import { PAGINATED_RESULTS_LIMIT } from '@/lib/constants'
 import { backupOwnedByAccount } from '@/lib/server/auth'
 import { getStorageContext } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
@@ -12,12 +13,12 @@ export async function GET(
   const { db } = getStorageContext()
   const { did: account } = await getSession()
   const searchParams = request.nextUrl.searchParams
-  const page = Number(searchParams.get('page'))
-  const limit = Number(searchParams.get('limit'))
+  const page = Number(searchParams.get('page') ?? 1)
+  const limit = Number(searchParams.get('limit') ?? PAGINATED_RESULTS_LIMIT)
   if (!(await backupOwnedByAccount(db, id, account))) {
     return new Response('Not authorized', { status: 401 })
   }
-  const data = await db.findBlobsForBackup(id)
+  const data = await db.findBlobsForBackup(id, { page, limit })
   const count = data.count
   const totalPages = Math.ceil(count / limit)
   const getPageUrl = (pageNumber: number) =>
