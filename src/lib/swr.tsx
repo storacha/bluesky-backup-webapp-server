@@ -108,7 +108,7 @@ const fetchers: Fetchers = {
       service: 'https://public.api.bsky.app/',
     })
     const {
-      data: { handle, displayName },
+      data: { handle, displayName, avatar },
     } = await atAgent.app.bsky.actor.getProfile({
       actor: did,
     })
@@ -120,6 +120,7 @@ const fetchers: Fetchers = {
     return {
       did,
       handle,
+      avatar,
       displayName,
       alsoKnownAs,
       verificationMethods,
