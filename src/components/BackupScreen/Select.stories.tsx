@@ -12,12 +12,6 @@ const meta: Meta<typeof Select> = {
       width: '300px',
     },
     backgrounds: {
-      values: [
-        {
-          name: 'Backup',
-          value: 'var(--color-light-blue-10)',
-        },
-      ],
       default: 'Backup',
     },
     design: {

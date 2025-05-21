@@ -204,6 +204,7 @@ export interface BBDatabase {
   findRotationKeys: (
     storachaAccount: string
   ) => Promise<{ results: RotationKey[] }>
+  updateBackup: (id: string, data: Partial<Backup>) => Promise<Backup>
 }
 
 interface StorageContext {
@@ -371,6 +372,18 @@ export function getStorageContext(): StorageContext {
         return {
           results,
         }
+      },
+      async updateBackup(id, data) {
+        const results = await sql<Backup[]>`
+          update backups
+          set ${sql(data)}
+          where id = ${id}
+          returning *
+        `
+        if (!results[0]) {
+          throw new Error('error updating backup')
+        }
+        return results[0]
       },
     },
   }
