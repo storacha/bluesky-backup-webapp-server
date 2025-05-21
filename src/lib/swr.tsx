@@ -6,7 +6,14 @@ import React from 'react'
 import useSWRBase, { SWRConfig, SWRConfiguration, SWRResponse } from 'swr'
 import useSWRMutationBase, { MutationFetcher } from 'swr/mutation'
 
-import { ATBlob, Backup, ProfileData, RotationKey, Snapshot, Identity } from '@/types'
+import {
+  ATBlob,
+  Backup,
+  ProfileData,
+  RotationKey,
+  Snapshot,
+  Identity,
+} from '@/types'
 
 import { newClient } from './plc'
 

@@ -86,7 +86,7 @@ export function IdentityCard({ identity }: IdentityCardProps) {
     const left = window.screenX + (window.outerWidth - width) / 2
     const top = window.screenY + (window.outerHeight - height) / 2
 
-    const url = handle 
+    const url = handle
       ? `/atproto/connect?handle=${encodeURIComponent(handle)}`
       : '/atproto/connect'
 
@@ -104,12 +104,14 @@ export function IdentityCard({ identity }: IdentityCardProps) {
           // Force a fresh fetch from the server
           const response = await fetch('/api/identities')
           const newData = await response.json()
-          
+
           // Update the SWR cache with the new data
           await mutate(newData, { revalidate: true })
-          
+
           // Wait for the cache to be updated
-          const updatedIdentity = newData.find((i: Identity) => i.id === identity.id)
+          const updatedIdentity = newData.find(
+            (i: Identity) => i.id === identity.id
+          )
           if (updatedIdentity?.isConnected) {
             toast.success('Successfully reconnected account')
           }
@@ -122,11 +124,16 @@ export function IdentityCard({ identity }: IdentityCardProps) {
   }
 
   // Get the current state of this identity from the SWR cache
-  const currentIdentity = identities?.find((i: Identity) => i.id === identity.id) || identity
+  const currentIdentity =
+    identities?.find((i: Identity) => i.id === identity.id) || identity
 
   return (
     <DisconnectedBox
-      $background={currentIdentity.isConnected ? "var(--color-white)" : "var(--color-gray-light)"}
+      $background={
+        currentIdentity.isConnected
+          ? 'var(--color-white)'
+          : 'var(--color-gray-light)'
+      }
     >
       <Stack $gap="1rem" $direction="row" $alignItems="center">
         <AccountLogo $imageSrc="/bluesky.png" />
@@ -141,7 +148,11 @@ export function IdentityCard({ identity }: IdentityCardProps) {
               <ATProtoHandle did={currentIdentity.atprotoAccount} />
             </Text>
             {!currentIdentity.isConnected && (
-              <Text $color="var(--color-red)" $fontSize="0.8rem" $fontWeight="bold">
+              <Text
+                $color="var(--color-red)"
+                $fontSize="0.8rem"
+                $fontWeight="bold"
+              >
                 (Disconnected)
               </Text>
             )}
@@ -151,8 +162,8 @@ export function IdentityCard({ identity }: IdentityCardProps) {
       </Stack>
       <Stack $direction="row" $gap="0.5rem">
         {!currentIdentity.isConnected && (
-          <Button 
-            $variant="outline" 
+          <Button
+            $variant="outline"
             $color="var(--color-black)"
             onClick={() => profile?.handle && connectNewAccount(profile.handle)}
             title="Reconnect account"
@@ -161,7 +172,9 @@ export function IdentityCard({ identity }: IdentityCardProps) {
             <ArrowsClockwise weight="bold" />
           </Button>
         )}
-        <IdentityLink href={`/identities/${encodeURIComponent(currentIdentity.atprotoAccount)}`}>
+        <IdentityLink
+          href={`/identities/${encodeURIComponent(currentIdentity.atprotoAccount)}`}
+        >
           <Button $variant="outline" $color="var(--color-black)">
             <Gear weight="bold" />
           </Button>
@@ -169,4 +182,4 @@ export function IdentityCard({ identity }: IdentityCardProps) {
       </Stack>
     </DisconnectedBox>
   )
-} 
+}

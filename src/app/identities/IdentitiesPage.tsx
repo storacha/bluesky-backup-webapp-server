@@ -17,12 +17,16 @@ type Identity = Backup & {
   isConnected: boolean
 }
 
-export default function IdentitiesPage({ identities: initialIdentities }: { identities: Identity[] }) {
+export default function IdentitiesPage({
+  identities: initialIdentities,
+}: {
+  identities: Identity[]
+}) {
   const { data: identities, error } = useSWR(['api', '/api/identities'], {
     fallbackData: initialIdentities,
     revalidateOnFocus: false,
     revalidateOnMount: true,
-    dedupingInterval: 0
+    dedupingInterval: 0,
   })
 
   if (error) {
