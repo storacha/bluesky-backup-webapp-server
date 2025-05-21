@@ -2,6 +2,8 @@
 
 HOT HOT HOT identity and data backup for your ATProto PDS
 
+Please visit https://bsky.storage to get started!
+
 ## Local
 
 ### Set up `.env`
