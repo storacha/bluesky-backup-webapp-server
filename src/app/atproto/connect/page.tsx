@@ -22,7 +22,6 @@ export const ConnectStack = styled(Stack)`
 
 const ConnectButton = () => {
   const { pending } = useFormStatus()
-  console.log('CONPEND', pending)
   return (
     <StatefulButton
       isLoading={pending}
