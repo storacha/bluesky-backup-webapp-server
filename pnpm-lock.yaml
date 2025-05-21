@@ -228,9 +228,6 @@ importers:
       knip:
         specifier: ^5.50.5
         version: 5.57.0(@types/node@20.17.50)(typescript@5.8.3)
-      playwright:
-        specifier: ^1.52.0
-        version: 1.52.0
       postcss:
         specifier: ^8.5.2
         version: 8.5.3

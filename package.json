@@ -101,7 +101,6 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-storybook": "^0.11.4",
     "knip": "^5.50.5",
-    "playwright": "^1.52.0",
     "postcss": "^8.5.2",
     "postcss-loader": "^8.1.1",
     "postcss-nested": "^7.0.2",
