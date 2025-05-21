@@ -32,7 +32,7 @@ export const Blobs = ({ blobs, backPath, loading, location }: BlobProps) => {
   }))
 
   return (
-    <Box $padding={isMobile ? '1rem' : '2rem'} $height="100%">
+    <Box $padding={isMobile ? '1rem' : '2rem'} $height="fit-content">
       {loading ? (
         <Center $height="88vh">
           <Loader />
@@ -40,12 +40,8 @@ export const Blobs = ({ blobs, backPath, loading, location }: BlobProps) => {
       ) : (
         <Stack $gap="1rem">
           <Stack $direction="row" $gap="1rem">
-            <BackButton
-              path={backPath}
-            />
-            <Heading>
-              Blobs in this {location}
-            </Heading>
+            <BackButton path={backPath} />
+            <Heading>Blobs in this {location}</Heading>
           </Stack>
           <Stack
             $direction="row"

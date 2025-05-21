@@ -193,7 +193,7 @@ export interface BBDatabase {
   updateSnapshot: (id: string, input: Partial<Snapshot>) => Promise<Snapshot>
   findSnapshots: (
     backupId: string,
-    options?: Partial<PaginatedResultParams>
+    options?: PaginatedResultParams
   ) => Promise<PaginatedResult<Snapshot>>
   findSnapshot: (id: string) => Promise<{ result: Snapshot | undefined }>
   findBackups: (account: string) => Promise<{ results: Backup[] }>
@@ -205,8 +205,14 @@ export interface BBDatabase {
     cid: string,
     backupId: string
   ) => Promise<{ result: ATBlob | undefined }>
-  findBlobsForBackup: (id: string) => Promise<{ results: ATBlob[] }>
-  findBlobsForSnapshot: (id: string) => Promise<{ results: ATBlob[] }>
+  findBlobsForBackup: (
+    id: string,
+    options?: PaginatedResultParams
+  ) => Promise<PaginatedResult<ATBlob>>
+  findBlobsForSnapshot: (
+    id: string,
+    options?: PaginatedResultParams
+  ) => Promise<PaginatedResult<ATBlob>>
   addRotationKey: (input: RotationKeyInput) => Promise<RotationKey>
   findRotationKeys: (
     storachaAccount: string
@@ -246,26 +252,64 @@ export function getStorageContext(): StorageContext {
         return { result }
       },
 
-      async findBlobsForBackup(id) {
-        if (!validateUUID(id)) return { results: [] }
+      async findBlobsForBackup(id, options?: PaginatedResultParams) {
+        const { limit = PAGINATED_RESULTS_LIMIT, page = 1 } = options ?? {}
+        const offset = (page - 1) * limit
+
+        if (!validateUUID(id))
+          return {
+            count: 0,
+            results: [],
+          }
+
+        const total = await sql<{ count: number }[]>`
+          select count(*) as count
+          from at_blobs
+          where backup_id = ${id}
+        `
 
         const results = await sql<ATBlob[]>`
           select * from at_blobs
           where backup_id = ${id}
-          `
+          order by created_at desc
+          limit ${limit}
+          offset ${offset}
+        `
+
+        const count = Number(total[0]?.count) ?? 0
         return {
+          count,
           results,
         }
       },
 
-      async findBlobsForSnapshot(id) {
-        if (!validateUUID(id)) return { results: [] }
+      async findBlobsForSnapshot(id, options?: PaginatedResultParams) {
+        const { limit = PAGINATED_RESULTS_LIMIT, page = 1 } = options ?? {}
+        const offset = (page - 1) * limit
+
+        if (!validateUUID(id))
+          return {
+            count: 0,
+            results: [],
+          }
+
+        const total = await sql<{ count: number }[]>`
+          select count(*) as count
+          from at_blobs
+          where snapshot_id = ${id}
+        `
 
         const results = await sql<ATBlob[]>`
           select * from at_blobs
           where snapshot_id = ${id}
-          `
+          order by created_at desc
+          limit ${limit}
+          offset ${offset}
+        `
+
+        const count = Number(total[0]?.count) ?? 0
         return {
+          count,
           results,
         }
       },
@@ -310,8 +354,6 @@ export function getStorageContext(): StorageContext {
         if (!validateUUID(backupId))
           return {
             count: 0,
-            next: null,
-            prev: null,
             results: [],
           }
 
@@ -333,8 +375,8 @@ export function getStorageContext(): StorageContext {
         const count = Number(total[0]?.count) ?? 0
 
         return {
-          count: count,
-          results: results,
+          count,
+          results,
         }
       },
       async addBackup(input) {

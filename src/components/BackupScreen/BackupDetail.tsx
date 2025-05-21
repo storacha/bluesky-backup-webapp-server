@@ -8,8 +8,7 @@ import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSe
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
 import { Stack, Text } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
-import { useSWR } from '@/lib/swr'
-import { ATBlob, Backup } from '@/types'
+import { Backup } from '@/types'
 
 import { DataBox } from './DataBox'
 import { EditableBackupName } from './EditableBackupName'
@@ -101,11 +100,6 @@ type BackupDatas = 'include_repository' | 'include_blobs'
  */
 export const BackupDetail = ({ backup }: BackupProps) => {
   const { isMobile, isBaseLaptop } = useMobileScreens()
-  const { data: blobsData } = useSWR([
-    'api',
-    `/api/backups/${backup?.id}/blobs`,
-  ])
-  const blobs = blobsData as ATBlob[]
 
   const [dataBoxState, setDataBoxState] = useState<
     Record<BackupDatas, boolean>
@@ -191,7 +185,7 @@ export const BackupDetail = ({ backup }: BackupProps) => {
           />
         </Stack>
       </Section>
-      {blobs?.length > 0 && (
+      {backup && (
         <BlobsLink href={`/backups/${backup?.id}/blobs`}>All blobs</BlobsLink>
       )}
     </Stack>

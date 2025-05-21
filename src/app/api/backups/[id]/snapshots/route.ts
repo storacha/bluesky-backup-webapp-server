@@ -16,8 +16,8 @@ export async function GET(
   const { did: account } = await getSession()
 
   const searchParams = request.nextUrl.searchParams
-  const limit = Number(searchParams.get('limit'))
-  const page = Number(searchParams.get('page'))
+  const limit = Number(searchParams.get('limit') || 10)
+  const page = Number(searchParams.get('page') || 1)
   if (!(await backupOwnedByAccount(db, id, account))) {
     return new Response('Not authorized', { status: 401 })
   }

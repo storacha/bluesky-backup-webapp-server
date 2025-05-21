@@ -31,11 +31,24 @@ export type Fetchable =
       ],
       PaginatedResult<Snapshot>,
     ]
-  | [['api', `/api/backups/${string}/blobs`, Record<string, string>?], ATBlob[]]
+  | [
+      [
+        'api',
+        `/api/backups/${string}/blobs`,
+        { page?: string; limit?: string },
+        Record<string, string>?,
+      ],
+      PaginatedResult<ATBlob>,
+    ]
   | [['api', `/api/snapshots/${string}`, Record<string, string>?], Snapshot]
   | [
-      ['api', `/api/snapshots/${string}/blobs`, Record<string, string>?],
-      ATBlob[],
+      [
+        'api',
+        `/api/snapshots/${string}/blobs`,
+        { page?: string; limit?: string },
+        Record<string, string>?,
+      ],
+      PaginatedResult<ATBlob>,
     ]
   | [['api', '/api/atproto-accounts', Record<string, string>?], string[]]
   | [['api', '/api/keys', Record<string, string>?], RotationKey[]]
