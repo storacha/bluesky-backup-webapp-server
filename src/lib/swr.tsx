@@ -36,7 +36,6 @@ type Fetchable =
       ['api', `/api/record?uri=${string}`, Record<string, string>?],
       FeedViewPost[],
     ]
-  | [['atproto-handle', string], string]
   | [['atproto-profile', Did], ProfileData | undefined]
   | [['storacha-plan', Account], string | undefined]
 
