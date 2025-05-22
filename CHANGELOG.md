@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.7.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.7.0...v1.7.1) (2025-05-16)
+
+
+### Bug Fixes
+
+* add very barebones snapshots page ([0cc002c](https://github.com/storacha/bluesky-backup-webapp-server/commit/0cc002c5b4380f73a1c418ed35848ed84d15f1ff))
+* two small tweaks to the identity manager ([f07061c](https://github.com/storacha/bluesky-backup-webapp-server/commit/f07061c713758f0f29c933759cea6bf9db95d045))
+* two small tweaks to the identity manager ([ce465b5](https://github.com/storacha/bluesky-backup-webapp-server/commit/ce465b568a2b084aec8212865deafa055da1a4eb))
+
+## [1.7.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.6.0...v1.7.0) (2025-05-15)
+
+
+### Features
+
+* add atproto identity manager ([#129](https://github.com/storacha/bluesky-backup-webapp-server/issues/129)) ([f83b366](https://github.com/storacha/bluesky-backup-webapp-server/commit/f83b3666a082720d5a44e6b2adbb90b484851bf0))
+* revamp restore flow ([48f7591](https://github.com/storacha/bluesky-backup-webapp-server/commit/48f7591b632b5f198245b3bf07084891695e55e6))
+
+
+### Bug Fixes
+
+* `Select`s handle `disabled` correctly ([8c840d1](https://github.com/storacha/bluesky-backup-webapp-server/commit/8c840d1e6fdb58741ca7d2456a82167f9786cd16))
+* `Select`s handle `disabled` correctly ([fb94431](https://github.com/storacha/bluesky-backup-webapp-server/commit/fb944313b833cfe23243919d9b67ec5dafec729b))
+* a few more tweaks and fixes ([972441f](https://github.com/storacha/bluesky-backup-webapp-server/commit/972441f34474fec6714827618a7a9b9b7e9f6170))
+* auto appends .bsky.social to user handles ([#156](https://github.com/storacha/bluesky-backup-webapp-server/issues/156)) ([1e8f8a6](https://github.com/storacha/bluesky-backup-webapp-server/commit/1e8f8a6c7e0c4d91f5fca555b1755d25ea4affde))
+* bugfixes from PR and screenshare review ([57c4a02](https://github.com/storacha/bluesky-backup-webapp-server/commit/57c4a02ae40252a85e13276630fd1399d16e8d42))
+* Make long `Select`s scroll ([cdb4ec3](https://github.com/storacha/bluesky-backup-webapp-server/commit/cdb4ec3e555b0cb8ae4e0dcce8e159925f519e76))
+* Make long `Select`s scroll ([d48a82e](https://github.com/storacha/bluesky-backup-webapp-server/commit/d48a82eb2aac6cebbe36dc97657945c6fb929677))
+* polish, add verification key icon ([89200dc](https://github.com/storacha/bluesky-backup-webapp-server/commit/89200dc15fac8d8cbbfd830794812daf88230c8c))
+* render 'back button' on large screens if teh path is specified ([#155](https://github.com/storacha/bluesky-backup-webapp-server/issues/155)) ([7586699](https://github.com/storacha/bluesky-backup-webapp-server/commit/7586699ac2a3c549108abbe952569d67b4968aef))
+* Shouldn't be able to back up nothing ([fadabe8](https://github.com/storacha/bluesky-backup-webapp-server/commit/fadabe8901df6f9cc0233a48b4883741ecc95c82))
+
 ## [1.6.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.5.1...v1.6.0) (2025-05-14)
 
 

@@ -1,27 +1,54 @@
 'use client'
 
-import { Agent } from '@atproto/api'
+import { Agent, Did } from '@atproto/api'
 import { Account } from '@storacha/ui-react'
 import React from 'react'
 import useSWRBase, { SWRConfig, SWRConfiguration, SWRResponse } from 'swr'
 import useSWRMutationBase, { MutationFetcher } from 'swr/mutation'
 
-import { ATBlob, Backup, ProfileData, RotationKey, Snapshot } from '@/types'
+import {
+  ATBlob,
+  Backup,
+  PaginatedResult,
+  ProfileData,
+  RotationKey,
+  Snapshot,
+} from '@/types'
+
+import { newClient } from './plc'
 
 // This type defines what's fetchable with `useSWR`. It is a union of key/data
 // pairs. The key can match a pattern by being as wide as it needs to be.
-type Fetchable =
+export type Fetchable =
   | [['api', '/session/did', Record<never, string>?], string]
   | [['api', '/api/backups', Record<string, string>?], Backup[]]
   | [
-      ['api', `/api/backups/${string}/snapshots`, Record<string, string>?],
-      Snapshot[],
+      [
+        'api',
+        `/api/backups/${string}/snapshots`,
+        { page?: string; limit?: string }?,
+        Record<string, string>?,
+      ],
+      PaginatedResult<Snapshot>,
     ]
-  | [['api', `/api/backups/${string}/blobs`, Record<string, string>?], ATBlob[]]
+  | [
+      [
+        'api',
+        `/api/backups/${string}/blobs`,
+        { page?: string; limit?: string },
+        Record<string, string>?,
+      ],
+      PaginatedResult<ATBlob>,
+    ]
   | [['api', `/api/snapshots/${string}`, Record<string, string>?], Snapshot]
   | [
-      ['api', `/api/snapshots/${string}/blobs`, Record<string, string>?],
-      ATBlob[],
+      [
+        'api',
+        `/api/snapshots/${string}/blobs`,
+        { page?: string; limit?: string },
+        Record<string, string>?,
+      ],
+      PaginatedResult<ATBlob>,
     ]
   | [['api', '/api/atproto-accounts', Record<string, string>?], string[]]
   | [['api', '/api/keys', Record<string, string>?], RotationKey[]]
@@ -29,7 +56,7 @@ type Fetchable =
       ['api', `/api/profile?did=${string}`, Record<string, string>?],
       ProfileData,
     ]
-  | [['atproto-handle', string], string]
+  | [['atproto-profile', Did], ProfileData | undefined]
   | [['storacha-plan', Account], string | undefined]
 
 export type Key = Fetchable extends [infer T, unknown] ? T : never
@@ -86,19 +113,33 @@ const fetchers: Fetchers = {
   },
 
   /**
-   * Fetches the Bluesky handle for a given DID.
-   * @param did The DID to fetch the handle for.
+   * Fetches the Bluesky profile for a given DID.
+   * @param did The DID to fetch the profile for.
    */
-  async 'atproto-handle'(did) {
-    const agent = new Agent({
+  async 'atproto-profile'(did) {
+    const atAgent = new Agent({
       service: 'https://public.api.bsky.app/',
     })
     const {
-      data: { handle },
-    } = await agent.app.bsky.actor.getProfile({
+      data: { handle, displayName, avatar },
+    } = await atAgent.app.bsky.actor.getProfile({
       actor: did,
     })
-    return handle
+
+    const plcClient = newClient()
+    const { alsoKnownAs, rotationKeys, verificationMethods, services } =
+      await plcClient.getDocumentData(did)
+
+    return {
+      did,
+      handle,
+      avatar,
+      displayName,
+      alsoKnownAs,
+      verificationMethods,
+      rotationKeys,
+      services,
+    }
   },
 
   async 'storacha-plan'(account) {
@@ -112,7 +153,7 @@ const fetchers: Fetchers = {
  * our fetchers and config. Also, logs any errors to the console.
  */
 export const useSWR = <K extends Key>(
-  key: K | null | undefined,
+  key: K | null | undefined | false,
   config?: SWRConfiguration
 ): SWRResponse<FetchedData<K>> => {
   const swrResponse = useSWRBase(key, config)

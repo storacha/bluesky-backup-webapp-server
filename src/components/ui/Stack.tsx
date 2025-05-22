@@ -13,6 +13,7 @@ export const Stack = styled.div<{ $even?: boolean } & Partial<StyleProps>>`
   height: ${({ $height = '' }) => $height};
   border-bottom: ${({ $borderBottom = '' }) => $borderBottom};
   border: ${({ $border = '' }) => $border};
+  align-items: ${({ $alignItems = '' }) => $alignItems};
 
   ${({ $even }) =>
     $even &&

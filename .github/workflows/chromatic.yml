@@ -20,3 +20,4 @@ jobs:
           # Always accept changes once they've merged to main, to keep baselines
           # up to date.
           autoAcceptChanges: main
+          buildScriptName: 'storybook:build'

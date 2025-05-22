@@ -1,5 +1,6 @@
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { css, styled } from 'next-yak'
+import { ReactNode } from 'react'
 import {
   Button,
   ButtonContext,
@@ -65,7 +66,7 @@ const FullButton = styled(Button)`
   width: 100%;
 `
 
-const ActionButton = styled(FullButton)`
+export const ActionButton = styled(FullButton)`
   border-top: 1px solid var(--color-gray-medium);
   padding: 0.75rem calc(0.75rem + 0.5rem);
   background-color: var(--color-gray-medium-light);
@@ -118,6 +119,12 @@ const Prompt = styled.div`
   color: var(--color-gray-medium);
 `
 
+// Trivially styled solely to let this element be targeted with parent
+// selectors.
+const Outside = styled(RACSelect)`
+  color: currentColor;
+`
+
 const Contents = styled.div<{ $hasValue: boolean }>`
   display: flex;
   flex-direction: row;
@@ -137,6 +144,11 @@ const Contents = styled.div<{ $hasValue: boolean }>`
 
   ${FullButton}:focus-visible & {
     outline: var(--color-dark-blue) 2px solid;
+  }
+
+  ${Outside}[data-invalid] & {
+    border-color: var(--color-dark-red);
+    outline-color: var(--color-dark-red);
   }
 `
 
@@ -218,36 +230,31 @@ export const Select = ({
   label,
   items,
   defaultSelectedKey,
-  actionLabel,
-  actionOnPress,
-  content,
   isDisabled,
+  isRequired,
+  actionButton,
+  renderItemValue = (item: Item) => item.label,
 }: {
   /** URL of the image to show in the control. */
   imageSrc: string
   /** A noun describing what is selected (eg. "Bluesky Account"). */
   label: string
-  /** The label for an action to place at the bottom of the options. */
-  actionLabel: string
-  /** Handler called when the action button is pressed. */
-  actionOnPress: () => void
-  content?: React.ReactNode
-} & Pick<SelectProps<Item>, 'name' | 'defaultSelectedKey' | 'isDisabled'> &
+  /** Renders the value of an item as text or similar inline content. */
+  renderItemValue?: (item: Item) => ReactNode
+  actionButton?: ReactNode
+} & Pick<
+  SelectProps<Item>,
+  'name' | 'defaultSelectedKey' | 'isDisabled' | 'isRequired'
+> &
   Pick<ListBoxProps<Item>, 'items'>) => {
   const prompt = `Select ${label}`
-  const actionButton = (
-    // Prevent the button from automagically being treated as the trigger
-    // button just because it's inside the <Select> component.
-    <ButtonContext.Provider value={{}}>
-      <ActionButton onPress={actionOnPress}>{actionLabel}</ActionButton>
-    </ButtonContext.Provider>
-  )
 
   return (
-    <RACSelect
+    <Outside
       name={name}
       defaultSelectedKey={defaultSelectedKey}
       isDisabled={isDisabled}
+      isRequired={isRequired}
     >
       <FullButton>
         <SelectValue<Item>>
@@ -259,7 +266,7 @@ export const Select = ({
                   {selectedItem ? (
                     <>
                       <Label>{label}</Label>
-                      <Value>{selectedItem.label}</Value>
+                      <Value>{renderItemValue(selectedItem)}</Value>
                     </>
                   ) : (
                     <Prompt>{prompt}</Prompt>
@@ -272,7 +279,7 @@ export const Select = ({
         </SelectValue>
       </FullButton>
       <Popover aria-label={prompt}>
-        {content ?? (
+        {
           <>
             <ListBox
               items={
@@ -281,20 +288,24 @@ export const Select = ({
                   : items
               }
             >
-              {({ id, label }) =>
+              {(item) =>
                 // The Select won't even open if there are no items, so we need
                 // to put a dummy item in the listbox.
-                id === '' ? (
+                item.id === '' ? (
                   <NonItem aria-hidden></NonItem>
                 ) : (
-                  <Item>{label}</Item>
+                  <Item>{renderItemValue(item)}</Item>
                 )
               }
             </ListBox>
-            {actionButton}
+            {/* Prevent the button from automagically being treated as the trigger
+             * button just because it's inside the <Select> component. */}
+            <ButtonContext.Provider value={{}}>
+              {actionButton}
+            </ButtonContext.Provider>
           </>
-        )}
+        }
       </Popover>
-    </RACSelect>
+    </Outside>
   )
 }

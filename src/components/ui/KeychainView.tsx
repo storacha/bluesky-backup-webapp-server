@@ -91,9 +91,7 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
     <Stack $gap="1rem">
       {did && (
         <Stack>
-          <SubHeading>
-            Key <NoTextTransform>DID</NoTextTransform>
-          </SubHeading>
+          <SubHeading>Key DID</SubHeading>
           <Stack $direction="row" $alignItems="center" $gap="0.5rem">
             <Text>{shortenDID(did)}</Text>
             <CopyButton text={did} />
@@ -446,7 +444,7 @@ function RotationKeyStatus({
           <Text $fontSize="1rem" $color="var(--color-black)">
             {isSigningKey ? <>Is</> : <>Is not</>} controlling {profile.handle}.
           </Text>
-          {isRotationKey && !isSigningKey && (
+          {isRotationKey && isSignable && !isSigningKey && (
             <Button
               onClick={() => {
                 takeControl()
@@ -458,7 +456,7 @@ function RotationKeyStatus({
         </Stack>
       </Stack>
       <Stack $direction="row" $gap="1rem">
-        {isSigningKey && (
+        {isSigningKey && isSignable && (
           <Button
             onClick={() => {
               setIsTransferringIdentity(true)
@@ -482,7 +480,7 @@ type KeychainProps = KeychainContextProps & {
 const KeyItem = styled(Stack)`
   ${roundRectStyle}
   background: var(--color-white);
-  border: 1px solid var(--color-gray-medium)'};
+  border: 1px solid var(--color-gray-medium);
   padding: 1rem;
 `
 
@@ -623,7 +621,11 @@ export default function KeychainView({
           )}
         </>
       )}
-      <CreateButton onClick={onClickAdd} disabled={generatingKeyPair}>
+      <CreateButton
+        onClick={onClickAdd}
+        disabled={generatingKeyPair}
+        $mt="1.4rem"
+      >
         New Key
       </CreateButton>
       <Modal

@@ -1,8 +1,12 @@
 import { expect, fn, userEvent, within } from '@storybook/test'
 
+import { ActionButton } from '../ActionButton'
+
 import { Select } from './Select'
 
 import type { Meta, StoryObj } from '@storybook/react'
+
+const actionOnPress = fn()
 
 const meta: Meta<typeof Select> = {
   title: 'Components/Select',
@@ -12,12 +16,6 @@ const meta: Meta<typeof Select> = {
       width: '300px',
     },
     backgrounds: {
-      values: [
-        {
-          name: 'Backup',
-          value: 'var(--color-light-blue-10)',
-        },
-      ],
       default: 'Backup',
     },
     design: {
@@ -39,8 +37,12 @@ const meta: Meta<typeof Select> = {
         label: 'chalametoui.bsky.social',
       },
     ],
-    actionLabel: 'Connect Bluesky account…',
-    actionOnPress: fn(),
+    actionButton: (
+      <ActionButton
+        actionLabel="Connect Bluesky account..."
+        actionOnPress={actionOnPress}
+      />
+    ),
   },
 }
 
@@ -103,7 +105,7 @@ export const WithNoOptions: Story = {
 }
 
 export const PerformingTheAction: Story = {
-  play: async ({ canvasElement, args }) => {
+  play: async ({ canvasElement }) => {
     // Use the entire body to find things in portals outside the canvas element.
     const body = within(canvasElement.ownerDocument.body)
     const button = await body.findByRole('button', {
@@ -114,11 +116,11 @@ export const PerformingTheAction: Story = {
       name: 'Select Bluesky account',
     })
     const option = await within(popup).findByRole('button', {
-      name: 'Connect Bluesky account…',
+      name: 'Connect Bluesky account...',
     })
     await userEvent.click(option)
     // expect the action to be called
-    await expect(args.actionOnPress).toHaveBeenCalled()
+    await expect(actionOnPress).toHaveBeenCalled()
   },
 }
 
