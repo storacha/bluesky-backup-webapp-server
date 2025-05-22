@@ -218,6 +218,7 @@ export interface BBDatabase {
     storachaAccount: string
   ) => Promise<{ results: RotationKey[] }>
   updateBackup: (id: string, data: Partial<Backup>) => Promise<Backup>
+  findBskyAccountsInBackups: (backupId: string) => Promise<{ results: string[] }>
 }
 
 interface StorageContext {
@@ -454,6 +455,16 @@ export function getStorageContext(): StorageContext {
           throw new Error('error updating backup')
         }
         return results[0]
+      },
+      async findBskyAccountsInBackups(backupId: string) {
+        if (!validateUUID(backupId)) return { results: [] }
+
+        const results = await sql<{ atproto_account: string }[]>`
+          select atproto_account
+          from backups
+          where id = ${backupId}
+        `
+        return { results: results.map(r => r.atproto_account) }
       },
     },
   }
