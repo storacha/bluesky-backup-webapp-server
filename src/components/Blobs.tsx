@@ -11,7 +11,7 @@ import { ATBlob } from '@/types'
 
 import { BackButton } from './BackButton'
 import { Loader } from './Loader'
-import { Box, Center, Heading, Stack, Text } from './ui'
+import { Box, Heading, Stack, Text } from './ui'
 
 interface BlobProps {
   blobs: ATBlob[]
@@ -34,9 +34,7 @@ export const Blobs = ({ blobs, backPath, loading, location }: BlobProps) => {
   return (
     <Box $padding={isMobile ? '1rem' : '2rem'} $height="fit-content">
       {loading ? (
-        <Center $height="88vh">
-          <Loader />
-        </Center>
+        <Loader />
       ) : (
         <Stack $gap="1rem">
           <Stack $direction="row" $gap="1rem">
