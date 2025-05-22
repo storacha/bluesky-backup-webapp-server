@@ -26,6 +26,7 @@ export default function KeyImportForm({
       <Stack $direction="row" $gap="0.5rem">
         <InputField
           type="password"
+          data-1p-ignore
           placeholder="M..."
           label="Private Key"
           {...register('keyMaterial')}

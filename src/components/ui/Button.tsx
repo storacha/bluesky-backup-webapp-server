@@ -44,6 +44,7 @@ const ButtonElement = styled.button<
   transition: background-color 0.2s ease;
   border: none;
   outline: none;
+  align-items: center;
   &:disabled {
     background-color: var(--color-gray-light);
     color: var(--color-gray-medium);

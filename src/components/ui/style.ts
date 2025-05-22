@@ -44,6 +44,10 @@ export type StyleProps = {
   $my: `${Property.MarginTop} ${Property.MarginBottom}`
   $pt: `${Property.PaddingTop}`
   $whiteSpace: Property.WhiteSpace
+  $overflow: Property.Overflow
+  $overflowX: Property.OverflowX
+  $overflowY: Property.OverflowY
+  $textDecor: Property.TextDecoration
 }
 
 export interface BtnProps extends StyleProps {

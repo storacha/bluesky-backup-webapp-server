@@ -46,5 +46,4 @@ export const SubHeading = styled.h3`
   font-weight: 600;
   color: var(--color-gray-medium);
   font-size: 0.75rem;
-  text-transform: capitalize;
 `
