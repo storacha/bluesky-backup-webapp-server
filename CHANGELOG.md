@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.8.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.7.1...v1.8.0) (2025-05-22)
+
+
+### Features
+
+* Accounts are required to create a backup ([0d562b7](https://github.com/storacha/bluesky-backup-webapp-server/commit/0d562b7ba57469fe6d24fd4ad7a35562646afa6a))
+* Accounts are required to create a backup ([8c78b1c](https://github.com/storacha/bluesky-backup-webapp-server/commit/8c78b1c5c05c3fbe1f5055d8ef09b4bd2d163108))
+* add ability to edit backup names ([c5d5ace](https://github.com/storacha/bluesky-backup-webapp-server/commit/c5d5acea4f4bfebc23c6b48c801e60052ffd7edf))
+* Add avatar and spinner to Identities ([#164](https://github.com/storacha/bluesky-backup-webapp-server/issues/164)) ([a1a0eb5](https://github.com/storacha/bluesky-backup-webapp-server/commit/a1a0eb5b960afdb0f379bf342fa33d1d7cd1a6e6))
+* add backup name editing functionality ([112ddcf](https://github.com/storacha/bluesky-backup-webapp-server/commit/112ddcf76dcc7ee79da49efb2517c564b9a9d30f))
+* Add hover text to `CopyButton` ([87d9c78](https://github.com/storacha/bluesky-backup-webapp-server/commit/87d9c78334dccb5211bf439a7bdb5ccf6ca360ac))
+* Add hover text to `CopyButton` ([e50652b](https://github.com/storacha/bluesky-backup-webapp-server/commit/e50652b151f53b64885134948158217da0b95328))
+* configure authenticator to send users back to bsky.storage after plan signup ([#179](https://github.com/storacha/bluesky-backup-webapp-server/issues/179)) ([6017b10](https://github.com/storacha/bluesky-backup-webapp-server/commit/6017b101abd70abf38bff28cc12684ba1a5ef2fc))
+* list all snapshots ([#171](https://github.com/storacha/bluesky-backup-webapp-server/issues/171)) ([7bfb8d1](https://github.com/storacha/bluesky-backup-webapp-server/commit/7bfb8d15817a67afa11fbdc8dda6936b72b09833))
+* Show handles on Bluesky select ([d535d15](https://github.com/storacha/bluesky-backup-webapp-server/commit/d535d15a21091b1bb97c3c52b7c0c04387113d57))
+
+
+### Bug Fixes
+
+* a few bits of cleanup in the blobs page ([#182](https://github.com/storacha/bluesky-backup-webapp-server/issues/182)) ([561c910](https://github.com/storacha/bluesky-backup-webapp-server/commit/561c910d8819ca1446feac883e3e4864155242b1))
+* discarded updateBackupName.ts ([2eb266d](https://github.com/storacha/bluesky-backup-webapp-server/commit/2eb266d686a6a02ef374d37ca63a888d5d2b0a4c))
+* Fix broken CSS syntax ([03071e3](https://github.com/storacha/bluesky-backup-webapp-server/commit/03071e30e257d2f8d3851d49898a9296c27919a2))
+* formatter ([f9db5f8](https://github.com/storacha/bluesky-backup-webapp-server/commit/f9db5f8ebfd26aa50c5fb8a2d29e7f311e4af225))
+* Match footer to storacha.network ([102547b](https://github.com/storacha/bluesky-backup-webapp-server/commit/102547ba2ffd7edc497673283ece7bced4bd4461))
+* polish up the bluesky account connection flow ([#181](https://github.com/storacha/bluesky-backup-webapp-server/issues/181)) ([fbffd13](https://github.com/storacha/bluesky-backup-webapp-server/commit/fbffd137ea30bfef3db876fe709ceb3709519413))
+* set defaults for snapshots URL ([#180](https://github.com/storacha/bluesky-backup-webapp-server/issues/180)) ([8ed9982](https://github.com/storacha/bluesky-backup-webapp-server/commit/8ed99822d552a44f651fa68ade59f7647099deb9))
+* Tell 1Password to ignore `keyMaterial` ([94bccd9](https://github.com/storacha/bluesky-backup-webapp-server/commit/94bccd9c8f11078282c34a49be1ccd0a631358cd))
+* Tell 1Password to ignore `keyMaterial` ([36f3af5](https://github.com/storacha/bluesky-backup-webapp-server/commit/36f3af5403a12bd125df353f3752594f6338119b))
+* **ui:** once a space is created, select it. ([#158](https://github.com/storacha/bluesky-backup-webapp-server/issues/158)) ([a4ea746](https://github.com/storacha/bluesky-backup-webapp-server/commit/a4ea746fc2170c3299e7f299577bf8f7fd263378))
+
 ## [1.7.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.7.0...v1.7.1) (2025-05-16)
 
 
