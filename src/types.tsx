@@ -1,6 +1,5 @@
 import { RepoEntry } from '@atcute/car'
 import { Did } from '@atproto/api'
-import { ProfileViewBasic } from '@atproto/api/dist/client/types/chat/bsky/actor/defs'
 import { Secp256k1Keypair } from '@atproto/crypto'
 
 export type SpaceDid = `did:key:${string}`
@@ -152,7 +151,18 @@ export interface ExtendedRepoEntry extends RepoEntry {
   uri: string
   /** custom field to check if a record is of the repost collection */
   isRepost?: boolean
-  author: ProfileViewBasic
+}
+
+export interface NormalizedPost {
+  id: string
+  text: string
+  createdAt: string
+  author: {
+    handle: string
+    displayName: string
+  }
+  embed?: ExternalEmbeds | ImageEmbeds | QuotedEmbeds | VideoEmbeds
+  isRepost?: boolean
 }
 
 export type LikedRecord = {

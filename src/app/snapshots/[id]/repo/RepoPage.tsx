@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { AppLayout } from '@/app/AppLayout'
 import { BackButton } from '@/components/BackButton'
 import { Loader } from '@/components/Loader'
-import { Posts } from '@/components/Posts'
+import { PostsTabContainer } from '@/components/Posts'
 import { Box, Center, Heading, NoTextTransform, Stack } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { useProfile } from '@/hooks/use-profile'
@@ -58,7 +58,7 @@ export default function RepoPage({ id }: { id: string }) {
                 )}{' '}
                 In This Snapshot
               </Heading>
-              <Posts
+              <PostsTabContainer
                 repositoryDid={snapshot.atprotoAccount}
                 posts={repo.posts.slice(0, 20)}
               />

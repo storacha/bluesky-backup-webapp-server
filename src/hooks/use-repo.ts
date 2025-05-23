@@ -1,5 +1,4 @@
 import { iterateAtpRepo } from '@atcute/car'
-import { FeedViewPost } from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import { useCallback, useEffect, useState } from 'react'
 
 import { loadCid } from '@/lib/storacha'
@@ -13,24 +12,11 @@ type ParsedRepo = {
   posts: ExtendedRepoEntry[]
 }
 
-// reposted records do not have the same data shape as the normal ones (from the repo CAR) in
-// the app.bsky.feed.post collection so we need to get it using the ATUri
-const getRecord = async (uri: string): Promise<FeedViewPost | null> => {
-  try {
-    const response = await fetch(`/api/record?uri=${uri}`)
-    const record = await response.json()
-    return record.posts?.[0]
-  } catch (error) {
-    console.error(error)
-    return null
-  }
-}
-
 const parseRepo = async (car: Uint8Array): Promise<ParsedRepo> => {
   try {
     const entries = [...iterateAtpRepo(car)] as ExtendedRepoEntry[]
 
-    const filteredEntries = entries
+    const posts = entries
       .filter(
         (entry) =>
           entry.collection === 'app.bsky.feed.post' ||
@@ -42,26 +28,8 @@ const parseRepo = async (car: Uint8Array): Promise<ParsedRepo> => {
         return dateB.getTime() - dateA.getTime()
       })
 
-    const processedPosts = await Promise.all(
-      filteredEntries.map(async (entry) => {
-        if (entry.collection === 'app.bsky.feed.repost') {
-          const repostedRecord = await getRecord(
-            String(entry.record.subject?.uri)
-          )
-          if (repostedRecord) {
-            return {
-              ...entry,
-              ...repostedRecord,
-              isRepost: true,
-            }
-          }
-        }
-        return entry
-      })
-    )
-
     return {
-      posts: processedPosts.filter(Boolean) as ExtendedRepoEntry[],
+      posts,
     }
   } catch (error) {
     console.error('Error parsing repo:', error)
