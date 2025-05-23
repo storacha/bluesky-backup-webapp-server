@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.9.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.8.0...v1.9.0) (2025-05-23)
+
+
+### Features
+
+* Backups can be paused ([313199a](https://github.com/storacha/bluesky-backup-webapp-server/commit/313199a299ff2232944f7c6173cd9ca13be4695f))
+* Use blue wordlogo ([79bb32c](https://github.com/storacha/bluesky-backup-webapp-server/commit/79bb32cf859b3626616e3b63218dd7138a431382))
+* Use blue wordlogo ([49a12ed](https://github.com/storacha/bluesky-backup-webapp-server/commit/49a12ed4f27b43c5b3a80160a74ada7d1db886b9))
+
 ## [1.8.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.7.1...v1.8.0) (2025-05-22)
 
 
