@@ -76,6 +76,10 @@ const backupItemLikeStyle = css`
 const BackupItem = styled.li<{ $selected?: boolean }>`
   ${backupItemLikeStyle}
 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
   ${({ $selected }) =>
     $selected &&
     css`
@@ -161,7 +165,6 @@ const BackupsLoader = styled(Loader)`
 
 function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
   const { data } = useSWR(['api', '/api/backups'])
-
   if (!data) return <BackupsLoader />
 
   return (

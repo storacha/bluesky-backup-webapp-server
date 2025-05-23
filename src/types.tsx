@@ -76,7 +76,7 @@ export const snapshotInputSchema = snapshotSchema
 
 export type SnapshotInput = z.infer<typeof snapshotInputSchema>
 
-export const stateSchema = z.enum(['loading', 'idle'])
+export const stateSchema = z.enum(['loading', 'idle', 'deleting'])
 export type State = z.infer<typeof stateSchema>
 
 export const atBlobSchema = z.object({
