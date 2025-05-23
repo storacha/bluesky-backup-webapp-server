@@ -7,7 +7,7 @@ import IdentitiesPage from './IdentitiesPage'
 export const dynamic = 'force-dynamic'
 
 export default async function Identities() {
-  const { did: account } = await getSession()
+  await getSession() // Keep session check but don't use the result
   const identities = await findAllIdentities()
 
   return <IdentitiesPage identities={identities} />

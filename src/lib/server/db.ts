@@ -11,11 +11,16 @@ import {
   ATBlobInput,
   Backup,
   BackupInput,
+  BackupInputUpdate,
+  PaginatedResult,
+  PaginatedResultParams,
   RotationKey,
   RotationKeyInput,
   Snapshot,
   SnapshotInput,
 } from '@/types'
+
+import { PAGINATED_RESULTS_LIMIT } from '../constants'
 
 // will use psql environment variables
 // https://github.com/porsager/postgres?tab=readme-ov-file#environmental-variables
@@ -187,7 +192,10 @@ export const requestLock: RuntimeLock = async (key, fn) => {
 export interface BBDatabase {
   addSnapshot: (input: SnapshotInput) => Promise<Snapshot>
   updateSnapshot: (id: string, input: Partial<Snapshot>) => Promise<Snapshot>
-  findSnapshots: (backupId: string) => Promise<{ results: Snapshot[] }>
+  findSnapshots: (
+    backupId: string,
+    options?: PaginatedResultParams
+  ) => Promise<PaginatedResult<Snapshot>>
   findSnapshot: (id: string) => Promise<{ result: Snapshot | undefined }>
   findBackups: (account: string) => Promise<{ results: Backup[] }>
   findBackup: (id: string) => Promise<{ result: Backup | undefined }>
@@ -198,13 +206,19 @@ export interface BBDatabase {
     cid: string,
     backupId: string
   ) => Promise<{ result: ATBlob | undefined }>
-  findBlobsForBackup: (id: string) => Promise<{ results: ATBlob[] }>
-  findBlobsForSnapshot: (id: string) => Promise<{ results: ATBlob[] }>
+  findBlobsForBackup: (
+    id: string,
+    options?: PaginatedResultParams
+  ) => Promise<PaginatedResult<ATBlob>>
+  findBlobsForSnapshot: (
+    id: string,
+    options?: PaginatedResultParams
+  ) => Promise<PaginatedResult<ATBlob>>
   addRotationKey: (input: RotationKeyInput) => Promise<RotationKey>
   findRotationKeys: (
     storachaAccount: string
   ) => Promise<{ results: RotationKey[] }>
-  updateBackup: (id: string, data: Partial<Backup>) => Promise<Backup>
+  updateBackup: (id: string, data: BackupInputUpdate) => Promise<Backup>
 }
 
 interface StorageContext {
@@ -239,26 +253,64 @@ export function getStorageContext(): StorageContext {
         return { result }
       },
 
-      async findBlobsForBackup(id) {
-        if (!validateUUID(id)) return { results: [] }
+      async findBlobsForBackup(id, options?: PaginatedResultParams) {
+        const { limit = PAGINATED_RESULTS_LIMIT, page = 1 } = options ?? {}
+        const offset = (page - 1) * limit
+
+        if (!validateUUID(id))
+          return {
+            count: 0,
+            results: [],
+          }
+
+        const total = await sql<{ count: number }[]>`
+          select count(*) as count
+          from at_blobs
+          where backup_id = ${id}
+        `
 
         const results = await sql<ATBlob[]>`
           select * from at_blobs
           where backup_id = ${id}
-          `
+          order by created_at desc
+          limit ${limit}
+          offset ${offset}
+        `
+
+        const count = Number(total[0]?.count) ?? 0
         return {
+          count,
           results,
         }
       },
 
-      async findBlobsForSnapshot(id) {
-        if (!validateUUID(id)) return { results: [] }
+      async findBlobsForSnapshot(id, options?: PaginatedResultParams) {
+        const { limit = PAGINATED_RESULTS_LIMIT, page = 1 } = options ?? {}
+        const offset = (page - 1) * limit
+
+        if (!validateUUID(id))
+          return {
+            count: 0,
+            results: [],
+          }
+
+        const total = await sql<{ count: number }[]>`
+          select count(*) as count
+          from at_blobs
+          where snapshot_id = ${id}
+        `
 
         const results = await sql<ATBlob[]>`
           select * from at_blobs
           where snapshot_id = ${id}
-          `
+          order by created_at desc
+          limit ${limit}
+          offset ${offset}
+        `
+
+        const count = Number(total[0]?.count) ?? 0
         return {
+          count,
           results,
         }
       },
@@ -296,16 +348,35 @@ export function getStorageContext(): StorageContext {
         }
         return results[0]
       },
-      async findSnapshots(backupId) {
-        if (!validateUUID(backupId)) return { results: [] }
+      async findSnapshots(backupId, options?: PaginatedResultParams) {
+        const { limit = PAGINATED_RESULTS_LIMIT, page = 1 } = options ?? {}
+        const offset = (page - 1) * limit
+
+        if (!validateUUID(backupId))
+          return {
+            count: 0,
+            results: [],
+          }
+
+        const total = await sql<{ count: number }[]>`
+          select count(*) as count
+          from snapshots
+          where backup_id = ${backupId}
+        `
 
         const results = await sql<Snapshot[]>`
           select *
           from snapshots
           where backup_id = ${backupId}
           order by created_at desc
+          limit ${limit}
+          offset ${offset}
         `
+
+        const count = Number(total[0]?.count) ?? 0
+
         return {
+          count,
           results,
         }
       },
@@ -336,6 +407,7 @@ export function getStorageContext(): StorageContext {
           select *
           from backups
           where delegation_cid is not null
+          and paused = false
         `
         return {
           results,

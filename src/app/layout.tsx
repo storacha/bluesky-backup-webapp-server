@@ -30,7 +30,7 @@ export default function RootLayout({
           <body>
             <div id="modal"></div>
             <NuqsAdapter>
-              <Authenticator as="div">
+              <Authenticator>
                 <KeychainProvider>
                   {children}
                   <Toaster

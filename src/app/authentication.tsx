@@ -1,12 +1,22 @@
 'use client'
 
-import { useAuthenticator } from '@storacha/ui-react'
+import {
+  AppName,
+  Authenticator as StorachaAuthenticator,
+  AuthenticatorRootProps,
+  useAuthenticator,
+} from '@storacha/ui-react'
+import { Fragment } from 'react'
 
 import type { ReactNode } from 'react'
 
-// Re-export as a Client Component, so it can safely be used in a Server
-// Component.
-export { Authenticator } from '@storacha/ui-react'
+export const Authenticator = (props: AuthenticatorRootProps) => (
+  <StorachaAuthenticator
+    as={Fragment}
+    appName={AppName.BskyBackups}
+    {...props}
+  />
+)
 
 /**
  * Renders {@link children} if the user is authenticated, otherwise renders

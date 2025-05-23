@@ -9,6 +9,7 @@ import { Stack, Text } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { Backup } from '@/types'
 
+import { BackupPauseButton } from './BackupPauseButton'
 import { DataBox } from './DataBox'
 import { EditableBackupName } from './EditableBackupName'
 
@@ -112,7 +113,10 @@ export const BackupDetail = ({ backup }: BackupProps) => {
   return (
     <Stack $gap="2rem">
       {backup ? (
-        <EditableBackupName backup={backup} />
+        <Stack $direction="row" $gap="1rem">
+          <EditableBackupName backup={backup} />
+          <BackupPauseButton backup={backup} />
+        </Stack>
       ) : (
         <BackupNameInput
           type="text"

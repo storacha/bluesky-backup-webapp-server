@@ -1,21 +1,38 @@
 'use client'
-import { styled } from 'next-yak'
+
+import Form from 'next/form'
 import { useSearchParams } from 'next/navigation'
 import React from 'react'
+import { useFormStatus } from 'react-dom'
 
 import {
-  Button,
   Center,
   Heading,
   InputField,
   Stack,
+  StatefulButton,
   SubHeading,
 } from '@/components/ui'
 import { useStorachaAccount } from '@/hooks/use-plan'
 
-const ConnectStack = styled(Stack)`
-  padding: 0 2rem;
-`
+import connectHandle from './connectHandle'
+import { ConnectStack } from './ui'
+
+const ConnectButton = () => {
+  const { pending } = useFormStatus()
+  return (
+    <StatefulButton
+      isLoading={pending}
+      disabled={pending}
+      $background="var(--color-dark-blue)"
+      $height="fit-content"
+      $fontSize="0.75rem"
+      type="submit"
+    >
+      Connect
+    </StatefulButton>
+  )
+}
 
 const ConnectPage: React.FC = () => {
   const account = useStorachaAccount()
@@ -24,28 +41,16 @@ const ConnectPage: React.FC = () => {
 
   if (!account) return null
 
-  const handleAppend = (e: React.FormEvent<HTMLFormElement>) => {
-    const handleInput = e.currentTarget.elements.namedItem(
-      'handle'
-    ) as HTMLInputElement
-    const handle = handleInput.value.trim()
-
-    if (!handle.includes('.')) {
-      handleInput.value = `${handle}.bsky.social`
-    }
-  }
-
   return (
     <Center $height="100vh">
       <ConnectStack $gap="1.2rem" $width="100%">
         <Stack>
           <Heading>Connect your Bluesky Account</Heading>
           <SubHeading>
-            {' '}
-            To get started, please log in to your Bluesky account.{' '}
+            To get started, please log in to your Bluesky account.
           </SubHeading>
         </Stack>
-        <form action="/atproto/oauth" method="POST" onSubmit={handleAppend}>
+        <Form action={connectHandle}>
           <input type="hidden" name="account" value={account.did()} />
           <Stack $gap="1rem">
             <InputField
@@ -55,16 +60,9 @@ const ConnectPage: React.FC = () => {
               placeholder="Enter your handle"
               defaultValue={handleParam || ''}
             />
-            <Button
-              $background="var(--color-dark-blue)"
-              $height="fit-content"
-              $fontSize="0.75rem"
-              type="submit"
-            >
-              Connect
-            </Button>
+            <ConnectButton />
           </Stack>
-        </form>
+        </Form>
       </ConnectStack>
     </Center>
   )

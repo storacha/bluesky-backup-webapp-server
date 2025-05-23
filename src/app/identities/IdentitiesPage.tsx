@@ -6,6 +6,7 @@ import { Sidebar } from '@/app/Sidebar'
 import { Heading, Stack, Text } from '@/components/ui'
 import { useSWR } from '@/lib/swr'
 import { Backup } from '@/types'
+
 import { IdentityCard } from './components/IdentityCard'
 
 const IdentitiesStack = styled(Stack)`

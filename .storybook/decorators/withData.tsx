@@ -1,10 +1,24 @@
-import { FetchedData, Key } from '@/lib/swr'
 import { Decorator } from '@storybook/react'
 import { SWRConfig, unstable_serialize } from 'swr'
 
+import { FetchedData, Key } from '@/lib/swr'
+
+type MaybePromise<T> = T | Promise<T>
+type MaybePromiseFunction<T> = ((data: T) => MaybePromise<T>) | MaybePromise<T>
+
+/**
+ * Provides data which can be fetched with SWR in the story.
+ */
 export const withData = <K extends Key>(
+  /**
+   * The key to fetch data for. This is the first argument to `useSWR`.
+   */
   key: K,
-  data: Promise<FetchedData<K>> | FetchedData<K>
+  /**
+   * The data to return for the key. Or, a function which receives the data from
+   * an earlier `withData` and returns modified data.
+   */
+  dataOrFunction: MaybePromiseFunction<FetchedData<K>>
 ): Decorator =>
   function WithDataDecorator(Story, ctx) {
     return (
@@ -22,10 +36,29 @@ export const withData = <K extends Key>(
               }),
 
             fetcher(fetchedKey: typeof key) {
-              if (unstable_serialize(fetchedKey) === unstable_serialize(key)) {
-                return data
-              } else if (parentConfig?.fetcher) {
-                return parentConfig.fetcher(fetchedKey)
+              const parentFetcher = parentConfig?.fetcher
+              const isMatch =
+                unstable_serialize(fetchedKey) === unstable_serialize(key)
+
+              if (isMatch) {
+                if (typeof dataOrFunction === 'function') {
+                  if (!parentFetcher) {
+                    const error = new Error(
+                      `withData in ${ctx.title} (${ctx.name}) for ${JSON.stringify(
+                        fetchedKey
+                      )} expected to modify data, but no earlier withData was found`
+                    )
+                    // Make sure this error is visible, even if SWR swallows it.
+                    console.error(error)
+                    throw error
+                  }
+                  return (async () =>
+                    dataOrFunction(await parentFetcher(fetchedKey)))()
+                } else {
+                  return dataOrFunction
+                }
+              } else if (parentFetcher) {
+                return parentFetcher(fetchedKey)
               } else {
                 const error = new Error(
                   `No fetcher given in story ${ctx.title} (${ctx.name}) for ${JSON.stringify(fetchedKey)}`

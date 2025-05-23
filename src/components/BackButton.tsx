@@ -34,7 +34,7 @@ export const BackButton = ({ path }: { path?: string }) => {
         $alignItems="center"
         $gap="1rem"
         onClick={goBack}
-        noPadding
+        $noPadding
       >
         <ArrowLeft size={18} />
       </Button>

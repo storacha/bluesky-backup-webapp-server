@@ -1,18 +1,14 @@
 import { Did } from '@atproto/api'
 import { JoseKey } from '@atproto/jwk-jose'
-import {
-  isDidPlc,
-  NodeOAuthClient,
-  OAuthClientMetadataInput,
-} from '@atproto/oauth-client-node'
+import { isDidPlc, NodeOAuthClient, OAuthClientMetadataInput } from '@atproto/oauth-client-node'
 import urlJoin from 'proper-url-join'
 
 import { getStorageContext, KVNamespace, requestLock } from '@/lib/server/db'
+import { getSession } from '@/lib/sessions'
 
 import { getConstants } from './server/constants'
 
 import type { SimpleStore, Value } from '@atproto-labs/simple-store'
-import { getSession } from '@/lib/sessions'
 
 const atprotoClientUri = process.env.NEXT_PUBLIC_APP_URI
 
