@@ -1,6 +1,10 @@
 'use client'
 
-import { DotsThree, PencilSimple, Trash } from '@phosphor-icons/react'
+import {
+  DotsThreeIcon,
+  PencilSimpleIcon,
+  TrashIcon,
+} from '@phosphor-icons/react'
 import { useRouter } from 'next/navigation'
 import { styled } from 'next-yak'
 import { useState } from 'react'
@@ -15,10 +19,20 @@ import {
 import { toast } from 'sonner'
 import { mutate } from 'swr'
 
-/* eslint-disable import/no-restricted-paths */
-import { deleteBackup } from '@/app/backups/deleteBackup'
 import { Spinner } from '@/components/ui'
 import { Backup, State } from '@/types'
+
+import { BackupPauseButton } from './BackupPauseButton'
+
+let deleteBackup: typeof import('../../app/backups/deleteBackup').deleteBackup
+if (process.env.STORYBOOK) {
+  deleteBackup = () => {
+    throw new Error('Server Functions are not available in Storybook')
+  }
+} else {
+  /* eslint-disable import/no-restricted-paths */
+  deleteBackup = (await import('../../app/backups/deleteBackup')).deleteBackup
+}
 
 const MenuButton = styled(Button)`
   all: unset;
@@ -119,20 +133,23 @@ export function BackupActionsMenu({
   return (
     <MenuTrigger>
       <MenuButton aria-label="More actions">
-        <DotsThree size={24} weight="bold" />
+        <DotsThreeIcon size={24} weight="bold" />
       </MenuButton>
 
       <Popover>
         <StyledMenu>
           <StyledMenuItem onAction={() => onEditAction()}>
-            <PencilSimple size={18} />
+            <PencilSimpleIcon size={18} />
             <MenuItemText>Edit name</MenuItemText>
           </StyledMenuItem>
-
+          <StyledMenuItem>
+            <BackupPauseButton backup={backup} />
+            <MenuItemText>Pause backup</MenuItemText>
+          </StyledMenuItem>
           <StyledSeparator />
 
           <StyledMenuItem data-danger="true" onAction={() => handleDelete()}>
-            <Trash size={18} />
+            <TrashIcon size={18} />
             <MenuItemText>Delete backup</MenuItemText>
           </StyledMenuItem>
         </StyledMenu>

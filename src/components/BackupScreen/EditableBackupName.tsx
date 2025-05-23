@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowRight } from '@phosphor-icons/react'
+import { ArrowRightIcon } from '@phosphor-icons/react'
 import { styled } from 'next-yak'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -46,7 +46,7 @@ const NameContainer = styled.div`
   gap: 0.75rem;
 `
 
-const SubmitIcon = styled(ArrowRight)`
+const SubmitIcon = styled(ArrowRightIcon)`
   color: var(--color-gray-medium);
   cursor: pointer;
   width: 20px;
