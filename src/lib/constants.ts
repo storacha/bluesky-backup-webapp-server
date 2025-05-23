@@ -53,3 +53,5 @@ const toWebDID = (input?: string) =>
 export const GATEWAY_ID =
   toWebDID(process.env.NEXT_PUBLIC_STORACHA_GATEWAY_ID) ??
   toWebDID('did:web:w3s.link')
+
+export const PAGINATED_RESULTS_LIMIT = 10

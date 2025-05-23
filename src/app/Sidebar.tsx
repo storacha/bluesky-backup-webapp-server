@@ -1,4 +1,5 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
+import { Pause } from '@phosphor-icons/react'
 import { IdentificationBadge } from '@phosphor-icons/react/dist/ssr'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -168,12 +169,26 @@ function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
 
   return (
     <BackupList>
-      {data.map(({ id, name }) => {
+      {data.map(({ id, name, paused }) => {
         const modifiedName = `${name.charAt(0).toUpperCase()}${name.slice(1)}`
         return (
           <Link key={id} href={`/backups/${id}`}>
             <BackupItem $selected={id === selectedBackupId}>
-              {shortenIfOver(modifiedName)}
+              <Stack
+                $direction="row"
+                $justifyContent="space-between"
+                $alignItems="center"
+              >
+                {shortenIfOver(modifiedName)}
+                {paused && (
+                  <Pause
+                    weight="fill"
+                    size="14"
+                    display="block"
+                    color="var(--color-gray-medium)"
+                  />
+                )}
+              </Stack>
             </BackupItem>
           </Link>
         )

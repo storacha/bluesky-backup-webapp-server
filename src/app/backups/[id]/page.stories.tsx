@@ -45,9 +45,11 @@ const meta = {
           includeBlobs: true,
           includePreferences: false,
           delegationCid: null,
+          paused: false,
         },
       ]
     ),
+    withData(['api', '/api/backups/abc/snapshots'], { count: 0, results: [] }),
   ],
 } satisfies Meta<typeof Page>
 
@@ -58,9 +60,11 @@ export const WithNoSnapshots: Story = {}
 
 export const WithSnapshots: Story = {
   decorators: [
-    withData(
-      ['api', '/api/backups/abc/snapshots'],
-      [
+    withData(['api', '/api/backups/abc/snapshots'], {
+      count: 2,
+      next: null,
+      prev: null,
+      results: [
         {
           id: 'abc',
           backupId: 'abc',
@@ -83,7 +87,21 @@ export const WithSnapshots: Story = {
             'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy552pref',
           createdAt: '2025-04-07 20:51:56',
         },
+      ],
+    }),
+  ],
+}
+
+export const Paused: Story = {
+  decorators: [
+    withData(['api', '/api/backups'], ([backup]) => {
+      if (!backup) throw new Error('Expected a backup from earlier data')
+      return [
+        {
+          ...backup,
+          paused: true,
+        },
       ]
-    ),
+    }),
   ],
 }

@@ -3,12 +3,12 @@ import { styled } from 'next-yak'
 import { ButtonHTMLAttributes, ReactNode } from 'react'
 
 import { Spinner } from './spinner'
-import { BtnProps, StyleProps } from './style'
+import { BtnProps, BtnVariant, StyleProps } from './style'
 
 const buttonBackgroundColor = (
   $background: Property.Background = 'var(--color-black)',
-  $disabled?: boolean,
-  $variant?: string
+  $disabled: boolean,
+  $variant: BtnVariant
 ) => {
   if ($variant === 'outline') {
     return 'transparent'
@@ -27,8 +27,8 @@ const ButtonElement = styled.button<
   border-radius: ${({ $borderRadius = '0.75rem' }) => $borderRadius};
   background-color: ${({
     $background = 'var(--color-dark-blue)',
-    $disabled,
-    $variant,
+    $disabled = false,
+    $variant = 'primary',
   }) => buttonBackgroundColor($background, $disabled, $variant)};
   color: ${({ $color = 'var(--color-white)', $disabled }) =>
     $disabled ? 'var(--color-gray-medium)' : $color};
@@ -44,6 +44,7 @@ const ButtonElement = styled.button<
   transition: background-color 0.2s ease;
   border: none;
   outline: none;
+  align-items: center;
   &:disabled {
     background-color: var(--color-gray-light);
     color: var(--color-gray-medium);

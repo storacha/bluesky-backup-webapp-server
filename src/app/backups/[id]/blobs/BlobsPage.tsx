@@ -8,9 +8,8 @@ import { PaginationControls } from '@/components/Pagination'
 import { Center, Stack } from '@/components/ui'
 import { PAGINATED_RESULTS_LIMIT } from '@/lib/constants'
 import { useSWR } from '@/lib/swr'
-import { ATBlob, PaginatedResult } from '@/types'
 
-export default function BlobsPage({ id }: { id: string }) {
+export default function AllBlobs({ backupId }: { backupId: string }) {
   const [pageNumber, setPageNumber] = useState(1)
   const {
     data: blobs,
@@ -18,28 +17,20 @@ export default function BlobsPage({ id }: { id: string }) {
     isLoading,
   } = useSWR([
     'api',
-    `/api/snapshots/${id}/blobs`,
+    `/api/backups/${backupId}/blobs`,
     { page: pageNumber.toString() },
   ])
-  // TS can't different the keys in the Fetchable tuple since
-  // /api/snapshots/${id} and /api/snapshots/${id}/blobs share a snimilar shape
-  // hence my type assertion here
-  const paginatedBlobs = blobs as PaginatedResult<ATBlob>
-  const totalPages =
-    blobs && Math.ceil(paginatedBlobs.count / PAGINATED_RESULTS_LIMIT)
+  const totalPages = blobs && Math.ceil(blobs?.count / PAGINATED_RESULTS_LIMIT)
   if (error) throw error
-  if (!blobs) return null
 
   return (
-    <AppLayout
-      selectedBackupId={paginatedBlobs?.results?.[0]?.backupId || null}
-    >
+    <AppLayout selectedBackupId={backupId}>
       <Stack $gap="0.8rem">
         <Blobs
-          blobs={paginatedBlobs?.results}
-          backPath={`/backups/${id}`}
+          blobs={blobs?.results || []}
+          backPath={`/backups/${backupId}`}
           loading={isLoading}
-          location="Snapshot"
+          location="Backup"
         />
         <Center>
           <PaginationControls

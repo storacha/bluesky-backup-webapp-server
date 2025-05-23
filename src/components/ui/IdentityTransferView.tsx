@@ -74,7 +74,6 @@ export default function IdentityTransferView({
 }
 
 const Tab = styled.div<{ $active: boolean }>`
-  pointer: cursor;
   padding: 0.1em 1em;
   border-top-right-radius: 0.5rem;
   border-top-left-radius: 0.5rem;
