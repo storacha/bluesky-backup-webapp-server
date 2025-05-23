@@ -9,13 +9,20 @@ import useSWRMutationBase, { MutationFetcher } from 'swr/mutation'
 import {
   ATBlob,
   Backup,
-  PaginatedResult,
+  Identity,
   ProfileData,
   RotationKey,
   Snapshot,
 } from '@/types'
 
 import { newClient } from './plc'
+
+export type PaginatedResult<T> = {
+  count: number
+  results: T[]
+  next?: string | null
+  prev?: string | null
+}
 
 // This type defines what's fetchable with `useSWR`. It is a union of key/data
 // pairs. The key can match a pattern by being as wide as it needs to be.
@@ -56,6 +63,7 @@ export type Fetchable =
       ['api', `/api/profile?did=${string}`, Record<string, string>?],
       ProfileData,
     ]
+  | [['api', '/api/identities', Record<string, string>?], Identity[]]
   | [['atproto-profile', Did], ProfileData | undefined]
   | [['storacha-plan', Account], string | undefined]
 

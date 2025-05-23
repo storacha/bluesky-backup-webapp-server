@@ -1,5 +1,7 @@
 'use client'
+
 import Form from 'next/form'
+import { useSearchParams } from 'next/navigation'
 import React from 'react'
 import { useFormStatus } from 'react-dom'
 
@@ -34,6 +36,9 @@ const ConnectButton = () => {
 
 const ConnectPage: React.FC = () => {
   const account = useStorachaAccount()
+  const searchParams = useSearchParams()
+  const handleParam = searchParams.get('handle')
+
   if (!account) return null
 
   return (
@@ -53,6 +58,7 @@ const ConnectPage: React.FC = () => {
               required
               label="Bluesky Handle"
               placeholder="Enter your handle"
+              defaultValue={handleParam || ''}
             />
             <ConnectButton />
           </Stack>
