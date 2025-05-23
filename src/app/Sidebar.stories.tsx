@@ -53,6 +53,7 @@ export const WithBackups: Story = {
           includeBlobs: true,
           includePreferences: false,
           delegationCid: null,
+          paused: false,
         },
         {
           id: 'def',
@@ -65,6 +66,20 @@ export const WithBackups: Story = {
           includeBlobs: false,
           includePreferences: true,
           delegationCid: null,
+          paused: false,
+        },
+        {
+          id: 'ghi',
+          accountDid: 'did:mailto:gmail.com:timothy-chalamet',
+          name: 'A Paused Backup',
+          atprotoAccount: 'did:plc:vv44vwwbr3lmbjht3p5fd7wz',
+          storachaSpace:
+            'did:key:zMwdHTDrZWDPyrEA2GLc3nnBTXcAn6RN3Lexio45ULK56BXA',
+          includeRepository: false,
+          includeBlobs: false,
+          includePreferences: true,
+          delegationCid: null,
+          paused: true,
         },
       ]
     ),

@@ -90,7 +90,7 @@ export const EditableBackupName = ({ backup }: EditableBackupNameProps) => {
     }
 
     try {
-      const response = await fetch(`/api/backups/${backup.id}/name`, {
+      const response = await fetch(`/api/backups/${backup.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
