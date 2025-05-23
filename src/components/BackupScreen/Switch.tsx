@@ -20,7 +20,9 @@ const SwitchContainer = styled.div<{
 }>`
   background: ${({ $isSelected, $isDisabled }) =>
     $isDisabled
-      ? 'var(--color-gray-light)'
+      ? $isSelected
+        ? 'var(--color-dark-blue-light)'
+        : 'var(--color-gray-light)'
       : $isSelected
         ? 'var(--color-dark-blue)'
         : 'var(--color-gray-medium-light)'};
@@ -42,7 +44,9 @@ const SwitchContainer = styled.div<{
 const SwitchNob = styled.div<{ $isSelected: boolean; $isDisabled?: boolean }>`
   background: ${({ $isSelected, $isDisabled }) =>
     $isDisabled
-      ? 'var(--color-gray-medium)'
+      ? $isSelected
+        ? 'var(--color-white)'
+        : 'var(--color-gray-medium)'
       : $isSelected
         ? 'var(--color-white)'
         : 'var(--color-gray)'};
