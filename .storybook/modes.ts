@@ -1,6 +1,12 @@
 export const allModes = {
-  default: {
+  desktop: {
     viewport: 1280,
+  },
+  'desktop-tall': {
+    viewport: {
+      width: 1280,
+      height: 2000,
+    },
   },
   iphone16: {
     viewport: 393,

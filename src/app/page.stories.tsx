@@ -16,7 +16,7 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
     chromatic: {
-      modes: modes(['default', 'iphone16']),
+      modes: modes(['desktop', 'iphone16']),
     },
   },
   decorators: [
@@ -45,6 +45,15 @@ export const Loading: Story = {
 }
 
 export const LoggedOut: Story = {
+  parameters: {
+    chromatic: {
+      modes: {
+        ...meta.parameters.chromatic.modes,
+        // Demonstrate how the footer lays out on a tall desktop screen.
+        ...modes(['desktop-tall']),
+      },
+    },
+  },
   decorators: [
     withAuthContext({
       accounts: [],
