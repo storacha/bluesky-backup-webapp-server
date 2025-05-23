@@ -139,8 +139,12 @@ export type Post = {
     handle: string
     displayName: string
   }
+  subject?: {
+    cid: string
+    uri: string
+  }
   creator?: string
-  embed?: ExternalEmbeds | ImageEmbeds | QuotedEmbeds
+  embed?: ExternalEmbeds | ImageEmbeds | QuotedEmbeds | VideoEmbeds
 }
 
 export type ExternalEmbeds = {
@@ -188,9 +192,39 @@ export type QuotedEmbeds = {
   }
 }
 
+export type VideoEmbeds = {
+  $type: 'app.bsky.embed.external#view'
+  external: {
+    description: string
+    thumb: {
+      $type: string
+      mimeType: string
+      ref: {
+        $link: string
+      }
+    }
+    title: string
+    uri: string
+  }
+}
+
 export interface ExtendedRepoEntry extends RepoEntry {
   record: Post
   uri: string
+  /** custom field to check if a record is of the repost collection */
+  isRepost?: boolean
+}
+
+export interface NormalizedPost {
+  id: string
+  text: string
+  createdAt: string
+  author: {
+    handle: string
+    displayName: string
+  }
+  embed?: ExternalEmbeds | ImageEmbeds | QuotedEmbeds | VideoEmbeds
+  isRepost?: boolean
 }
 
 export type LikedRecord = {
