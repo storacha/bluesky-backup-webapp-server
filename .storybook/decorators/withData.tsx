@@ -41,10 +41,8 @@ export const withData = <K extends Key>(
                 unstable_serialize(fetchedKey) === unstable_serialize(key)
 
               if (isMatch) {
-                console.log('isMatch', fetchedKey, key)
                 if (typeof dataOrFunction === 'function') {
                   if (!parentFetcher) {
-                    console.log('No parent fetcher', fetchedKey, key)
                     const error = new Error(
                       `withData in ${ctx.title} (${ctx.name}) for ${JSON.stringify(
                         fetchedKey
