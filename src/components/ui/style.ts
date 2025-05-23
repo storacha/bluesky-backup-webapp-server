@@ -38,11 +38,11 @@ export type StyleProps = {
   $borderRadius: Property.BorderRadius
   $fontFamily: Property.FontFamily
   $mt: Property.MarginTop
-  $mx: `${Property.MarginLeft} ${Property.MarginRight}`
-  $px: `${Property.PaddingLeft} ${Property.PaddingRight}`
-  $py: `${Property.PaddingTop} ${Property.PaddingBottom}`
-  $my: `${Property.MarginTop} ${Property.MarginBottom}`
-  $pt: `${Property.PaddingTop}`
+  $mx: Property.MarginLeft
+  $px: Property.PaddingLeft
+  $py: Property.PaddingTop
+  $my: Property.MarginTop
+  $pt: Property.PaddingTop
   $whiteSpace: Property.WhiteSpace
   $overflow: Property.Overflow
   $overflowX: Property.OverflowX
@@ -50,10 +50,12 @@ export type StyleProps = {
   $textDecor: Property.TextDecoration
 }
 
+export type BtnVariant = 'primary' | 'secondary' | 'outline'
+
 export interface BtnProps extends StyleProps {
   $isLoading?: boolean
   $hideLoadingText?: boolean
-  $variant?: string
+  $variant?: BtnVariant
   $leftIcon?: ReactNode
   $disabled?: boolean
 }

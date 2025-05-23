@@ -11,6 +11,7 @@ import {
   ATBlobInput,
   Backup,
   BackupInput,
+  BackupInputUpdate,
   PaginatedResult,
   PaginatedResultParams,
   RotationKey,
@@ -217,7 +218,7 @@ export interface BBDatabase {
   findRotationKeys: (
     storachaAccount: string
   ) => Promise<{ results: RotationKey[] }>
-  updateBackup: (id: string, data: Partial<Backup>) => Promise<Backup>
+  updateBackup: (id: string, data: BackupInputUpdate) => Promise<Backup>
 }
 
 interface StorageContext {
@@ -406,6 +407,7 @@ export function getStorageContext(): StorageContext {
           select *
           from backups
           where delegation_cid is not null
+          and paused = false
         `
         return {
           results,

@@ -28,6 +28,10 @@
     // Consider this an "entry" because it has types that happen to only used by
     // Storybook right now.
     "src/app/swr.tsx!",
+
+    // Consider this an "entry" because, like a library would, it exports things
+    // we may not use yet, but want to have clearly available.
+    "src/types.tsx!",
   ],
   // It's okay to export types even if they aren't (currently) used.
   "exclude": ["types"],

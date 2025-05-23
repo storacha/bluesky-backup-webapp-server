@@ -1,64 +1,126 @@
 import { RepoEntry } from '@atcute/car'
-import { Did } from '@atproto/api'
 import { Secp256k1Keypair } from '@atproto/crypto'
+import { z } from 'zod/v4'
 
-export type SpaceDid = `did:key:${string}`
+export const didSchema = z.templateLiteral(['did:', z.string()])
+export type Did = z.infer<typeof didSchema>
 
-export type Backup = {
-  id: string
-  accountDid: string
-  name: string
-  atprotoAccount: Did
-  storachaSpace: SpaceDid
-  includeRepository: boolean
-  includeBlobs: boolean
-  includePreferences: boolean
-  delegationCid: string | null
-}
+export const spaceDidSchema = z.templateLiteral(['did:key:', z.string()])
+export type SpaceDid = z.infer<typeof spaceDidSchema>
 
-type Input<
-  T,
-  NoInput extends keyof T,
-  OptionalInput extends keyof T = never,
-> = Omit<Omit<T, NoInput>, OptionalInput> &
-  Partial<Omit<Pick<T, OptionalInput>, NoInput>>
+export const backupSchema = z.object({
+  id: z.string(),
+  accountDid: z.string(),
+  name: z.string(),
+  atprotoAccount: didSchema,
+  storachaSpace: spaceDidSchema,
+  includeRepository: z.boolean(),
+  includeBlobs: z.boolean(),
+  includePreferences: z.boolean(),
+  delegationCid: z.string().nullable(),
+  paused: z.boolean(),
+})
 
-export type BackupInput = Input<Backup, 'id'>
+export type Backup = z.infer<typeof backupSchema>
 
-type SnapshotStatus = 'not-started' | 'in-progress' | 'failed' | 'success'
+export const backupInputSchema = backupSchema
+  .omit({
+    id: true,
+  })
+  .partial({ paused: true })
 
-export type Snapshot = {
-  id: string
-  atprotoAccount: Did
-  backupId: string
-  repositoryStatus: SnapshotStatus
-  repositoryCid?: string
-  blobsStatus: SnapshotStatus
-  preferencesStatus: SnapshotStatus
-  preferencesCid?: string
-  createdAt: string
-}
+export type BackupInput = z.infer<typeof backupInputSchema>
 
-export type SnapshotInput = Input<
-  Snapshot,
-  'id' | 'createdAt',
-  | 'repositoryStatus'
-  | 'repositoryCid'
-  | 'blobsStatus'
-  | 'preferencesStatus'
-  | 'preferencesCid'
+export const backupInputUpdateSchema = backupInputSchema
+  .pick({
+    name: true,
+    paused: true,
+  })
+  .partial()
+
+export type BackupInputUpdate = z.infer<typeof backupInputUpdateSchema>
+
+export const snapshotStatusSchema = z.enum([
+  'not-started',
+  'in-progress',
+  'failed',
+  'success',
+])
+
+export const snapshotSchema = z.object({
+  id: z.string(),
+  atprotoAccount: didSchema,
+  backupId: z.string(),
+  repositoryStatus: snapshotStatusSchema,
+  repositoryCid: z.string().optional(),
+  blobsStatus: snapshotStatusSchema,
+  preferencesStatus: snapshotStatusSchema,
+  preferencesCid: z.string().optional(),
+  createdAt: z.string(),
+})
+
+export type Snapshot = z.infer<typeof snapshotSchema>
+
+export const snapshotInputSchema = snapshotSchema
+  .omit({
+    id: true,
+    createdAt: true,
+  })
+  .partial({
+    repositoryStatus: true,
+    repositoryCid: true,
+    blobsStatus: true,
+    preferencesStatus: true,
+    preferencesCid: true,
+  })
+
+export type SnapshotInput = z.infer<typeof snapshotInputSchema>
+
+export const stateSchema = z.enum(['loading', 'idle'])
+export type State = z.infer<typeof stateSchema>
+
+export const atBlobSchema = z.object({
+  id: z.string(),
+  cid: z.string(),
+  contentType: z.string().optional(),
+  snapshotId: z.string(),
+  backupId: z.string().optional(),
+  createdAt: z.string(),
+})
+
+export type ATBlob = z.infer<typeof atBlobSchema>
+
+export const atBlobInputSchema = atBlobSchema.omit({
+  id: true,
+  createdAt: true,
+})
+
+export type ATBlobInput = z.infer<typeof atBlobInputSchema>
+
+export const rotationKeySchema = z.object({
+  id: z.string(),
+  keypair: z.instanceof(Secp256k1Keypair).optional(),
+  storachaAccount: z.string(),
+  atprotoAccount: z.string(),
+  createdAt: z.string(),
+})
+
+export type RotationKey = z.infer<typeof rotationKeySchema>
+
+export const rotationKeyInputSchema = rotationKeySchema.omit({
+  createdAt: true,
+  keypair: true,
+})
+
+export type RotationKeyInput = z.infer<typeof rotationKeyInputSchema>
+
+export const rotationKeyClientInputSchema = rotationKeyInputSchema.omit({
+  storachaAccount: true,
+})
+
+export type RotationKeyClientInput = z.infer<
+  typeof rotationKeyClientInputSchema
 >
-
-export type State = 'loading' | 'idle'
-
-export interface ATBlob {
-  id: string
-  cid: string
-  contentType?: string
-  snapshotId: string
-  backupId?: string
-  createdAt: string
-}
 
 export interface BlockMap {
   [cid: string]: string
@@ -197,20 +259,6 @@ export interface BskyProfile {
 }
 
 export type ProfileData = PlcProfile & BskyProfile
-
-export type ATBlobInput = Input<ATBlob, 'id' | 'createdAt'>
-
-export interface RotationKey {
-  id: string
-  keypair?: Secp256k1Keypair
-  storachaAccount: string
-  atprotoAccount: string
-  createdAt: string
-}
-
-export type RotationKeyInput = Input<RotationKey, 'createdAt' | 'keypair'>
-
-export type RotationKeyClientInput = Input<RotationKeyInput, 'storachaAccount'>
 
 export type PaginatedResult<T> = {
   count: number

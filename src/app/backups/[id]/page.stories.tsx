@@ -45,9 +45,11 @@ const meta = {
           includeBlobs: true,
           includePreferences: false,
           delegationCid: null,
+          paused: false,
         },
       ]
     ),
+    withData(['api', '/api/backups/abc/snapshots'], { count: 0, results: [] }),
   ],
 } satisfies Meta<typeof Page>
 
@@ -86,6 +88,20 @@ export const WithSnapshots: Story = {
           createdAt: '2025-04-07 20:51:56',
         },
       ],
+    }),
+  ],
+}
+
+export const Paused: Story = {
+  decorators: [
+    withData(['api', '/api/backups'], ([backup]) => {
+      if (!backup) throw new Error('Expected a backup from earlier data')
+      return [
+        {
+          ...backup,
+          paused: true,
+        },
+      ]
     }),
   ],
 }
