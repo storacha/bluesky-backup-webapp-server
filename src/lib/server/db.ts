@@ -5,6 +5,7 @@ import { Signer } from '@aws-sdk/rds-signer'
 import retry from 'p-retry'
 import postgres from 'postgres'
 import { validate as validateUUID } from 'uuid'
+import { z } from 'zod'
 
 import {
   ATBlob,
@@ -133,7 +134,7 @@ function newKvNamespace(table: string): KVNamespace {
       from ${tableSql}
       where key like ${`${prefix}%`}
     `
-      return { keys: results.map((r) => ({ name: r.key })) }
+      return { keys: results.map((r: { key: string }) => ({ name: r.key })) }
     },
   }
 }
@@ -173,7 +174,7 @@ function newLock(table: string): SqlSemaphore {
 }
 
 const sem = newLock('refresh_locks')
-export const requestLock: RuntimeLock = async (key, fn) => {
+export const requestLock: RuntimeLock = async (key: string, fn: () => Promise<unknown>) => {
   const lockId = await sem.lock(key)
   try {
     return await fn()
@@ -204,6 +205,60 @@ interface StorageContext {
   authSessionStore: KVNamespace
   authStateStore: KVNamespace
   db: BBDatabase
+}
+
+// Input validation schemas
+const UUIDSchema = z.string().uuid()
+
+// Define SnapshotStatus enum
+const SnapshotStatus = z.enum(['pending', 'completed', 'failed'])
+type SnapshotStatus = z.infer<typeof SnapshotStatus>
+
+const BackupInputSchema = z.object({
+  id: z.string().uuid(),
+  account: z.string().min(1).max(255),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  atprotoAccount: z.string().min(1),
+  accountDid: z.string().min(1),
+  name: z.string().min(1),
+  storachaSpace: z.string().min(1),
+  includeRepository: z.boolean(),
+  includeBlobs: z.boolean(),
+  includePreferences: z.boolean(),
+  delegationCid: z.string().optional(),
+  delegationStatus: z.string().optional(),
+  repositoryStatus: z.string().optional(),
+  repositoryCid: z.string().optional(),
+  blobsStatus: z.string().optional(),
+  preferencesStatus: z.string().optional(),
+  preferencesCid: z.string().optional()
+})
+
+const SnapshotInputSchema = z.object({
+  id: z.string().uuid(),
+  backupId: z.string().uuid(),
+  createdAt: z.date(),
+  atprotoAccount: z.string().min(1),
+  accountDid: z.string().min(1),
+  name: z.string().min(1),
+  storachaSpace: z.string().min(1),
+  repositoryStatus: SnapshotStatus.optional(),
+  repositoryCid: z.string().optional(),
+  blobsStatus: SnapshotStatus.optional(),
+  preferencesStatus: SnapshotStatus.optional(),
+  preferencesCid: z.string().optional(),
+  delegationCid: z.string().optional(),
+  delegationStatus: z.string().optional()
+})
+
+// Input validation functions
+export function validateBackupInput(input: unknown): BackupInput {
+  return BackupInputSchema.parse(input)
+}
+
+export function validateSnapshotInput(input: unknown): SnapshotInput {
+  return SnapshotInputSchema.parse(input)
 }
 
 export function getStorageContext(): StorageContext {
@@ -256,16 +311,17 @@ export function getStorageContext(): StorageContext {
         }
       },
       async findSnapshot(id) {
-        if (!validateUUID(id)) return { result: undefined }
-
-        const [result] = await sql<Snapshot[]>`
-          select *
-          from snapshots
-          where id = ${id}
-        `
-
-        return {
-          result,
+        try {
+          const validatedId = UUIDSchema.parse(id)
+          const [result] = await sql<Snapshot[]>`
+            select *
+            from snapshots
+            where id = ${validatedId}
+          `
+          return { result }
+        } catch (error) {
+          console.error('Error finding snapshot:', error)
+          return { result: undefined }
         }
       },
       async addSnapshot(input) {
@@ -290,15 +346,17 @@ export function getStorageContext(): StorageContext {
         return results[0]
       },
       async findSnapshots(backupId) {
-        if (!validateUUID(backupId)) return { results: [] }
-
-        const results = await sql<Snapshot[]>`
-          select *
-          from snapshots
-          where backup_id = ${backupId}
-        `
-        return {
-          results,
+        try {
+          const validatedBackupId = UUIDSchema.parse(backupId)
+          const results = await sql<Snapshot[]>`
+            select *
+            from snapshots
+            where backup_id = ${validatedBackupId}
+          `
+          return { results }
+        } catch (error) {
+          console.error('Error finding snapshots:', error)
+          return { results: [] }
         }
       },
       async addBackup(input) {
@@ -332,15 +390,17 @@ export function getStorageContext(): StorageContext {
         }
       },
       async findBackup(id) {
-        if (!validateUUID(id)) return { result: undefined }
-
-        const [result] = await sql<Backup[]>`
-          select *
-          from backups
-          where id = ${id}
-        `
-        return {
-          result,
+        try {
+          const validatedId = UUIDSchema.parse(id)
+          const [result] = await sql<Backup[]>`
+            select *
+            from backups
+            where id = ${validatedId}
+          `
+          return { result }
+        } catch (error) {
+          console.error('Error finding backup:', error)
+          return { result: undefined }
         }
       },
     },
