@@ -9,15 +9,10 @@ import urlJoin from 'proper-url-join'
 
 import { getStorageContext, KVNamespace, requestLock } from '@/lib/server/db'
 
+import { NEXT_PUBLIC_APP_URI } from './constants'
 import { getConstants } from './server/constants'
 
 import type { SimpleStore, Value } from '@atproto-labs/simple-store'
-
-const atprotoClientUri = process.env.NEXT_PUBLIC_APP_URI
-
-if (!atprotoClientUri) {
-  throw new Error('NEXT_PUBLIC_APP_URI must be provided')
-}
 
 class Store<K extends string, V extends Value = Value>
   implements SimpleStore<K, V>
@@ -76,22 +71,22 @@ export const blueskyClientMetadata = ({
 }): OAuthClientMetadataInput => {
   return {
     client_id: urlJoin(
-      atprotoClientUri,
+      NEXT_PUBLIC_APP_URI,
       'atproto',
       'oauth-client-metadata',
       encodeURIComponent(account)
     ),
     client_name: 'Storacha Bluesky Backups',
-    client_uri: atprotoClientUri,
+    client_uri: NEXT_PUBLIC_APP_URI,
     application_type: 'web',
     grant_types: ['authorization_code', 'refresh_token'],
     response_types: ['code'],
-    redirect_uris: [urlJoin(atprotoClientUri, 'atproto', 'callback')],
+    redirect_uris: [urlJoin(NEXT_PUBLIC_APP_URI, 'atproto', 'callback')],
     token_endpoint_auth_method: 'private_key_jwt',
     token_endpoint_auth_signing_alg: 'ES256',
     scope: 'atproto transition:generic',
     dpop_bound_access_tokens: true,
-    jwks_uri: urlJoin(atprotoClientUri, 'atproto', 'oauth', 'jwks'),
+    jwks_uri: urlJoin(NEXT_PUBLIC_APP_URI, 'atproto', 'oauth', 'jwks'),
   }
 }
 
