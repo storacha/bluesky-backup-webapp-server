@@ -1,7 +1,9 @@
-import { ArrowsClockwiseIcon } from '@phosphor-icons/react'
+import { ArrowsClockwiseIcon, IconProps } from '@phosphor-icons/react'
+import { useAuthenticator } from '@storacha/ui-react/dist/Authenticator'
 import { UCAN } from '@ucanto/core'
 import Link from 'next/link'
-import { styled } from 'next-yak'
+import { keyframes, styled } from 'next-yak'
+import { toast } from 'sonner'
 
 import { Loader } from '@/components/Loader'
 import {
@@ -12,7 +14,9 @@ import {
   Stack,
   SubHeading,
 } from '@/components/ui'
-import { useSWR } from '@/lib/swr'
+import { delegate } from '@/lib/delegate'
+import { uploadCAR } from '@/lib/storacha'
+import { useSWR, useSWRMutation } from '@/lib/swr'
 import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
 import { Backup } from '@/types'
 
@@ -74,7 +78,7 @@ export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
         <Stack $direction="row" $alignItems="center" $gap="1rem">
           <DetailName>Delegation CID</DetailName>
           <DetailValue>
-            <DelegationDetail delegationCid={backup.delegationCid} />
+            <DelegationDetail backup={backup} />
           </DetailValue>
         </Stack>
         <Stack $direction="row" $alignItems="center" $gap="1rem">
@@ -128,45 +132,105 @@ export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
   )
 }
 
-const DelegationDetail = ({
-  delegationCid,
-}: {
-  delegationCid: string | null
-}) => {
+const DelegationDetail = ({ backup }: { backup: Backup }) => {
   const { data: delegation, isLoading } = useSWR(
-    delegationCid !== null && ['delegation', { cid: delegationCid }]
+    backup.delegationCid !== null && [
+      'delegation',
+      { cid: backup.delegationCid },
+    ]
   )
 
-  if (!delegationCid) {
+  if (!backup.delegationCid) {
     return <>No delegation set</>
   } else if (isLoading) {
     return (
       <>
-        {isLoading && <Spinner size="xs" />} {shortenCID(delegationCid)}
+        {isLoading && <Spinner size="xs" />} {shortenCID(backup.delegationCid)}
       </>
     )
   } else if (!delegation) {
-    return <>❌ {shortenCID(delegationCid)} Not Found</>
+    return <>❌ {shortenCID(backup.delegationCid)} Not Found</>
   } else if (UCAN.isExpired(delegation)) {
     return (
       <>
-        ❌ {shortenCID(delegationCid)} Expired <RedelegateButton />
+        ❌ {shortenCID(backup.delegationCid)} Expired{' '}
+        <RedelegateButton backup={backup} />
       </>
     )
   }
 }
 
-const RedelegateButton = () => {
+const spin = keyframes`
+  to {
+    transform: rotate(360deg);
+  }
+`
+
+const RedelegateButtonIcon = styled<{ $spin?: boolean } & IconProps>(
+  ArrowsClockwiseIcon
+)`
+  /* animation: ${spin} 2s linear infinite; */
+  animation-name: ${({ $spin }) => ($spin ? spin : 'none')};
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+`
+
+const RedelegateButton = ({ backup }: { backup: Backup }) => {
+  const [{ client }] = useAuthenticator()
+
+  const { trigger, isMutating } = useSWRMutation(
+    ['api', '/api/backups'],
+    async () => {
+      // Should not render the button at all when the client is not yet ready
+      if (!client) return
+
+      await client.setCurrentSpace(backup.storachaSpace)
+      // upload the delegation to Storacha so we can use it later
+
+      // Create a delegation valid for a year of backups
+      const delegationDuration = 60 * 60 * 24 * 365
+      const newDelegationCid = await uploadCAR(
+        client,
+        new Blob([
+          await delegate(client, backup.storachaSpace, {
+            duration: delegationDuration,
+          }),
+        ])
+      )
+
+      const response = await fetch(`/api/backups/${backup.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ delegationCid: newDelegationCid }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to redelegate authorization for backup`)
+      }
+
+      toast.success(
+        `Backup reauthorized with new delegation: ${shortenCID(newDelegationCid)}`
+      )
+    }
+  )
+
+  if (!client) return null
+
   return (
     <IconButton
       title="Reauthorize Backup"
       aria-label="Reauthorize Backup"
-      // onClick={}
+      onClick={() => trigger()}
+      disabled={isMutating}
     >
-      <ArrowsClockwiseIcon
+      <RedelegateButtonIcon
         size="0.75rem"
         color="var(--color-green)"
         display="block"
+        $spin={isMutating}
       />
     </IconButton>
   )

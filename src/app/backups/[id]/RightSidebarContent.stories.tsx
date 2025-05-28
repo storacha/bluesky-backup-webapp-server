@@ -1,8 +1,9 @@
 import { SpaceBlob, SpaceIndex, Upload } from '@storacha/capabilities'
+import { Account, Space } from '@storacha/ui-react'
 import { Delegation } from '@ucanto/core'
 import { Capabilities, Signer } from '@ucanto/principal/ed25519'
 
-import { withData } from '@/../.storybook/decorators'
+import { withAuthContext, withData } from '@/../.storybook/decorators'
 import { SERVER_DID } from '@/lib/constants'
 
 import { RightSidebarContent } from './RightSidebarContent'
@@ -37,6 +38,20 @@ const meta = {
     },
   },
   decorators: [
+    withAuthContext({
+      accounts: [
+        {
+          did: () => 'did:mailto:gmail.com:timothy-chalamet',
+          toEmail: () => 'timothy-chalamet@gmail.com',
+        } as unknown as Account,
+      ],
+      spaces: [
+        {
+          name: 'Important Stuff',
+          did: () => 'did:key:zMw6cW3gpcPQzNkdfprbTZZh2MajkgZ3MdbqgUsqmksvBPiz',
+        } as unknown as Space,
+      ],
+    }),
     withData(['api', '/api/backups/abc/snapshots'], {
       count: 0,
       next: null,
