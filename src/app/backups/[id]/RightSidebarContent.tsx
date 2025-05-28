@@ -1,8 +1,9 @@
+import { UCAN } from '@ucanto/core'
 import Link from 'next/link'
 import { styled } from 'next-yak'
 
 import { Loader } from '@/components/Loader'
-import { Box, Center, Stack, SubHeading } from '@/components/ui'
+import { Box, Center, Spinner, Stack, SubHeading } from '@/components/ui'
 import { useSWR } from '@/lib/swr'
 import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
 import { Backup } from '@/types'
@@ -65,9 +66,7 @@ export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
         <Stack $direction="row" $alignItems="center" $gap="1rem">
           <DetailName>Delegation CID</DetailName>
           <DetailValue>
-            {backup.delegationCid
-              ? shortenCID(backup.delegationCid)
-              : 'No delegation set'}
+            <DelegationDetail delegationCid={backup.delegationCid} />
           </DetailValue>
         </Stack>
         <Stack $direction="row" $alignItems="center" $gap="1rem">
@@ -119,4 +118,28 @@ export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
       </SnapshotContainer>
     </>
   )
+}
+
+const DelegationDetail = ({
+  delegationCid,
+}: {
+  delegationCid: string | null
+}) => {
+  const { data: delegation, isLoading } = useSWR(
+    delegationCid !== null && ['delegation', { cid: delegationCid }]
+  )
+
+  if (!delegationCid) {
+    return <>No delegation set</>
+  } else if (isLoading) {
+    return (
+      <>
+        {isLoading && <Spinner size="xs" />} {shortenCID(delegationCid)}
+      </>
+    )
+  } else if (!delegation) {
+    return <>❌ {shortenCID(delegationCid)} Not Found</>
+  } else if (UCAN.isExpired(delegation)) {
+    return <>❌ {shortenCID(delegationCid)} Expired</>
+  }
 }

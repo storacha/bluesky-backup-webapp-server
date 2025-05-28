@@ -1,7 +1,7 @@
 'use client'
 
 import { Agent, Did } from '@atproto/api'
-import { Account } from '@storacha/ui-react'
+import { Account, Delegation } from '@storacha/ui-react'
 import React from 'react'
 import useSWRBase, { SWRConfig, SWRConfiguration, SWRResponse } from 'swr'
 import useSWRMutationBase, { MutationFetcher } from 'swr/mutation'
@@ -58,6 +58,7 @@ export type Fetchable =
     ]
   | [['atproto-profile', Did], ProfileData | undefined]
   | [['storacha-plan', Account], string | undefined]
+  | [['delegation', { cid: string }], Delegation]
 
 export type Key = Fetchable extends [infer T, unknown] ? T : never
 

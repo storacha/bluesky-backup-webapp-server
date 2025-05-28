@@ -1,4 +1,9 @@
+import { SpaceBlob, SpaceIndex, Upload } from '@storacha/capabilities'
+import { Delegation } from '@ucanto/core'
+import { Capabilities, Signer } from '@ucanto/principal/ed25519'
+
 import { withData } from '@/../.storybook/decorators'
+import { SERVER_DID } from '@/lib/constants'
 
 import { RightSidebarContent } from './RightSidebarContent'
 
@@ -77,5 +82,64 @@ export const WithSnapshots: Story = {
         },
       ],
     }),
+  ],
+}
+
+const spaceSigner = await Signer.generate()
+
+const capabilities: Capabilities = [
+  {
+    can: SpaceBlob.add.can,
+    with: spaceSigner.did(),
+  },
+  {
+    can: SpaceIndex.add.can,
+    with: spaceSigner.did(),
+  },
+  {
+    can: Upload.add.can,
+    with: spaceSigner.did(),
+  },
+]
+
+export const WithLoadingDelegation: Story = {
+  decorators: [
+    withData(
+      [
+        'delegation',
+        { cid: 'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551dele' },
+      ],
+      new Promise(() => {})
+    ),
+  ],
+}
+
+export const WithNotFoundDelegation: Story = {
+  decorators: [
+    withData(
+      [
+        'delegation',
+        { cid: 'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551dele' },
+      ],
+      new Error('Delegation not found')
+    ),
+  ],
+}
+
+export const WithExpiredDelegation: Story = {
+  decorators: [
+    withData(
+      [
+        'delegation',
+        { cid: 'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551dele' },
+      ],
+      Delegation.delegate({
+        issuer: spaceSigner,
+        audience: { did: () => SERVER_DID },
+        capabilities,
+        proofs: [],
+        expiration: Math.floor(Date.now() / 1000) - 1,
+      })
+    ),
   ],
 }
