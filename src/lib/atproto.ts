@@ -116,7 +116,7 @@ export const findAllIdentities = async () => {
     account
   )
 
-  // Get all accounts that have backups
+  // Get all of the logged-in user's backups
   const { results: backupAccounts } = await db.findBackups(account)
 
   // Create a map of connected accounts for quick lookup

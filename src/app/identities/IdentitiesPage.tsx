@@ -3,7 +3,7 @@
 import { styled } from 'next-yak'
 
 import { Sidebar } from '@/app/Sidebar'
-import { Heading, Stack, Text } from '@/components/ui'
+import { Heading, Stack } from '@/components/ui'
 import { useSWR } from '@/lib/swr'
 import { Backup } from '@/types'
 
@@ -17,6 +17,13 @@ const IdentitiesStack = styled(Stack)`
 type Identity = Backup & {
   isConnected: boolean
 }
+
+const IdentitiesLayout = ({ children }: { children: React.ReactNode }) => (
+  <div className="flex flex-col gap-4 p-4">
+    <h1 className="text-2xl font-bold">Identities</h1>
+    {children}
+  </div>
+)
 
 export default function IdentitiesPage({
   identities: initialIdentities,
@@ -32,18 +39,14 @@ export default function IdentitiesPage({
 
   if (error) {
     return (
-      <>
-        <Sidebar selectedBackupId={null} />
-        <IdentitiesStack $gap="1rem">
-          <Heading>Error loading identities</Heading>
-          <Text>Please try refreshing the page</Text>
-        </IdentitiesStack>
-      </>
+      <IdentitiesLayout>
+        <div className="text-red-500">Error loading identities: {error.message}</div>
+      </IdentitiesLayout>
     )
   }
 
   return (
-    <>
+    <IdentitiesLayout>
       <Sidebar selectedBackupId={null} />
       <IdentitiesStack $gap="1rem">
         <Heading>Bluesky Identities</Heading>
@@ -51,6 +54,6 @@ export default function IdentitiesPage({
           <IdentityCard key={identity.id} identity={identity} />
         ))}
       </IdentitiesStack>
-    </>
+    </IdentitiesLayout>
   )
 }

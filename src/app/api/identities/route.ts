@@ -8,12 +8,13 @@ export async function GET() {
   }
 
   const identities = await findAllIdentities()
+
+  // Cache for 200ms to reduce server load while maintaining reasonable freshness
+  // The request involves multiple DB queries and JS-space deduplication
   return new Response(JSON.stringify(identities), {
     headers: {
       'Content-Type': 'application/json',
-      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-      Pragma: 'no-cache',
-      Expires: '0',
+      'Cache-Control': 'max-age=0.2, must-revalidate',
     },
   })
 }
