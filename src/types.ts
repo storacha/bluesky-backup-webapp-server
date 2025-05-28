@@ -19,6 +19,7 @@ export const backupSchema = z.object({
   includePreferences: z.boolean(),
   delegationCid: z.string().nullable(),
   paused: z.boolean(),
+  archived: z.boolean(),
 })
 
 export type Backup = z.infer<typeof backupSchema>
@@ -27,7 +28,7 @@ export const backupInputSchema = backupSchema
   .omit({
     id: true,
   })
-  .partial({ paused: true })
+  .partial({ paused: true, archived: true })
 
 export type BackupInput = z.infer<typeof backupInputSchema>
 
@@ -35,6 +36,7 @@ export const backupInputUpdateSchema = backupInputSchema
   .pick({
     name: true,
     paused: true,
+    archived: true,
   })
   .partial()
 

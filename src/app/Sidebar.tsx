@@ -1,6 +1,5 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
-import { Pause } from '@phosphor-icons/react'
-import { IdentificationBadge } from '@phosphor-icons/react/dist/ssr'
+import { IdentificationBadgeIcon, PauseIcon } from '@phosphor-icons/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { css, styled } from 'next-yak'
@@ -148,7 +147,7 @@ export function Sidebar({
       </Stack>
       <Stack $gap="1rem">
         <IdentitiesLink href="/identities">
-          Identities <IdentificationBadge />
+          Identities <IdentificationBadgeIcon />
         </IdentitiesLink>
         <LogOutButton>
           Log Out <ActionIcon />
@@ -181,7 +180,7 @@ function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
               >
                 {shortenIfOver(modifiedName)}
                 {paused && (
-                  <Pause
+                  <PauseIcon
                     weight="fill"
                     size="14"
                     display="block"

@@ -1,10 +1,7 @@
 'use client'
 
-import {
-  DotsThreeIcon,
-  PencilSimpleIcon,
-  TrashIcon,
-} from '@phosphor-icons/react'
+import { DotsThreeIcon, PencilSimpleIcon } from '@phosphor-icons/react'
+import { ArchiveIcon } from '@phosphor-icons/react/dist/ssr'
 import { useRouter } from 'next/navigation'
 import { styled } from 'next-yak'
 import { useState } from 'react'
@@ -23,16 +20,6 @@ import { Spinner } from '@/components/ui'
 import { Backup, State } from '@/types'
 
 import { BackupPauseButton } from './BackupPauseButton'
-
-let deleteBackup: typeof import('../../app/backups/deleteBackup').deleteBackup
-if (process.env.STORYBOOK) {
-  deleteBackup = () => {
-    throw new Error('Server Functions are not available in Storybook')
-  }
-} else {
-  /* eslint-disable import/no-restricted-paths */
-  deleteBackup = (await import('../../app/backups/deleteBackup')).deleteBackup
-}
 
 const MenuButton = styled(Button)`
   all: unset;
@@ -106,17 +93,23 @@ export function BackupActionsMenu({
   const [state, setState] = useState<State>('idle')
 
   const handleDelete = async () => {
-    if (confirm(`Are you sure you want to delete ${backup.name}?`)) {
+    if (confirm(`Are you sure you want to archive ${backup.name}?`)) {
       setState('deleting')
       try {
-        const result = await deleteBackup(backup.id)
-        if (result.success) {
-          toast.success('Backup deleted!')
+        const request = await fetch(`/api/backups/${backup.id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ archived: true }),
+        })
+
+        if (request.ok) {
+          toast.success('Backup archived!')
           mutate(['api', '/api/backups'])
           router.push('/')
         } else {
-          toast.error(`Failed to delete ${backup.name}`)
-          console.error(result.error)
+          toast.error(`Failed to archive ${backup.name}`)
         }
       } catch (error) {
         console.error(error)
@@ -149,8 +142,8 @@ export function BackupActionsMenu({
           <StyledSeparator />
 
           <StyledMenuItem data-danger="true" onAction={() => handleDelete()}>
-            <TrashIcon size={18} />
-            <MenuItemText>Delete backup</MenuItemText>
+            <ArchiveIcon size={18} />
+            <MenuItemText>Archive backup</MenuItemText>
           </StyledMenuItem>
         </StyledMenu>
       </Popover>
