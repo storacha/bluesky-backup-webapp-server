@@ -1,7 +1,8 @@
 'use client'
 
 import { Agent, Did } from '@atproto/api'
-import { Account, Delegation } from '@storacha/ui-react'
+import { Account } from '@storacha/ui-react'
+import { Delegation } from '@ucanto/core'
 import React from 'react'
 import useSWRBase, { SWRConfig, SWRConfiguration, SWRResponse } from 'swr'
 import useSWRImmutableBase from 'swr/immutable'
@@ -17,6 +18,7 @@ import {
 } from '@/types'
 
 import { newClient } from './plc'
+import { cidUrl } from './storacha'
 
 // This type defines what's fetchable with `useSWR`. It is a union of key/data
 // pairs. The key can match a pattern by being as wide as it needs to be.
@@ -147,6 +149,27 @@ const fetchers: Fetchers = {
   async 'storacha-plan'(account) {
     const { ok: planName } = await account.plan.get()
     return planName?.product
+  },
+
+  async delegation({ cid }) {
+    const response = await fetch(cidUrl(cid))
+
+    if (response.status != 200 || !response.body) {
+      throw new Error(
+        `Could not fetch delegation from Storacha: Status ${response.status}`
+      )
+    }
+
+    const delegationResult = await Delegation.extract(
+      new Uint8Array(await response.arrayBuffer())
+    )
+
+    if (delegationResult.error) {
+      console.error(delegationResult.error)
+      throw new Error('Invalid UCAN')
+    }
+
+    return delegationResult.ok
   },
 }
 
