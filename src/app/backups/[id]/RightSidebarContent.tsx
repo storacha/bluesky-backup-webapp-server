@@ -1,22 +1,23 @@
-import { ArrowsClockwiseIcon, IconProps } from '@phosphor-icons/react'
+import { CheckIcon, XIcon } from '@phosphor-icons/react'
 import { useAuthenticator } from '@storacha/ui-react/dist/Authenticator'
 import { UCAN } from '@ucanto/core'
 import Link from 'next/link'
-import { keyframes, styled } from 'next-yak'
+import { css, styled } from 'next-yak'
+import { ComponentProps } from 'react'
 import { toast } from 'sonner'
 
 import { Loader } from '@/components/Loader'
 import {
   Box,
+  Button,
   Center,
-  IconButton,
   Spinner,
   Stack,
   SubHeading,
 } from '@/components/ui'
 import { delegate } from '@/lib/delegate'
 import { uploadCAR } from '@/lib/storacha'
-import { useSWR, useSWRMutation } from '@/lib/swr'
+import { useSWR, useSWRImmutable, useSWRMutation } from '@/lib/swr'
 import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
 import { Backup } from '@/types'
 
@@ -75,8 +76,8 @@ export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
           <DetailName>Account DID</DetailName>
           <DetailValue>{shortenDID(backup.atprotoAccount)}</DetailValue>
         </Stack>
-        <Stack $direction="row" $alignItems="center" $gap="1rem">
-          <DetailName>Delegation CID</DetailName>
+        <Stack $direction="row" $gap="1rem">
+          <DetailName>Delegation</DetailName>
           <DetailValue>
             <DelegationDetail backup={backup} />
           </DetailValue>
@@ -132,49 +133,65 @@ export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
   )
 }
 
+const DelegationStatus = styled<
+  { $error: boolean } & ComponentProps<typeof Stack>
+>(Stack)`
+  ${({ $error }) =>
+    $error &&
+    css`
+      color: var(--color-dark-red);
+      font-weight: 500;
+    `}
+`
+
 const DelegationDetail = ({ backup }: { backup: Backup }) => {
-  const { data: delegation, isLoading } = useSWR(
+  const { data: delegation, isLoading } = useSWRImmutable(
     backup.delegationCid !== null && [
       'delegation',
       { cid: backup.delegationCid },
     ]
   )
 
-  if (!backup.delegationCid) {
-    return <>No delegation set</>
-  } else if (isLoading) {
-    return (
-      <>
-        {isLoading && <Spinner size="xs" />} {shortenCID(backup.delegationCid)}
-      </>
-    )
-  } else if (!delegation) {
-    return <>❌ {shortenCID(backup.delegationCid)} Not Found</>
-  } else if (UCAN.isExpired(delegation)) {
-    return (
-      <>
-        ❌ {shortenCID(backup.delegationCid)} Expired{' '}
-        <RedelegateButton backup={backup} />
-      </>
-    )
-  }
+  const errorMsg = isLoading ? null : !delegation ? (
+    'Not Found'
+  ) : UCAN.isExpired(delegation) ? (
+    <>Expired {formatExpiration(delegation.expiration)}</>
+  ) : null
+
+  const expirationMsg = !delegation ? null : (
+    <>Expires {formatExpiration(delegation.expiration)}</>
+  )
+
+  return (
+    <Stack>
+      <Stack $direction="row" $gap="0.25rem">
+        <span>{backup.delegationCid && shortenCID(backup.delegationCid)}</span>
+        {isLoading && <Spinner size="xs" />}
+      </Stack>
+      {!isLoading && (
+        <>
+          <DelegationStatus
+            $direction="row"
+            $gap="0.25rem"
+            $alignItems="center"
+            $error={!!errorMsg}
+          >
+            {errorMsg ? (
+              <>
+                {errorMsg} <XIcon size="0.75rem" />
+              </>
+            ) : (
+              <>
+                {expirationMsg} <CheckIcon size="0.75rem" />
+              </>
+            )}
+          </DelegationStatus>
+          {errorMsg && <RedelegateButton backup={backup} />}
+        </>
+      )}
+    </Stack>
+  )
 }
-
-const spin = keyframes`
-  to {
-    transform: rotate(360deg);
-  }
-`
-
-const RedelegateButtonIcon = styled<{ $spin?: boolean } & IconProps>(
-  ArrowsClockwiseIcon
-)`
-  /* animation: ${spin} 2s linear infinite; */
-  animation-name: ${({ $spin }) => ($spin ? spin : 'none')};
-  animation-duration: 2s;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-`
 
 const RedelegateButton = ({ backup }: { backup: Backup }) => {
   const [{ client }] = useAuthenticator()
@@ -220,18 +237,20 @@ const RedelegateButton = ({ backup }: { backup: Backup }) => {
   if (!client) return null
 
   return (
-    <IconButton
-      title="Reauthorize Backup"
-      aria-label="Reauthorize Backup"
+    <Button
+      $fontSize="0.75rem"
+      $px="0.5rem"
+      $py="0.2rem"
+      $borderRadius="0.5rem"
+      $variant="secondary"
       onClick={() => trigger()}
       disabled={isMutating}
     >
-      <RedelegateButtonIcon
-        size="0.75rem"
-        color="var(--color-green)"
-        display="block"
-        $spin={isMutating}
-      />
-    </IconButton>
+      {isMutating ? <Spinner size="xs" /> : <>Reauthorize Backup</>}
+    </Button>
   )
+}
+
+function formatExpiration(expiration: number) {
+  return new Date(expiration * 1000).toLocaleDateString()
 }

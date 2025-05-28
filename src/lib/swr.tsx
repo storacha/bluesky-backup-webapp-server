@@ -4,6 +4,7 @@ import { Agent, Did } from '@atproto/api'
 import { Account, Delegation } from '@storacha/ui-react'
 import React from 'react'
 import useSWRBase, { SWRConfig, SWRConfiguration, SWRResponse } from 'swr'
+import useSWRImmutableBase from 'swr/immutable'
 import useSWRMutationBase, { MutationFetcher } from 'swr/mutation'
 
 import {
@@ -150,8 +151,9 @@ const fetchers: Fetchers = {
 }
 
 /**
- * Exactly the same as `useSWR`, but typed to only accept the keys supported by
- * our fetchers and config. Also, logs any errors to the console.
+ * Exactly the same as {@link useSWRBase|useSWR}, but typed to only accept the
+ * keys supported by our fetchers and config. Also, logs any errors to the
+ * console.
  */
 export const useSWR = <K extends Key>(
   key: K | null | undefined | false,
@@ -165,10 +167,27 @@ export const useSWR = <K extends Key>(
 }
 
 /**
- * Exactly the same as `useSWRMutation`, but typed to only accept the keys
- * supported by our fetchers and config, and the options object is not currently
- * supported. (It could be, but the types take some effort, and we haven't hit a
- * use for it so far.) Also, logs any errors to the console.
+ * Exactly the same as {@link useSWRImmutableBase|useSWRImmutable}, but typed to
+ * only accept the keys supported by our fetchers and config. Also, logs any
+ * errors to the console.
+ */
+export const useSWRImmutable = <K extends Key>(
+  key: K | null | undefined | false,
+  config?: SWRConfiguration
+): SWRResponse<FetchedData<K>> => {
+  const swrResponse = useSWRImmutableBase(key, config)
+  if (swrResponse.error) {
+    console.error('SWR error:', swrResponse.error)
+  }
+  return swrResponse
+}
+
+/**
+ * Exactly the same as {@link useSWRMutationBase|useSWRMutation}, but typed to
+ * only accept the keys supported by our fetchers and config, and the options
+ * object is not currently supported. (It could be, but the types take some
+ * effort, and we haven't hit a use for it so far.) Also, logs any errors to the
+ * console.
  */
 export const useSWRMutation = <
   Data = unknown,

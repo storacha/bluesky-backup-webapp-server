@@ -10,6 +10,23 @@ import { RightSidebarContent } from './RightSidebarContent'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
+const spaceSigner = await Signer.generate()
+
+const capabilities: Capabilities = [
+  {
+    can: SpaceBlob.add.can,
+    with: spaceSigner.did(),
+  },
+  {
+    can: SpaceIndex.add.can,
+    with: spaceSigner.did(),
+  },
+  {
+    can: Upload.add.can,
+    with: spaceSigner.did(),
+  },
+]
+
 const meta = {
   // Uses division slash (∕) instead of regular slash (/) in the title.
   title: '∕backups∕[id]/RightSidebarContent',
@@ -58,6 +75,19 @@ const meta = {
       prev: null,
       results: [],
     }),
+    withData(
+      [
+        'delegation',
+        { cid: 'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551dele' },
+      ],
+      Delegation.delegate({
+        issuer: spaceSigner,
+        audience: { did: () => SERVER_DID },
+        capabilities,
+        proofs: [],
+        expiration: Math.floor(Date.now() / 1000) + 100000,
+      })
+    ),
   ],
 } satisfies Meta<typeof RightSidebarContent>
 
@@ -99,23 +129,6 @@ export const WithSnapshots: Story = {
     }),
   ],
 }
-
-const spaceSigner = await Signer.generate()
-
-const capabilities: Capabilities = [
-  {
-    can: SpaceBlob.add.can,
-    with: spaceSigner.did(),
-  },
-  {
-    can: SpaceIndex.add.can,
-    with: spaceSigner.did(),
-  },
-  {
-    can: Upload.add.can,
-    with: spaceSigner.did(),
-  },
-]
 
 export const WithLoadingDelegation: Story = {
   decorators: [
