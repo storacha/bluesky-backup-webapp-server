@@ -221,7 +221,7 @@ const RedelegateButton = ({ backup }: { backup: Backup }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ delegationCid: newDelegationCid }),
+        body: JSON.stringify({ delegationCid: newDelegationCid.toString() }),
       })
 
       if (!response.ok) {

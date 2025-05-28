@@ -1,7 +1,7 @@
 'use client'
 
 import { Agent, Did } from '@atproto/api'
-import { Account } from '@storacha/ui-react'
+import { Account, Delegation as DelegationType } from '@storacha/ui-react'
 import { Delegation } from '@ucanto/core'
 import React from 'react'
 import useSWRBase, { SWRConfig, SWRConfiguration, SWRResponse } from 'swr'
@@ -61,7 +61,7 @@ export type Fetchable =
     ]
   | [['atproto-profile', Did], ProfileData | undefined]
   | [['storacha-plan', Account], string | undefined]
-  | [['delegation', { cid: string }], Delegation]
+  | [['delegation', { cid: string }], DelegationType]
 
 export type Key = Fetchable extends [infer T, unknown] ? T : never
 
