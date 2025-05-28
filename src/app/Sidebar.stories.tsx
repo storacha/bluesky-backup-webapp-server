@@ -54,6 +54,7 @@ export const WithBackups: Story = {
           includePreferences: false,
           delegationCid: null,
           paused: false,
+          archived: false,
         },
         {
           id: 'def',
@@ -67,6 +68,7 @@ export const WithBackups: Story = {
           includePreferences: true,
           delegationCid: null,
           paused: false,
+          archived: false,
         },
         {
           id: 'ghi',
@@ -80,6 +82,7 @@ export const WithBackups: Story = {
           includePreferences: true,
           delegationCid: null,
           paused: true,
+          archived: false,
         },
       ]
     ),
