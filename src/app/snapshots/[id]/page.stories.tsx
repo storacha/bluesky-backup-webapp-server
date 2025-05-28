@@ -46,7 +46,7 @@ const meta = {
           includeBlobs: true,
           includePreferences: false,
           paused: false,
-          archived: false
+          archived: false,
         },
       ]
     ),
