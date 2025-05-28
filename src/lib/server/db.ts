@@ -429,7 +429,7 @@ export function getStorageContext(): StorageContext {
           select *
           from backups
           where delegation_cid is not null
-          and paused = false
+          and paused = false and archived = false
         `
         return {
           results,
