@@ -6,6 +6,7 @@ import { css, styled } from 'next-yak'
 import { ComponentProps } from 'react'
 import { toast } from 'sonner'
 
+import CopyButton from '@/components/CopyButton'
 import { Loader } from '@/components/Loader'
 import {
   Box,
@@ -164,10 +165,15 @@ const DelegationDetail = ({ backup }: { backup: Backup }) => {
 
   return (
     <Stack>
-      <Stack $direction="row" $gap="0.25rem">
-        <span>{backup.delegationCid && shortenCID(backup.delegationCid)}</span>
-        {isLoading && <Spinner size="xs" />}
-      </Stack>
+      {backup.delegationCid && (
+        <Stack $direction="row" $gap="0.25rem" $alignItems="center">
+          <span title={backup.delegationCid}>
+            {shortenCID(backup.delegationCid)}
+          </span>
+          <CopyButton text={backup.delegationCid} size="0.75rem" />
+          {isLoading && <Spinner size="xs" />}
+        </Stack>
+      )}
       {!isLoading && (
         <>
           <DelegationStatus
@@ -229,7 +235,7 @@ const RedelegateButton = ({ backup }: { backup: Backup }) => {
       }
 
       toast.success(
-        `Backup reauthorized with new delegation: ${shortenCID(newDelegationCid)}`
+        `Backup reauthorized with new delegation: ${newDelegationCid}`
       )
     }
   )
