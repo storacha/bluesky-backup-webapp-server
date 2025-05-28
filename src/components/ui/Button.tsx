@@ -108,3 +108,9 @@ export const StatefulButton = ({
     </Button>
   )
 }
+
+export const IconButton = styled(Button)`
+  display: inline;
+  background: transparent;
+  padding: 0;
+`

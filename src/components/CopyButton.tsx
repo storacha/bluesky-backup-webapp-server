@@ -1,20 +1,13 @@
 'use client'
 import { CheckFat, Copy } from '@phosphor-icons/react'
-import { styled } from 'next-yak'
 import { useEffect, useState } from 'react'
 
-import { Button } from './ui'
+import { IconButton } from './ui'
 
 interface CopyButtonProps {
   text: string
   className?: string
 }
-
-const IconButton = styled(Button)`
-  display: inline;
-  background: transparent;
-  padding: 0;
-`
 
 export default function CopyButton({ text }: CopyButtonProps) {
   const [copied, setCopied] = useState(false)

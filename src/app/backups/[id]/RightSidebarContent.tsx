@@ -1,9 +1,17 @@
+import { ArrowsClockwiseIcon } from '@phosphor-icons/react'
 import { UCAN } from '@ucanto/core'
 import Link from 'next/link'
 import { styled } from 'next-yak'
 
 import { Loader } from '@/components/Loader'
-import { Box, Center, Spinner, Stack, SubHeading } from '@/components/ui'
+import {
+  Box,
+  Center,
+  IconButton,
+  Spinner,
+  Stack,
+  SubHeading,
+} from '@/components/ui'
 import { useSWR } from '@/lib/swr'
 import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
 import { Backup } from '@/types'
@@ -140,6 +148,26 @@ const DelegationDetail = ({
   } else if (!delegation) {
     return <>❌ {shortenCID(delegationCid)} Not Found</>
   } else if (UCAN.isExpired(delegation)) {
-    return <>❌ {shortenCID(delegationCid)} Expired</>
+    return (
+      <>
+        ❌ {shortenCID(delegationCid)} Expired <RedelegateButton />
+      </>
+    )
   }
+}
+
+const RedelegateButton = () => {
+  return (
+    <IconButton
+      title="Reauthorize Backup"
+      aria-label="Reauthorize Backup"
+      // onClick={}
+    >
+      <ArrowsClockwiseIcon
+        size="0.75rem"
+        color="var(--color-green)"
+        display="block"
+      />
+    </IconButton>
+  )
 }
