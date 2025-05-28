@@ -1,6 +1,6 @@
+import { isExpired } from '@ipld/dag-ucan'
 import { CheckIcon, XIcon } from '@phosphor-icons/react'
 import { useAuthenticator } from '@storacha/ui-react/dist/Authenticator'
-import { UCAN } from '@ucanto/core'
 import Link from 'next/link'
 import { css, styled } from 'next-yak'
 import { ComponentProps } from 'react'
@@ -155,7 +155,7 @@ const DelegationDetail = ({ backup }: { backup: Backup }) => {
 
   const errorMsg = isLoading ? null : !delegation ? (
     'Not Found'
-  ) : UCAN.isExpired(delegation) ? (
+  ) : isExpired(delegation.data) ? (
     <>Expired {formatExpiration(delegation.expiration)}</>
   ) : null
 
