@@ -1,6 +1,7 @@
 import { Delegation } from '@ucanto/core'
 import { NextRequest } from 'next/server'
 
+import { NEXT_PUBLIC_APP_URI } from '@/lib/constants'
 import { backupOwnedByAccount, isCronjobAuthed } from '@/lib/server/auth'
 import { createSnapshotForBackup } from '@/lib/server/backups'
 import { getStorageContext } from '@/lib/server/db'
@@ -26,7 +27,7 @@ export async function GET(
   const totalPages = Math.ceil(count / limit)
 
   const getPageUrl = (pageNumber: number) =>
-    `${process.env.NEXT_PUBLIC_APP_URI!}/api/backups/${id}/snapshots?page=${pageNumber}&limit=${limit}`
+    `${NEXT_PUBLIC_APP_URI}/api/backups/${id}/snapshots?page=${pageNumber}&limit=${limit}`
 
   return Response.json({
     ...data,
