@@ -8,7 +8,7 @@ export type Did = z.infer<typeof didSchema>
 const spaceDidSchema = z.templateLiteral(['did:key:', z.string()])
 export type SpaceDid = z.infer<typeof spaceDidSchema>
 
-export const backupSchema = z.strictObject({
+const backupSchema = z.strictObject({
   id: z.string(),
   accountDid: z.string(),
   name: z.string(),
@@ -28,7 +28,7 @@ export type Identity = Backup & {
   isConnected: boolean
 }
 
-export const backupInputSchema = backupSchema
+const backupInputSchema = backupSchema
   .omit({
     id: true,
   })
@@ -54,7 +54,7 @@ const snapshotStatusSchema = z.enum([
   'success',
 ])
 
-export const snapshotSchema = z.strictObject({
+const snapshotSchema = z.strictObject({
   id: z.string(),
   atprotoAccount: didSchema,
   backupId: z.string(),
@@ -87,7 +87,7 @@ export type SnapshotInput = z.infer<typeof snapshotInputSchema>
 const stateSchema = z.enum(['loading', 'idle', 'deleting'])
 export type State = z.infer<typeof stateSchema>
 
-export const atBlobSchema = z.strictObject({
+const atBlobSchema = z.strictObject({
   id: z.string(),
   cid: z.string(),
   contentType: z.string().optional(),
@@ -105,7 +105,7 @@ const atBlobInputSchema = atBlobSchema.omit({
 
 export type ATBlobInput = z.infer<typeof atBlobInputSchema>
 
-export const rotationKeySchema = z.strictObject({
+const rotationKeySchema = z.strictObject({
   id: z.string(),
   keypair: z.instanceof(Secp256k1Keypair).optional(),
   storachaAccount: z.string(),
