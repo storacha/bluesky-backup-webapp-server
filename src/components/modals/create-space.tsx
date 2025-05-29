@@ -1,5 +1,4 @@
 import { CheckCircle, Copy, EyeSlash } from '@phosphor-icons/react'
-import * as Client from '@storacha/client'
 import * as Storacha from '@storacha/client/account'
 import * as StorachaSpace from '@storacha/client/space'
 import { ContentServeService, useAuthenticator } from '@storacha/ui-react'
@@ -104,16 +103,27 @@ export const CreateSpaceModal = ({
   }
 
   const createDelegationForSpace = async () => {
-    if (!createdSpace) return
-    const client = await Client.create()
+    if (!client || !createdSpace) {
+      console.error(
+        'client or createdSpace is not defined, cannot create space'
+      )
+      return
+    }
 
     try {
       setState('creating-delegation')
       const recovery = await createdSpace.createRecovery(account.did())
-      await client.capability.access.delegate({
+
+      const delegationResponse = await client.capability.access.delegate({
         space: createdSpace.did(),
         delegations: [recovery],
       })
+
+      if (delegationResponse.error) {
+        throw new Error('Recovery delegation could not be created.', {
+          cause: delegationResponse.error,
+        })
+      }
 
       if (onSpaceCreated && createdSpace) {
         onSpaceCreated(createdSpace.did())

@@ -45,6 +45,7 @@ const meta = {
           includeRepository: true,
           includeBlobs: true,
           includePreferences: false,
+          paused: false,
         },
       ]
     ),

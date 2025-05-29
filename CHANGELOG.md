@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.9.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.8.0...v1.9.0) (2025-05-29)
+
+
+### Features
+
+* Backups can be paused ([313199a](https://github.com/storacha/bluesky-backup-webapp-server/commit/313199a299ff2232944f7c6173cd9ca13be4695f))
+* Footer sticks to bottom of viewport ([#185](https://github.com/storacha/bluesky-backup-webapp-server/issues/185)) ([ac4186b](https://github.com/storacha/bluesky-backup-webapp-server/commit/ac4186bc2a4271fb7ad4b05066c61a6e1c452907))
+* Use blue wordlogo ([79bb32c](https://github.com/storacha/bluesky-backup-webapp-server/commit/79bb32cf859b3626616e3b63218dd7138a431382))
+* Use blue wordlogo ([49a12ed](https://github.com/storacha/bluesky-backup-webapp-server/commit/49a12ed4f27b43c5b3a80160a74ada7d1db886b9))
+
+
+### Bug Fixes
+
+* add disable switch color ([#184](https://github.com/storacha/bluesky-backup-webapp-server/issues/184)) ([2ea9e01](https://github.com/storacha/bluesky-backup-webapp-server/commit/2ea9e014aebd729bd63e0054653748d9a39af682))
+* use client from authenticator in space creator ([#192](https://github.com/storacha/bluesky-backup-webapp-server/issues/192)) ([add571b](https://github.com/storacha/bluesky-backup-webapp-server/commit/add571ba71e5aa72f614fd72120d49c9d1218703))
+
 ## [1.8.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.7.1...v1.8.0) (2025-05-22)
 
 
