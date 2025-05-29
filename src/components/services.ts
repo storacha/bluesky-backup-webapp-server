@@ -31,6 +31,8 @@ export const serviceConnection = connect<Service>({
   channel: HTTP.open({
     url: serviceURL,
     method: 'POST',
-    headers: { 'X-Client': `Storacha/1 (js; browser) BlueskyBackups/${version.split('.')[0]}` },
+    headers: {
+      'X-Client': `Storacha/1 (js; browser) BlueskyBackups/${version.split('.')[0]}`,
+    },
   }),
 })
