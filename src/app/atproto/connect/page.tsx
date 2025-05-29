@@ -1,8 +1,9 @@
 'use client'
 
+import { Account } from '@storacha/ui-react'
 import Form from 'next/form'
 import { useSearchParams } from 'next/navigation'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { useFormStatus } from 'react-dom'
 
 import {
@@ -34,8 +35,11 @@ const ConnectButton = () => {
   )
 }
 
-const ConnectPage: React.FC = () => {
-  const account = useStorachaAccount()
+const Loading = () => {
+  return <div>Loading...</div>
+}
+
+const ConnectContent = ({ account }: { account: Account | undefined }) => {
   const searchParams = useSearchParams()
   const handleParam = searchParams.get('handle')
 
@@ -65,6 +69,16 @@ const ConnectPage: React.FC = () => {
         </Form>
       </ConnectStack>
     </Center>
+  )
+}
+
+const ConnectPage: React.FC = () => {
+  const account = useStorachaAccount()
+
+  return (
+    <Suspense fallback={<Loading />}>
+      <ConnectContent account={account} />
+    </Suspense>
   )
 }
 
