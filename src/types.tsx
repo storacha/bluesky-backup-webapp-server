@@ -23,6 +23,10 @@ export const backupSchema = z.strictObject({
 
 export type Backup = z.infer<typeof backupSchema>
 
+export type Identity = Backup & {
+  isConnected: boolean
+}
+
 export const backupInputSchema = backupSchema
   .omit({
     id: true,

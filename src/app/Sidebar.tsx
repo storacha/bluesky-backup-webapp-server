@@ -1,3 +1,5 @@
+'use client'
+
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
 import { isExpired } from '@ipld/dag-ucan'
 import { PauseIcon, XIcon } from '@phosphor-icons/react'
