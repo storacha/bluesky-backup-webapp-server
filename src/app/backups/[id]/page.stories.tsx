@@ -46,6 +46,7 @@ const meta = {
           includePreferences: false,
           delegationCid: null,
           paused: false,
+          archived: false,
         },
       ]
     ),

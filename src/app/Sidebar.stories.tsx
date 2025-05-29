@@ -76,6 +76,7 @@ export const WithBackups: Story = {
           includePreferences: false,
           delegationCid: null,
           paused: false,
+          archived: false,
         },
         {
           id: 'def',
@@ -89,6 +90,7 @@ export const WithBackups: Story = {
           includePreferences: true,
           delegationCid: null,
           paused: false,
+          archived: false,
         },
         {
           id: 'ghi',
@@ -102,6 +104,7 @@ export const WithBackups: Story = {
           includePreferences: true,
           delegationCid: null,
           paused: true,
+          archived: false,
         },
         {
           id: 'ghi',
@@ -116,6 +119,7 @@ export const WithBackups: Story = {
           delegationCid:
             'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551dele',
           paused: false,
+          archived: false,
         },
       ]
     ),

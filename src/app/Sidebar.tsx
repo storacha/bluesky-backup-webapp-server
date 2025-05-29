@@ -80,6 +80,10 @@ const backupItemLikeStyle = css`
 const BackupItem = styled.li<{ $selected?: boolean; $expired?: boolean }>`
   ${backupItemLikeStyle}
 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
   ${({ $selected }) =>
     $selected &&
     css`
@@ -88,7 +92,7 @@ const BackupItem = styled.li<{ $selected?: boolean; $expired?: boolean }>`
       box-shadow: none;
     `}
 
-    ${({ $expired }) =>
+  ${({ $expired }) =>
     $expired &&
     css`
       background-color: var(--color-light-red);
@@ -171,7 +175,6 @@ const BackupsLoader = styled(Loader)`
 
 function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
   const { data } = useSWR(['api', '/api/backups'])
-
   if (!data) return <BackupsLoader />
 
   return (

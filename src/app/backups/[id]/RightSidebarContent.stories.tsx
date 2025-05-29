@@ -52,6 +52,7 @@ const meta = {
       delegationCid:
         'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551dele',
       paused: false,
+      archived: false,
     },
   },
   decorators: [
