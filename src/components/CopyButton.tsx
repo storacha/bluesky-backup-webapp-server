@@ -1,22 +1,15 @@
 'use client'
-import { CheckFat, Copy } from '@phosphor-icons/react'
-import { styled } from 'next-yak'
+import { CheckFatIcon, CopyIcon, IconProps } from '@phosphor-icons/react'
 import { useEffect, useState } from 'react'
 
-import { Button } from './ui'
+import { IconButton } from './ui'
 
-interface CopyButtonProps {
+interface CopyButtonProps extends Pick<IconProps, 'size'> {
   text: string
   className?: string
 }
 
-const IconButton = styled(Button)`
-  display: inline;
-  background: transparent;
-  padding: 0;
-`
-
-export default function CopyButton({ text }: CopyButtonProps) {
+export default function CopyButton({ text, size = '16' }: CopyButtonProps) {
   const [copied, setCopied] = useState(false)
   useEffect(() => {
     if (copied) {
@@ -36,9 +29,9 @@ export default function CopyButton({ text }: CopyButtonProps) {
       onClick={copy}
     >
       {copied ? (
-        <CheckFat size="16" color={iconColor} />
+        <CheckFatIcon display="block" size={size} color={iconColor} />
       ) : (
-        <Copy size="16" color={iconColor} />
+        <CopyIcon display="block" size={size} color={iconColor} />
       )}
     </IconButton>
   )

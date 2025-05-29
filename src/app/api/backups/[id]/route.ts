@@ -19,6 +19,7 @@ export async function PATCH(
     const parsed = backupInputUpdateSchema.safeParse(await request.json())
 
     if (!parsed.success) {
+      console.error('Invalid backup update input:', parsed.error)
       return new Response('Invalid input', { status: 400 })
     }
 

@@ -3,8 +3,22 @@ import { SWRConfig, unstable_serialize } from 'swr'
 
 import { FetchedData, Key } from '@/lib/swr'
 
-type MaybePromise<T> = T | Promise<T>
+type MaybeError<T> = T | Error
+type MaybePromise<T> = MaybeError<T> | Promise<MaybeError<T>>
 type MaybePromiseFunction<T> = ((data: T) => MaybePromise<T>) | MaybePromise<T>
+
+/**
+ * Returns (the resolved value of) {@link value}, unless it's an `Error`, in
+ * which case it throws that error.
+ */
+const returnOrThrow = async <T,>(value: MaybePromise<T>): Promise<T> => {
+  const resolved = await value
+  if (resolved instanceof Error) {
+    throw resolved
+  } else {
+    return resolved
+  }
+}
 
 /**
  * Provides data which can be fetched with SWR in the story.
@@ -53,9 +67,11 @@ export const withData = <K extends Key>(
                     throw error
                   }
                   return (async () =>
-                    dataOrFunction(await parentFetcher(fetchedKey)))()
+                    returnOrThrow(
+                      dataOrFunction(await parentFetcher(fetchedKey))
+                    ))()
                 } else {
-                  return dataOrFunction
+                  return returnOrThrow(dataOrFunction)
                 }
               } else if (parentFetcher) {
                 return parentFetcher(fetchedKey)
