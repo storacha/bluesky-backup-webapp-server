@@ -1,18 +1,27 @@
 'use client'
 
 import { Did } from '@atproto/api'
-import { Gear } from '@phosphor-icons/react'
+import { GearIcon } from '@phosphor-icons/react'
 import Link from 'next/link'
 import { styled } from 'next-yak'
 
+import { BackButton } from '@/components/BackButton'
 import { Box, Button, Heading, Spinner, Stack, Text } from '@/components/ui'
 import { useProfile } from '@/hooks/use-profile'
 
-import { Sidebar } from '../Sidebar'
+import { AppLayout } from '../AppLayout'
 
 const IdentitiesStack = styled(Stack)`
   padding: 2rem;
-  width: 100%;
+  width: 50%;
+
+  @media only screen and (min-width: 0px) and (max-width: 600px) {
+    width: 100%;
+  }
+
+  @media only screen and (min-width: 601px) and (max-width: 992px) {
+    width: 55%;
+  }
 `
 
 const IdentityLink = styled(Link)`
@@ -49,16 +58,36 @@ const AccountLogo = styled.div<{
 `
 
 export default function IdentitiesPage({ accounts }: { accounts: Did[] }) {
+  const connectNewAccount = () => {
+    const width = 500
+    const height = 600
+    const left = window.screenX + (window.outerWidth - width) / 2
+    const top = window.screenY + (window.outerHeight - height) / 2
+    window.open(
+      '/atproto/connect',
+      'atproto-connect',
+      `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+    )
+  }
   return (
-    <>
-      <Sidebar selectedBackupId={null} />
+    <AppLayout selectedBackupId={null}>
       <IdentitiesStack $gap="1rem">
-        <Heading>Bluesky Identities</Heading>
+        <Stack $alignItems="center" $direction="row" $gap="1rem">
+          <BackButton path="/" />
+          <Heading>Bluesky Identities</Heading>
+        </Stack>
         {accounts.map((account) => (
           <Account key={account} account={account} />
         ))}
+        <Button
+          $width="fit-content"
+          $fontSize="0.875rem"
+          onClick={connectNewAccount}
+        >
+          Connect new account
+        </Button>
       </IdentitiesStack>
-    </>
+    </AppLayout>
   )
 }
 
@@ -93,7 +122,7 @@ const Account = ({ account }: { account: Did }) => {
       </Stack>
       <IdentityLink href={`/identities/${encodeURIComponent(account)}`}>
         <Button $variant="outline" $color="var(--color-black)">
-          <Gear />
+          <GearIcon />
         </Button>
       </IdentityLink>
     </Box>
