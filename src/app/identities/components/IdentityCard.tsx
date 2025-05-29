@@ -161,7 +161,7 @@ export function IdentityCard({ identity }: IdentityCardProps) {
         </Stack>
       </Stack>
       <Stack $direction="row" $gap="0.5rem">
-        {!currentIdentity.isConnected && (
+        {!currentIdentity.isConnected ? (
           <Button
             $variant="outline"
             $color="var(--color-black)"
@@ -171,14 +171,15 @@ export function IdentityCard({ identity }: IdentityCardProps) {
           >
             <ArrowsClockwise weight="bold" />
           </Button>
+        ) : (
+          <IdentityLink
+            href={`/identities/${encodeURIComponent(currentIdentity.atprotoAccount)}`}
+          >
+            <Button $variant="outline" $color="var(--color-black)">
+              <Gear weight="bold" />
+            </Button>
+          </IdentityLink>
         )}
-        <IdentityLink
-          href={`/identities/${encodeURIComponent(currentIdentity.atprotoAccount)}`}
-        >
-          <Button $variant="outline" $color="var(--color-black)">
-            <Gear weight="bold" />
-          </Button>
-        </IdentityLink>
       </Stack>
     </DisconnectedBox>
   )

@@ -1,3 +1,5 @@
+'use client'
+
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
 import { Pause } from '@phosphor-icons/react'
 import { IdentificationBadge } from '@phosphor-icons/react/dist/ssr'
