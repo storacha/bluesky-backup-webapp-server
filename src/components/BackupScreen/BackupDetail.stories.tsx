@@ -31,6 +31,7 @@ export const ShowBackup: Story = {
       includePreferences: false,
       delegationCid: null,
       paused: false,
+      archived: false,
     },
   },
 }
