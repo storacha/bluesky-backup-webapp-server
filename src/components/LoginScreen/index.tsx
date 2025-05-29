@@ -335,6 +335,7 @@ const MainStack = styled(Stack)`
 
 const MainContainer = styled.section`
   max-width: 1280px;
+  height: 100%;
   margin: 0 auto;
   padding: 2rem;
   display: flex;
