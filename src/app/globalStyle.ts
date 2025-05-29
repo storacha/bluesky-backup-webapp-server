@@ -10,7 +10,7 @@ export const dmSans = DM_Sans({
 
 export const dmMono = DM_Mono({
   subsets: ['latin'],
-  weight: '300',
+  weight: ['300', '400', '500'],
   variable: '--font-dm-mono',
 })
 

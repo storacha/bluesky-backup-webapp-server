@@ -199,8 +199,10 @@ export interface BBDatabase {
   findSnapshot: (id: string) => Promise<{ result: Snapshot | undefined }>
   findBackups: (account: string) => Promise<{ results: Backup[] }>
   findBackup: (id: string) => Promise<{ result: Backup | undefined }>
+  findArchivedBackups: (account: string) => Promise<{ results: Backup[] }>
   findScheduledBackups: () => Promise<{ results: Backup[] }>
   addBackup: (input: BackupInput) => Promise<Backup>
+  deleteBackup: (id: string) => void
   addBlob: (input: ATBlobInput) => Promise<ATBlob>
   getBlobInBackup: (
     cid: string,
@@ -390,14 +392,34 @@ export function getStorageContext(): StorageContext {
         }
         return results[0]
       },
+      async deleteBackup(id: string) {
+        if (!validateUUID(id)) return
+        await sql<Backup[]>`
+          delete from backups
+          where id = ${id}
+        `
+      },
       async findBackups(account: string) {
         const results = await sql<Backup[]>`
           select *
           from backups
-          where account_did = ${account}
+          where account_did = ${account} and archived = false
           order by created_at desc
           limit 10
         `
+        return {
+          results,
+        }
+      },
+      async findArchivedBackups(account: string) {
+        const results = await sql<Backup[]>`
+         select *
+         from backups
+         where account_did = ${account} and archived = true
+         order by created_at desc
+         limit 10
+        `
+
         return {
           results,
         }
@@ -407,7 +429,7 @@ export function getStorageContext(): StorageContext {
           select *
           from backups
           where delegation_cid is not null
-          and paused = false
+          and paused = false and archived = false
         `
         return {
           results,

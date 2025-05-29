@@ -1,6 +1,6 @@
 'use client'
 
-import { Pause } from '@phosphor-icons/react'
+import { PauseIcon } from '@phosphor-icons/react'
 import { styled } from 'next-yak'
 import { toast } from 'sonner'
 
@@ -55,7 +55,7 @@ export const BackupPauseButton = ({ backup }: { backup: Backup }) => {
               'aria-label': 'Resume backup',
             }
           : {
-              $background: 'var(--color-gray-light)',
+              $background: 'none',
               $color: 'var(--color-gray-medium)',
               title: 'Pause backup',
               'aria-label': 'Pause backup',
@@ -64,7 +64,7 @@ export const BackupPauseButton = ({ backup }: { backup: Backup }) => {
         {isMutating ? (
           <BlockSpinner />
         ) : (
-          <Pause weight="fill" size="1rem" display="block" />
+          <PauseIcon color="var(--color-black)" size="1rem" display="block" />
         )}
       </Button>
     </Stack>

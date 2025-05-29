@@ -1,5 +1,8 @@
+'use client'
+
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
-import { PauseIcon } from '@phosphor-icons/react'
+import { isExpired } from '@ipld/dag-ucan'
+import { PauseIcon, XIcon } from '@phosphor-icons/react'
 import { IdentificationBadgeIcon } from '@phosphor-icons/react/dist/ssr'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,8 +11,9 @@ import { css, styled } from 'next-yak'
 import { Loader } from '@/components/Loader'
 import { roundRectStyle, Stack } from '@/components/ui'
 import wordlogo from '@/images/wordlogo.png'
-import { useSWR } from '@/lib/swr'
+import { useSWR, useSWRImmutable } from '@/lib/swr'
 import { shortenIfOver } from '@/lib/ui'
+import { Backup as BackupType } from '@/types'
 
 import { LogOutButton as BaseLogOutButton } from './authentication'
 
@@ -73,8 +77,12 @@ const backupItemLikeStyle = css`
   box-shadow: 0px 0px 20px -5px var(--color-gray-light);
 `
 
-const BackupItem = styled.li<{ $selected?: boolean }>`
+const BackupItem = styled.li<{ $selected?: boolean; $expired?: boolean }>`
   ${backupItemLikeStyle}
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   ${({ $selected }) =>
     $selected &&
@@ -82,6 +90,12 @@ const BackupItem = styled.li<{ $selected?: boolean }>`
       border-color: var(--color-gray-light);
       background-color: var(--color-gray-medium-light);
       box-shadow: none;
+    `}
+
+  ${({ $expired }) =>
+    $expired &&
+    css`
+      background-color: var(--color-light-red);
     `}
 `
 
@@ -161,35 +175,64 @@ const BackupsLoader = styled(Loader)`
 
 function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
   const { data } = useSWR(['api', '/api/backups'])
-
   if (!data) return <BackupsLoader />
 
   return (
     <BackupList>
-      {data.map(({ id, name, paused }) => {
-        const modifiedName = `${name.charAt(0).toUpperCase()}${name.slice(1)}`
+      {data.map((backup) => {
         return (
-          <Link key={id} href={`/backups/${id}`}>
-            <BackupItem $selected={id === selectedBackupId}>
-              <Stack
-                $direction="row"
-                $justifyContent="space-between"
-                $alignItems="center"
-              >
-                {shortenIfOver(modifiedName)}
-                {paused && (
-                  <PauseIcon
-                    weight="fill"
-                    size="14"
-                    display="block"
-                    color="var(--color-gray-medium)"
-                  />
-                )}
-              </Stack>
-            </BackupItem>
-          </Link>
+          <Backup
+            key={backup.id}
+            backup={backup}
+            selected={backup.id === selectedBackupId}
+          />
         )
       })}
     </BackupList>
+  )
+}
+
+const Backup = ({
+  backup: { id, name, paused, delegationCid },
+  selected,
+}: {
+  backup: BackupType
+  selected: boolean
+}) => {
+  const { data: delegation } = useSWRImmutable(
+    delegationCid !== null && ['delegation', { cid: delegationCid }]
+  )
+
+  const modifiedName = `${name.charAt(0).toUpperCase()}${name.slice(1)}`
+  const expired = delegation && isExpired(delegation.data)
+
+  return (
+    <Link key={id} href={`/backups/${id}`}>
+      <BackupItem $selected={selected} $expired={expired}>
+        <Stack
+          $direction="row"
+          $justifyContent="space-between"
+          $alignItems="center"
+        >
+          {shortenIfOver(modifiedName)}
+          {paused && (
+            <PauseIcon
+              weight="fill"
+              size="14"
+              display="block"
+              color="var(--color-gray-medium)"
+            />
+          )}
+          {expired && (
+            <XIcon
+              weight="regular"
+              size="14"
+              display="block"
+              color="var(--color-dark-red)"
+            />
+          )}
+        </Stack>
+      </BackupItem>
+    </Link>
   )
 }
