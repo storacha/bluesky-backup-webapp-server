@@ -23,7 +23,7 @@ export const receiptsEndpoint = new URL(
     die('NEXT_PUBLIC_STORACHA_RECEIPTS_URL')
 )
 
-const version = process.env.NEXT_PUBLIC_VERSION ?? '1.0.0'
+const version = process.env.version ?? '0.0.0'
 
 export const serviceConnection = connect<Service>({
   id: servicePrincipal,
