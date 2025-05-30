@@ -4,7 +4,10 @@ import { getSession } from '@/lib/sessions'
 
 // NEEDS AUTHORIZATION
 
-export async function GET({ params }: { params: Promise<{ id: string }> }) {
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { id } = await params
   const { db } = getStorageContext()
   const { did: account } = await getSession()
