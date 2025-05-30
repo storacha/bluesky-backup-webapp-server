@@ -2,14 +2,14 @@
 
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
 import { isExpired } from '@ipld/dag-ucan'
-import { PauseIcon, XIcon } from '@phosphor-icons/react'
+import { ArchiveIcon, PauseIcon, XIcon } from '@phosphor-icons/react'
 import { IdentificationBadgeIcon } from '@phosphor-icons/react/dist/ssr'
 import Image from 'next/image'
 import Link from 'next/link'
 import { css, styled } from 'next-yak'
 
 import { Loader } from '@/components/Loader'
-import { roundRectStyle, Stack } from '@/components/ui'
+import { Button, roundRectStyle, Stack } from '@/components/ui'
 import wordlogo from '@/images/wordlogo.png'
 import { useSWR, useSWRImmutable } from '@/lib/swr'
 import { shortenIfOver } from '@/lib/ui'
@@ -58,7 +58,6 @@ const Header = styled.header`
 const Heading = styled.h2`
   font-size: 1rem;
   font-weight: 500;
-  padding-bottom: 1rem;
   color: var(--color-gray-medium);
 `
 
@@ -150,7 +149,18 @@ export function Sidebar({
             <Image src={wordlogo} alt="Storacha" width="164" height="57" />
           </Link>
         </Header>
-        <Heading>Backups</Heading>
+        <Stack
+          $direction="row"
+          $justifyContent="space-between"
+          $alignItems="center"
+        >
+          <Heading>Backups</Heading>
+          <Link href="/backups/archived">
+            <Button $background="#fff" $mt="0.2rem">
+              <ArchiveIcon color="var(--color-gray-medium)" />
+            </Button>
+          </Link>
+        </Stack>
         <Stack $gap="1rem">
           <Backups selectedBackupId={selectedBackupId} />
           <AddBackup href="/">Add backup…</AddBackup>

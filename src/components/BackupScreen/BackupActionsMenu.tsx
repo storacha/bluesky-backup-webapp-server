@@ -92,7 +92,7 @@ export function BackupActionsMenu({
   const router = useRouter()
   const [state, setState] = useState<State>('idle')
 
-  const handleDelete = async () => {
+  const archiveBackup = async () => {
     if (confirm(`Are you sure you want to archive ${backup.name}?`)) {
       setState('deleting')
       try {
@@ -141,7 +141,7 @@ export function BackupActionsMenu({
           </StyledMenuItem>
           <StyledSeparator />
 
-          <StyledMenuItem data-danger="true" onAction={() => handleDelete()}>
+          <StyledMenuItem data-danger="true" onAction={() => archiveBackup()}>
             <ArchiveIcon size={18} />
             <MenuItemText>Archive backup</MenuItemText>
           </StyledMenuItem>
