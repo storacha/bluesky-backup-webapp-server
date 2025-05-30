@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.10.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.9.0...v1.10.0) (2025-05-30)
+
+
+### Features
+
+* add 'connect new account' button to identities page ([#194](https://github.com/storacha/bluesky-backup-webapp-server/issues/194)) ([83ef1f8](https://github.com/storacha/bluesky-backup-webapp-server/commit/83ef1f8aed2e9bb52d158c035d73adec8f7704f4))
+* add ability to archive backups ([#170](https://github.com/storacha/bluesky-backup-webapp-server/issues/170)) ([3877bd5](https://github.com/storacha/bluesky-backup-webapp-server/commit/3877bd5faac93ec998383a06ef168942f26dd295))
+* add identity reconnection flow ([#178](https://github.com/storacha/bluesky-backup-webapp-server/issues/178)) ([5c7a225](https://github.com/storacha/bluesky-backup-webapp-server/commit/5c7a2252b4b14c4d8f849c18a36a7e458cad4544))
+* add x-client header ([#193](https://github.com/storacha/bluesky-backup-webapp-server/issues/193)) ([de3aef0](https://github.com/storacha/bluesky-backup-webapp-server/commit/de3aef0cc940efd4676fd15d116962f194f5d72b))
+* Handle delegation expiration ([0336093](https://github.com/storacha/bluesky-backup-webapp-server/commit/03360932307d7ef270333af8e033bc05581fa751))
+
+
+### Bug Fixes
+
+* **ui:** remove resizable panels on mobile ([#197](https://github.com/storacha/bluesky-backup-webapp-server/issues/197)) ([02546ad](https://github.com/storacha/bluesky-backup-webapp-server/commit/02546adb14ae3db5a27d1f04a17787e984207d35))
+
 ## [1.9.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.8.0...v1.9.0) (2025-05-29)
 
 
