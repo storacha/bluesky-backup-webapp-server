@@ -3,12 +3,13 @@
 import { Agent, CredentialSession, Did } from '@atproto/api'
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 import {
-  ArrowCircleRight,
-  Eye,
-  EyeSlash,
-  Gear,
-  IdentificationBadge,
-  Key,
+  ArrowCircleRightIcon,
+  EyeIcon,
+  EyeSlashIcon,
+  GearIcon,
+  IdentificationBadgeIcon,
+  KeyIcon,
+  TrashIcon,
   //  Trash,
 } from '@phosphor-icons/react'
 import { base64pad } from 'multiformats/bases/base64'
@@ -117,7 +118,7 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
               $variant="secondary"
               onClick={hideSecret}
               $leftIcon={
-                <EyeSlash size="16" color="var(--color-gray-medium)" />
+                <EyeSlashIcon size="16" color="var(--color-gray-medium)" />
               }
             >
               Hide Secret
@@ -146,7 +147,9 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
               <Button
                 $variant="secondary"
                 onClick={showSecret}
-                $leftIcon={<Eye size="16" color="var(--color-gray-medium)" />}
+                $leftIcon={
+                  <EyeIcon size="16" color="var(--color-gray-medium)" />
+                }
               >
                 Show Secret
               </Button>
@@ -313,7 +316,7 @@ function AddRotationKey({
                 onClick={transferIdentity}
                 disabled={isTransferringIdentity}
                 $leftIcon={
-                  <ArrowCircleRight
+                  <ArrowCircleRightIcon
                     size="16"
                     color="var(--color-gray-medium)"
                   />
@@ -492,7 +495,7 @@ export default function KeychainView({
   keys,
   generateKeyPair,
   importKey,
-  //forgetKey,
+  forgetKey,
   profile,
 }: KeychainProps) {
   const { did: atprotoAccount, rotationKeys, handle } = profile ?? {}
@@ -565,7 +568,7 @@ export default function KeychainView({
                       onClick={() => openRotationKeyStatus(key)}
                       aria-label="Rotation key status"
                     >
-                      <Key
+                      <KeyIcon
                         size="16"
                         color={
                           rotationKeys
@@ -583,7 +586,7 @@ export default function KeychainView({
                       onClick={() => openRotationKeyStatus(key)}
                       aria-label="Rotation key status"
                     >
-                      <IdentificationBadge
+                      <IdentificationBadgeIcon
                         size="16"
                         color={
                           rotationKeys
@@ -601,7 +604,15 @@ export default function KeychainView({
                       onClick={() => openRotationKeyStatus(key)}
                       aria-label="View key details"
                     >
-                      <Gear size="16" color="var(--color-gray-medium)" />
+                      <GearIcon size="16" color="var(--color-gray-medium)" />
+                    </Button>
+                    <Button
+                      $variant="outline"
+                      className="p-1"
+                      onClick={() => forgetKey(key)}
+                      aria-label="View key details"
+                    >
+                      <TrashIcon size="16" color="var(--color-gray-medium)" />
                     </Button>
                     {/* 
                     TODO: add this back with warnings if it is registered as a rotation key
