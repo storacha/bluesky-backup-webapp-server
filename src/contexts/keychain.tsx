@@ -6,6 +6,7 @@ import { createContext, useContext, useState } from 'react'
 import { toast } from 'sonner'
 
 import { Button, Modal, Stack, StatefulButton, Text } from '@/components/ui'
+import KeyMaterialImportForm from '@/components/ui/KeyMaterialImportForm'
 import { useStorachaAccount } from '@/hooks/use-plan'
 import { useSWR } from '@/lib/swr'
 import { RotationKey } from '@/types'
@@ -21,16 +22,21 @@ if (process.env.STORYBOOK) {
   recordKey = (await import('@/actions/recordKey')).recordKey
 }
 
-export type KeyImportFn = (
+export type KeyHydrateFn = (
   key: RotationKey,
   keyMaterial: string
 ) => Promise<void>
+
+export type KeyImportFn = (atprotoAccount: string) => Promise<void>
+
+export type KeyMaterialImportFn = (keyMaterial: string) => Promise<void>
 
 export type KeychainContextProps = {
   keys: RotationKey[]
   selectedKey?: RotationKey
   setSelectedKey: (key: RotationKey) => unknown
   generateKeyPair?: (atprotoAccount: string) => Promise<RotationKey | undefined>
+  hydrateKey: KeyHydrateFn
   importKey: KeyImportFn
   forgetKey: (key: RotationKey) => Promise<unknown>
 }
@@ -40,8 +46,11 @@ const KeychainContext = createContext<KeychainContextProps>({
   setSelectedKey: () => {
     console.warn('setSelectedKeyPair is unimplemented')
   },
+  hydrateKey: async () => {
+    console.warn('hydrateKey is unimplemented')
+  },
   importKey: async () => {
-    console.warn('importKey is unimplemented')
+    throw new Error('importKey is unimplemented')
   },
   forgetKey: async () => {
     console.warn('forgetKey is unimplemented')
@@ -60,7 +69,7 @@ export const KeychainProvider = ({
   const [isDeletingKey, setIsDeletingKey] = useState(false)
   const storachaAccount = useStorachaAccount()
   const { data: keys, mutate: mutateKeys } = useSWR(['api', `/api/keys`])
-  async function generateKeyPair(atprotoAccount: string) {
+  async function generateKeyPair (atprotoAccount: string) {
     if (storachaAccount) {
       const keypair = await Secp256k1Keypair.create({ exportable: true })
       const newKey = await recordKey({
@@ -75,7 +84,7 @@ export const KeychainProvider = ({
       console.warn('could not find storacha account')
     }
   }
-  async function importKey(key: RotationKey, keyMaterial: string) {
+  async function hydrateKey (key: RotationKey, keyMaterial: string) {
     const keypair = await Secp256k1Keypair.import(
       base64pad.decode(keyMaterial),
       { exportable: true }
@@ -89,12 +98,46 @@ export const KeychainProvider = ({
       )
     }
   }
+  const [keyImportAccount, setKeyImportAccount] = useState<string>()
+
+  async function importKey (atProtoAccount: string) {
+    setKeyImportAccount(atProtoAccount)
+  }
+
+  async function importKeyMaterial (keyMaterial: string) {
+    if (!keyImportAccount)
+      throw new Error(
+        'keyImportAccount is not defined, cannot import key material'
+      )
+    try {
+      const keypair = await Secp256k1Keypair.import(
+        base64pad.decode(keyMaterial),
+        { exportable: true }
+      )
+      if (!keys?.map(k => k.id).includes(keypair.did())) {
+        const newKey = await recordKey({
+          id: keypair.did(),
+          atprotoAccount: keyImportAccount,
+        })
+        newKey.keypair = keypair
+        setSelectedKey(newKey)
+        await mutateKeys()
+        toast.success(`Imported ${keypair.did()}`)
+      } else {
+        toast.success(`You already imported ${keypair.did()}`)
+      }
+    } catch (err: unknown) {
+      toast.error(`Error importing key: ${err}`)
+    } finally {
+      setKeyImportAccount(undefined)
+    }
+  }
   const [forgettableKey, setForgettableKey] = useState<RotationKey>()
-  async function forgetKey(key: RotationKey) {
+  async function forgetKey (key: RotationKey) {
     setForgettableKey(key)
   }
 
-  async function deleteKey(key?: RotationKey) {
+  async function deleteKey (key?: RotationKey) {
     if (!key) throw new Error('key is undefined, cannot delete key')
     setIsDeletingKey(true)
     try {
@@ -121,6 +164,7 @@ export const KeychainProvider = ({
         selectedKey,
         setSelectedKey,
         generateKeyPair,
+        hydrateKey,
         importKey,
         forgetKey,
       }}
@@ -157,6 +201,14 @@ export const KeychainProvider = ({
             </Button>
           </Stack>
         </Stack>
+      </Modal>
+      <Modal
+        isOpen={Boolean(keyImportAccount)}
+        onClose={() => setKeyImportAccount(undefined)}
+        title="Import Key"
+        size="md"
+      >
+        <KeyMaterialImportForm importKeyMaterial={importKeyMaterial} />
       </Modal>
     </KeychainContext.Provider>
   )

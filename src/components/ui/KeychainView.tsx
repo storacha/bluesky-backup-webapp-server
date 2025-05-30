@@ -47,7 +47,7 @@ import { CreateButton } from './CreateButton'
 import { IdentityTransfer } from './IdentityTransfer'
 import KeyImportForm from './KeyImportForm'
 
-import type { KeyImportFn } from '@/contexts/keychain'
+import type { KeyHydrateFn } from '@/contexts/keychain'
 
 const SecretText = styled(Text)`
   font-family: var(--font-dm-mono);
@@ -55,16 +55,16 @@ const SecretText = styled(Text)`
 
 interface KeyDetailsProps {
   dbKey?: RotationKey
-  importKey?: KeyImportFn
+  hydrateKey?: KeyHydrateFn
   onDone?: () => unknown
 }
 
-function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
+function KeyDetails ({ dbKey, onDone, hydrateKey }: KeyDetailsProps) {
   const [secret, setSecret] = useState<string>()
   const [showImport, setShowImport] = useState<boolean>(false)
   const keypair = dbKey?.keypair
 
-  async function showSecret() {
+  async function showSecret () {
     const secret = await keypair?.export()
     if (secret) {
       setSecret(base64pad.encode(secret))
@@ -73,13 +73,13 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
     }
   }
 
-  function hideSecret() {
+  function hideSecret () {
     setSecret(undefined)
   }
 
-  async function importAndClose(key: RotationKey, keyMaterial: string) {
-    if (importKey) {
-      await importKey(key, keyMaterial)
+  async function importAndClose (key: RotationKey, keyMaterial: string) {
+    if (hydrateKey) {
+      await hydrateKey(key, keyMaterial)
       setShowImport(false)
     } else {
       console.warn('importKey was not defined, cannot import key')
@@ -100,7 +100,7 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
         </Stack>
       )}
 
-      {showImport && importKey && dbKey ? (
+      {showImport && hydrateKey && dbKey ? (
         <div className="mt-2">
           <KeyImportForm dbKey={dbKey} importKey={importAndClose} />
         </div>
@@ -166,14 +166,14 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
   )
 }
 
-function isCurrentRotationKey(
+function isCurrentRotationKey (
   rotationKey: RotationKey,
   profile: ProfileData
 ): boolean {
   return profile.rotationKeys.includes(rotationKey.id)
 }
 
-function isCurrentVerificationKey(
+function isCurrentVerificationKey (
   rotationKey: RotationKey,
   profile: ProfileData
 ): boolean {
@@ -194,7 +194,7 @@ const LoginFormElement = styled.form`
   width: 384px;
 `
 
-function AtprotoLoginForm({ login, handle, server }: AtprotoLoginFormProps) {
+function AtprotoLoginForm ({ login, handle, server }: AtprotoLoginFormProps) {
   const { register, handleSubmit, reset } = useForm<PwForm>()
   const onSubmit = handleSubmit(async (data) => {
     await login(handle, data.password, { server })
@@ -219,7 +219,7 @@ const PlcOpCode = styled.code`
   font-size: 0.5em;
 `
 
-function AddRotationKey({
+function AddRotationKey ({
   did,
   rotationKey,
   onDone,
@@ -245,7 +245,7 @@ function AddRotationKey({
     setIsPlcRestoreAuthorizationEmailSent,
   ] = useState<boolean>(false)
 
-  async function sendPlcRestoreAuthorizationEmail() {
+  async function sendPlcRestoreAuthorizationEmail () {
     if (sourceAgent) {
       await sourceAgent.com.atproto.identity.requestPlcOperationSignature()
       setIsPlcRestoreAuthorizationEmailSent(true)
@@ -265,7 +265,7 @@ function AddRotationKey({
     const agent = new Agent(session)
     setSourceAgent(agent)
   }
-  async function setupPlcRestore(plcToken: string) {
+  async function setupPlcRestore (plcToken: string) {
     if (sourceAgent) {
       if (!existingKeys) {
         throw new Error('No rotation key provided')
@@ -285,7 +285,7 @@ function AddRotationKey({
   }
   const isPlcRestoreSetup = !!plcOp
 
-  async function transferIdentity() {
+  async function transferIdentity () {
     if (sourceAgent && plcOp) {
       setIsTransferringIdentity(true)
       await sourceAgent.com.atproto.identity.submitPlcOperation({
@@ -378,15 +378,15 @@ const RotationKeyStack = styled(Stack)`
   margin-top: 1rem;
 `
 
-function RotationKeyStatus({
+function RotationKeyStatus ({
   did,
   rotationKey,
-  importKey,
+  hydrateKey,
   onDone,
 }: {
   did: Did
   rotationKey: RotationKey
-  importKey: KeyImportFn
+  hydrateKey: KeyHydrateFn
   onDone: () => void
 }) {
   const { data: profile, mutate } = useProfile(did)
@@ -397,7 +397,7 @@ function RotationKeyStatus({
   const isSigningKey = profile?.verificationMethods?.atproto === rotationKey.id
   const [isAddingKey, setIsAddingKey] = useState(false)
   const [isTransferringIdentity, setIsTransferringIdentity] = useState(false)
-  async function takeControl() {
+  async function takeControl () {
     if (!profile) throw new Error('profile not defined, cannot take control')
 
     const op = await createPlcUpdateOp(profile, rotationKey, {
@@ -426,7 +426,7 @@ function RotationKeyStatus({
             {isSignable ? <>Does</> : <>Does not</>} have a private key loaded.
           </Text>
           {!isSignable && (
-            <KeyImportForm dbKey={rotationKey} importKey={importKey} />
+            <KeyImportForm dbKey={rotationKey} importKey={hydrateKey} />
           )}
         </Stack>
         <Stack $gap="1rem">
@@ -491,9 +491,10 @@ const PublicKey = styled.div`
   font-style: bold;
 `
 
-export default function KeychainView({
+export default function KeychainView ({
   keys,
   generateKeyPair,
+  hydrateKey,
   importKey,
   forgetKey,
   profile,
@@ -507,7 +508,7 @@ export default function KeychainView({
   const [selectedKeyDetails, setSelectedKeyDetails] =
     useState<RotationKey | null>(null)
 
-  async function onClickAdd() {
+  async function onClickAdd () {
     if (!generateKeyPair)
       throw new Error(
         'could not generate key pair, generator function is not defined'
@@ -614,17 +615,6 @@ export default function KeychainView({
                     >
                       <TrashIcon size="16" color="var(--color-gray-medium)" />
                     </Button>
-                    {/* 
-                    TODO: add this back with warnings if it is registered as a rotation key
-                    <Button
-                      $variant="outline"
-                      className="p-1"
-                      onClick={() => forgetKey(key)}
-                      aria-label="Delete key"
-                    >
-                      <Trash size="16" color="var(--color-gray-medium)" /> 
-                    </Button>
-                    */}
                   </Stack>
                 </KeyItem>
               ))}
@@ -632,13 +622,19 @@ export default function KeychainView({
           )}
         </>
       )}
-      <CreateButton
-        onClick={onClickAdd}
-        disabled={generatingKeyPair}
-        $mt="1.4rem"
-      >
-        New Key
-      </CreateButton>
+      <Stack $direction='row' $mt="1.4rem" $gap="1rem">
+        <CreateButton
+          onClick={onClickAdd}
+          disabled={generatingKeyPair}
+        >
+          New Key
+        </CreateButton>
+        <CreateButton
+          onClick={() => atprotoAccount && importKey(atprotoAccount)}
+        >
+          Import Key
+        </CreateButton>
+      </Stack>
       <Modal
         isOpen={isKeyDetailsDialogOpen}
         onClose={() => setIsKeyDetailsDialogOpen(false)}
@@ -648,7 +644,7 @@ export default function KeychainView({
         {selectedKeyDetails && isKeyDetailsDialogOpen && (
           <KeyDetails
             dbKey={selectedKeyDetails}
-            importKey={importKey}
+            hydrateKey={hydrateKey}
             onDone={() => setIsKeyDetailsDialogOpen(false)}
           />
         )}
@@ -663,7 +659,7 @@ export default function KeychainView({
           <RotationKeyStatus
             did={atprotoAccount}
             rotationKey={selectedKeyDetails}
-            importKey={importKey}
+            hydrateKey={hydrateKey}
             onDone={() => setIsRotationKeyDialogOpen(false)}
           />
         )}
