@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 
+import { PAGINATED_RESULTS_LIMIT } from '@/lib/constants'
 import { getStorageContext } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
 
@@ -9,7 +10,7 @@ export async function GET(request: NextRequest) {
   if (!did) return new Response('Not authenticated', { status: 401 })
 
   const searchParams = request.nextUrl.searchParams
-  const limit = Number(searchParams.get('limit'))
+  const limit = Number(searchParams.get('limit') || PAGINATED_RESULTS_LIMIT)
   const page = Number(searchParams.get('page'))
 
   const data = await db.findArchivedBackups(did)
