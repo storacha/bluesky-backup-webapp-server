@@ -1,101 +1,173 @@
 'use client'
 
-import { Did } from '@atproto/api'
-import { Gear } from '@phosphor-icons/react'
-import Link from 'next/link'
 import { styled } from 'next-yak'
+import { useState } from 'react'
+import useSWR, { SWRResponse } from 'swr'
 
-import { Box, Button, Heading, Spinner, Stack, Text } from '@/components/ui'
-import { useProfile } from '@/hooks/use-profile'
+import { Sidebar } from '@/app/Sidebar'
+import { Heading, Stack } from '@/components/ui'
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
+import { Identity } from '@/types'
 
-import { Sidebar } from '../Sidebar'
+import { IdentityCard } from './components/IdentityCard'
 
 const IdentitiesStack = styled(Stack)`
   padding: 2rem;
   width: 100%;
 `
 
-const IdentityLink = styled(Link)`
-  display: block;
+const IdentitiesLayout = ({ children }: { children: React.ReactNode }) => (
+  <div className="flex flex-col gap-4 p-4">{children}</div>
+)
+
+const HamburgerButton = styled.button`
+  display: none;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2rem;
+  height: 2rem;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-medium-light);
+  border-radius: 4px;
+  padding: 0.25rem;
+  z-index: 10;
+
+  @media only screen and (min-width: 0px) and (max-width: 992px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-gray-light);
+  }
 `
 
-// TODO: Dedupe with `AccountLogo` in `Select`
-const AccountLogo = styled.div<{
-  $imageSrc?: string
+const HamburgerLine = styled.span`
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-gray-medium);
+  transition: all 0.3s ease;
+`
+
+const MobileSidebar = styled.div<{
+  $isOpen: boolean
+  $width?: string
 }>`
-  --account-logo-border-color: var(--color-gray-light);
-  --account-logo-image: ${({ $imageSrc }) =>
-    $imageSrc ? `url(${$imageSrc})` : 'unset'};
-  --account-logo-size: 25px 25px;
-  --account-logo-position: center;
-  --account-logo-repeat: no-repeat;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: ${({ $width = '70%' }) => $width};
+  height: 100vh;
+  background-color: var(--color-gray-extra-light);
+  z-index: 100;
+  transform: translateX(${(props) => (props.$isOpen ? '0' : '-100%')});
+  transition: transform 0.3s ease;
+  box-shadow: ${(props) =>
+    props.$isOpen ? '0 0 10px rgba(0, 0, 0, 0.1)' : 'none'};
+  overflow-y: auto;
 
-  flex-shrink: 0;
+  @media only screen and (min-width: 0px) and (max-width: 992px) {
+    display: block;
+  }
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  height: 42px;
-  width: 42px;
-  border-radius: 8px;
-  border: 1px solid var(--account-logo-border-color);
-
-  background-color: var(--color-gray-light);
-  background-image: var(--account-logo-image);
-  background-size: var(--account-logo-size);
-  background-position: var(--account-logo-position);
-  background-repeat: var(--account-logo-repeat);
+  @media only screen and (min-width: 576px) and (max-width: 992px) {
+    width: 30%;
+  }
 `
 
-export default function IdentitiesPage({ accounts }: { accounts: Did[] }) {
+const Overlay = styled.div<{
+  $isOpen: boolean
+}>`
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 99;
+  opacity: ${(props) => (props.$isOpen ? '1' : '0')};
+  pointer-events: ${(props) => (props.$isOpen ? 'auto' : 'none')};
+  transition: opacity 0.3s ease;
+
+  @media only screen and (min-width: 0px) and (max-width: 992px) {
+    display: block;
+  }
+`
+
+export default function IdentitiesPage({
+  identities: initialIdentities,
+}: {
+  identities: Identity[]
+}) {
+  const { data: identities, error }: SWRResponse<Identity[] | undefined> =
+    useSWR(['api', '/api/identities'], {
+      fallbackData: initialIdentities,
+      revalidateOnFocus: false,
+      revalidateOnMount: true,
+      dedupingInterval: 0,
+    })
+
+  const { isSmallViewPort } = useMobileScreens()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+  const toggleMobileSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen)
+  }
+
+  if (error) {
+    return (
+      <IdentitiesLayout>
+        <div className="text-red-500">
+          Error loading identities: {error.message}
+        </div>
+      </IdentitiesLayout>
+    )
+  }
+
+  if (isSmallViewPort) {
+    return (
+      <div>
+        <MobileSidebar $isOpen={isSidebarOpen} $width="70%">
+          <Sidebar selectedBackupId={null} variant="mobile" />
+        </MobileSidebar>
+        <Overlay
+          $isOpen={isSidebarOpen}
+          onClick={() => setIsSidebarOpen(false)}
+        />
+        <HamburgerButton
+          onClick={toggleMobileSidebar}
+          aria-label="Toggle sidebar"
+        >
+          {Array.from({ length: 3 }, (_, index) => (
+            <HamburgerLine key={index} />
+          ))}
+        </HamburgerButton>
+        <IdentitiesLayout>
+          <IdentitiesStack $gap="1rem">
+            <Heading>Bluesky Identities</Heading>
+            {identities?.map((identity) => (
+              <IdentityCard key={identity.id} identity={identity as Identity} />
+            ))}
+          </IdentitiesStack>
+        </IdentitiesLayout>
+      </div>
+    )
+  }
+
   return (
-    <>
-      <Sidebar selectedBackupId={null} />
+    <IdentitiesLayout>
       <IdentitiesStack $gap="1rem">
         <Heading>Bluesky Identities</Heading>
-        {accounts.map((account) => (
-          <Account key={account} account={account} />
+        {identities?.map((identity) => (
+          <IdentityCard key={identity.id} identity={identity as Identity} />
         ))}
       </IdentitiesStack>
-    </>
-  )
-}
-
-const Account = ({ account }: { account: Did }) => {
-  const { data: profile } = useProfile(account)
-
-  return (
-    <Box
-      key={account}
-      $gap="1rem"
-      $display="flex"
-      $justifyContent="space-between"
-      $background="var(--color-white)"
-    >
-      <Stack $gap="1rem" $direction="row" $alignItems="center">
-        <AccountLogo $imageSrc={profile?.avatar}>
-          {!profile && <Spinner />}
-        </AccountLogo>
-        <Stack $alignItems="start">
-          <Stack $direction="row" $alignItems="baseline" $gap="0.5rem">
-            <Text
-              $color="var(--color-black)"
-              $fontSize="0.9rem"
-              $fontWeight="bold"
-            >
-              {profile?.displayName && <>{profile?.displayName} &ndash;</>}{' '}
-              {profile?.handle}
-            </Text>
-          </Stack>
-          <Text>{account}</Text>
-        </Stack>
-      </Stack>
-      <IdentityLink href={`/identities/${encodeURIComponent(account)}`}>
-        <Button $variant="outline" $color="var(--color-black)">
-          <Gear />
-        </Button>
-      </IdentityLink>
-    </Box>
+    </IdentitiesLayout>
   )
 }

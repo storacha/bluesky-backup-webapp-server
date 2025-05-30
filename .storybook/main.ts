@@ -148,9 +148,11 @@ async function ignoreServerFunctionModules(
   webpackConfig.plugins.push(
     new IgnorePlugin({
       checkResource(resource) {
-        return ['./createSnapshot', './backups/new/createNewBackup'].includes(
-          resource
-        )
+        return [
+          './createSnapshot',
+          './backups/new/createNewBackup',
+          './backups/deleteBackup',
+        ].includes(resource)
       },
     })
   )

@@ -1,3 +1,5 @@
+import { CARLink } from '@storacha/ui-react'
+
 import { GATEWAY_HOSTNAME } from './constants'
 
 import type { Client } from '@storacha/client'
@@ -9,8 +11,8 @@ export function cidUrl(cid: string) {
 export async function uploadCAR(
   storachaClient: Client,
   blob: Blob
-): Promise<string> {
-  let storachaRepoCid
+): Promise<CARLink> {
+  let storachaRepoCid: CARLink | undefined
   await storachaClient.uploadCAR(blob, {
     onShardStored: (carMetadata) => {
       storachaRepoCid = carMetadata.cid
