@@ -50,6 +50,10 @@ export type Fetchable =
       ],
       PaginatedResult<ATBlob>,
     ]
+  | [
+      ['api', '/api/backups/archived', Record<string, string>?],
+      PaginatedResult<Backup>,
+    ]
   | [['api', `/api/snapshots/${string}`, Record<string, string>?], Snapshot]
   | [
       [
