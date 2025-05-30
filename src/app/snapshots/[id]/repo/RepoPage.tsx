@@ -2,15 +2,18 @@
 import { Did } from '@atproto/api'
 import Link from 'next/link'
 
-import { Sidebar } from '@/app/Sidebar'
+import { AppLayout } from '@/app/AppLayout'
 import { BackButton } from '@/components/BackButton'
-import { Posts } from '@/components/Posts'
-import { Box, Heading, NoTextTransform, Stack } from '@/components/ui'
+import { Loader } from '@/components/Loader'
+import { PostsTabContainer } from '@/components/Posts'
+import { Box, Center, Heading, NoTextTransform, Stack } from '@/components/ui'
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { useProfile } from '@/hooks/use-profile'
 import { useRepo } from '@/hooks/use-repo'
 import { useSWR } from '@/lib/swr'
 
 export default function RepoPage({ id }: { id: string }) {
+  const { isMobile, isTablet } = useMobileScreens()
   const { data: snapshot, error } = useSWR(['api', `/api/snapshots/${id}`])
 
   const { repo, loading } = useRepo({
@@ -22,15 +25,23 @@ export default function RepoPage({ id }: { id: string }) {
   if (!snapshot) return null
 
   return (
-    <>
-      <Sidebar selectedBackupId={null} />
-      <Box $padding="2rem" $borderStyle="none" $height="100%">
+    <AppLayout selectedBackupId={snapshot.backupId}>
+      <Box
+        $padding={isMobile ? '1rem' : '2rem'}
+        $borderStyle="none"
+        $height="100%"
+      >
         {loading ? (
-          <p>Loading repository data...</p>
+          <Center $height="80vh">
+            <Loader />
+          </Center>
         ) : (
-          <Stack $gap="1rem">
+          <Stack
+            $gap="1rem"
+            $width={isMobile ? '100%' : isTablet ? '60%' : '35%'}
+          >
             <BackButton path={`/snapshots/${id}`} />
-            <Stack $gap=".8rem">
+            <Stack $gap=".8rem" $width="100%">
               <Heading>
                 Recent Posts
                 {profile && (
@@ -47,7 +58,7 @@ export default function RepoPage({ id }: { id: string }) {
                 )}{' '}
                 In This Snapshot
               </Heading>
-              <Posts
+              <PostsTabContainer
                 repositoryDid={snapshot.atprotoAccount}
                 posts={repo.posts.slice(0, 20)}
               />
@@ -55,6 +66,6 @@ export default function RepoPage({ id }: { id: string }) {
           </Stack>
         )}
       </Box>
-    </>
+    </AppLayout>
   )
 }

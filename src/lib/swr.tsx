@@ -1,6 +1,7 @@
 'use client'
 
 import { Agent, Did } from '@atproto/api'
+import { FeedViewPost } from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import { Account, Delegation as DelegationType } from '@storacha/ui-react'
 import { Delegation } from '@ucanto/core'
 import React from 'react'
@@ -65,6 +66,10 @@ export type Fetchable =
   | [
       ['api', `/api/profile?did=${string}`, Record<string, string>?],
       ProfileData,
+    ]
+  | [
+      ['api', `/api/record?uri=${string}`, Record<string, string>?],
+      FeedViewPost[],
     ]
   | [['api', '/api/identities', Record<string, string>?], Identity[]]
   | [['atproto-profile', Did], ProfileData | undefined]
