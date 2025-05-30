@@ -1,9 +1,9 @@
+import { styled } from 'next-yak'
 import { useForm } from 'react-hook-form'
 
 import { Button, InputField, Stack } from '.'
 
 import type { KeyMaterialImportFn } from '@/contexts/keychain'
-import { styled } from 'next-yak'
 
 interface KeyMaterialImportFormParams {
   keyMaterial: string
@@ -13,13 +13,14 @@ const FormElement = styled.form`
   margin-top: 1em;
 `
 
-export default function KeyMaterialImportForm ({
+export default function KeyMaterialImportForm({
   importKeyMaterial,
 }: {
   importKeyMaterial: KeyMaterialImportFn
 }) {
-  const { register, handleSubmit, reset } = useForm<KeyMaterialImportFormParams>()
-  async function submit (data: KeyMaterialImportFormParams) {
+  const { register, handleSubmit, reset } =
+    useForm<KeyMaterialImportFormParams>()
+  async function submit(data: KeyMaterialImportFormParams) {
     await importKeyMaterial(data.keyMaterial)
     reset()
   }
