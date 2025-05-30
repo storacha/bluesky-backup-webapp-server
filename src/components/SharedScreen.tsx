@@ -12,8 +12,8 @@ import { useMobileScreens } from '@/hooks/use-mobile-screens'
 const ScreenContainer = styled.div`
   display: flex;
   width: 100%;
+  height: 100%;
   background-color: var(--color-light-blue-10);
-  height: 100vh;
 `
 
 const ResizeHandleOuter = styled.div`
@@ -36,6 +36,26 @@ const ResizeHandleInner = styled.div`
 const ContentWrapper = styled.div`
   position: relative;
   width: 100%;
+  height: 100%;
+`
+
+const MobileLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+`
+
+const MobileTopSection = styled.div`
+  height: 40vh;
+  min-height: 40vh;
+  position: relative;
+`
+
+const MobileBottomSection = styled.div`
+  flex: 1;
+  height: 100%;
 `
 
 const HamburgerButton = styled.button`
@@ -126,28 +146,25 @@ export const SharedScreenLayout = ({
   selectedBackupId,
   rightPanelContent,
 }: SharedScreenLayoutProps) => {
-  const { isMobile, isSmallViewPort } = useMobileScreens()
+  const { isSmallViewPort } = useMobileScreens()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const toggleMobileSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen)
   }
 
-  return (
-    <ScreenContainer>
-      <MobileSidebar $isOpen={isSidebarOpen}>
-        <Sidebar selectedBackupId={selectedBackupId} variant="mobile" />
-      </MobileSidebar>
-      <Overlay
-        $isOpen={isSidebarOpen}
-        onClick={() => setIsSidebarOpen(false)}
-      />
-      <PanelGroup
-        autoSaveId={`${screenName}-screen-layout`}
-        direction={isSmallViewPort ? 'vertical' : 'horizontal'}
-      >
-        <Panel defaultSize={isMobile ? 40 : 60} minSize={isMobile ? 30 : 45}>
-          <ContentWrapper>
+  if (isSmallViewPort) {
+    return (
+      <ScreenContainer>
+        <MobileSidebar $isOpen={isSidebarOpen}>
+          <Sidebar selectedBackupId={selectedBackupId} variant="mobile" />
+        </MobileSidebar>
+        <Overlay
+          $isOpen={isSidebarOpen}
+          onClick={() => setIsSidebarOpen(false)}
+        />
+        <MobileLayout>
+          <MobileTopSection>
             <HamburgerButton
               onClick={toggleMobileSidebar}
               aria-label="Toggle sidebar"
@@ -157,6 +174,22 @@ export const SharedScreenLayout = ({
               })}
             </HamburgerButton>
             <Container>{mainContent}</Container>
+          </MobileTopSection>
+          <MobileBottomSection>{rightPanelContent}</MobileBottomSection>
+        </MobileLayout>
+      </ScreenContainer>
+    )
+  }
+
+  return (
+    <ScreenContainer>
+      <PanelGroup
+        autoSaveId={`${screenName}-screen-layout`}
+        direction="horizontal"
+      >
+        <Panel defaultSize={60} minSize={45}>
+          <ContentWrapper>
+            <Container>{mainContent}</Container>
           </ContentWrapper>
         </Panel>
         <PanelResizeHandle>
@@ -164,7 +197,7 @@ export const SharedScreenLayout = ({
             <ResizeHandleInner />
           </ResizeHandleOuter>
         </PanelResizeHandle>
-        <Panel defaultSize={isMobile ? 60 : 40} minSize={isMobile ? 60 : 40}>
+        <Panel defaultSize={40} minSize={40}>
           {rightPanelContent}
         </Panel>
       </PanelGroup>
