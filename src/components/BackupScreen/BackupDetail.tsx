@@ -34,7 +34,6 @@ const AccountsContainer = styled(Stack)`
 
 const BackupNameInput = styled.input`
   border-radius: 8px;
-  border: 2px solid var(--color-gray-light);
   width: 100%;
   font-weight: 700;
   font-size: 1.125rem;
@@ -45,12 +44,7 @@ const BackupNameInput = styled.input`
     color: var(--color-gray-medium);
   }
 
-  &:hover {
-    border-color: var(--color-gray);
-  }
-
   &:focus {
-    outline: none;
     border-color: var(--color-dark-blue);
   }
 `
