@@ -123,6 +123,15 @@ export async function backupOwnedByAccount(
   return backup?.accountDid === account
 }
 
+export async function rotationKeyOwnedByAccount(
+  db: BBDatabase,
+  keyId: string,
+  account: string
+) {
+  const { result: key } = await db.findRotationKey(keyId)
+  return key?.storachaAccount === account
+}
+
 export async function snapshotOwnedByAccount(
   db: BBDatabase,
   snapshotId: string,
