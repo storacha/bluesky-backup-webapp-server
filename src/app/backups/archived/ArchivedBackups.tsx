@@ -111,10 +111,10 @@ const Backups = ({ backups }: { backups: Backup[] }) => {
 
   // when people try to see the details of an archived backup
   // we should give them the opportunity to do that separately, instead of
-  // updating teh location history
+  // updating the location history
   const openArchivedBackup = (backupId: string) => {
     if (typeof window !== 'undefined')
-      window.location.replace(`/backups/${backupId}`)
+      window.open(`/backups/${backupId}`, '__blank')
   }
 
   return (
