@@ -1,29 +1,20 @@
 'use client'
 
-import { ArrowUpRightIcon } from '@phosphor-icons/react'
+import Link from 'next/link'
 import { styled } from 'next-yak'
-import { MouseEvent, useState } from 'react'
-import { toast } from 'sonner'
-import { mutate } from 'swr'
+import { useState } from 'react'
 
 import { AppLayout } from '@/app/AppLayout'
 import { BackButton } from '@/components/BackButton'
 import { PaginationControls } from '@/components/Pagination'
-import {
-  Button,
-  Heading,
-  Stack,
-  StatefulButton,
-  SubHeading,
-} from '@/components/ui'
+import { Heading, Stack, SubHeading } from '@/components/ui'
 import { PAGINATED_RESULTS_LIMIT } from '@/lib/constants'
 import { useSWR } from '@/lib/swr'
-import { shortenIfOver } from '@/lib/ui'
-import { Backup, State } from '@/types'
+import { Backup, PaginatedResult } from '@/types'
 
 const ArchivedBackupsWrapper = styled(Stack)`
   padding: 2rem;
-  width: 38%;
+  width: 100%;
 
   @media only screen and (min-width: 0px) and (max-width: 600px) {
     width: 100%;
@@ -46,11 +37,12 @@ const BackupCard = styled.div`
 
 export default function ArchivedBackupsPage() {
   const [pageNumber, setPageNumber] = useState<number>(1)
-  const { data: archivedBackups, error } = useSWR([
+  const { data, error } = useSWR([
     'api',
     '/api/backups/archived',
     { page: pageNumber.toString() },
   ])
+  const archivedBackups = data as PaginatedResult<Backup>
 
   const totalPages =
     archivedBackups &&
@@ -77,80 +69,21 @@ export default function ArchivedBackupsPage() {
 }
 
 const Backups = ({ backups }: { backups: Backup[] }) => {
-  const [state, setState] = useState<State>('idle')
-  const [selectedBackup, setSelectedBackup] = useState<Backup | null>(null)
-
-  const unarchiveBackup = async (e: MouseEvent, id: string) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const found = backups.find((backup) => backup.id === id)
-    if (!found) return
-    setSelectedBackup(found)
-
-    try {
-      setState('loading')
-      const request = await fetch(`/api/backups/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ archived: false }),
-      })
-
-      if (request.ok) {
-        toast.success('Backup unarchived!')
-        mutate(['api', '/api/backups'])
-        mutate(['api', '/api/backups/archived'])
-      }
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setState('idle')
-    }
-  }
-
-  // when people try to see the details of an archived backup
-  // we should give them the opportunity to do that separately, instead of
-  // updating the location history
-  const openArchivedBackup = (backupId: string) => {
-    if (typeof window !== 'undefined')
-      window.open(`/backups/${backupId}`, '__blank')
-  }
-
   return (
     <Stack $gap="0.8rem">
       {backups.map((backup) => {
         return (
-          <BackupCard key={backup.id}>
-            <Stack
-              $justifyContent="space-between"
-              $direction="row"
-              $alignItems="center"
-            >
-              <SubHeading>{shortenIfOver(backup.name)}</SubHeading>
-              <Stack $direction="row">
-                <Button
-                  $background="none"
-                  onClick={() => openArchivedBackup(backup.id)}
-                >
-                  <ArrowUpRightIcon color="var(--color-gray-medium)" />
-                </Button>
-                <StatefulButton
-                  $fontSize="0.75rem"
-                  $gap="1rem"
-                  isLoading={
-                    state === 'loading' && selectedBackup?.id === backup.id
-                  }
-                  disabled={
-                    state === 'loading' && selectedBackup?.id === backup.id
-                  }
-                  onClick={(e) => unarchiveBackup(e, backup.id)}
-                >
-                  Unarchive
-                </StatefulButton>
+          <Link href={`/backups/${backup.id}`} key={backup.id}>
+            <BackupCard>
+              <Stack
+                $justifyContent="space-between"
+                $direction="row"
+                $alignItems="center"
+              >
+                <SubHeading>{backup.name}</SubHeading>
               </Stack>
-            </Stack>
-          </BackupCard>
+            </BackupCard>
+          </Link>
         )
       })}
     </Stack>

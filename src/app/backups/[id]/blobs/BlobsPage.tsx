@@ -8,18 +8,17 @@ import { PaginationControls } from '@/components/Pagination'
 import { Center, Stack } from '@/components/ui'
 import { PAGINATED_RESULTS_LIMIT } from '@/lib/constants'
 import { useSWR } from '@/lib/swr'
+import { ATBlob, PaginatedResult } from '@/types'
 
 export default function AllBlobs({ backupId }: { backupId: string }) {
   const [pageNumber, setPageNumber] = useState(1)
-  const {
-    data: blobs,
-    error,
-    isLoading,
-  } = useSWR([
+  const { data, error, isLoading } = useSWR([
     'api',
     `/api/backups/${backupId}/blobs`,
     { page: pageNumber.toString() },
   ])
+  // TODO: remove this cast when we fix the bug in Fetchable that makes it ambiguous
+  const blobs = data as PaginatedResult<ATBlob>
   const totalPages = blobs && Math.ceil(blobs?.count / PAGINATED_RESULTS_LIMIT)
   if (error) throw error
 

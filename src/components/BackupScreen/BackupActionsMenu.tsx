@@ -1,8 +1,11 @@
 'use client'
 
-import { DotsThreeIcon, PencilSimpleIcon } from '@phosphor-icons/react'
+import {
+  BoxArrowUpIcon,
+  DotsThreeIcon,
+  PencilSimpleIcon,
+} from '@phosphor-icons/react'
 import { ArchiveIcon } from '@phosphor-icons/react/dist/ssr'
-import { useRouter } from 'next/navigation'
 import { styled } from 'next-yak'
 import { useState } from 'react'
 import {
@@ -89,35 +92,37 @@ export function BackupActionsMenu({
   backup,
   onEditAction,
 }: BackupActionsMenuProps) {
-  const router = useRouter()
   const [state, setState] = useState<State>('idle')
 
-  const archiveBackup = async () => {
-    if (confirm(`Are you sure you want to archive ${backup.name}?`)) {
-      setState('deleting')
-      try {
-        const request = await fetch(`/api/backups/${backup.id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ archived: true }),
-        })
+  const setArchived = async (archived: boolean) => {
+    setState('deleting')
+    try {
+      const request = await fetch(`/api/backups/${backup.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ archived }),
+      })
 
-        if (request.ok) {
-          toast.success('Backup archived!')
-          mutate(['api', '/api/backups'])
-          router.push('/')
-        } else {
-          toast.error(`Failed to archive ${backup.name}`)
-        }
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setState('idle')
+      if (request.ok) {
+        toast.success(`Backup ${archived ? 'archived' : 'unarchived'}!`)
+        mutate(['api', '/api/backups'])
+        mutate(['api', '/api/backups/archived'])
+      } else {
+        toast.error(
+          `Failed to ${archived ? 'archive' : 'unarchive'} ${backup.name}`
+        )
       }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setState('idle')
     }
   }
+
+  const archiveBackup = () => setArchived(true)
+  const unarchiveBackup = () => setArchived(false)
 
   if (state === 'deleting') {
     return <Spinner />
@@ -140,11 +145,20 @@ export function BackupActionsMenu({
             <MenuItemText>Pause backup</MenuItemText>
           </StyledMenuItem>
           <StyledSeparator />
-
-          <StyledMenuItem data-danger="true" onAction={() => archiveBackup()}>
-            <ArchiveIcon size={18} />
-            <MenuItemText>Archive backup</MenuItemText>
-          </StyledMenuItem>
+          {backup.archived ? (
+            <StyledMenuItem
+              data-danger="true"
+              onAction={() => unarchiveBackup()}
+            >
+              <BoxArrowUpIcon size={18} />
+              <MenuItemText>Unarchive backup</MenuItemText>
+            </StyledMenuItem>
+          ) : (
+            <StyledMenuItem data-danger="true" onAction={() => archiveBackup()}>
+              <ArchiveIcon size={18} />
+              <MenuItemText>Archive backup</MenuItemText>
+            </StyledMenuItem>
+          )}
         </StyledMenu>
       </Popover>
     </MenuTrigger>
