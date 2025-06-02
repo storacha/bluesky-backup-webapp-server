@@ -67,10 +67,6 @@ export type Fetchable =
       ['api', `/api/profile?did=${string}`, Record<string, string>?],
       ProfileData,
     ]
-  | [
-      ['api', `/api/record?uri=${string}`, Record<string, string>?],
-      FeedViewPost[],
-    ]
   | [['api', '/api/identities', Record<string, string>?], Identity[]]
   | [['atproto-profile', Did], ProfileData | undefined]
   | [['storacha-plan', Account], string | undefined]
