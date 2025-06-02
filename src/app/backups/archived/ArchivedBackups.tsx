@@ -1,4 +1,5 @@
 'use client'
+
 import { ArrowUpRightIcon } from '@phosphor-icons/react'
 import { styled } from 'next-yak'
 import { MouseEvent, useState } from 'react'
@@ -113,7 +114,7 @@ const Backups = ({ backups }: { backups: Backup[] }) => {
   // updating teh location history
   const openArchivedBackup = (backupId: string) => {
     if (typeof window !== 'undefined')
-      window.open(`/backups/${backupId}`, '__blank')
+      window.location.replace(`/backups/${backupId}`)
   }
 
   return (
@@ -129,7 +130,7 @@ const Backups = ({ backups }: { backups: Backup[] }) => {
               <SubHeading>{shortenIfOver(backup.name)}</SubHeading>
               <Stack $direction="row">
                 <Button
-                  $background="var(--color-white)"
+                  $background="none"
                   onClick={() => openArchivedBackup(backup.id)}
                 >
                   <ArrowUpRightIcon color="var(--color-gray-medium)" />

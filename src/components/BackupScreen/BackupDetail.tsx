@@ -1,13 +1,15 @@
 'use client'
 
+import { create } from '@storacha/client'
 import { styled } from 'next-yak'
 import { ReactNode, useState } from 'react'
 
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
-import { Stack, Text } from '@/components/ui'
+import { Stack, StatefulButton, Text } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
-import { Backup } from '@/types'
+import { useSWR } from '@/lib/swr'
+import { Backup, State } from '@/types'
 
 import { DataBox } from './DataBox'
 import { EditableBackupName } from './EditableBackupName'
@@ -72,7 +74,32 @@ type BackupDatas = 'include_repository' | 'include_blobs'
  * To submit the data, wrap this component with a form element.
  */
 export const BackupDetail = ({ backup }: BackupProps) => {
+  const [state, setState] = useState<State>('idle')
   const { isMobile, isBaseLaptop } = useMobileScreens()
+  const { data: backupCids } = useSWR([
+    'api',
+    `/api/backups/${backup?.id}/cids`,
+  ])
+
+  const clearAllData = async () => {
+    try {
+      setState('deleting')
+      if (backupCids && backup) {
+        const client = await create()
+        await client?.setCurrentSpace(backup?.storachaSpace)
+
+        for (const cid of backupCids) {
+          client.remove(cid, { shards: true })
+        }
+      } else {
+        console.warn('no backup cids found')
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setState('idle')
+    }
+  }
 
   const [dataBoxState, setDataBoxState] = useState<
     Record<BackupDatas, boolean>
@@ -160,6 +187,18 @@ export const BackupDetail = ({ backup }: BackupProps) => {
           />
         </Stack>
       </Section>
+      {backup?.archived && (
+        <StatefulButton
+          $width="fit-content"
+          $fontSize="0.75rem"
+          isLoading={state === 'deleting'}
+          disabled={state === 'loading'}
+          onClick={clearAllData}
+          $background="var(--color-dark-red)"
+        >
+          Delete backup
+        </StatefulButton>
+      )}
     </Stack>
   )
 }

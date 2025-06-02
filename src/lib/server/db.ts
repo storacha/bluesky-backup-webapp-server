@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 
 import { RuntimeLock } from '@atproto/oauth-client-node'
 import { Signer } from '@aws-sdk/rds-signer'
+import { UnknownLink } from '@storacha/ui-react'
 import retry from 'p-retry'
 import postgres from 'postgres'
 import { validate as validateUUID } from 'uuid'
@@ -224,6 +225,7 @@ export interface BBDatabase {
     storachaAccount: string
   ) => Promise<{ results: RotationKey[] }>
   updateBackup: (id: string, data: BackupInputUpdate) => Promise<Backup>
+  getAllCidsInBackup: (id: string) => Promise<UnknownLink[]>
 }
 
 interface StorageContext {
@@ -401,6 +403,42 @@ export function getStorageContext(): StorageContext {
           delete from backups
           where id = ${id}
         `
+      },
+
+      async getAllCidsInBackup(id: string) {
+        if (!validateUUID(id)) return []
+
+        const results = await sql<{ cid: UnknownLink }[]>`
+          with backup_cids as (
+            select repository_cid as cid
+            from snapshots
+            where id = ${id} and repository_cid is not null
+
+            union all
+
+            select preferences_cid as cid
+            from snapshots
+            where id = ${id} and preferences_cid is not null
+          ),
+          blob_cids as (
+            select distinct cid
+            from at_blobs
+            where backup_id = ${id}
+          ),
+          snapshot_blob_cids as (
+            select distinct ab.cid
+            from at_blobs ab
+            inner join snapshots s on ab.snapshot_id = s.id
+            where s.backup_id = ${id}
+          )
+          select distinct cid from backup_cids
+          union
+          select distinct cid from blob_cids
+          union
+          select distinct cid from snapshot_blob_cids
+        `
+
+        return results.map((row) => row.cid)
       },
       async findBackups(account: string) {
         const results = await sql<Backup[]>`

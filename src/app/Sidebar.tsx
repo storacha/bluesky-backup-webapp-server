@@ -156,7 +156,7 @@ export function Sidebar({
         >
           <Heading>Backups</Heading>
           <Link href="/backups/archived">
-            <Button $background="#fff" $mt="0.2rem">
+            <Button $background="none" $mt="0.2rem">
               <ArchiveIcon color="var(--color-gray-medium)" />
             </Button>
           </Link>
