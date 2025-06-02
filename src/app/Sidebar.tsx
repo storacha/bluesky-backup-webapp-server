@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { css, styled } from 'next-yak'
 
 import { Loader } from '@/components/Loader'
-import { Button, roundRectStyle, Stack } from '@/components/ui'
+import { roundRectStyle, Stack } from '@/components/ui'
 import wordlogo from '@/images/wordlogo.png'
 import { useSWR, useSWRImmutable } from '@/lib/swr'
 import { shortenIfOver } from '@/lib/ui'
@@ -123,6 +123,10 @@ const ActionIcon = styled(ArrowRightIcon)`
   color: var(--color-gray-medium);
 `
 
+const ArchivedLink = styled(Link)`
+  ${actionButtonStyle}
+`
+
 const LogOutButton = styled(BaseLogOutButton)`
   /* TK: Needs active state */
   ${actionButtonStyle}
@@ -149,24 +153,16 @@ export function Sidebar({
             <Image src={wordlogo} alt="Storacha" width="164" height="57" />
           </Link>
         </Header>
-        <Stack
-          $direction="row"
-          $justifyContent="space-between"
-          $alignItems="center"
-        >
-          <Heading>Backups</Heading>
-          <Link href="/backups/archived">
-            <Button $background="#fff" $mt="0.2rem">
-              <ArchiveIcon color="var(--color-gray-medium)" />
-            </Button>
-          </Link>
-        </Stack>
+        <Heading>Backups</Heading>
         <Stack $gap="1rem">
           <Backups selectedBackupId={selectedBackupId} />
           <AddBackup href="/">Add backup…</AddBackup>
         </Stack>
       </Stack>
       <Stack $gap="1rem">
+        <ArchivedLink href="/backups/archived">
+          Archived Backups <ArchiveIcon />
+        </ArchivedLink>
         <IdentitiesLink href="/identities">
           Identities <IdentificationBadgeIcon />
         </IdentitiesLink>

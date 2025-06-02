@@ -12,7 +12,7 @@ import { Box, Center, Heading, Stack } from '@/components/ui'
 import { PAGINATED_RESULTS_LIMIT } from '@/lib/constants'
 import { useSWR } from '@/lib/swr'
 import { formatDate } from '@/lib/ui'
-import { Snapshot } from '@/types'
+import { PaginatedResult, Snapshot } from '@/types'
 
 const SnapshotContainer = styled(Stack)`
   margin: 2rem;
@@ -75,12 +75,13 @@ export default function SnapshotPage({
 }: Pick<SnapshotPageProps, 'backupId'>) {
   const [pageNumber, setPageNumber] = useState(1)
 
-  const { data: snapshots, isLoading } = useSWR([
+  const { data, isLoading } = useSWR([
     'api',
     `/api/backups/${backupId}/snapshots`,
     { page: pageNumber.toString() },
   ])
-
+  // TODO: remove this cast once Fetchable no longer gets confused
+  const snapshots = data as PaginatedResult<Snapshot>
   const totalPages =
     snapshots && Math.ceil(snapshots?.count / PAGINATED_RESULTS_LIMIT)
 

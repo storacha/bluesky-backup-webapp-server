@@ -5,6 +5,8 @@ import { getStorageContext } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
 
 export async function GET(request: NextRequest) {
+  if (!process.env.NEXT_PUBLIC_APP_URI)
+    throw new Error('App is misconfigured: please set NEXT_PUBLIC_APP_URI')
   const { db } = getStorageContext()
   const { did } = await getSession()
   if (!did) return new Response('Not authenticated', { status: 401 })
@@ -17,7 +19,7 @@ export async function GET(request: NextRequest) {
   const count = data.count
   const totalPages = Math.ceil(count / limit)
   const getPageUrl = (pageNumber: number) =>
-    `${process.env.NEXT_PUBLIC_APP_URI!}/api/backups/archived?page=${pageNumber}&limit=${limit}`
+    `${process.env.NEXT_PUBLIC_APP_URI}/api/backups/archived?page=${pageNumber}&limit=${limit}`
 
   return Response.json({
     ...data,
