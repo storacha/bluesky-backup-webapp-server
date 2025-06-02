@@ -202,7 +202,7 @@ export interface BBDatabase {
   findArchivedBackups: (account: string) => Promise<{ results: Backup[] }>
   findScheduledBackups: () => Promise<{ results: Backup[] }>
   addBackup: (input: BackupInput) => Promise<Backup>
-  deleteBackup: (id: string) => void
+  deleteBackup: (id: string) => Promise<void>
   addBlob: (input: ATBlobInput) => Promise<ATBlob>
   getBlobInBackup: (
     cid: string,
@@ -217,9 +217,13 @@ export interface BBDatabase {
     options?: PaginatedResultParams
   ) => Promise<PaginatedResult<ATBlob>>
   addRotationKey: (input: RotationKeyInput) => Promise<RotationKey>
+  findRotationKey: (
+    keyId: string
+  ) => Promise<{ result: RotationKey | undefined }>
   findRotationKeys: (
     storachaAccount: string
   ) => Promise<{ results: RotationKey[] }>
+  deleteRotationKey: (id: string) => Promise<void>
   updateBackup: (id: string, data: BackupInputUpdate) => Promise<Backup>
 }
 
@@ -394,7 +398,7 @@ export function getStorageContext(): StorageContext {
       },
       async deleteBackup(id: string) {
         if (!validateUUID(id)) return
-        await sql<Backup[]>`
+        await sql`
           delete from backups
           where id = ${id}
         `
@@ -466,6 +470,22 @@ export function getStorageContext(): StorageContext {
         return {
           results,
         }
+      },
+      async findRotationKey(keyId: string) {
+        const results = await sql<RotationKey[]>`
+          select *
+          from rotation_keys
+          where id = ${keyId}
+        `
+        return {
+          result: results[0],
+        }
+      },
+      async deleteRotationKey(keyId: string) {
+        await sql`
+          delete from rotation_keys
+          where id = ${keyId}
+        `
       },
       async updateBackup(id, data) {
         const results = await sql<Backup[]>`
