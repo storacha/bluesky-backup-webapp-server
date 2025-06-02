@@ -32,23 +32,21 @@ const meta = {
       ],
     }),
     withData(
-      ['api', '/api/backups'],
-      [
-        {
-          id: 'abc',
-          accountDid: 'did:mailto:gmail.com:timothy-chalamet',
-          name: 'Backup #1',
-          atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
-          storachaSpace:
-            'did:key:zMw6cW3gpcPQzNkdfprbTZZh2MajkgZ3MdbqgUsqmksvBPiz',
-          includeRepository: true,
-          includeBlobs: true,
-          includePreferences: false,
-          delegationCid: null,
-          paused: false,
-          archived: false,
-        },
-      ]
+      ['api', '/api/backups/abc'],
+      {
+        id: 'abc',
+        accountDid: 'did:mailto:gmail.com:timothy-chalamet',
+        name: 'Backup #1',
+        atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
+        storachaSpace:
+          'did:key:zMw6cW3gpcPQzNkdfprbTZZh2MajkgZ3MdbqgUsqmksvBPiz',
+        includeRepository: true,
+        includeBlobs: true,
+        includePreferences: false,
+        delegationCid: null,
+        paused: false,
+        archived: false,
+      },
     ),
     withData(['api', '/api/backups/abc/snapshots'], { count: 0, results: [] }),
   ],
