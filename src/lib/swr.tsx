@@ -1,7 +1,6 @@
 'use client'
 
 import { Agent, Did } from '@atproto/api'
-import { FeedViewPost } from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import { Account, Delegation as DelegationType } from '@storacha/ui-react'
 import { Delegation } from '@ucanto/core'
 import React from 'react'
