@@ -219,7 +219,9 @@ export interface BBDatabase {
     storachaAccount: string
   ) => Promise<{ results: RotationKey[] }>
   updateBackup: (id: string, data: BackupInputUpdate) => Promise<Backup>
-  findBskyAccountsInBackups: (backupId: string) => Promise<{ results: string[] }>
+  findBskyAccountsInBackups: (
+    backupId: string
+  ) => Promise<{ results: string[] }>
 }
 
 interface StorageContext {
@@ -466,7 +468,7 @@ export function getStorageContext(): StorageContext {
           from backups
           where id = ${backupId}
         `
-        return { results: results.map(r => r.atproto_account) }
+        return { results: results.map((r) => r.atproto_account) }
       },
     },
   }
