@@ -147,7 +147,7 @@ export const KeychainProvider = ({
       if (response.status === 200) {
         await mutateKeys()
         setForgettableKey(undefined)
-        toast.success(`Deleted rotation key ${key.id}`)
+        toast.success(`Deleted recovery key ${key.id}`)
       } else {
         console.error('delete failed: ', await response.text())
         toast.success(`Failed to delete ${key.id}`)
@@ -156,7 +156,9 @@ export const KeychainProvider = ({
       setIsDeletingKey(false)
     }
   }
-
+  function closeForgetKey() {
+    setForgettableKey(undefined)
+  }
   return (
     <KeychainContext.Provider
       value={{
@@ -172,35 +174,34 @@ export const KeychainProvider = ({
       {children}
       <Modal
         isOpen={Boolean(forgettableKey)}
-        onClose={() => setForgettableKey(undefined)}
+        onClose={closeForgetKey}
         title="Forget Key?"
         size="md"
       >
-        <Stack $gap="1rem">
-          <Text>Are you sure you want to forget {forgettableKey?.id} ?</Text>
-          <Text>
-            As long as you have the private key backed up you can reload it
-            later.
-          </Text>
-          <Stack $direction="row" $gap="1rem">
-            <StatefulButton
-              disabled={isDeletingKey}
-              isLoading={isDeletingKey}
-              onClick={() => {
-                deleteKey(forgettableKey)
-              }}
-            >
-              Yes, forget it!
-            </StatefulButton>
-            <Button
-              onClick={() => {
-                setForgettableKey(undefined)
-              }}
-            >
-              No, nevermind
-            </Button>
+        {forgettableKey ? (
+          <Stack $gap="1rem">
+            <Text>Are you sure you want to forget {forgettableKey.id} ?</Text>
+            <Text>
+              As long as you have the private key backed up you can reload it
+              later.
+            </Text>
+            <Stack $direction="row" $gap="1rem">
+              <StatefulButton
+                disabled={isDeletingKey}
+                isLoading={isDeletingKey}
+                onClick={() => {
+                  deleteKey(forgettableKey)
+                }}
+              >
+                Yes, forget it!
+              </StatefulButton>
+              <Button onClick={closeForgetKey}>No, never mind.</Button>
+            </Stack>
           </Stack>
-        </Stack>
+        ) : (
+          // this should really never happen - the modal should be closed if forgettableKey is undefined
+          <Button onClick={closeForgetKey}>Close</Button>
+        )}
       </Modal>
       <Modal
         isOpen={Boolean(keyImportAccount)}
