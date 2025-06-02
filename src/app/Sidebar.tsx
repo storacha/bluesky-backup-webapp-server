@@ -2,7 +2,7 @@
 
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
 import { isExpired } from '@ipld/dag-ucan'
-import { PauseIcon, XIcon } from '@phosphor-icons/react'
+import { ArchiveIcon, PauseIcon, XIcon } from '@phosphor-icons/react'
 import { IdentificationBadgeIcon } from '@phosphor-icons/react/dist/ssr'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -58,7 +58,6 @@ const Header = styled.header`
 const Heading = styled.h2`
   font-size: 1rem;
   font-weight: 500;
-  padding-bottom: 1rem;
   color: var(--color-gray-medium);
 `
 
@@ -124,6 +123,10 @@ const ActionIcon = styled(ArrowRightIcon)`
   color: var(--color-gray-medium);
 `
 
+const ArchivedLink = styled(Link)`
+  ${actionButtonStyle}
+`
+
 const LogOutButton = styled(BaseLogOutButton)`
   /* TK: Needs active state */
   ${actionButtonStyle}
@@ -157,6 +160,9 @@ export function Sidebar({
         </Stack>
       </Stack>
       <Stack $gap="1rem">
+        <ArchivedLink href="/backups/archived">
+          Archived Backups <ArchiveIcon />
+        </ArchivedLink>
         <IdentitiesLink href="/identities">
           Identities <IdentificationBadgeIcon />
         </IdentitiesLink>

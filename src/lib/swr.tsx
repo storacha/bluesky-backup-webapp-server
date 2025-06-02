@@ -32,6 +32,7 @@ export type PaginatedResult<T> = {
 export type Fetchable =
   | [['api', '/session/did', Record<never, string>?], string]
   | [['api', '/api/backups', Record<string, string>?], Backup[]]
+  | [['api', `/api/backups/${string}`, Record<string, string>?], Backup]
   | [
       [
         'api',
@@ -49,6 +50,15 @@ export type Fetchable =
         Record<string, string>?,
       ],
       PaginatedResult<ATBlob>,
+    ]
+  | [
+      [
+        'api',
+        '/api/backups/archived',
+        { page?: string; limit?: string },
+        Record<string, string>?,
+      ],
+      PaginatedResult<Backup>,
     ]
   | [['api', `/api/snapshots/${string}`, Record<string, string>?], Snapshot]
   | [

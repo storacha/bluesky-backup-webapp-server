@@ -199,7 +199,10 @@ export interface BBDatabase {
   findSnapshot: (id: string) => Promise<{ result: Snapshot | undefined }>
   findBackups: (account: string) => Promise<{ results: Backup[] }>
   findBackup: (id: string) => Promise<{ result: Backup | undefined }>
-  findArchivedBackups: (account: string) => Promise<{ results: Backup[] }>
+  findArchivedBackups: (
+    account: string,
+    options?: PaginatedResultParams
+  ) => Promise<PaginatedResult<Backup>>
   findScheduledBackups: () => Promise<{ results: Backup[] }>
   addBackup: (input: BackupInput) => Promise<Backup>
   deleteBackup: (id: string) => Promise<void>
@@ -415,16 +418,38 @@ export function getStorageContext(): StorageContext {
           results,
         }
       },
-      async findArchivedBackups(account: string) {
+      async findArchivedBackups(
+        account: string,
+        options?: PaginatedResultParams
+      ) {
+        const { limit = PAGINATED_RESULTS_LIMIT, page = 1 } = options ?? {}
+        const offset = (page - 1) * limit
+
+        if (!account)
+          return {
+            count: 0,
+            results: [],
+          }
+
+        const total = await sql<{ count: number }[]>`
+          select count(*) as count
+          from backups
+          where account_did = ${account} and archived = true
+        `
+
         const results = await sql<Backup[]>`
          select *
          from backups
          where account_did = ${account} and archived = true
          order by created_at desc
-         limit 10
+         limit ${limit}
+         offset ${offset}
         `
 
+        const count = Number(total?.[0]?.count) ?? 0
+
         return {
+          count,
           results,
         }
       },

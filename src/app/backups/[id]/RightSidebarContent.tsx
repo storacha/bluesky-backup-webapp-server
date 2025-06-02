@@ -20,7 +20,7 @@ import { delegate } from '@/lib/delegate'
 import { uploadCAR } from '@/lib/storacha'
 import { useSWR, useSWRImmutable, useSWRMutation } from '@/lib/swr'
 import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
-import { Backup } from '@/types'
+import { Backup, PaginatedResult, Snapshot } from '@/types'
 
 import { CreateSnapshotButton } from './CreateSnapshotButton'
 
@@ -34,6 +34,7 @@ const Details = styled(Stack)`
 
 const DetailName = styled(SubHeading)`
   color: black;
+  width: 5rem;
 `
 
 const DetailValue = styled.div`
@@ -64,11 +65,12 @@ const SnapshotsLink = styled(Link)`
 `
 
 export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
-  const { data: snapshots, isLoading } = useSWR([
+  const { data, isLoading } = useSWR([
     'api',
     `/api/backups/${backup.id}/snapshots`,
   ])
-
+  // TODO: remove this cast once Fetchable no longer gets confused
+  const snapshots = data as PaginatedResult<Snapshot>
   return (
     <>
       <Details $gap="1rem">
@@ -88,6 +90,10 @@ export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
           <Link href={`/backups/${backup.id}/blobs`}>
             <DetailValue>View Blobs</DetailValue>
           </Link>
+        </Stack>
+        <Stack $direction="row" $alignItems="center" $gap="1rem">
+          <DetailName>Archived</DetailName>
+          <DetailValue>{backup.archived ? 'yes' : 'no'}</DetailValue>
         </Stack>
       </Details>
       <SnapshotContainer $gap="1rem">
