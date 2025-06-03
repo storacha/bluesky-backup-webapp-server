@@ -1,11 +1,7 @@
 'use client'
 
 import { Agent, Did } from '@atproto/api'
-import {
-  Account,
-  Delegation as DelegationType,
-  UnknownLink,
-} from '@storacha/ui-react'
+import { Account, Delegation as DelegationType } from '@storacha/ui-react'
 import { Delegation } from '@ucanto/core'
 import React from 'react'
 import useSWRBase, { SWRConfig, SWRConfiguration, SWRResponse } from 'swr'
@@ -64,10 +60,7 @@ export type Fetchable =
       ],
       PaginatedResult<Backup>,
     ]
-  | [
-      ['api', `/api/backups/${string}/cids`, Record<string, string>?],
-      UnknownLink[],
-    ]
+  | [['api', `/api/backups/${string}/cids`, Record<string, string>?], string[]]
   | [['api', `/api/snapshots/${string}`, Record<string, string>?], Snapshot]
   | [
       [

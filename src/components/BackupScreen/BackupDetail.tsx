@@ -1,15 +1,23 @@
 'use client'
 
-import { create } from '@storacha/client'
+import { useAuthenticator } from '@storacha/ui-react'
+import { CID } from 'multiformats'
 import { styled } from 'next-yak'
 import { ReactNode, useState } from 'react'
 
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
-import { Stack, StatefulButton, Text } from '@/components/ui'
+import {
+  Button,
+  Modal,
+  Spinner,
+  Stack,
+  StatefulButton,
+  Text,
+} from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { useSWR } from '@/lib/swr'
-import { Backup, State } from '@/types'
+import { Backup } from '@/types'
 
 import { DataBox } from './DataBox'
 import { EditableBackupName } from './EditableBackupName'
@@ -64,6 +72,81 @@ const Section = ({
   </Stack>
 )
 
+function BackupCleaner({ backup }: { backup: Backup }) {
+  const [{ client }] = useAuthenticator()
+  const [isDeleteInProgress, setIsDeleteInProgress] = useState(false)
+  const { data, isLoading } = useSWR(['api', `/api/backups/${backup?.id}/cids`])
+  const backupCids = data ? (data as string[]) : data
+
+  const clearAllData = async () => {
+    if (!client) throw new Error('client is undefined, cannot remove data')
+    if (!backupCids)
+      throw new Error('backupCids is undefined, cannot remove data')
+    try {
+      setIsDeleteInProgress(true)
+      await client.setCurrentSpace(backup.storachaSpace)
+
+      for (const cid of backupCids) {
+        await client.remove(CID.parse(cid), { shards: true })
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsDeleteInProgress(false)
+    }
+  }
+
+  return isLoading ? (
+    <Spinner />
+  ) : (
+    <Stack $gap="1em">
+      <Text>
+        Are you sure you want to delete {backupCids?.length} uploads from
+        Storacha? They may still remain available on the network for some amount
+        of time.
+      </Text>
+      <StatefulButton
+        isLoading={isDeleteInProgress}
+        disabled={isDeleteInProgress}
+        onClick={clearAllData}
+        $background="var(--color-dark-blue)"
+        $height="fit-content"
+        $fontSize="0.75rem"
+      >
+        Yes, remove them all.
+      </StatefulButton>
+    </Stack>
+  )
+}
+
+function DeleteBackupButton({ backup }: { backup: Backup }) {
+  const [isDeleting, setIsDeleting] = useState(false)
+  return (
+    <>
+      <Button
+        $width="fit-content"
+        $fontSize="0.75rem"
+        onClick={() => {
+          setIsDeleting(true)
+        }}
+        $background="var(--color-dark-red)"
+      >
+        Delete backup
+      </Button>
+      <Modal
+        isOpen={isDeleting}
+        onClose={() => {
+          setIsDeleting(false)
+        }}
+        title="Delete Stored Data"
+        size="md"
+      >
+        {isDeleting && <BackupCleaner backup={backup} />}
+      </Modal>
+    </>
+  )
+}
+
 type BackupDatas = 'include_repository' | 'include_blobs'
 
 /**
@@ -74,32 +157,7 @@ type BackupDatas = 'include_repository' | 'include_blobs'
  * To submit the data, wrap this component with a form element.
  */
 export const BackupDetail = ({ backup }: BackupProps) => {
-  const [state, setState] = useState<State>('idle')
   const { isMobile, isBaseLaptop } = useMobileScreens()
-  const { data: backupCids } = useSWR([
-    'api',
-    `/api/backups/${backup?.id}/cids`,
-  ])
-
-  const clearAllData = async () => {
-    try {
-      setState('deleting')
-      if (backupCids && backup) {
-        const client = await create()
-        await client?.setCurrentSpace(backup?.storachaSpace)
-
-        for (const cid of backupCids) {
-          client.remove(cid, { shards: true })
-        }
-      } else {
-        console.warn('no backup cids found')
-      }
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setState('idle')
-    }
-  }
 
   const [dataBoxState, setDataBoxState] = useState<
     Record<BackupDatas, boolean>
@@ -187,18 +245,7 @@ export const BackupDetail = ({ backup }: BackupProps) => {
           />
         </Stack>
       </Section>
-      {backup?.archived && (
-        <StatefulButton
-          $width="fit-content"
-          $fontSize="0.75rem"
-          isLoading={state === 'deleting'}
-          disabled={state === 'loading'}
-          onClick={clearAllData}
-          $background="var(--color-dark-red)"
-        >
-          Delete backup
-        </StatefulButton>
-      )}
+      {backup?.archived && <DeleteBackupButton backup={backup} />}
     </Stack>
   )
 }
