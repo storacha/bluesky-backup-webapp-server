@@ -255,6 +255,7 @@ function AddRotationKey({
       )
     }
   }
+
   const loginToSource: LoginFn = async (
     identifier: string,
     password: string,
@@ -265,6 +266,7 @@ function AddRotationKey({
     const agent = new Agent(session)
     setSourceAgent(agent)
   }
+
   async function setupPlcRestore(plcToken: string) {
     if (sourceAgent) {
       if (!existingKeys) {
@@ -374,6 +376,73 @@ function AddRotationKey({
   )
 }
 
+function TakeControl({
+  did,
+  rotationKey,
+  onDone,
+}: {
+  did: Did
+  rotationKey: RotationKey
+  onDone: () => Promise<void>
+}) {
+  const { data: profile, mutate } = useProfile(did)
+
+  async function takeControl() {
+    if (!profile)
+      throw new Error(
+        'profile not defined, cannot safely create a PLC update op'
+      )
+
+    const op = await createPlcUpdateOp(profile, rotationKey, {
+      verificationMethods: {
+        ...profile.verificationMethods,
+        atproto: rotationKey.id,
+      },
+    })
+    const client = new plc.Client('https://plc.directory')
+    await client.sendOperation(profile.did, op)
+    await mutate()
+    onDone()
+  }
+  return (
+    <Stack $gap="1em" $padding="1em">
+      <Text>
+        Warning! Taking control over this identity{' '}
+        <b>
+          will prevent your PDS from creating new posts, following people, and
+          most other things you do on Bluesky and the AT Protocol
+        </b>{' '}
+        - you probably do not want to do this unless you are ready to move to a
+        new host.
+      </Text>
+      <Text>
+        If you are sure you are ready to take control of this account and you
+        are sure you have the private key for{' '}
+        <b>{shortenDID(rotationKey.id)}</b> saved, you can use the button below
+        to install <b>{shortenDID(rotationKey.id)}</b> as the verification
+        method for {profile?.handle}.
+      </Text>
+      <Text>If not, click &quot;No&quot; or reload the page.</Text>
+      <Stack $direction="row" $gap="1em">
+        <Button
+          onClick={() => {
+            takeControl()
+          }}
+        >
+          Yes, take control
+        </Button>
+        <Button
+          onClick={() => {
+            onDone()
+          }}
+        >
+          No, go back
+        </Button>
+      </Stack>
+    </Stack>
+  )
+}
+
 const RotationKeyStack = styled(Stack)`
   margin-top: 1rem;
 `
@@ -389,29 +458,26 @@ function RotationKeyStatus({
   hydrateKey: KeyHydrateFn
   onDone: () => void
 }) {
-  const { data: profile, mutate } = useProfile(did)
+  const { data: profile } = useProfile(did)
   const { handle } = profile || {}
 
   const isRotationKey = profile && isCurrentRotationKey(rotationKey, profile)
   const isSignable = Boolean(rotationKey.keypair)
   const isSigningKey = profile?.verificationMethods?.atproto === rotationKey.id
   const [isAddingKey, setIsAddingKey] = useState(false)
+  const [isTakingControl, setIsTakingControl] = useState(false)
   const [isTransferringIdentity, setIsTransferringIdentity] = useState(false)
-  async function takeControl() {
-    if (!profile) throw new Error('profile not defined, cannot take control')
 
-    const op = await createPlcUpdateOp(profile, rotationKey, {
-      verificationMethods: {
-        ...profile.verificationMethods,
-        atproto: rotationKey.id,
-      },
-    })
-    const client = new plc.Client('https://plc.directory')
-    await client.sendOperation(profile.did, op)
-    await mutate()
-  }
   if (!profile) return null
-  return isAddingKey ? (
+  return isTakingControl ? (
+    <TakeControl
+      did={did}
+      rotationKey={rotationKey}
+      onDone={async () => {
+        setIsTakingControl(false)
+      }}
+    />
+  ) : isAddingKey ? (
     <AddRotationKey did={did} rotationKey={rotationKey} onDone={onDone} />
   ) : isTransferringIdentity ? (
     <IdentityTransfer profile={profile} rotationKey={rotationKey} />
@@ -450,7 +516,7 @@ function RotationKeyStatus({
           {isRotationKey && isSignable && !isSigningKey && (
             <Button
               onClick={() => {
-                takeControl()
+                setIsTakingControl(true)
               }}
             >
               Take Control
