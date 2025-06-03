@@ -92,7 +92,7 @@ function NewBackupForm({
 
       // Create a delegation valid for a year of backups
       const delegationDuration = 60 * 60 * 24 * 365
-      const delegationCid = await uploadCAR(
+      const { carCid: delegationCid } = await uploadCAR(
         client,
         new Blob([
           await delegate(client, space, { duration: delegationDuration }),

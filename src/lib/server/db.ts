@@ -408,9 +408,9 @@ export function getStorageContext(): StorageContext {
         if (!validateUUID(id)) return []
 
         const results = await sql<{ cid: string }[]>`
-          select repository_cid as cid
+          select repository_upload_cid as cid
           from snapshots
-          where backup_id = ${id} and repository_cid is not null
+          where backup_id = ${id} and repository_upload_cid is not null
           union
           select cid
           from at_blobs
