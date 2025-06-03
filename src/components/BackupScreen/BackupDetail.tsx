@@ -131,7 +131,7 @@ function DeleteBackupButton({ backup }: { backup: Backup }) {
         }}
         $background="var(--color-dark-red)"
       >
-        Delete backup
+        Delete backup&hellip;
       </Button>
       <Modal
         isOpen={isDeleting}
