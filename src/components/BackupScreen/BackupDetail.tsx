@@ -1,12 +1,23 @@
 'use client'
 
+import { useAuthenticator } from '@storacha/ui-react'
+import { CID } from 'multiformats'
 import { styled } from 'next-yak'
 import { ReactNode, useState } from 'react'
+import { toast } from 'sonner'
 
 import { BlueskyAccountSelect } from '@/components/BackupScreen/BlueskyAccountSelect'
 import { StorachaSpaceSelect } from '@/components/BackupScreen/StorachaSpaceSelect'
-import { Stack, Text } from '@/components/ui'
+import {
+  Button,
+  Modal,
+  Spinner,
+  Stack,
+  StatefulButton,
+  Text,
+} from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
+import { useSWR, useSWRMutation } from '@/lib/swr'
 import { Backup } from '@/types'
 
 import { DataBox } from './DataBox'
@@ -61,6 +72,118 @@ const Section = ({
     {children}
   </Stack>
 )
+
+function BackupCleaner({
+  backup,
+  onDone,
+}: {
+  backup: Backup
+  onDone: () => Promise<void>
+}) {
+  const [{ client }] = useAuthenticator()
+  const { data, isLoading } = useSWR(['api', `/api/backups/${backup?.id}/cids`])
+
+  // This shouldn't be necessary, but we need it for now because Fetcher (in lib/swr.tsx)
+  // is overeager in its matching - this is here to exclude the possibility that data
+  // is a Backup, which will never happen in practice.
+  const backupCids = data ? (data as string[]) : data
+
+  const { trigger: clearAllData, isMutating: isDeleteInProgress } =
+    useSWRMutation(['api', `/api/backups/${backup?.id}/cids`], async () => {
+      // practically these two should never happen since we render a spinner below
+      // if either is falsy
+      if (!client) throw new Error('client is undefined, cannot remove data')
+      if (!backupCids)
+        throw new Error('backupCids is undefined, cannot remove data')
+      await client.setCurrentSpace(backup.storachaSpace)
+      const errors = []
+      const alreadyRemoved = []
+      for (const cidStr of backupCids) {
+        try {
+          const cid = CID.parse(cidStr)
+          await client.remove(cid, { shards: true })
+        } catch (err) {
+          // @ts-expect-error err.cause doesn't typecheck
+          const errorName = (err.cause.name || '') as string
+          if (errorName === 'UploadNotFound') {
+            alreadyRemoved.push(cidStr)
+          } else {
+            console.error(`error removing ${cidStr}`, err)
+            errors.push(cidStr)
+          }
+        }
+      }
+      if (errors.length > 0) {
+        toast.error(
+          `Error removing ${errors.length} CIDs, please see console for more information.`
+        )
+      } else if (alreadyRemoved.length > 0) {
+        toast.success(
+          `Removed ${backupCids.length - alreadyRemoved.length} CIDs from Storacha. ${alreadyRemoved.length} CIDs were already gone.`
+        )
+      } else {
+        toast.success(`Removed ${backupCids.length} CIDs from Storacha.`)
+      }
+      await onDone()
+    })
+
+  return isLoading || !client || !backupCids ? (
+    <Spinner />
+  ) : (
+    <Stack $gap="1em">
+      <Text>
+        Are you sure you want to remove up to {backupCids?.length} uploads from
+        Storacha? They may still remain available on the network for some amount
+        of time.
+      </Text>
+      <StatefulButton
+        isLoading={isDeleteInProgress}
+        disabled={isDeleteInProgress}
+        onClick={() => clearAllData()}
+        $background="var(--color-dark-blue)"
+        $height="fit-content"
+        $fontSize="0.75rem"
+      >
+        Yes, remove them all.
+      </StatefulButton>
+    </Stack>
+  )
+}
+
+function DeleteBackupButton({ backup }: { backup: Backup }) {
+  const [isOpen, setIsOpen] = useState(false)
+  return (
+    <>
+      <Button
+        $width="fit-content"
+        $fontSize="0.75rem"
+        onClick={() => {
+          setIsOpen(true)
+        }}
+        $background="var(--color-dark-red)"
+      >
+        Remove Data From Storacha&hellip;
+      </Button>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false)
+        }}
+        title="Delete Stored Data"
+        size="md"
+      >
+        {isOpen && (
+          <BackupCleaner
+            backup={backup}
+            onDone={async () => {
+              setIsOpen(false)
+            }}
+          />
+        )}
+      </Modal>
+    </>
+  )
+}
 
 type BackupDatas = 'include_repository' | 'include_blobs'
 
@@ -160,6 +283,7 @@ export const BackupDetail = ({ backup }: BackupProps) => {
           />
         </Stack>
       </Section>
+      {backup?.archived && <DeleteBackupButton backup={backup} />}
     </Stack>
   )
 }

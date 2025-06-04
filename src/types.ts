@@ -60,6 +60,7 @@ const snapshotSchema = z.strictObject({
   backupId: z.string(),
   repositoryStatus: snapshotStatusSchema,
   repositoryCid: z.string().optional(),
+  repositoryUploadCid: z.string().optional(),
   blobsStatus: snapshotStatusSchema,
   preferencesStatus: snapshotStatusSchema,
   preferencesCid: z.string().optional(),
@@ -77,6 +78,7 @@ const snapshotInputSchema = snapshotSchema
   .partial({
     repositoryStatus: true,
     repositoryCid: true,
+    repositoryUploadCid: true,
     blobsStatus: true,
     preferencesStatus: true,
     preferencesCid: true,

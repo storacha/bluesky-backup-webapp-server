@@ -120,10 +120,14 @@ const doSnapshot = async (
         throw new Error('Failed to get repo')
       }
 
-      const repoRoot = await uploadCAR(storachaClient, new Blob([repoRes.data]))
+      const { carCid, uploadCid } = await uploadCAR(
+        storachaClient,
+        new Blob([repoRes.data])
+      )
       await db.updateSnapshot(snapshotId, {
         repositoryStatus: 'success',
-        repositoryCid: repoRoot.toString(),
+        repositoryCid: carCid.toString(),
+        repositoryUploadCid: uploadCid.toString(),
       })
     } catch (e: unknown) {
       // @ts-expect-error e.cause doesn't typecheck
