@@ -1,9 +1,11 @@
 'use client'
 
 import { Agent, CredentialSession, Did } from '@atproto/api'
+import { Secp256k1Keypair } from '@atproto/crypto'
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 import {
   ArrowCircleRightIcon,
+  CopyIcon,
   EyeIcon,
   EyeSlashIcon,
   GearIcon,
@@ -16,6 +18,7 @@ import { base64pad } from 'multiformats/bases/base64'
 import { styled } from 'next-yak'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { mutate } from 'swr'
 
 import { KeychainContextProps } from '@/contexts/keychain'
@@ -53,6 +56,10 @@ const SecretText = styled(Text)`
   font-family: var(--font-dm-mono);
 `
 
+async function exportSecret(keypair: Secp256k1Keypair) {
+  return base64pad.encode(await keypair.export())
+}
+
 interface KeyDetailsProps {
   dbKey?: RotationKey
   hydrateKey?: KeyHydrateFn
@@ -65,11 +72,10 @@ function KeyDetails({ dbKey, onDone, hydrateKey }: KeyDetailsProps) {
   const keypair = dbKey?.keypair
 
   async function showSecret() {
-    const secret = await keypair?.export()
-    if (secret) {
-      setSecret(base64pad.encode(secret))
+    if (keypair) {
+      setSecret(await exportSecret(keypair))
     } else {
-      console.warn("can't show secret", keypair)
+      console.warn("can't show secret, keypair is falsy")
     }
   }
 
@@ -87,6 +93,12 @@ function KeyDetails({ dbKey, onDone, hydrateKey }: KeyDetailsProps) {
   }
 
   const did = dbKey?.id ?? keypair?.did()
+
+  async function copySecret() {
+    if (!keypair) throw new Error('secret not defined')
+    navigator.clipboard.writeText(await exportSecret(keypair))
+    toast.success(`Copied private key for ${did} to the clipboard.`)
+  }
 
   return (
     <Stack $gap="1rem">
@@ -152,6 +164,15 @@ function KeyDetails({ dbKey, onDone, hydrateKey }: KeyDetailsProps) {
                 }
               >
                 Show Secret
+              </Button>
+              <Button
+                $variant="secondary"
+                onClick={copySecret}
+                $leftIcon={
+                  <CopyIcon size="16" color="var(--color-gray-medium)" />
+                }
+              >
+                Copy Secret
               </Button>
             </>
           )}
