@@ -189,3 +189,53 @@ export type PaginatedResultParams = {
   limit?: number
   page?: number
 }
+
+export type TrackingParams = {
+  source?: string
+  utm_term?: string
+  utm_content?: string
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+}
+
+type BackupEventParams = {
+  includeBlobs?: boolean
+  includeRepository?: boolean
+  spaceId?: string
+  atProtoAccount?: string
+}
+
+export type BBEvents = {
+  'plan-selection': TrackingParams & { userId?: string }
+  'email-verification-started': {
+    userId?: string
+    emailDomain?: string
+  }
+  'email-verification-successful': {
+    userId?: string
+    emailDomain?: string
+    verificationTime?: string
+  }
+  'login-started': TrackingParams & {
+    method?: 'email'
+  }
+  'login-successful': {
+    userId?: string
+    method?: 'email'
+    returningUser?: boolean
+  }
+  'humanode-verification-started': {
+    userId?: string
+  }
+  'humanode-verification-successful': {
+    userId?: string
+    verificationTime?: number
+  }
+  'backup-creation-started': BackupEventParams & {
+    userId?: string
+  }
+  'backup-creation-successful': BackupEventParams & {
+    userId?: string
+  }
+}

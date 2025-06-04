@@ -1,6 +1,7 @@
 'use client'
 
 import { Account, Client, useAuthenticator } from '@storacha/ui-react'
+import { useRouter } from 'next/navigation'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
@@ -11,6 +12,7 @@ import { FullscreenLoader } from '@/components/Loader'
 import StripePricingTable from '@/components/StripePricingTable'
 import { Box, Center, Heading, Stack, Text } from '@/components/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
+import { useBBAnalytics } from '@/hooks/use-bb-analytics'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { usePlan, useStorachaAccount } from '@/hooks/use-plan'
 import { atproto } from '@/lib/capabilities'
@@ -69,6 +71,8 @@ function NewBackupForm({
   children: ReactNode
 }) {
   const [{ client }] = useAuthenticator()
+  const { logBackupCreationSuccessful } = useBBAnalytics()
+  const router = useRouter()
 
   async function generateDelegationAndCreateNewBackup(formData: FormData) {
     formData.append('account', account.did())
@@ -101,7 +105,17 @@ function NewBackupForm({
       formData.append('delegation_cid', delegationCid.toString())
 
       const result = await createNewBackup(formData)
-      return result
+      if (result) {
+        logBackupCreationSuccessful({
+          atProtoAccount: result.atprotoAccount,
+          includeBlobs: result.includeBlobs,
+          includeRepository: result.includeRepository,
+          spaceId: result.storachaSpace,
+          userId: result.accountDid,
+        })
+        toast.success('Backup created!')
+        router.push(`/backups/${result.id}`)
+      }
     } catch (error) {
       toast.error(
         error instanceof Error
