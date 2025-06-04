@@ -14,6 +14,8 @@ const meta: Meta<typeof SnapshotScreen> = {
       repositoryStatus: 'success',
       repositoryCid:
         'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551repo',
+      repositoryUploadCid:
+        'bafybeigdyrzalji2f8a9f8lha3iuhglag498hal359a8h3l4g9a8h1repo',
       blobsStatus: 'in-progress',
       preferencesStatus: 'not-started',
       createdAt: '2025-04-07 19:51:56',

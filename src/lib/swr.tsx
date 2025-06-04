@@ -60,6 +60,7 @@ export type Fetchable =
       ],
       PaginatedResult<Backup>,
     ]
+  | [['api', `/api/backups/${string}/cids`, Record<never, string>?], string[]]
   | [['api', `/api/snapshots/${string}`, Record<string, string>?], Snapshot]
   | [
       [

@@ -219,7 +219,7 @@ const RedelegateButton = ({ backup }: { backup: Backup }) => {
 
       // Create a delegation valid for a year of backups
       const delegationDuration = 60 * 60 * 24 * 365
-      const newDelegationCid = await uploadCAR(
+      const { carCid: newDelegationCid } = await uploadCAR(
         client,
         new Blob([
           await delegate(client, backup.storachaSpace, {

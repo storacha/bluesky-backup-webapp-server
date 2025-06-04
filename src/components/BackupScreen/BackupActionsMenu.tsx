@@ -109,6 +109,7 @@ export function BackupActionsMenu({
         toast.success(`Backup ${archived ? 'archived' : 'unarchived'}!`)
         mutate(['api', '/api/backups'])
         mutate(['api', '/api/backups/archived'])
+        mutate(['api', `/api/backups/${backup.id}`])
       } else {
         toast.error(
           `Failed to ${archived ? 'archive' : 'unarchive'} ${backup.name}`
