@@ -228,6 +228,7 @@ export interface BBDatabase {
   ) => Promise<{ results: RotationKey[] }>
   deleteRotationKey: (id: string) => Promise<void>
   updateBackup: (id: string, data: BackupInputUpdate) => Promise<Backup>
+  getAllCidsInBackup: (id: string) => Promise<string[]>
 }
 
 interface StorageContext {
@@ -405,6 +406,22 @@ export function getStorageContext(): StorageContext {
           delete from backups
           where id = ${id}
         `
+      },
+
+      async getAllCidsInBackup(id: string) {
+        if (!validateUUID(id)) return []
+
+        const results = await sql<{ cid: string }[]>`
+          select repository_upload_cid as cid
+          from snapshots
+          where backup_id = ${id} and repository_upload_cid is not null
+          union
+          select cid
+          from at_blobs
+          where backup_id = ${id}
+        `
+
+        return results.map((row) => row.cid)
       },
       async findBackups(account: string) {
         const results = await sql<Backup[]>`
