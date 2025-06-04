@@ -1,5 +1,6 @@
 import { styled } from 'next-yak'
 
+import { Stack } from './Stack'
 import { StyleProps } from './style'
 
 export type TextProps = Partial<
@@ -44,4 +45,13 @@ export const SubHeading = styled.h3`
   font-weight: 600;
   color: var(--color-gray-medium);
   font-size: 0.75rem;
+`
+
+export const Explainer = styled(Stack)`
+  gap: 1em;
+`
+
+export const ExText = styled(Text)`
+  font-size: 0.875em;
+  font-weight: 600;
 `

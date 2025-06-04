@@ -48,7 +48,7 @@ const BackupNameInput = styled.input`
   width: 100%;
   font-weight: 700;
   font-size: 1.125rem;
-  padding: 0.5rem;
+  padding: 0.5rem 0;
   transition: border-color 0.2s ease;
 
   &::placeholder {
