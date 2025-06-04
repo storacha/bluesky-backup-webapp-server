@@ -61,7 +61,7 @@ export default function IdentityTransferView({
       ) : (
         <Stack $gap="1rem">
           <Stack $gap="0.25rem">
-            <Heading>Data Restore</Heading>
+            <Heading>Transfer Identity</Heading>
             <SubHeading>
               Please login to your new account or create a new ATProto account.
             </SubHeading>
