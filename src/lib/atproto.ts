@@ -8,6 +8,7 @@ import {
 import urlJoin from 'proper-url-join'
 
 import { getStorageContext, KVNamespace, requestLock } from '@/lib/server/db'
+import { getSession } from '@/lib/sessions'
 
 import { NEXT_PUBLIC_APP_URI } from './constants'
 import { getConstants } from './server/constants'
@@ -102,4 +103,37 @@ export const createClient = async ({ account }: { account: string }) => {
   })
 
   return client
+}
+
+export const findAllIdentities = async () => {
+  const { db, authSessionStore } = getStorageContext()
+  const { did: account } = await getSession()
+
+  // Get all connected accounts
+  const connectedAccounts = await findAuthedBskyAccounts(
+    authSessionStore,
+    account
+  )
+
+  // Get all of the logged-in user's backups
+  const { results: backupAccounts } = await db.findBackups(account)
+
+  // Create a map of connected accounts for quick lookup
+  const connectedMap = new Map(connectedAccounts.map((did) => [did, true]))
+
+  // Create a map to deduplicate by atprotoAccount
+  const identityMap = new Map()
+
+  // Combine both sets with connection status, keeping only the most recent backup for each account
+  backupAccounts.forEach((backup) => {
+    const existing = identityMap.get(backup.atprotoAccount)
+    if (!existing) {
+      identityMap.set(backup.atprotoAccount, {
+        ...backup,
+        isConnected: connectedMap.has(backup.atprotoAccount),
+      })
+    }
+  })
+
+  return Array.from(identityMap.values())
 }

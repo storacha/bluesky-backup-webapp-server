@@ -1,6 +1,7 @@
 import { Did } from '@atproto/api'
 import { isDidPlc } from '@atproto/oauth-client-node'
 
+import { AppLayout } from '@/app/AppLayout'
 import { findAuthedBskyAccounts } from '@/lib/atproto'
 import { getStorageContext, KVNamespace } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
@@ -39,5 +40,9 @@ export default async function Identity({
   ) {
     return <div>unauthorized</div>
   }
-  return <IdentityPage atprotoDid={atprotoDid} />
+  return (
+    <AppLayout selectedBackupId={null}>
+      <IdentityPage atprotoDid={atprotoDid} />
+    </AppLayout>
+  )
 }

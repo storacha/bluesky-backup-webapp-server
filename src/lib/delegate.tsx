@@ -10,12 +10,12 @@ import { Delegation } from '@ucanto/core'
 import { SERVER_DID } from './constants'
 
 interface DelegateOptions {
-  // number of milliseconds this delegation should be valid for
+  // number of seconds this delegation should be valid for
   duration?: number
 }
 
 // default to 1 hour
-const defaultDuration = 1000 * 60 * 60
+const defaultDuration = 60 * 60
 
 export async function delegate(
   client: Client,
@@ -44,7 +44,7 @@ export async function delegate(
     audience: { did: () => SERVER_DID },
     capabilities,
     proofs: client.proofs(capabilities),
-    expiration: new Date(Date.now() + duration).getTime(),
+    expiration: Math.floor(Date.now() / 1000) + duration,
   })
 
   const result = await delegation.archive()

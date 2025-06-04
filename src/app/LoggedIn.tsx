@@ -95,8 +95,8 @@ function NewBackupForm({
       // upload the delegation to Storacha so we can use it later
 
       // Create a delegation valid for a year of backups
-      const delegationDuration = 1000 * 60 * 60 * 24 * 365
-      const delegationCid = await uploadCAR(
+      const delegationDuration = 60 * 60 * 24 * 365
+      const { carCid: delegationCid } = await uploadCAR(
         client,
         new Blob([
           await delegate(client, space, { duration: delegationDuration }),

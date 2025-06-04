@@ -3,12 +3,12 @@ import { styled } from 'next-yak'
 import { ButtonHTMLAttributes, ReactNode } from 'react'
 
 import { Spinner } from './spinner'
-import { BtnProps, StyleProps } from './style'
+import { BtnProps, BtnVariant, StyleProps } from './style'
 
 const buttonBackgroundColor = (
   $background: Property.Background = 'var(--color-black)',
-  $disabled?: boolean,
-  $variant?: string
+  $disabled: boolean,
+  $variant: BtnVariant
 ) => {
   if ($variant === 'outline') {
     return 'transparent'
@@ -27,8 +27,8 @@ const ButtonElement = styled.button<
   border-radius: ${({ $borderRadius = '0.75rem' }) => $borderRadius};
   background-color: ${({
     $background = 'var(--color-dark-blue)',
-    $disabled,
-    $variant,
+    $disabled = false,
+    $variant = 'primary',
   }) => buttonBackgroundColor($background, $disabled, $variant)};
   color: ${({ $color = 'var(--color-white)', $disabled }) =>
     $disabled ? 'var(--color-gray-medium)' : $color};
@@ -61,7 +61,7 @@ export const Button = ({
 }: ButtonHTMLAttributes<HTMLButtonElement> &
   Partial<BtnProps & { $noPadding: boolean }>) => (
   <ButtonElement {...props}>
-    {props.$leftIcon}
+    {props.$leftIcon && <>{props.$leftIcon} </>}
     {children}
   </ButtonElement>
 )
@@ -108,3 +108,9 @@ export const StatefulButton = ({
     </Button>
   )
 }
+
+export const IconButton = styled(Button)`
+  display: inline;
+  background: transparent;
+  padding: 0;
+`

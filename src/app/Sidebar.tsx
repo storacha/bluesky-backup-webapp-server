@@ -1,5 +1,9 @@
+'use client'
+
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
-import { IdentificationBadge } from '@phosphor-icons/react/dist/ssr'
+import { isExpired } from '@ipld/dag-ucan'
+import { ArchiveIcon, PauseIcon, XIcon } from '@phosphor-icons/react'
+import { IdentificationBadgeIcon } from '@phosphor-icons/react/dist/ssr'
 import Image from 'next/image'
 import Link from 'next/link'
 import { css, styled } from 'next-yak'
@@ -7,8 +11,9 @@ import { css, styled } from 'next-yak'
 import { Loader } from '@/components/Loader'
 import { roundRectStyle, Stack } from '@/components/ui'
 import wordlogo from '@/images/wordlogo.png'
-import { useSWR } from '@/lib/swr'
+import { useSWR, useSWRImmutable } from '@/lib/swr'
 import { shortenIfOver } from '@/lib/ui'
+import { Backup as BackupType } from '@/types'
 
 import { LogOutButton as BaseLogOutButton } from './authentication'
 
@@ -53,7 +58,6 @@ const Header = styled.header`
 const Heading = styled.h2`
   font-size: 1rem;
   font-weight: 500;
-  padding-bottom: 1rem;
   color: var(--color-gray-medium);
 `
 
@@ -72,8 +76,12 @@ const backupItemLikeStyle = css`
   box-shadow: 0px 0px 20px -5px var(--color-gray-light);
 `
 
-const BackupItem = styled.li<{ $selected?: boolean }>`
+const BackupItem = styled.li<{ $selected?: boolean; $expired?: boolean }>`
   ${backupItemLikeStyle}
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   ${({ $selected }) =>
     $selected &&
@@ -81,6 +89,12 @@ const BackupItem = styled.li<{ $selected?: boolean }>`
       border-color: var(--color-gray-light);
       background-color: var(--color-gray-medium-light);
       box-shadow: none;
+    `}
+
+  ${({ $expired }) =>
+    $expired &&
+    css`
+      background-color: var(--color-light-red);
     `}
 `
 
@@ -107,6 +121,10 @@ const actionButtonStyle = css`
 const ActionIcon = styled(ArrowRightIcon)`
   width: 1.25rem;
   color: var(--color-gray-medium);
+`
+
+const ArchivedLink = styled(Link)`
+  ${actionButtonStyle}
 `
 
 const LogOutButton = styled(BaseLogOutButton)`
@@ -142,8 +160,11 @@ export function Sidebar({
         </Stack>
       </Stack>
       <Stack $gap="1rem">
+        <ArchivedLink href="/backups/archived">
+          Archived Backups <ArchiveIcon />
+        </ArchivedLink>
         <IdentitiesLink href="/identities">
-          Identities <IdentificationBadge />
+          Identities <IdentificationBadgeIcon />
         </IdentitiesLink>
         <LogOutButton>
           Log Out <ActionIcon />
@@ -160,21 +181,64 @@ const BackupsLoader = styled(Loader)`
 
 function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
   const { data } = useSWR(['api', '/api/backups'])
-
   if (!data) return <BackupsLoader />
 
   return (
     <BackupList>
-      {data.map(({ id, name }) => {
-        const modifiedName = `${name.charAt(0).toUpperCase()}${name.slice(1)}`
+      {data.map((backup) => {
         return (
-          <Link key={id} href={`/backups/${id}`}>
-            <BackupItem $selected={id === selectedBackupId}>
-              {shortenIfOver(modifiedName)}
-            </BackupItem>
-          </Link>
+          <Backup
+            key={backup.id}
+            backup={backup}
+            selected={backup.id === selectedBackupId}
+          />
         )
       })}
     </BackupList>
+  )
+}
+
+const Backup = ({
+  backup: { id, name, paused, delegationCid },
+  selected,
+}: {
+  backup: BackupType
+  selected: boolean
+}) => {
+  const { data: delegation } = useSWRImmutable(
+    delegationCid !== null && ['delegation', { cid: delegationCid }]
+  )
+
+  const modifiedName = `${name.charAt(0).toUpperCase()}${name.slice(1)}`
+  const expired = delegation && isExpired(delegation.data)
+
+  return (
+    <Link key={id} href={`/backups/${id}`}>
+      <BackupItem $selected={selected} $expired={expired}>
+        <Stack
+          $direction="row"
+          $justifyContent="space-between"
+          $alignItems="center"
+        >
+          {shortenIfOver(modifiedName)}
+          {paused && (
+            <PauseIcon
+              weight="fill"
+              size="14"
+              display="block"
+              color="var(--color-gray-medium)"
+            />
+          )}
+          {expired && (
+            <XIcon
+              weight="regular"
+              size="14"
+              display="block"
+              color="var(--color-dark-red)"
+            />
+          )}
+        </Stack>
+      </BackupItem>
+    </Link>
   )
 }

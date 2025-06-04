@@ -1,5 +1,4 @@
-import { findAuthedBskyAccounts } from '@/lib/atproto'
-import { getStorageContext } from '@/lib/server/db'
+import { findAllIdentities } from '@/lib/atproto'
 import { getSession } from '@/lib/sessions'
 
 import IdentitiesPage from './IdentitiesPage'
@@ -8,9 +7,8 @@ import IdentitiesPage from './IdentitiesPage'
 export const dynamic = 'force-dynamic'
 
 export default async function Identities() {
-  const { did: account } = await getSession()
-  const { authSessionStore } = getStorageContext()
-  const accounts = await findAuthedBskyAccounts(authSessionStore, account)
+  await getSession() // Keep session check but don't use the result
+  const identities = await findAllIdentities()
 
-  return <IdentitiesPage accounts={accounts} />
+  return <IdentitiesPage identities={identities} />
 }

@@ -1,3 +1,5 @@
+import { AnyLink, CARLink } from '@storacha/ui-react'
+
 import { GATEWAY_HOSTNAME } from './constants'
 
 import type { Client } from '@storacha/client'
@@ -9,20 +11,20 @@ export function cidUrl(cid: string) {
 export async function uploadCAR(
   storachaClient: Client,
   blob: Blob
-): Promise<string> {
-  let storachaRepoCid
-  await storachaClient.uploadCAR(blob, {
+): Promise<{ uploadCid: AnyLink; carCid: CARLink }> {
+  let carCid: CARLink | undefined
+  const uploadCid = await storachaClient.uploadCAR(blob, {
     onShardStored: (carMetadata) => {
-      storachaRepoCid = carMetadata.cid
+      carCid = carMetadata.cid
     },
     // set shard size to 4 GiB - the maximum shard size
     shardSize: 1024 * 1024 * 1024 * 4,
   })
-  if (!storachaRepoCid)
+  if (!carCid)
     throw new Error(
       'Uploaded CAR but did not get shard ID, this is unexpected.'
     )
-  return storachaRepoCid
+  return { carCid, uploadCid }
 }
 
 export async function loadCid(

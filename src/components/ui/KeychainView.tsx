@@ -1,20 +1,24 @@
 'use client'
 
 import { Agent, CredentialSession, Did } from '@atproto/api'
+import { Secp256k1Keypair } from '@atproto/crypto'
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 import {
-  ArrowCircleRight,
-  Eye,
-  EyeSlash,
-  Gear,
-  IdentificationBadge,
-  Key,
+  ArrowCircleRightIcon,
+  CopyIcon,
+  EyeIcon,
+  EyeSlashIcon,
+  GearIcon,
+  IdentificationBadgeIcon,
+  KeyIcon,
+  TrashIcon,
   //  Trash,
 } from '@phosphor-icons/react'
 import { base64pad } from 'multiformats/bases/base64'
 import { styled } from 'next-yak'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { mutate } from 'swr'
 
 import { KeychainContextProps } from '@/contexts/keychain'
@@ -46,29 +50,32 @@ import { CreateButton } from './CreateButton'
 import { IdentityTransfer } from './IdentityTransfer'
 import KeyImportForm from './KeyImportForm'
 
-import type { KeyImportFn } from '@/contexts/keychain'
+import type { KeyHydrateFn } from '@/contexts/keychain'
 
 const SecretText = styled(Text)`
   font-family: var(--font-dm-mono);
 `
 
+async function exportSecret(keypair: Secp256k1Keypair) {
+  return base64pad.encode(await keypair.export())
+}
+
 interface KeyDetailsProps {
   dbKey?: RotationKey
-  importKey?: KeyImportFn
+  hydrateKey?: KeyHydrateFn
   onDone?: () => unknown
 }
 
-function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
+function KeyDetails({ dbKey, onDone, hydrateKey }: KeyDetailsProps) {
   const [secret, setSecret] = useState<string>()
   const [showImport, setShowImport] = useState<boolean>(false)
   const keypair = dbKey?.keypair
 
   async function showSecret() {
-    const secret = await keypair?.export()
-    if (secret) {
-      setSecret(base64pad.encode(secret))
+    if (keypair) {
+      setSecret(await exportSecret(keypair))
     } else {
-      console.warn("can't show secret", keypair)
+      console.warn("can't show secret, keypair is falsy")
     }
   }
 
@@ -77,8 +84,8 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
   }
 
   async function importAndClose(key: RotationKey, keyMaterial: string) {
-    if (importKey) {
-      await importKey(key, keyMaterial)
+    if (hydrateKey) {
+      await hydrateKey(key, keyMaterial)
       setShowImport(false)
     } else {
       console.warn('importKey was not defined, cannot import key')
@@ -86,6 +93,12 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
   }
 
   const did = dbKey?.id ?? keypair?.did()
+
+  async function copySecret() {
+    if (!keypair) throw new Error('secret not defined')
+    navigator.clipboard.writeText(await exportSecret(keypair))
+    toast.success(`Copied private key for ${did} to the clipboard.`)
+  }
 
   return (
     <Stack $gap="1rem">
@@ -99,7 +112,7 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
         </Stack>
       )}
 
-      {showImport && importKey && dbKey ? (
+      {showImport && hydrateKey && dbKey ? (
         <div className="mt-2">
           <KeyImportForm dbKey={dbKey} importKey={importAndClose} />
         </div>
@@ -117,7 +130,7 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
               $variant="secondary"
               onClick={hideSecret}
               $leftIcon={
-                <EyeSlash size="16" color="var(--color-gray-medium)" />
+                <EyeSlashIcon size="16" color="var(--color-gray-medium)" />
               }
             >
               Hide Secret
@@ -146,9 +159,20 @@ function KeyDetails({ dbKey, onDone, importKey }: KeyDetailsProps) {
               <Button
                 $variant="secondary"
                 onClick={showSecret}
-                $leftIcon={<Eye size="16" color="var(--color-gray-medium)" />}
+                $leftIcon={
+                  <EyeIcon size="16" color="var(--color-gray-medium)" />
+                }
               >
                 Show Secret
+              </Button>
+              <Button
+                $variant="secondary"
+                onClick={copySecret}
+                $leftIcon={
+                  <CopyIcon size="16" color="var(--color-gray-medium)" />
+                }
+              >
+                Copy Secret
               </Button>
             </>
           )}
@@ -313,7 +337,7 @@ function AddRotationKey({
                 onClick={transferIdentity}
                 disabled={isTransferringIdentity}
                 $leftIcon={
-                  <ArrowCircleRight
+                  <ArrowCircleRightIcon
                     size="16"
                     color="var(--color-gray-medium)"
                   />
@@ -378,12 +402,12 @@ const RotationKeyStack = styled(Stack)`
 function RotationKeyStatus({
   did,
   rotationKey,
-  importKey,
+  hydrateKey,
   onDone,
 }: {
   did: Did
   rotationKey: RotationKey
-  importKey: KeyImportFn
+  hydrateKey: KeyHydrateFn
   onDone: () => void
 }) {
   const { data: profile, mutate } = useProfile(did)
@@ -423,7 +447,7 @@ function RotationKeyStatus({
             {isSignable ? <>Does</> : <>Does not</>} have a private key loaded.
           </Text>
           {!isSignable && (
-            <KeyImportForm dbKey={rotationKey} importKey={importKey} />
+            <KeyImportForm dbKey={rotationKey} importKey={hydrateKey} />
           )}
         </Stack>
         <Stack $gap="1rem">
@@ -491,8 +515,9 @@ const PublicKey = styled.div`
 export default function KeychainView({
   keys,
   generateKeyPair,
+  hydrateKey,
   importKey,
-  //forgetKey,
+  forgetKey,
   profile,
 }: KeychainProps) {
   const { did: atprotoAccount, rotationKeys, handle } = profile ?? {}
@@ -565,7 +590,7 @@ export default function KeychainView({
                       onClick={() => openRotationKeyStatus(key)}
                       aria-label="Rotation key status"
                     >
-                      <Key
+                      <KeyIcon
                         size="16"
                         color={
                           rotationKeys
@@ -583,7 +608,7 @@ export default function KeychainView({
                       onClick={() => openRotationKeyStatus(key)}
                       aria-label="Rotation key status"
                     >
-                      <IdentificationBadge
+                      <IdentificationBadgeIcon
                         size="16"
                         color={
                           rotationKeys
@@ -601,19 +626,16 @@ export default function KeychainView({
                       onClick={() => openRotationKeyStatus(key)}
                       aria-label="View key details"
                     >
-                      <Gear size="16" color="var(--color-gray-medium)" />
+                      <GearIcon size="16" color="var(--color-gray-medium)" />
                     </Button>
-                    {/* 
-                    TODO: add this back with warnings if it is registered as a rotation key
                     <Button
                       $variant="outline"
                       className="p-1"
                       onClick={() => forgetKey(key)}
-                      aria-label="Delete key"
+                      aria-label="View key details"
                     >
-                      <Trash size="16" color="var(--color-gray-medium)" /> 
+                      <TrashIcon size="16" color="var(--color-gray-medium)" />
                     </Button>
-                    */}
                   </Stack>
                 </KeyItem>
               ))}
@@ -621,13 +643,16 @@ export default function KeychainView({
           )}
         </>
       )}
-      <CreateButton
-        onClick={onClickAdd}
-        disabled={generatingKeyPair}
-        $mt="1.4rem"
-      >
-        New Key
-      </CreateButton>
+      <Stack $direction="row" $mt="1.4rem" $gap="1rem">
+        <CreateButton onClick={onClickAdd} disabled={generatingKeyPair}>
+          New Key
+        </CreateButton>
+        <CreateButton
+          onClick={() => atprotoAccount && importKey(atprotoAccount)}
+        >
+          Import Key
+        </CreateButton>
+      </Stack>
       <Modal
         isOpen={isKeyDetailsDialogOpen}
         onClose={() => setIsKeyDetailsDialogOpen(false)}
@@ -637,7 +662,7 @@ export default function KeychainView({
         {selectedKeyDetails && isKeyDetailsDialogOpen && (
           <KeyDetails
             dbKey={selectedKeyDetails}
-            importKey={importKey}
+            hydrateKey={hydrateKey}
             onDone={() => setIsKeyDetailsDialogOpen(false)}
           />
         )}
@@ -652,7 +677,7 @@ export default function KeychainView({
           <RotationKeyStatus
             did={atprotoAccount}
             rotationKey={selectedKeyDetails}
-            importKey={importKey}
+            hydrateKey={hydrateKey}
             onDone={() => setIsRotationKeyDialogOpen(false)}
           />
         )}
