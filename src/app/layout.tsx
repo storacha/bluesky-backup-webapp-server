@@ -23,7 +23,17 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <PlausibleProvider domain={NEXT_PUBLIC_APP_DOMAIN}>
+    <PlausibleProvider
+      domain={
+        process.env.NODE_ENV === 'development'
+          ? 'console.storacha.local'
+          : NEXT_PUBLIC_APP_DOMAIN
+      }
+      trackLocalhost={true}
+      trackOutboundLinks={true}
+      taggedEvents={true}
+      enabled={true}
+    >
       <StorachaProvider>
         <SWRConfigProvider>
           <html

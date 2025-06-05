@@ -264,36 +264,45 @@ type BackupEventParams = {
   atProtoAccount?: string
 }
 
+export type AccountDid = `did:mailto:${string}:${string}`
+
 export type BBEvents = {
-  'plan-selection': TrackingParams & { userId?: string }
-  'email-verification-started': {
-    userId?: string
+  'Plan Selection': TrackingParams & { userId?: string }
+  'Email Verification Started': {
+    userId?: AccountDid | string
     emailDomain?: string
   }
-  'email-verification-successful': {
-    userId?: string
+  'Email Verification Successful': {
+    userId?: AccountDid | string
     emailDomain?: string
     verificationTime?: string
   }
-  'login-started': TrackingParams & {
+  'Storacha Login': TrackingParams & {
     method?: 'email'
   }
-  'login-successful': {
+  'Bluesky Login Successful': {
+    userId: AccountDid
+    handle?: string
+  }
+  'Bluesky Login Started': {
+    userId: AccountDid
+  }
+  'Login Successful': {
     userId?: string
     method?: 'email'
     returningUser?: boolean
   }
-  'humanode-verification-started': {
+  'Humanode Verification Started': {
     userId?: string
   }
-  'humanode-verification-successful': {
+  'Humanode Verification Successful': {
     userId?: string
     verificationTime?: number
   }
-  'backup-creation-started': BackupEventParams & {
+  'Backup Creation Started': BackupEventParams & {
     userId?: string
   }
-  'backup-creation-successful': BackupEventParams & {
+  'Backup Creation Successful': BackupEventParams & {
     userId?: string
   }
 }

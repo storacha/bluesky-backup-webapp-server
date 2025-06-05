@@ -12,10 +12,10 @@ export const LoginForm = ({
   email: string | undefined
   setEmail: (email: string) => void
 }) => {
-  const { loginStarted } = useBBAnalytics()
+  const { logStorachaLogin } = useBBAnalytics()
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    loginStarted({ method: 'email' })
+    logStorachaLogin({ method: 'email' })
   }
   return (
     <Stack $gap="2rem">

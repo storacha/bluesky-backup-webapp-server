@@ -3,7 +3,7 @@
 import { Account } from '@storacha/ui-react'
 import Form from 'next/form'
 import { useSearchParams } from 'next/navigation'
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { useFormStatus } from 'react-dom'
 
 import {
@@ -42,6 +42,27 @@ const Loading = () => {
 const ConnectContent = ({ account }: { account: Account | undefined }) => {
   const searchParams = useSearchParams()
   const handleParam = searchParams.get('handle')
+
+  useEffect(() => {
+    const isOAuthSuccess =
+      searchParams.get('code') ||
+      searchParams.get('success') === 'true' ||
+      searchParams.get('state')
+
+    const message = {
+      type: 'bsky-login-successful',
+      data: {
+        handle: handleParam || searchParams.get('handle'),
+        account_did: account?.did(),
+        timestamp: Date.now(),
+      },
+    }
+    if (isOAuthSuccess) {
+      console.log('message', message)
+      window.opener?.postMessage(message, window.location.origin)
+      window.close()
+    }
+  }, [searchParams, handleParam, account])
 
   if (!account) return null
 

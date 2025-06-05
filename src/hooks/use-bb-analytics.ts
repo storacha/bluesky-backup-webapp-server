@@ -82,8 +82,8 @@ export const useBBAnalytics = () => {
   )
 
   const logPlanSelection = useCallback(
-    (props: BBEvents['plan-selection']) => {
-      plausible('plan-selection', {
+    (props: BBEvents['Plan Selection']) => {
+      plausible('Plan Selection', {
         props: withUTMParams(props),
       })
     },
@@ -91,36 +91,43 @@ export const useBBAnalytics = () => {
   )
 
   const logBackupCreationSuccessful = useCallback(
-    (props: BBEvents['backup-creation-successful']) => {
-      plausible('backup-creation-successful', { props })
+    (props: BBEvents['Backup Creation Successful']) => {
+      plausible('Backup Creation Successful', { props })
     },
     [plausible]
   )
 
   const logEmailVerificationStarted = useCallback(
-    (props: BBEvents['email-verification-started']) => {
-      plausible('email-verification-started', { props })
+    (props: BBEvents['Email Verification Started']) => {
+      plausible('Email Verification Started', { props })
     },
     [plausible]
   )
 
   const logEmailVerificationSuccessful = useCallback(
-    (props: BBEvents['email-verification-successful']) => {
-      plausible('email-verification-successful', { props })
+    (props: BBEvents['Email Verification Successful']) => {
+      plausible('Email Verification Successful', { props })
     },
     [plausible]
   )
 
-  const logSuccessfulLogin = useCallback(
-    (props: BBEvents['login-successful']) => {
-      plausible('login-successful', { props })
+  const logBlueskyLoginSuccessful = useCallback(
+    (props: BBEvents['Bluesky Login Successful']) => {
+      plausible('Bluesky Login Successful', { props })
     },
     [plausible]
   )
 
-  const loginStarted = useCallback(
-    (props: BBEvents['login-started']) => {
-      plausible('login-started', { props })
+  const logBlueskyLoginStarted = useCallback(
+    (props: BBEvents['Bluesky Login Started']) => {
+      plausible('Bluesky Login Started', { props })
+    },
+    [plausible]
+  )
+
+  const logStorachaLogin = useCallback(
+    (props: BBEvents['Storacha Login']) => {
+      plausible('Storacha Login', { props })
     },
     [plausible]
   )
@@ -129,8 +136,9 @@ export const useBBAnalytics = () => {
     logPlanSelection,
     logBackupCreationSuccessful,
     logEmailVerificationStarted,
-    logSuccessfulLogin,
-    loginStarted,
+    logBlueskyLoginStarted,
+    logBlueskyLoginSuccessful,
+    logStorachaLogin,
     logEmailVerificationSuccessful,
   }
 }
