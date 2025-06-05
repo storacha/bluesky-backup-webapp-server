@@ -24,11 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <PlausibleProvider
-      domain={
-        process.env.NODE_ENV === 'development'
-          ? 'console.storacha.local'
-          : NEXT_PUBLIC_APP_DOMAIN
-      }
+      domain={NEXT_PUBLIC_APP_DOMAIN}
       trackLocalhost={true}
       trackOutboundLinks={true}
       taggedEvents={true}

@@ -151,6 +151,7 @@ export function LoggedIn() {
   const [{ client }] = useAuthenticator()
   const account = useStorachaAccount()
   const { error: sessionDIDError, mutate } = useSWR(['api', '/session/did'])
+  const { logStorachaLogin } = useBBAnalytics()
 
   const [sessionCreationAttempted, setSessionCreationAttempted] =
     useState(false)
@@ -163,12 +164,20 @@ export function LoggedIn() {
         try {
           await createSession(client, account)
           await mutate()
+          logStorachaLogin({ method: 'email' })
         } finally {
           setSessionCreationAttempted(true)
         }
       })()
     }
-  }, [sessionCreationAttempted, account, sessionDIDError, mutate, client])
+  }, [
+    sessionCreationAttempted,
+    account,
+    sessionDIDError,
+    mutate,
+    client,
+    logStorachaLogin,
+  ])
   if (!account) return null
   return (
     <Outside $direction="row">
