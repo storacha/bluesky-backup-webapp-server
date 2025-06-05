@@ -12,6 +12,8 @@ import {
   Box,
   Button,
   Center,
+  Explainer,
+  ExText,
   Spinner,
   Stack,
   SubHeading,
@@ -25,7 +27,7 @@ import { Backup, PaginatedResult, Snapshot } from '@/types'
 import { CreateSnapshotButton } from './CreateSnapshotButton'
 
 const SnapshotContainer = styled(Stack)`
-  margin-top: 4rem;
+  margin-top: 3rem;
 `
 
 const Details = styled(Stack)`
@@ -96,8 +98,8 @@ export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
           <DetailValue>{backup.archived ? 'yes' : 'no'}</DetailValue>
         </Stack>
       </Details>
-      <SnapshotContainer $gap="1rem">
-        <Stack $gap="0.5em" $direction="row" $alignItems="center">
+      <SnapshotContainer $gap="2rem">
+        <Stack $gap="0.5em" $direction="row" $alignItems="center" $my="1rem">
           <CreateSnapshotButton backup={backup} />
           {snapshots && snapshots?.count > 5 && (
             <SnapshotsLink href={`/backups/${backup.id}/snapshots`}>
@@ -105,14 +107,24 @@ export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
             </SnapshotsLink>
           )}
         </Stack>
-        <SubHeading>Recent Snapshots</SubHeading>
         <Stack $gap="0.6rem">
           {isLoading ? (
             <Center $height="200px">
               <Loader />
             </Center>
+          ) : snapshots?.results.length === 0 ? (
+            <Explainer>
+              <ExText>
+                We&apos;ll take a snapshot of your Bluesky account every hour.
+              </ExText>
+              <ExText>
+                If you would like to create a snapshot now, click &ldquo;Create
+                Snapshot&rdquo; above.
+              </ExText>
+            </Explainer>
           ) : (
             <>
+              <SubHeading>Recent Snapshots</SubHeading>
               {snapshots?.results.slice(0, 5).map((snapshot) => (
                 <SnapshotSummary
                   key={snapshot.id}
