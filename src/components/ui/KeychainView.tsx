@@ -10,11 +10,11 @@ import {
   EyeSlashIcon,
   GearIcon,
   IdentificationBadgeIcon,
-  KeyIcon,
   TrashIcon,
   //  Trash,
 } from '@phosphor-icons/react'
 import { base64pad } from 'multiformats/bases/base64'
+import { useSearchParams } from 'next/navigation'
 import { styled } from 'next-yak'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -24,8 +24,6 @@ import { mutate } from 'swr'
 import { KeychainContextProps } from '@/contexts/keychain'
 import { useProfile } from '@/hooks/use-profile'
 import { ATPROTO_DEFAULT_SOURCE } from '@/lib/constants'
-import * as plc from '@/lib/crypto/plc'
-import { createPlcUpdateOp } from '@/lib/plc'
 import { shortenDID } from '@/lib/ui'
 import { ProfileData, RotationKey } from '@/types'
 
@@ -192,13 +190,6 @@ function isCurrentRotationKey(
   profile: ProfileData
 ): boolean {
   return profile.rotationKeys.includes(rotationKey.id)
-}
-
-function isCurrentVerificationKey(
-  rotationKey: RotationKey,
-  profile: ProfileData
-): boolean {
-  return profile.verificationMethods.atproto === rotationKey.id
 }
 
 interface AtprotoLoginFormProps {
@@ -410,27 +401,13 @@ function RotationKeyStatus({
   hydrateKey: KeyHydrateFn
   onDone: () => void
 }) {
-  const { data: profile, mutate } = useProfile(did)
+  const { data: profile } = useProfile(did)
   const { handle } = profile || {}
-
+  const params = useSearchParams()
   const isRotationKey = profile && isCurrentRotationKey(rotationKey, profile)
   const isSignable = Boolean(rotationKey.keypair)
-  const isSigningKey = profile?.verificationMethods?.atproto === rotationKey.id
   const [isAddingKey, setIsAddingKey] = useState(false)
   const [isTransferringIdentity, setIsTransferringIdentity] = useState(false)
-  async function takeControl() {
-    if (!profile) throw new Error('profile not defined, cannot take control')
-
-    const op = await createPlcUpdateOp(profile, rotationKey, {
-      verificationMethods: {
-        ...profile.verificationMethods,
-        atproto: rotationKey.id,
-      },
-    })
-    const client = new plc.Client('https://plc.directory')
-    await client.sendOperation(profile.did, op)
-    await mutate()
-  }
   if (!profile) return null
   return isAddingKey ? (
     <AddRotationKey did={did} rotationKey={rotationKey} onDone={onDone} />
@@ -464,29 +441,16 @@ function RotationKeyStatus({
             </Button>
           )}
         </Stack>
-        <Stack $gap="1rem">
-          <Text $fontSize="1rem" $color="var(--color-black)">
-            {isSigningKey ? <>Is</> : <>Is not</>} controlling {profile.handle}.
-          </Text>
-          {isRotationKey && isSignable && !isSigningKey && (
-            <Button
-              onClick={() => {
-                takeControl()
-              }}
-            >
-              Take Control
-            </Button>
-          )}
-        </Stack>
       </Stack>
       <Stack $direction="row" $gap="1rem">
-        {isSigningKey && isSignable && (
+        {isRotationKey && isSignable && (
           <Button
+            disabled={!params.get('identity-transfer')}
             onClick={() => {
               setIsTransferringIdentity(true)
             }}
           >
-            Transfer Identity
+            Transfer Identity (coming soon!)
           </Button>
         )}
 
@@ -584,24 +548,6 @@ export default function KeychainView({
                     <CopyButton text={key.id} />
                   </Stack>
                   <Stack $direction="row" $gap="0.5rem">
-                    <Button
-                      $variant="outline"
-                      className="p-1"
-                      onClick={() => openRotationKeyStatus(key)}
-                      aria-label="Rotation key status"
-                    >
-                      <KeyIcon
-                        size="16"
-                        color={
-                          rotationKeys
-                            ? isCurrentVerificationKey(key, profile)
-                              ? 'var(--color-green)'
-                              : 'var(--color-dark-red)'
-                            : 'var(--color-gray-medium)'
-                        }
-                      />
-                    </Button>
-
                     <Button
                       $variant="outline"
                       className="p-1"
