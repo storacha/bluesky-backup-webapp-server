@@ -13,13 +13,13 @@ export async function GET(
   const { did: account } = await getSession()
 
   const searchParams = request.nextUrl.searchParams
-  const page = Number(searchParams.get('page'))
-  const limit = Number(searchParams.get('limit'))
+  const page = Number(searchParams.get('page') || 1)
+  const limit = Number(searchParams.get('limit') || 10)
   if (!(await snapshotOwnedByAccount(db, id, account))) {
     return new Response('Not authorized', { status: 401 })
   }
 
-  const data = await db.findBlobsForSnapshot(id)
+  const data = await db.findBlobsForSnapshot(id, { limit, page })
   const count = data.count
   const totalPages = Math.ceil(count / limit)
   const getPageUrl = (pageNumber: number) =>
