@@ -1,3 +1,9 @@
+import { SpaceBlob, SpaceIndex, Upload } from '@storacha/capabilities'
+import { Delegation } from '@ucanto/core'
+import { Capabilities, Signer } from '@ucanto/principal/ed25519'
+
+import { SERVER_DID } from '@/lib/constants'
+
 import { withData, withLinks } from '../../.storybook/decorators'
 
 import { Sidebar } from './Sidebar'
@@ -37,6 +43,22 @@ type Story = StoryObj<typeof meta>
 
 export const NoBackups: Story = {}
 
+const spaceSigner = await Signer.generate()
+
+const capabilities: Capabilities = [
+  {
+    can: SpaceBlob.add.can,
+    with: spaceSigner.did(),
+  },
+  {
+    can: SpaceIndex.add.can,
+    with: spaceSigner.did(),
+  },
+  {
+    can: Upload.add.can,
+    with: spaceSigner.did(),
+  },
+]
 export const WithBackups: Story = {
   decorators: [
     withData(
@@ -54,6 +76,7 @@ export const WithBackups: Story = {
           includePreferences: false,
           delegationCid: null,
           paused: false,
+          archived: false,
         },
         {
           id: 'def',
@@ -67,6 +90,7 @@ export const WithBackups: Story = {
           includePreferences: true,
           delegationCid: null,
           paused: false,
+          archived: false,
         },
         {
           id: 'ghi',
@@ -80,8 +104,37 @@ export const WithBackups: Story = {
           includePreferences: true,
           delegationCid: null,
           paused: true,
+          archived: false,
+        },
+        {
+          id: 'ghi',
+          accountDid: 'did:mailto:gmail.com:timothy-chalamet',
+          name: 'An Expired Backup',
+          atprotoAccount: 'did:plc:vv44vwwbr3lmbjht3p5fd7wz',
+          storachaSpace:
+            'did:key:zMwdHTDrZWDPyrEA2GLc3nnBTXcAn6RN3Lexio45ULK56BXA',
+          includeRepository: false,
+          includeBlobs: false,
+          includePreferences: true,
+          delegationCid:
+            'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551dele',
+          paused: false,
+          archived: false,
         },
       ]
+    ),
+    withData(
+      [
+        'delegation',
+        { cid: 'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy551dele' },
+      ],
+      Delegation.delegate({
+        issuer: spaceSigner,
+        audience: { did: () => SERVER_DID },
+        capabilities,
+        proofs: [],
+        expiration: Math.floor(Date.now() / 1000) - 1,
+      })
     ),
   ],
   args: {

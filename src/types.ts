@@ -2,13 +2,13 @@ import { RepoEntry } from '@atcute/car'
 import { Secp256k1Keypair } from '@atproto/crypto'
 import { z } from 'zod/v4'
 
-export const didSchema = z.templateLiteral(['did:', z.string()])
+const didSchema = z.templateLiteral(['did:', z.string()])
 export type Did = z.infer<typeof didSchema>
 
-export const spaceDidSchema = z.templateLiteral(['did:key:', z.string()])
+const spaceDidSchema = z.templateLiteral(['did:key:', z.string()])
 export type SpaceDid = z.infer<typeof spaceDidSchema>
 
-export const backupSchema = z.object({
+const backupSchema = z.strictObject({
   id: z.string(),
   accountDid: z.string(),
   name: z.string(),
@@ -19,40 +19,48 @@ export const backupSchema = z.object({
   includePreferences: z.boolean(),
   delegationCid: z.string().nullable(),
   paused: z.boolean(),
+  archived: z.boolean(),
 })
 
 export type Backup = z.infer<typeof backupSchema>
 
-export const backupInputSchema = backupSchema
+export type Identity = Backup & {
+  isConnected: boolean
+}
+
+const backupInputSchema = backupSchema
   .omit({
     id: true,
   })
-  .partial({ paused: true })
+  .partial({ paused: true, archived: true })
 
 export type BackupInput = z.infer<typeof backupInputSchema>
 
 export const backupInputUpdateSchema = backupInputSchema
   .pick({
     name: true,
+    delegationCid: true,
     paused: true,
+    archived: true,
   })
   .partial()
 
 export type BackupInputUpdate = z.infer<typeof backupInputUpdateSchema>
 
-export const snapshotStatusSchema = z.enum([
+const snapshotStatusSchema = z.enum([
   'not-started',
   'in-progress',
   'failed',
   'success',
 ])
 
-export const snapshotSchema = z.object({
+const snapshotSchema = z.strictObject({
   id: z.string(),
   atprotoAccount: didSchema,
   backupId: z.string(),
   repositoryStatus: snapshotStatusSchema,
   repositoryCid: z.string().optional(),
+  repositoryUploadCid: z.string().optional(),
   blobsStatus: snapshotStatusSchema,
   preferencesStatus: snapshotStatusSchema,
   preferencesCid: z.string().optional(),
@@ -61,7 +69,8 @@ export const snapshotSchema = z.object({
 
 export type Snapshot = z.infer<typeof snapshotSchema>
 
-export const snapshotInputSchema = snapshotSchema
+/* eslint-disable @typescript-eslint/no-unused-vars */
+const snapshotInputSchema = snapshotSchema
   .omit({
     id: true,
     createdAt: true,
@@ -69,6 +78,7 @@ export const snapshotInputSchema = snapshotSchema
   .partial({
     repositoryStatus: true,
     repositoryCid: true,
+    repositoryUploadCid: true,
     blobsStatus: true,
     preferencesStatus: true,
     preferencesCid: true,
@@ -76,10 +86,10 @@ export const snapshotInputSchema = snapshotSchema
 
 export type SnapshotInput = z.infer<typeof snapshotInputSchema>
 
-export const stateSchema = z.enum(['loading', 'idle'])
+const stateSchema = z.enum(['loading', 'idle', 'deleting'])
 export type State = z.infer<typeof stateSchema>
 
-export const atBlobSchema = z.object({
+const atBlobSchema = z.strictObject({
   id: z.string(),
   cid: z.string(),
   contentType: z.string().optional(),
@@ -90,14 +100,14 @@ export const atBlobSchema = z.object({
 
 export type ATBlob = z.infer<typeof atBlobSchema>
 
-export const atBlobInputSchema = atBlobSchema.omit({
+const atBlobInputSchema = atBlobSchema.omit({
   id: true,
   createdAt: true,
 })
 
 export type ATBlobInput = z.infer<typeof atBlobInputSchema>
 
-export const rotationKeySchema = z.object({
+const rotationKeySchema = z.strictObject({
   id: z.string(),
   keypair: z.instanceof(Secp256k1Keypair).optional(),
   storachaAccount: z.string(),
@@ -107,14 +117,14 @@ export const rotationKeySchema = z.object({
 
 export type RotationKey = z.infer<typeof rotationKeySchema>
 
-export const rotationKeyInputSchema = rotationKeySchema.omit({
+const rotationKeyInputSchema = rotationKeySchema.omit({
   createdAt: true,
   keypair: true,
 })
 
 export type RotationKeyInput = z.infer<typeof rotationKeyInputSchema>
 
-export const rotationKeyClientInputSchema = rotationKeyInputSchema.omit({
+const rotationKeyClientInputSchema = rotationKeyInputSchema.omit({
   storachaAccount: true,
 })
 

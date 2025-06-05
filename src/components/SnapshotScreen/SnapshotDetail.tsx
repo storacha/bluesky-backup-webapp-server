@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { styled } from 'next-yak'
 
-import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
+import { cidUrl } from '@/lib/storacha'
+import { formatDate, shortenDID } from '@/lib/ui'
 import { Snapshot } from '@/types'
 
 import CopyButton from '../CopyButton'
@@ -39,11 +40,21 @@ export default function SnapshotDetail({ snapshot }: SnapshotDetailArgs) {
         <DetailValue>{formatDate(snapshot.createdAt)}</DetailValue>
       </Stack>
       {snapshot.repositoryCid && (
-        <Stack $direction="row" $alignItems="center" $gap="1rem">
+        <Stack $direction="row" $alignItems="start" $gap="1rem">
           <DetailName>Repository</DetailName>
-          <Link href={`/snapshots/${snapshot.id}/repo`}>
-            <DetailValue>{shortenCID(snapshot.repositoryCid)}</DetailValue>
-          </Link>
+          <DetailValue>
+            <Stack $alignItems="start" $gap="0.5rem">
+              <Link href={`/snapshots/${snapshot.id}/repo`}>Repo Explorer</Link>
+              {snapshot.repositoryUploadCid && (
+                <Link
+                  href={cidUrl(snapshot.repositoryUploadCid)}
+                  target="_blank"
+                >
+                  Storacha Gateway
+                </Link>
+              )}
+            </Stack>
+          </DetailValue>
         </Stack>
       )}
       <Stack $direction="row" $alignItems="center" $gap="1rem">

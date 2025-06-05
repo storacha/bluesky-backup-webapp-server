@@ -23,11 +23,16 @@ export const receiptsEndpoint = new URL(
     die('NEXT_PUBLIC_STORACHA_RECEIPTS_URL')
 )
 
+const version = process.env.version ?? '0.0.0'
+
 export const serviceConnection = connect<Service>({
   id: servicePrincipal,
   codec: CAR.outbound,
   channel: HTTP.open({
     url: serviceURL,
     method: 'POST',
+    headers: {
+      'X-Client': `Storacha/1 (js; browser) BlueskyBackups/${version.split('.')[0]}`,
+    },
   }),
 })

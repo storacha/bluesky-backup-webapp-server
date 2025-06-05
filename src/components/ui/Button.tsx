@@ -61,7 +61,7 @@ export const Button = ({
 }: ButtonHTMLAttributes<HTMLButtonElement> &
   Partial<BtnProps & { $noPadding: boolean }>) => (
   <ButtonElement {...props}>
-    {props.$leftIcon}
+    {props.$leftIcon && <>{props.$leftIcon} </>}
     {children}
   </ButtonElement>
 )
@@ -108,3 +108,9 @@ export const StatefulButton = ({
     </Button>
   )
 }
+
+export const IconButton = styled(Button)`
+  display: inline;
+  background: transparent;
+  padding: 0;
+`

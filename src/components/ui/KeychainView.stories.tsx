@@ -66,6 +66,7 @@ const meta = {
     keys,
     generateKeyPair: async () => key,
     setSelectedKey: fn(),
+    hydrateKey: fn(),
     importKey: fn(),
     forgetKey: fn(),
   },
