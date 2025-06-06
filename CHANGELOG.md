@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.10.0...v1.10.1) (2025-06-06)
+
+
+### Bug Fixes
+
+* add template script for db tunnel ([#207](https://github.com/storacha/bluesky-backup-webapp-server/issues/207)) ([0d59046](https://github.com/storacha/bluesky-backup-webapp-server/commit/0d59046fa06e0d622216a586f59d30061a26ca8e))
+
 ## [1.10.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.9.0...v1.10.0) (2025-06-05)
 
 
