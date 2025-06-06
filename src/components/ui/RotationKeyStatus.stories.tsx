@@ -60,13 +60,12 @@ type Story = StoryObj<typeof meta>
 
 export const Initial: Story = {
   args: {
-    rotationKey: key
+    rotationKey: key,
   },
 }
 
 export const MetaOnly: Story = {
   args: {
-    rotationKey: metaOnlyKey
+    rotationKey: metaOnlyKey,
   },
 }
-

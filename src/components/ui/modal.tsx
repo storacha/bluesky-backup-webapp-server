@@ -7,6 +7,10 @@ import { KeyboardEvent, ReactNode, useEffect, useRef, useState } from 'react'
 import { AriaDialogProps, useDialog } from 'react-aria'
 import { createPortal } from 'react-dom'
 
+import { ResponsiveBreakpoints } from '@/hooks/use-mobile-screens'
+
+import { Stack } from './Stack'
+
 type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
 const sizeToWidth: Record<ModalSize, Property.Width> = {
@@ -200,3 +204,25 @@ export const Modal = ({
     </ClientOnlyPortal>
   )
 }
+
+export const ModalStack = styled(Stack)<ResponsiveBreakpoints>`
+  padding: 4em;
+  flex-direction: ${({ isMobile }) => (isMobile ? 'column' : 'row')};
+  gap: 1em;
+  background-color: var(--color-light-blue-100);
+`
+
+export const ModalLeft = styled(Stack)<ResponsiveBreakpoints>`
+  max-width: 15em;
+  gap: 1em;
+  padding: 1rem;
+`
+
+export const ModalRight = styled(Stack)<ResponsiveBreakpoints>`
+  border-radius: 12px;
+  background: var(--color-white);
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  border: 1px solid var(--color-gray-light);
+`

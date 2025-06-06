@@ -1,5 +1,4 @@
 'use client'
-import { Did } from '@atproto/api'
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
@@ -20,7 +19,7 @@ import { Heading, Text } from './text'
 
 import type { KeyHydrateFn } from '@/contexts/keychain'
 
-export default function RotationKeyStatus ({
+export default function RotationKeyStatus({
   rotationKey,
   profile,
   hydrateKey,
@@ -39,7 +38,11 @@ export default function RotationKeyStatus ({
   const [isTransferringIdentity, setIsTransferringIdentity] = useState(false)
   if (!profile) return null
   return isAddingKey ? (
-    <AddRotationKey atprotoAccount={profile.did} rotationKey={rotationKey} onDone={onDone} />
+    <AddRotationKey
+      atprotoAccount={profile.did}
+      rotationKey={rotationKey}
+      onDone={onDone}
+    />
   ) : isTransferringIdentity ? (
     <IdentityTransfer profile={profile} rotationKey={rotationKey} />
   ) : (

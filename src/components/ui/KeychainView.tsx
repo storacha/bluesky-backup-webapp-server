@@ -1,23 +1,17 @@
 'use client'
 
 import { Agent, CredentialSession, Did } from '@atproto/api'
-import { Secp256k1Keypair } from '@atproto/crypto'
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 import {
   ArrowCircleRightIcon,
-  CopyIcon,
-  EyeIcon,
-  EyeSlashIcon,
   GearIcon,
   IdentificationBadgeIcon,
   TrashIcon,
   //  Trash,
 } from '@phosphor-icons/react'
-import { base64pad } from 'multiformats/bases/base64'
 import { styled } from 'next-yak'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 import { mutate } from 'swr'
 
 import { KeychainContextProps } from '@/contexts/keychain'
@@ -37,153 +31,15 @@ import {
   roundRectStyle,
   Spinner,
   Stack,
-  SubHeading,
   Text,
 } from '.'
 
 import { LoginFn, PlcTokenForm } from './atproto'
 import { CreateButton } from './CreateButton'
-import KeyImportForm from './KeyImportForm'
+import NewKey from './NewKey'
 import RotationKeyStatus from './RotationKeyStatus'
 
-import type { KeyHydrateFn } from '@/contexts/keychain'
-
-const SecretText = styled(Text)`
-  font-family: var(--font-dm-mono);
-`
-
-async function exportSecret (keypair: Secp256k1Keypair) {
-  return base64pad.encode(await keypair.export())
-}
-
-interface KeyDetailsProps {
-  dbKey?: RotationKey
-  hydrateKey?: KeyHydrateFn
-  onDone?: () => unknown
-}
-
-function KeyDetails ({ dbKey, onDone, hydrateKey }: KeyDetailsProps) {
-  const [secret, setSecret] = useState<string>()
-  const [showImport, setShowImport] = useState<boolean>(false)
-  const keypair = dbKey?.keypair
-
-  async function showSecret () {
-    if (keypair) {
-      setSecret(await exportSecret(keypair))
-    } else {
-      console.warn("can't show secret, keypair is falsy")
-    }
-  }
-
-  function hideSecret () {
-    setSecret(undefined)
-  }
-
-  async function importAndClose (key: RotationKey, keyMaterial: string) {
-    if (hydrateKey) {
-      await hydrateKey(key, keyMaterial)
-      setShowImport(false)
-    } else {
-      console.warn('importKey was not defined, cannot import key')
-    }
-  }
-
-  const did = dbKey?.id ?? keypair?.did()
-
-  async function copySecret () {
-    if (!keypair) throw new Error('secret not defined')
-    navigator.clipboard.writeText(await exportSecret(keypair))
-    toast.success(`Copied private key for ${did} to the clipboard.`)
-  }
-
-  return (
-    <Stack $gap="1rem">
-      {did && (
-        <Stack>
-          <SubHeading>Key DID</SubHeading>
-          <Stack $direction="row" $alignItems="center" $gap="0.5rem">
-            <Text>{shortenDID(did)}</Text>
-            <CopyButton text={did} />
-          </Stack>
-        </Stack>
-      )}
-
-      {showImport && hydrateKey && dbKey ? (
-        <div className="mt-2">
-          <KeyImportForm dbKey={dbKey} importKey={importAndClose} />
-        </div>
-      ) : secret ? (
-        <Stack $gap="1rem">
-          <Stack>
-            <SubHeading>Secret Key</SubHeading>
-            <Stack $direction="row" $gap="0.5rem" $alignItems="center">
-              <SecretText>{secret}</SecretText>
-              <CopyButton text={secret} />
-            </Stack>
-          </Stack>
-          <Stack $direction="row" $gap="0.5rem">
-            <Button
-              $variant="secondary"
-              onClick={hideSecret}
-              $leftIcon={
-                <EyeSlashIcon size="16" color="var(--color-gray-medium)" />
-              }
-            >
-              Hide Secret
-            </Button>
-            {onDone && (
-              <Button $variant="primary" onClick={onDone}>
-                Done
-              </Button>
-            )}
-          </Stack>
-        </Stack>
-      ) : (
-        <Stack $direction="row" $gap="0.5rem">
-          {!keypair && (
-            <Button
-              $variant="secondary"
-              onClick={() => {
-                setShowImport(true)
-              }}
-            >
-              Import Key
-            </Button>
-          )}
-          {keypair && (
-            <>
-              <Button
-                $variant="secondary"
-                onClick={showSecret}
-                $leftIcon={
-                  <EyeIcon size="16" color="var(--color-gray-medium)" />
-                }
-              >
-                Show Secret
-              </Button>
-              <Button
-                $variant="secondary"
-                onClick={copySecret}
-                $leftIcon={
-                  <CopyIcon size="16" color="var(--color-gray-medium)" />
-                }
-              >
-                Copy Secret
-              </Button>
-            </>
-          )}
-          {onDone && (
-            <Button $variant="primary" onClick={onDone}>
-              Done
-            </Button>
-          )}
-        </Stack>
-      )}
-    </Stack>
-  )
-}
-
-export function isCurrentRotationKey (
+export function isCurrentRotationKey(
   rotationKey: RotationKey,
   profile: ProfileData
 ): boolean {
@@ -204,7 +60,7 @@ const LoginFormElement = styled.form`
   width: 384px;
 `
 
-function AtprotoLoginForm ({ login, handle, server }: AtprotoLoginFormProps) {
+function AtprotoLoginForm({ login, handle, server }: AtprotoLoginFormProps) {
   const { register, handleSubmit, reset } = useForm<PwForm>()
   const onSubmit = handleSubmit(async (data) => {
     await login(handle, data.password, { server })
@@ -229,7 +85,7 @@ const PlcOpCode = styled.code`
   font-size: 0.5em;
 `
 
-export function AddRotationKey ({
+export function AddRotationKey({
   atprotoAccount,
   rotationKey,
   onDone,
@@ -255,7 +111,7 @@ export function AddRotationKey ({
     setIsPlcRestoreAuthorizationEmailSent,
   ] = useState<boolean>(false)
 
-  async function sendPlcRestoreAuthorizationEmail () {
+  async function sendPlcRestoreAuthorizationEmail() {
     if (sourceAgent) {
       await sourceAgent.com.atproto.identity.requestPlcOperationSignature()
       setIsPlcRestoreAuthorizationEmailSent(true)
@@ -275,7 +131,7 @@ export function AddRotationKey ({
     const agent = new Agent(session)
     setSourceAgent(agent)
   }
-  async function setupPlcRestore (plcToken: string) {
+  async function setupPlcRestore(plcToken: string) {
     if (sourceAgent) {
       if (!existingKeys) {
         throw new Error('No rotation key provided')
@@ -295,7 +151,7 @@ export function AddRotationKey ({
   }
   const isPlcRestoreSetup = !!plcOp
 
-  async function transferIdentity () {
+  async function transferIdentity() {
     if (sourceAgent && plcOp) {
       setIsTransferringIdentity(true)
       await sourceAgent.com.atproto.identity.submitPlcOperation({
@@ -404,7 +260,7 @@ const PublicKey = styled.div`
   font-style: bold;
 `
 
-export default function KeychainView ({
+export default function KeychainView({
   keys,
   generateKeyPair,
   hydrateKey,
@@ -415,13 +271,12 @@ export default function KeychainView ({
   const { did: atprotoAccount, rotationKeys, handle } = profile ?? {}
   const [generatingKeyPair, setGeneratingKeyPair] = useState(false)
   const [newKey, setNewKey] = useState<RotationKey>()
-  const [isKeyDetailsDialogOpen, setIsKeyDetailsDialogOpen] = useState(false)
   const [isRotationKeyDialogOpen, setIsRotationKeyDialogOpen] = useState(false)
 
   const [selectedKeyDetails, setSelectedKeyDetails] =
     useState<RotationKey | null>(null)
 
-  async function onClickAdd () {
+  async function onClickAdd() {
     if (!generateKeyPair)
       throw new Error(
         'could not generate key pair, generator function is not defined'
@@ -528,20 +383,6 @@ export default function KeychainView ({
         </CreateButton>
       </Stack>
       <Modal
-        isOpen={isKeyDetailsDialogOpen}
-        onClose={() => setIsKeyDetailsDialogOpen(false)}
-        title="Key Details"
-        size="md"
-      >
-        {selectedKeyDetails && isKeyDetailsDialogOpen && (
-          <KeyDetails
-            dbKey={selectedKeyDetails}
-            hydrateKey={hydrateKey}
-            onDone={() => setIsKeyDetailsDialogOpen(false)}
-          />
-        )}
-      </Modal>
-      <Modal
         isOpen={isRotationKeyDialogOpen}
         onClose={() => setIsRotationKeyDialogOpen(false)}
         title="Recovery Key Status"
@@ -560,20 +401,17 @@ export default function KeychainView ({
         isOpen={Boolean(newKey)}
         onClose={() => {
           setNewKey(undefined)
-          setIsKeyDetailsDialogOpen(false)
         }}
-        title="Key Details"
         size="md"
       >
-        <Stack $gap="1rem">
-          <Text>We&apos;ve created your new key!</Text>
-          <KeyDetails
-            dbKey={newKey}
+        {newKey && (
+          <NewKey
+            rotationKey={newKey}
             onDone={() => {
               setNewKey(undefined)
             }}
           />
-        </Stack>
+        )}
       </Modal>
     </Stack>
   )
