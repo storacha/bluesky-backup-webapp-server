@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 
+import { NEXT_PUBLIC_APP_URI } from '@/lib/constants'
 import { snapshotOwnedByAccount } from '@/lib/server/auth'
 import { getStorageContext } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
@@ -23,7 +24,7 @@ export async function GET(
   const count = data.count
   const totalPages = Math.ceil(count / limit)
   const getPageUrl = (pageNumber: number) =>
-    `${process.env.NEXT_PUBLIC_APP_URI!}/api/snapshots/${id}/blobs?page=${pageNumber}&limit=${limit}`
+    `${NEXT_PUBLIC_APP_URI}/api/snapshots/${id}/blobs?page=${pageNumber}&limit=${limit}`
 
   return Response.json({
     ...data,

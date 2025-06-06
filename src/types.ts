@@ -247,3 +247,62 @@ export type PaginatedResultParams = {
   limit?: number
   page?: number
 }
+
+export type TrackingParams = {
+  source?: string
+  utm_term?: string
+  utm_content?: string
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+}
+
+type BackupEventParams = {
+  includeBlobs?: boolean
+  includeRepository?: boolean
+  spaceId?: string
+  atProtoAccount?: string
+}
+
+export type AccountDid = `did:mailto:${string}:${string}`
+
+export type BBEvents = {
+  'Plan Selection': TrackingParams & { userId?: string }
+  'Email Verification Started': {
+    userId?: AccountDid | string
+    emailDomain?: string
+  }
+  'Email Verification Successful': {
+    userId?: AccountDid | string
+    emailDomain?: string
+    verificationTime?: string
+  }
+  'Storacha Login': TrackingParams & {
+    method?: 'email'
+  }
+  'Bluesky Login Successful': {
+    userId: AccountDid
+    handle?: string
+  }
+  'Bluesky Login Started': {
+    userId: AccountDid
+  }
+  'Login Successful': {
+    userId?: string
+    method?: 'email'
+    returningUser?: boolean
+  }
+  'Humanode Verification Started': {
+    userId?: string
+  }
+  'Humanode Verification Successful': {
+    userId?: string
+    verificationTime?: number
+  }
+  'Backup Creation Started': BackupEventParams & {
+    userId?: string
+  }
+  'Backup Creation Successful': BackupEventParams & {
+    userId?: string
+  }
+}

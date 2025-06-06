@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 
-import { PAGINATED_RESULTS_LIMIT } from '@/lib/constants'
+import { NEXT_PUBLIC_APP_URI, PAGINATED_RESULTS_LIMIT } from '@/lib/constants'
 import { backupOwnedByAccount } from '@/lib/server/auth'
 import { getStorageContext } from '@/lib/server/db'
 import { getSession } from '@/lib/sessions'
@@ -22,7 +22,7 @@ export async function GET(
   const count = data.count
   const totalPages = Math.ceil(count / limit)
   const getPageUrl = (pageNumber: number) =>
-    `${process.env.NEXT_PUBLIC_APP_URI!}/api/backups/${id}/blobs?page=${pageNumber}&limit=${limit}`
+    `${NEXT_PUBLIC_APP_URI}/api/backups/${id}/blobs?page=${pageNumber}&limit=${limit}`
 
   return Response.json({
     ...data,

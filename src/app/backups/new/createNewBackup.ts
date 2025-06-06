@@ -1,6 +1,5 @@
 'use server'
 import { Did } from '@atproto/oauth-client-node'
-import { redirect } from 'next/navigation'
 
 import { getStorageContext } from '@/lib/server/db'
 
@@ -27,5 +26,5 @@ export const action = async (data: FormData) => {
     delegationCid: data.get('delegation_cid') as string,
   })
 
-  redirect(`/backups/${backup.id}`)
+  return backup
 }

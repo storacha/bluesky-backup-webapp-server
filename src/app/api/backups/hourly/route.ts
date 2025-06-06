@@ -1,3 +1,4 @@
+import { NEXT_PUBLIC_APP_URI } from '@/lib/constants'
 import { logAndCaptureError } from '@/lib/sentry'
 import { isCronjobAuthed } from '@/lib/server/auth'
 import { getStorageContext } from '@/lib/server/db'
@@ -21,15 +22,12 @@ export async function POST(request: Request) {
   for (const backup of backups) {
     try {
       console.log(`${PREFIX}Snapshotting ${backup.id}`)
-      void fetch(
-        `${process.env.NEXT_PUBLIC_APP_URI}/api/backups/${backup.id}/snapshots`,
-        {
-          method: 'POST',
-          headers: {
-            authorization: authHeader,
-          },
-        }
-      )
+      void fetch(`${NEXT_PUBLIC_APP_URI}/api/backups/${backup.id}/snapshots`, {
+        method: 'POST',
+        headers: {
+          authorization: authHeader,
+        },
+      })
     } catch (e) {
       console.error(`${PREFIX}Error snapshotting backup ${backup.id}`, e)
       logAndCaptureError(e)
