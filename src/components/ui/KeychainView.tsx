@@ -14,7 +14,6 @@ import {
   //  Trash,
 } from '@phosphor-icons/react'
 import { base64pad } from 'multiformats/bases/base64'
-import { useSearchParams } from 'next/navigation'
 import { styled } from 'next-yak'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -35,7 +34,6 @@ import {
   Heading,
   InputField,
   Modal,
-  NoTextTransform,
   roundRectStyle,
   Spinner,
   Stack,
@@ -45,8 +43,8 @@ import {
 
 import { LoginFn, PlcTokenForm } from './atproto'
 import { CreateButton } from './CreateButton'
-import { IdentityTransfer } from './IdentityTransfer'
 import KeyImportForm from './KeyImportForm'
+import RotationKeyStatus from './RotationKeyStatus'
 
 import type { KeyHydrateFn } from '@/contexts/keychain'
 
@@ -54,7 +52,7 @@ const SecretText = styled(Text)`
   font-family: var(--font-dm-mono);
 `
 
-async function exportSecret(keypair: Secp256k1Keypair) {
+async function exportSecret (keypair: Secp256k1Keypair) {
   return base64pad.encode(await keypair.export())
 }
 
@@ -64,12 +62,12 @@ interface KeyDetailsProps {
   onDone?: () => unknown
 }
 
-function KeyDetails({ dbKey, onDone, hydrateKey }: KeyDetailsProps) {
+function KeyDetails ({ dbKey, onDone, hydrateKey }: KeyDetailsProps) {
   const [secret, setSecret] = useState<string>()
   const [showImport, setShowImport] = useState<boolean>(false)
   const keypair = dbKey?.keypair
 
-  async function showSecret() {
+  async function showSecret () {
     if (keypair) {
       setSecret(await exportSecret(keypair))
     } else {
@@ -77,11 +75,11 @@ function KeyDetails({ dbKey, onDone, hydrateKey }: KeyDetailsProps) {
     }
   }
 
-  function hideSecret() {
+  function hideSecret () {
     setSecret(undefined)
   }
 
-  async function importAndClose(key: RotationKey, keyMaterial: string) {
+  async function importAndClose (key: RotationKey, keyMaterial: string) {
     if (hydrateKey) {
       await hydrateKey(key, keyMaterial)
       setShowImport(false)
@@ -92,7 +90,7 @@ function KeyDetails({ dbKey, onDone, hydrateKey }: KeyDetailsProps) {
 
   const did = dbKey?.id ?? keypair?.did()
 
-  async function copySecret() {
+  async function copySecret () {
     if (!keypair) throw new Error('secret not defined')
     navigator.clipboard.writeText(await exportSecret(keypair))
     toast.success(`Copied private key for ${did} to the clipboard.`)
@@ -185,7 +183,7 @@ function KeyDetails({ dbKey, onDone, hydrateKey }: KeyDetailsProps) {
   )
 }
 
-function isCurrentRotationKey(
+export function isCurrentRotationKey (
   rotationKey: RotationKey,
   profile: ProfileData
 ): boolean {
@@ -206,7 +204,7 @@ const LoginFormElement = styled.form`
   width: 384px;
 `
 
-function AtprotoLoginForm({ login, handle, server }: AtprotoLoginFormProps) {
+function AtprotoLoginForm ({ login, handle, server }: AtprotoLoginFormProps) {
   const { register, handleSubmit, reset } = useForm<PwForm>()
   const onSubmit = handleSubmit(async (data) => {
     await login(handle, data.password, { server })
@@ -231,16 +229,16 @@ const PlcOpCode = styled.code`
   font-size: 0.5em;
 `
 
-function AddRotationKey({
-  did,
+export function AddRotationKey ({
+  atprotoAccount,
   rotationKey,
   onDone,
 }: {
-  did: Did
+  atprotoAccount: Did
   rotationKey: RotationKey
   onDone: () => void
 }) {
-  const { data: profile } = useProfile(did)
+  const { data: profile } = useProfile(atprotoAccount)
   const {
     handle,
     rotationKeys: existingKeys,
@@ -257,7 +255,7 @@ function AddRotationKey({
     setIsPlcRestoreAuthorizationEmailSent,
   ] = useState<boolean>(false)
 
-  async function sendPlcRestoreAuthorizationEmail() {
+  async function sendPlcRestoreAuthorizationEmail () {
     if (sourceAgent) {
       await sourceAgent.com.atproto.identity.requestPlcOperationSignature()
       setIsPlcRestoreAuthorizationEmailSent(true)
@@ -277,7 +275,7 @@ function AddRotationKey({
     const agent = new Agent(session)
     setSourceAgent(agent)
   }
-  async function setupPlcRestore(plcToken: string) {
+  async function setupPlcRestore (plcToken: string) {
     if (sourceAgent) {
       if (!existingKeys) {
         throw new Error('No rotation key provided')
@@ -297,7 +295,7 @@ function AddRotationKey({
   }
   const isPlcRestoreSetup = !!plcOp
 
-  async function transferIdentity() {
+  async function transferIdentity () {
     if (sourceAgent && plcOp) {
       setIsTransferringIdentity(true)
       await sourceAgent.com.atproto.identity.submitPlcOperation({
@@ -305,7 +303,7 @@ function AddRotationKey({
       })
       setIsTransferringIdentity(false)
       onDone()
-      mutate(['api', `/api/profile?did=${did}`])
+      mutate(['api', `/api/profile?did=${atprotoAccount}`])
     } else {
       console.warn('not transferring identity: ', sourceAgent, plcOp)
     }
@@ -386,79 +384,9 @@ function AddRotationKey({
   )
 }
 
-const RotationKeyStack = styled(Stack)`
+export const RotationKeyStack = styled(Stack)`
   margin-top: 1rem;
 `
-
-function RotationKeyStatus({
-  did,
-  rotationKey,
-  hydrateKey,
-  onDone,
-}: {
-  did: Did
-  rotationKey: RotationKey
-  hydrateKey: KeyHydrateFn
-  onDone: () => void
-}) {
-  const { data: profile } = useProfile(did)
-  const { handle } = profile || {}
-  const params = useSearchParams()
-  const isRotationKey = profile && isCurrentRotationKey(rotationKey, profile)
-  const isSignable = Boolean(rotationKey.keypair)
-  const [isAddingKey, setIsAddingKey] = useState(false)
-  const [isTransferringIdentity, setIsTransferringIdentity] = useState(false)
-  if (!profile) return null
-  return isAddingKey ? (
-    <AddRotationKey did={did} rotationKey={rotationKey} onDone={onDone} />
-  ) : isTransferringIdentity ? (
-    <IdentityTransfer profile={profile} rotationKey={rotationKey} />
-  ) : (
-    <RotationKeyStack $gap="2rem">
-      <Stack $gap="2rem">
-        <Heading>
-          <NoTextTransform>{shortenDID(rotationKey.id)}</NoTextTransform>
-        </Heading>
-        <Stack $gap="1rem">
-          <Text $fontSize="1rem" $color="var(--color-black)">
-            {isSignable ? <>Does</> : <>Does not</>} have a private key loaded.
-          </Text>
-          {!isSignable && (
-            <KeyImportForm dbKey={rotationKey} importKey={hydrateKey} />
-          )}
-        </Stack>
-        <Stack $gap="1rem">
-          <Text $fontSize="1rem" $color="var(--color-black)">
-            {isRotationKey ? <>Is</> : <>Is not</>} currently a recovery key.
-          </Text>
-          {!isRotationKey && (
-            <Button
-              onClick={() => {
-                setIsAddingKey(true)
-              }}
-            >
-              Add This Key To {handle}
-            </Button>
-          )}
-        </Stack>
-      </Stack>
-      <Stack $direction="row" $gap="1rem">
-        {isRotationKey && isSignable && (
-          <Button
-            disabled={!params.get('identity-transfer')}
-            onClick={() => {
-              setIsTransferringIdentity(true)
-            }}
-          >
-            Transfer Identity (coming soon!)
-          </Button>
-        )}
-
-        <Button onClick={onDone}>Done</Button>
-      </Stack>
-    </RotationKeyStack>
-  )
-}
 
 type KeychainProps = KeychainContextProps & {
   className?: string
@@ -476,7 +404,7 @@ const PublicKey = styled.div`
   font-style: bold;
 `
 
-export default function KeychainView({
+export default function KeychainView ({
   keys,
   generateKeyPair,
   hydrateKey,
@@ -493,7 +421,7 @@ export default function KeychainView({
   const [selectedKeyDetails, setSelectedKeyDetails] =
     useState<RotationKey | null>(null)
 
-  async function onClickAdd() {
+  async function onClickAdd () {
     if (!generateKeyPair)
       throw new Error(
         'could not generate key pair, generator function is not defined'
@@ -621,7 +549,7 @@ export default function KeychainView({
       >
         {selectedKeyDetails && atprotoAccount && isRotationKeyDialogOpen && (
           <RotationKeyStatus
-            did={atprotoAccount}
+            profile={profile}
             rotationKey={selectedKeyDetails}
             hydrateKey={hydrateKey}
             onDone={() => setIsRotationKeyDialogOpen(false)}
