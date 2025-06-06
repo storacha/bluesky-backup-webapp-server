@@ -18,6 +18,8 @@ const MainContent = styled.main`
   flex: 1;
   min-width: 0;
   display: flex;
+  height: 100vh;
+  overflow-y: auto;
 `
 
 export const AppLayout = ({ children, selectedBackupId }: AppLayoutProps) => {

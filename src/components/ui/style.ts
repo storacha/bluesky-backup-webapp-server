@@ -43,6 +43,7 @@ export type StyleProps = {
   $py: Property.PaddingTop
   $my: Property.MarginTop
   $pt: Property.PaddingTop
+  $whiteSpace: Property.WhiteSpace
   $overflow: Property.Overflow
   $overflowX: Property.OverflowX
   $overflowY: Property.OverflowY
