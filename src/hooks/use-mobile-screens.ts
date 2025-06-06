@@ -1,6 +1,13 @@
 import { useMediaQuery } from 'react-responsive'
 
-export const useMobileScreens = () => {
+export interface ResponsiveBreakpoints {
+  isMobile: boolean
+  isTablet: boolean
+  isBaseLaptop: boolean
+  isSmallViewPort: boolean
+}
+
+export function useMobileScreens(): ResponsiveBreakpoints {
   const isMobile = useMediaQuery({ query: '(max-width: 576px)' })
   const isTablet = useMediaQuery({ minWidth: 576, maxWidth: 992 })
   // laptop breakpoint/screens that do not cross the 1024px threshold

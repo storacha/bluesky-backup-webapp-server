@@ -10,16 +10,16 @@ interface KeyImportFormParams {
   keyMaterial: string
 }
 
-export default function KeyImportForm({
-  dbKey,
+export default function KeyImportForm ({
+  rotationKey,
   importKey,
 }: {
-  dbKey: RotationKey
+  rotationKey: RotationKey
   importKey: KeyHydrateFn
 }) {
   const { register, handleSubmit } = useForm<KeyImportFormParams>()
-  async function submit(data: KeyImportFormParams) {
-    await importKey(dbKey, data.keyMaterial)
+  async function submit (data: KeyImportFormParams) {
+    await importKey(rotationKey, data.keyMaterial)
   }
   return (
     <form onSubmit={handleSubmit(submit)}>
@@ -36,7 +36,7 @@ export default function KeyImportForm({
           $variant="primary"
           className="text-xs uppercase font-bold"
         >
-          Load&nbsp;Key
+          Load
         </Button>
       </Stack>
     </form>
