@@ -80,7 +80,7 @@ export default function NewKey({ rotationKey, onDone }: KeyDetailsProps) {
           . If you lose it, you won&apos;t be able to access your backup.
         </Text>
       </ModalLeft>
-      <ModalRight {...breakpoints}>
+      <ModalRight {...breakpoints} $gap="2rem">
         <Stack>
           <Text $color="var(--color-black)" $fontSize="1rem">
             New Rotation Key
@@ -121,12 +121,12 @@ export default function NewKey({ rotationKey, onDone }: KeyDetailsProps) {
               </Button>
             </>
           )}
-          {onDone && (
-            <Button $variant="secondary" $fontSize="1rem" onClick={onDone}>
-              Done
-            </Button>
-          )}
         </Stack>
+        {onDone && (
+          <Button $variant="secondary" $fontSize="1rem" onClick={onDone}>
+            Done
+          </Button>
+        )}
       </ModalRight>
     </ModalStack>
   )

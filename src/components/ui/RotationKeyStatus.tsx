@@ -2,24 +2,22 @@
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
+import { isCurrentRotationKey } from '@/lib/domain'
 import { shortenDID } from '@/lib/ui'
 import { ProfileData, RotationKey } from '@/types'
 
+import AddRotationKey from './AddRotationKey'
 import { Button } from './Button'
 import { IdentityTransfer } from './IdentityTransfer'
-import {
-  AddRotationKey,
-  isCurrentRotationKey,
-  RotationKeyStack,
-} from './KeychainView'
-import KeyImportForm from './KeyImportForm'
+import { ModalLeft, ModalRight, ModalStack } from './modal'
 import { Stack } from './Stack'
-import { NoTextTransform } from './style'
-import { Heading, Text } from './text'
+import { Heading, SubHeading, Text } from './text'
 
 import type { KeyHydrateFn } from '@/contexts/keychain'
+import KeyImportForm from './KeyImportForm'
 
-export default function RotationKeyStatus({
+export default function RotationKeyStatus ({
   rotationKey,
   profile,
   hydrateKey,
@@ -33,61 +31,59 @@ export default function RotationKeyStatus({
   const { handle } = profile || {}
   const params = useSearchParams()
   const isRotationKey = profile && isCurrentRotationKey(rotationKey, profile)
-  const isSignable = Boolean(rotationKey.keypair)
   const [isAddingKey, setIsAddingKey] = useState(false)
   const [isTransferringIdentity, setIsTransferringIdentity] = useState(false)
+  const breakpoints = useMobileScreens()
   if (!profile) return null
   return isAddingKey ? (
     <AddRotationKey
-      atprotoAccount={profile.did}
+      profile={profile}
       rotationKey={rotationKey}
       onDone={onDone}
     />
   ) : isTransferringIdentity ? (
-    <IdentityTransfer profile={profile} rotationKey={rotationKey} />
+    rotationKey.keypair ? (
+      <IdentityTransfer profile={profile} rotationKey={rotationKey} />
+    ) : (
+      <KeyImportForm rotationKey={rotationKey} importKey={hydrateKey} />
+    )
   ) : (
-    <RotationKeyStack $gap="2rem">
-      <Stack $gap="2rem">
-        <Heading>
-          <NoTextTransform>{shortenDID(rotationKey.id)}</NoTextTransform>
-        </Heading>
-        <Stack $gap="1rem">
-          <Text $fontSize="1rem" $color="var(--color-black)">
-            {isSignable ? <>Does</> : <>Does not</>} have a private key loaded.
-          </Text>
-          {!isSignable && (
-            <KeyImportForm dbKey={rotationKey} importKey={hydrateKey} />
-          )}
-        </Stack>
-        <Stack $gap="1rem">
-          <Text $fontSize="1rem" $color="var(--color-black)">
-            {isRotationKey ? <>Is</> : <>Is not</>} currently a recovery key.
-          </Text>
-          {!isRotationKey && (
+    <ModalStack {...breakpoints}>
+      <ModalLeft {...breakpoints}>
+        <Heading>Rotation Key</Heading>
+        <SubHeading>{shortenDID(rotationKey.id)}</SubHeading>
+        <SubHeading>{handle}</SubHeading>
+      </ModalLeft>
+      <ModalRight $justifyContent="space-between" $gap="2em" {...breakpoints}>
+        <Text $fontSize="1reem">
+          This key {isRotationKey ? 'is' : 'is not'} installed as a recovery key
+          for&nbsp;{handle}.
+        </Text>
+        <Stack $direction="row" $gap="1rem" $justifyContent="space-between">
+          {isRotationKey ? (
             <Button
+              $fontSize="1rem"
+              disabled={!params.get('identity-transfer')}
+              onClick={() => {
+                setIsTransferringIdentity(true)
+              }}
+            >
+              Transfer Identity
+              <Text>(coming soon!)</Text>
+            </Button>
+          ) : (
+            <Button
+              $fontSize="1rem"
               onClick={() => {
                 setIsAddingKey(true)
               }}
             >
-              Add This Key To {handle}
+              Install Key
             </Button>
           )}
+          <Button onClick={onDone}>Done</Button>
         </Stack>
-      </Stack>
-      <Stack $direction="row" $gap="1rem">
-        {isRotationKey && isSignable && (
-          <Button
-            disabled={!params.get('identity-transfer')}
-            onClick={() => {
-              setIsTransferringIdentity(true)
-            }}
-          >
-            Transfer Identity (coming soon!)
-          </Button>
-        )}
-
-        <Button onClick={onDone}>Done</Button>
-      </Stack>
-    </RotationKeyStack>
+      </ModalRight>
+    </ModalStack>
   )
 }

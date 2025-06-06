@@ -5,10 +5,22 @@ import { base64pad } from 'multiformats/bases/base64'
 import { createContext, useContext, useState } from 'react'
 import { toast } from 'sonner'
 
-import { Button, Modal, Stack, StatefulButton, Text } from '@/components/ui'
+import {
+  Button,
+  Heading,
+  Modal,
+  ModalLeft,
+  ModalRight,
+  ModalStack,
+  Stack,
+  StatefulButton,
+  Text,
+} from '@/components/ui'
 import KeyMaterialImportForm from '@/components/ui/KeyMaterialImportForm'
+import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { useStorachaAccount } from '@/hooks/use-plan'
 import { useSWR } from '@/lib/swr'
+import { shortenDID } from '@/lib/ui'
 import { RotationKey } from '@/types'
 
 import type { ReactNode } from 'react'
@@ -69,7 +81,7 @@ export const KeychainProvider = ({
   const [isDeletingKey, setIsDeletingKey] = useState(false)
   const storachaAccount = useStorachaAccount()
   const { data: keys, mutate: mutateKeys } = useSWR(['api', `/api/keys`])
-  async function generateKeyPair(atprotoAccount: string) {
+  async function generateKeyPair (atprotoAccount: string) {
     if (storachaAccount) {
       const keypair = await Secp256k1Keypair.create({ exportable: true })
       const newKey = await recordKey({
@@ -84,7 +96,7 @@ export const KeychainProvider = ({
       console.warn('could not find storacha account')
     }
   }
-  async function hydrateKey(key: RotationKey, keyMaterial: string) {
+  async function hydrateKey (key: RotationKey, keyMaterial: string) {
     const keypair = await Secp256k1Keypair.import(
       base64pad.decode(keyMaterial),
       { exportable: true }
@@ -100,11 +112,11 @@ export const KeychainProvider = ({
   }
   const [keyImportAccount, setKeyImportAccount] = useState<string>()
 
-  async function importKey(atProtoAccount: string) {
+  async function importKey (atProtoAccount: string) {
     setKeyImportAccount(atProtoAccount)
   }
 
-  async function importKeyMaterial(keyMaterial: string) {
+  async function importKeyMaterial (keyMaterial: string) {
     if (!keyImportAccount)
       throw new Error(
         'keyImportAccount is not defined, cannot import key material'
@@ -133,11 +145,11 @@ export const KeychainProvider = ({
     }
   }
   const [forgettableKey, setForgettableKey] = useState<RotationKey>()
-  async function forgetKey(key: RotationKey) {
+  async function forgetKey (key: RotationKey) {
     setForgettableKey(key)
   }
 
-  async function deleteKey(key?: RotationKey) {
+  async function deleteKey (key?: RotationKey) {
     if (!key) throw new Error('key is undefined, cannot delete key')
     setIsDeletingKey(true)
     try {
@@ -156,9 +168,10 @@ export const KeychainProvider = ({
       setIsDeletingKey(false)
     }
   }
-  function closeForgetKey() {
+  function closeForgetKey () {
     setForgettableKey(undefined)
   }
+  const breakpoints = useMobileScreens()
   return (
     <KeychainContext.Provider
       value={{
@@ -175,16 +188,24 @@ export const KeychainProvider = ({
       <Modal
         isOpen={Boolean(forgettableKey)}
         onClose={closeForgetKey}
-        title="Forget Key?"
-        size="md"
+        size="lg"
+        background="var(--color-light-blue-100)"
       >
-        {forgettableKey ? (
-          <Stack $gap="1rem">
-            <Text>Are you sure you want to forget {forgettableKey.id} ?</Text>
-            <Text>
-              As long as you have the private key backed up you can reload it
-              later.
-            </Text>
+        <ModalStack {...breakpoints}>
+          <ModalLeft {...breakpoints}>
+            <Stack $gap="1rem">
+              <Heading>Forget Key?</Heading>
+              <Text>
+                Are you sure you want to forget{' '}
+                {forgettableKey && shortenDID(forgettableKey.id)} ?
+              </Text>
+              <Text>
+                As long as you have the private key backed up you can reload it
+                later.
+              </Text>
+            </Stack>
+          </ModalLeft>
+          <ModalRight $justifyContent="center" {...breakpoints}>
             <Stack $direction="row" $gap="1rem">
               <StatefulButton
                 disabled={isDeletingKey}
@@ -192,24 +213,34 @@ export const KeychainProvider = ({
                 onClick={() => {
                   deleteKey(forgettableKey)
                 }}
+                $fontSize="1rem"
               >
-                Yes, forget it!
+                Yes!&nbsp;Forget&nbsp;it.
               </StatefulButton>
-              <Button onClick={closeForgetKey}>No, never mind.</Button>
+              <Button onClick={closeForgetKey}
+                $fontSize="1rem"
+              >
+                No,&nbsp;nevermind!
+              </Button>
             </Stack>
-          </Stack>
-        ) : (
-          // this should really never happen - the modal should be closed if forgettableKey is undefined
-          <Button onClick={closeForgetKey}>Close</Button>
-        )}
+          </ModalRight>
+        </ModalStack>
       </Modal>
       <Modal
         isOpen={Boolean(keyImportAccount)}
         onClose={() => setKeyImportAccount(undefined)}
-        title="Import Key"
         size="md"
+        background="var(--color-light-blue-100)"
       >
-        <KeyMaterialImportForm importKeyMaterial={importKeyMaterial} />
+        <ModalStack {...breakpoints}>
+          <ModalLeft {...breakpoints}>
+            <Heading>Import Key</Heading>
+            <Text>Paste a private key to start tracking it.</Text>
+          </ModalLeft>
+          <ModalRight $justifyContent="center" {...breakpoints}>
+            <KeyMaterialImportForm importKeyMaterial={importKeyMaterial} />
+          </ModalRight>
+        </ModalStack>
       </Modal>
     </KeychainContext.Provider>
   )
