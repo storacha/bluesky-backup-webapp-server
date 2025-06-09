@@ -1,73 +1,40 @@
 import { useSearchParams } from 'next/navigation'
 import { usePlausible } from 'next-plausible'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
+import useLocalStorageState from 'use-local-storage-state'
 
 import { BBEvents } from '@/types'
 
-type StoredUtm = {
-  ttl: number
-  timestamp: number
-  params: Record<string, string>
-}
+const utms = [
+  'utm_source',
+  'utm_medium',
+  'utm_content',
+  'utm_term',
+  'utm_content',
+]
 
 export const useBBAnalytics = () => {
   const plausible = usePlausible<BBEvents>()
-  const [utmParams, setUtmParams] = useState<Record<string, string>>({})
-
+  const [utmParams, setUtmParams] = useLocalStorageState<
+    Record<string, string>
+  >('utms', { defaultValue: {} })
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    // initially the approach here was to retain the UTM params in session
-    // pretty much just a browser tab session, so when that tab closes, the data is lost
-    // i moved towards a 'keep this data for a while and clear it' approach with localStorage instead of sessionStorage
-    const DURATION = 7 * 24 * 60 * 60 + 1000
-
-    const getUtmParams = () => {
-      const params: Record<string, string> = {}
-      ;[
-        'utm_source',
-        'utm_medium',
-        'utm_content',
-        'utm_term',
-        'utm_content',
-      ].forEach((param) => {
-        const value = searchParams.get(param)
+    const utmps = utms.reduce(
+      (m, utm) => {
+        const value = searchParams.get(utm)
         if (value) {
-          params[param] = value
+          m[utm] = value
         }
-      })
-
-      setUtmParams(params)
-
-      if (Object.keys(params).length > 0) {
-        const utmData = {
-          params,
-          ttl: DURATION,
-          timeStamp: Date.now(),
-        }
-        localStorage.setItem('bb_utm_params', JSON.stringify(utmData))
-      }
+        return m
+      },
+      {} as Record<string, string>
+    )
+    if (Object.keys(utmps).length > 0) {
+      setUtmParams(utmps)
     }
-
-    const storedUtmData = localStorage.getItem('bb_utm_params')
-    if (storedUtmData) {
-      try {
-        const parsed: StoredUtm = JSON.parse(storedUtmData)
-        if (parsed.timestamp && Date.now() - parsed.timestamp < parsed.ttl) {
-          setUtmParams(parsed.params)
-        } else {
-          localStorage.removeItem('bb_utm_params')
-          getUtmParams()
-        }
-      } catch (error) {
-        localStorage.removeItem('bb_utm_params')
-        getUtmParams()
-        console.error(error)
-      }
-    } else {
-      getUtmParams()
-    }
-  }, [searchParams])
+  }, [searchParams, setUtmParams])
 
   // for events like first time signups/plan selection, we need the utm
   // params alongside whatever data we choose to send
@@ -120,16 +87,20 @@ export const useBBAnalytics = () => {
 
   const logLoginStarted = useCallback(
     (props: BBEvents['Login Started']) => {
-      plausible('Login Started', { props })
+      plausible('Login Started', {
+        props: withUTMParams(props),
+      })
     },
-    [plausible]
+    [plausible, withUTMParams]
   )
 
   const logLoginSuccessful = useCallback(
     (props: BBEvents['Login Successful']) => {
-      plausible('Login Successful', { props })
+      plausible('Login Successful', {
+        props: withUTMParams(props),
+      })
     },
-    [plausible]
+    [plausible, withUTMParams]
   )
 
   return {
