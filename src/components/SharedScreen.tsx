@@ -13,7 +13,6 @@ const ScreenContainer = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  background-color: var(--color-light-blue-10);
 `
 
 const ResizeHandleOuter = styled.div`

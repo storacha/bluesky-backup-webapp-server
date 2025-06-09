@@ -14,7 +14,7 @@ import { Backup, PaginatedResult } from '@/types'
 
 const ArchivedBackupsWrapper = styled(Stack)`
   padding: 2rem;
-  width: 100%;
+  width: 38%;
 
   @media only screen and (min-width: 0px) and (max-width: 600px) {
     width: 100%;
