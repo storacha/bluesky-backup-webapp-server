@@ -90,6 +90,13 @@ export const useBBAnalytics = () => {
     [plausible, withUTMParams]
   )
 
+  const logBackupCreationStarted = useCallback(
+    (props: BBEvents['Backup Creation Started']) => {
+      plausible('Backup Creation Started', { props })
+    },
+    [plausible]
+  )
+
   const logBackupCreationSuccessful = useCallback(
     (props: BBEvents['Backup Creation Successful']) => {
       plausible('Backup Creation Successful', { props })
@@ -97,48 +104,41 @@ export const useBBAnalytics = () => {
     [plausible]
   )
 
-  const logEmailVerificationStarted = useCallback(
-    (props: BBEvents['Email Verification Started']) => {
-      plausible('Email Verification Started', { props })
-    },
-    [plausible]
-  )
-
-  const logEmailVerificationSuccessful = useCallback(
-    (props: BBEvents['Email Verification Successful']) => {
-      plausible('Email Verification Successful', { props })
-    },
-    [plausible]
-  )
-
   const logBlueskyLoginSuccessful = useCallback(
-    (props: BBEvents['Bluesky Login Successful']) => {
-      plausible('Bluesky Login Successful', { props })
+    (props: BBEvents['Bluesky Connect Successful']) => {
+      plausible('Bluesky Connect Successful', { props })
     },
     [plausible]
   )
 
   const logBlueskyLoginStarted = useCallback(
-    (props: BBEvents['Bluesky Login Started']) => {
-      plausible('Bluesky Login Started', { props })
+    (props: BBEvents['Bluesky Connect Started']) => {
+      plausible('Bluesky Connect Started', { props })
     },
     [plausible]
   )
 
-  const logStorachaLogin = useCallback(
-    (props: BBEvents['Storacha Login']) => {
-      plausible('Storacha Login', { props })
+  const logLoginStarted = useCallback(
+    (props: BBEvents['Login Started']) => {
+      plausible('Login Started', { props })
+    },
+    [plausible]
+  )
+
+  const logLoginSuccessful = useCallback(
+    (props: BBEvents['Login Successful']) => {
+      plausible('Login Successful', { props })
     },
     [plausible]
   )
 
   return {
     logPlanSelection,
+    logBackupCreationStarted,
     logBackupCreationSuccessful,
-    logEmailVerificationStarted,
     logBlueskyLoginStarted,
     logBlueskyLoginSuccessful,
-    logStorachaLogin,
-    logEmailVerificationSuccessful,
+    logLoginStarted,
+    logLoginSuccessful,
   }
 }

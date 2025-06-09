@@ -23,7 +23,8 @@ async function CallbackServerPage({
   const { session } = await client.callback(searchParamEntries)
   const agent = new Agent(session)
 
-  if (!isDidPlc(agent.did)) throw new Error('Did not find PLC DID for current session.')
+  if (!isDidPlc(agent.did))
+    throw new Error('Did not find PLC DID for current session.')
 
   return <CallbackPage plcDid={agent.did} />
 }

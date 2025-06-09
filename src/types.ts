@@ -261,7 +261,7 @@ type BackupEventParams = {
   includeBlobs?: boolean
   includeRepository?: boolean
   spaceId?: string
-  atProtoAccount?: string
+  atprotoAccount?: string
 }
 
 export type AccountDid = `did:mailto:${string}:${string}`
@@ -277,15 +277,17 @@ export type BBEvents = {
     emailDomain?: string
     verificationTime?: string
   }
-  'Storacha Login': TrackingParams & {
-    method?: 'email'
-  }
-  'Bluesky Login Successful': {
+  'Bluesky Connect Successful': {
     userId: AccountDid
     handle?: string
   }
-  'Bluesky Login Started': {
+  'Bluesky Connect Started': {
     userId: AccountDid
+  }
+  'Login Started': {
+    userId?: string
+    method?: 'email'
+    returningUser?: boolean
   }
   'Login Successful': {
     userId?: string

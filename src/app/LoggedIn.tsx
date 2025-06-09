@@ -71,10 +71,18 @@ function NewBackupForm({
   children: ReactNode
 }) {
   const [{ client }] = useAuthenticator()
-  const { logBackupCreationSuccessful } = useBBAnalytics()
+  const { logBackupCreationSuccessful, logBackupCreationStarted } =
+    useBBAnalytics()
   const router = useRouter()
 
   async function generateDelegationAndCreateNewBackup(formData: FormData) {
+    logBackupCreationStarted({
+      atprotoAccount: formData.get('atproto_account')?.toString(),
+      includeBlobs: formData.get('include_blobs') === 'on',
+      includeRepository: formData.get('include_repository') === 'on',
+      spaceId: formData.get('storacha_space')?.toString(),
+      userId: account.did(),
+    })
     formData.append('account', account.did())
     try {
       const space = formData.get('storacha_space') as SpaceDid | undefined
@@ -107,7 +115,7 @@ function NewBackupForm({
       const result = await createNewBackup(formData)
       if (result) {
         logBackupCreationSuccessful({
-          atProtoAccount: result.atprotoAccount,
+          atprotoAccount: result.atprotoAccount,
           includeBlobs: result.includeBlobs,
           includeRepository: result.includeRepository,
           spaceId: result.storachaSpace,
@@ -181,7 +189,7 @@ export function LoggedIn() {
   const [{ client }] = useAuthenticator()
   const account = useStorachaAccount()
   const { error: sessionDIDError, mutate } = useSWR(['api', '/session/did'])
-  const { logStorachaLogin } = useBBAnalytics()
+  const { logLoginSuccessful } = useBBAnalytics()
 
   const [sessionCreationAttempted, setSessionCreationAttempted] =
     useState(false)
@@ -194,7 +202,7 @@ export function LoggedIn() {
         try {
           await createSession(client, account)
           await mutate()
-          logStorachaLogin({ method: 'email' })
+          logLoginSuccessful({ method: 'email' })
         } finally {
           setSessionCreationAttempted(true)
         }
@@ -206,7 +214,7 @@ export function LoggedIn() {
     sessionDIDError,
     mutate,
     client,
-    logStorachaLogin,
+    logLoginSuccessful,
   ])
   if (!account) return null
   return (

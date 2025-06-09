@@ -3,13 +3,13 @@
 import { Did } from '@atproto/api'
 import { useEffect } from 'react'
 
+import { Loader } from '@/components/Loader'
+import { Stack } from '@/components/ui'
 import { useBBAnalytics } from '@/hooks/use-bb-analytics'
 import { useStorachaAccount } from '@/hooks/use-plan'
 import { useProfile } from '@/hooks/use-profile'
-import { Loader } from '@/components/Loader'
-import { Stack } from '@/components/ui'
 
-export default function CallbackPage ({ plcDid }: { plcDid: Did }) {
+export default function CallbackPage({ plcDid }: { plcDid: Did }) {
   const account = useStorachaAccount()
   const userId = account?.did()
 
@@ -31,7 +31,12 @@ export default function CallbackPage ({ plcDid }: { plcDid: Did }) {
   )
 
   return (
-    <Stack $justifyContent='center' $alignItems='center' $width='100vh' $height='100vh'>
+    <Stack
+      $justifyContent="center"
+      $alignItems="center"
+      $width="100vh"
+      $height="100vh"
+    >
       <Loader />
     </Stack>
   )
