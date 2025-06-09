@@ -1,7 +1,8 @@
 import { styled } from 'next-yak'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { Button, InputField, Stack } from '../ui'
+import { Button, InputField, Stack, Text } from '../ui'
 
 export type LoginFn = (
   identifier: string,
@@ -17,6 +18,8 @@ export interface LoginForm {
 
 export interface AtprotoLoginFormProps {
   login: LoginFn
+  handle?: string
+  server?: string
   defaultServer?: string
   className?: string
 }
@@ -39,34 +42,49 @@ export interface AtprotoCreateAccountFormProps {
 }
 
 const LoginFormElement = styled.form`
-  width: 384px;
+  min-width: 20rem;
 `
 
 export function AtprotoLoginForm({
   login,
+  handle,
+  server,
   defaultServer,
 }: AtprotoLoginFormProps) {
   const { register, handleSubmit, reset } = useForm<LoginForm>()
+  const [errorMessage, setErrorMessage] = useState()
   const onSubmit = handleSubmit(async (data) => {
-    await login(data.handle, data.password, {
-      server: data.server || `https://${defaultServer}`,
-    })
-    reset()
+    try {
+      await login(handle ?? data.handle, data.password, {
+        server: server ?? data.server ?? `https://${defaultServer}`,
+      })
+      reset()
+    } catch (e) {
+      // @ts-expect-error TS doesn't know about message
+      setErrorMessage(e.message)
+    }
   })
   return (
     <LoginFormElement onSubmit={onSubmit}>
       <Stack $gap="1rem">
-        <InputField
-          label="Server"
-          placeholder={`https://${defaultServer}`}
-          {...register('server')}
-        />
-        <InputField
-          label="Handle"
-          placeholder={`racha.${defaultServer}`}
-          autoComplete="off"
-          {...register('handle')}
-        />
+        {errorMessage && (
+          <Text $color="var(--color-dark-red)">{errorMessage}</Text>
+        )}
+        {!server && (
+          <InputField
+            label="Server"
+            placeholder={`https://${defaultServer}`}
+            {...register('server')}
+          />
+        )}
+        {!handle && (
+          <InputField
+            label="Handle"
+            placeholder={`racha.${defaultServer}`}
+            autoComplete="off"
+            {...register('handle')}
+          />
+        )}
         <InputField
           label="Password"
           type="password"

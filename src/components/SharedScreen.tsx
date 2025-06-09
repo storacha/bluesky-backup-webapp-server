@@ -48,8 +48,6 @@ const MobileLayout = styled.div`
 `
 
 const MobileTopSection = styled.div`
-  height: 40vh;
-  min-height: 40vh;
   position: relative;
 `
 

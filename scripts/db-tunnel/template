@@ -1,0 +1,9 @@
+#!/bin/bash
+
+PGHOST=
+PGPORT=5432
+
+BASTION_HOST=
+BASTION_USER=ec2-user
+
+ssh -i "~/.ssh/id_storacha" -N -L 5440:$PGHOST:$PGPORT $BASTION_USER@$BASTION_HOST -v

@@ -10,7 +10,7 @@ import { toast } from 'sonner'
 import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
 import { FullscreenLoader } from '@/components/Loader'
 import StripePricingTable from '@/components/StripePricingTable'
-import { Box, Center, Heading, Stack, Text } from '@/components/ui'
+import { Box, Explainer, ExText, Heading, Stack, Text } from '@/components/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
 import { useBBAnalytics } from '@/hooks/use-bb-analytics'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
@@ -146,8 +146,38 @@ const PricingTableContainer = styled(Stack)`
   padding-top: 2rem;
 `
 
+const BackupExplainer = () => (
+  <Explainer>
+    <ExText>
+      Connect and select a Bluesky account you&apos;d like to start backing up,
+      and then create a Storacha space you&apos;d like to start saving data to.
+    </ExText>
+    <ExText $fontSize="0.875em" $fontWeight="600">
+      Once you create a backup, we&apos;ll make a snapshot of your publicly
+      available Bluesky data - posts, images, videos, follows and followers,
+      blocks, and more - every hour. Thanks to Storacha&apos;s content-addressed
+      storage, we we&apos;ll only ever store new data - look ma, no dupes!
+    </ExText>
+  </Explainer>
+)
+
+const SmallExplainerContainer = styled.div`
+  margin-top: 3em;
+  margin-bottom: 1em;
+  padding-bottom: 1.5em;
+  border-bottom: 1px solid var(--color-gray-medium);
+`
+
+const BigExplainerContainer = styled.div`
+  margin-top: 1em;
+`
+
+const CreateBackupText = styled(Text)`
+  margin-top: 1em;
+`
+
 export function LoggedIn() {
-  const { isMobile } = useMobileScreens()
+  const { isSmallViewPort } = useMobileScreens()
   const [{ client }] = useAuthenticator()
   const account = useStorachaAccount()
   const { error: sessionDIDError, mutate } = useSWR(['api', '/session/did'])
@@ -188,17 +218,26 @@ export function LoggedIn() {
           <BackupScreen
             selectedBackupId={null}
             rightPanelContent={
-              <Center $height={isMobile ? '45vh' : '90vh'}>
-                <Text $fontWeight="600">
-                  Press &quot;Create Backup&quot; to get started!
-                </Text>
-              </Center>
+              isSmallViewPort ? (
+                <CreateBackupText>Create a backup above.</CreateBackupText>
+              ) : (
+                <BigExplainerContainer>
+                  <BackupExplainer />
+                </BigExplainerContainer>
+              )
             }
           >
-            <NewBackupForm account={account}>
-              <BackupDetail />
-              <CreateBackupButton />
-            </NewBackupForm>
+            <Stack>
+              {isSmallViewPort && (
+                <SmallExplainerContainer>
+                  <BackupExplainer />
+                </SmallExplainerContainer>
+              )}
+              <NewBackupForm account={account}>
+                <BackupDetail />
+                <CreateBackupButton />
+              </NewBackupForm>
+            </Stack>
           </BackupScreen>
         ) : (
           <PricingTableContainer $alignItems="center" $gap="1rem">
