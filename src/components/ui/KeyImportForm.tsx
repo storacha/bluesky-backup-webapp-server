@@ -10,7 +10,7 @@ interface KeyImportFormParams {
   keyMaterial: string
 }
 
-export default function KeyImportForm ({
+export default function KeyImportForm({
   rotationKey,
   importKey,
 }: {
@@ -18,7 +18,7 @@ export default function KeyImportForm ({
   importKey: KeyHydrateFn
 }) {
   const { register, handleSubmit } = useForm<KeyImportFormParams>()
-  async function submit (data: KeyImportFormParams) {
+  async function submit(data: KeyImportFormParams) {
     await importKey(rotationKey, data.keyMaterial)
   }
   return (

@@ -81,7 +81,7 @@ export const KeychainProvider = ({
   const [isDeletingKey, setIsDeletingKey] = useState(false)
   const storachaAccount = useStorachaAccount()
   const { data: keys, mutate: mutateKeys } = useSWR(['api', `/api/keys`])
-  async function generateKeyPair (atprotoAccount: string) {
+  async function generateKeyPair(atprotoAccount: string) {
     if (storachaAccount) {
       const keypair = await Secp256k1Keypair.create({ exportable: true })
       const newKey = await recordKey({
@@ -96,7 +96,7 @@ export const KeychainProvider = ({
       console.warn('could not find storacha account')
     }
   }
-  async function hydrateKey (key: RotationKey, keyMaterial: string) {
+  async function hydrateKey(key: RotationKey, keyMaterial: string) {
     const keypair = await Secp256k1Keypair.import(
       base64pad.decode(keyMaterial),
       { exportable: true }
@@ -112,11 +112,11 @@ export const KeychainProvider = ({
   }
   const [keyImportAccount, setKeyImportAccount] = useState<string>()
 
-  async function importKey (atProtoAccount: string) {
+  async function importKey(atProtoAccount: string) {
     setKeyImportAccount(atProtoAccount)
   }
 
-  async function importKeyMaterial (keyMaterial: string) {
+  async function importKeyMaterial(keyMaterial: string) {
     if (!keyImportAccount)
       throw new Error(
         'keyImportAccount is not defined, cannot import key material'
@@ -145,11 +145,11 @@ export const KeychainProvider = ({
     }
   }
   const [forgettableKey, setForgettableKey] = useState<RotationKey>()
-  async function forgetKey (key: RotationKey) {
+  async function forgetKey(key: RotationKey) {
     setForgettableKey(key)
   }
 
-  async function deleteKey (key?: RotationKey) {
+  async function deleteKey(key?: RotationKey) {
     if (!key) throw new Error('key is undefined, cannot delete key')
     setIsDeletingKey(true)
     try {
@@ -168,7 +168,7 @@ export const KeychainProvider = ({
       setIsDeletingKey(false)
     }
   }
-  function closeForgetKey () {
+  function closeForgetKey() {
     setForgettableKey(undefined)
   }
   const breakpoints = useMobileScreens()
@@ -217,9 +217,7 @@ export const KeychainProvider = ({
               >
                 Yes!&nbsp;Forget&nbsp;it.
               </StatefulButton>
-              <Button onClick={closeForgetKey}
-                $fontSize="1rem"
-              >
+              <Button onClick={closeForgetKey} $fontSize="1rem">
                 No,&nbsp;nevermind!
               </Button>
             </Stack>

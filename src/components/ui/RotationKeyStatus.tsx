@@ -10,14 +10,14 @@ import { ProfileData, RotationKey } from '@/types'
 import AddRotationKey from './AddRotationKey'
 import { Button } from './Button'
 import { IdentityTransfer } from './IdentityTransfer'
+import KeyImportForm from './KeyImportForm'
 import { ModalLeft, ModalRight, ModalStack } from './modal'
 import { Stack } from './Stack'
 import { Heading, SubHeading, Text } from './text'
 
 import type { KeyHydrateFn } from '@/contexts/keychain'
-import KeyImportForm from './KeyImportForm'
 
-export default function RotationKeyStatus ({
+export default function RotationKeyStatus({
   rotationKey,
   profile,
   hydrateKey,
