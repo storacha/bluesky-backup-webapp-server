@@ -1,7 +1,6 @@
 'use client'
 
 import { Did, isDid } from '@atproto/api'
-import { useEffect } from 'react'
 
 import { useBBAnalytics } from '@/hooks/use-bb-analytics'
 import { useStorachaAccount } from '@/hooks/use-plan'
@@ -25,24 +24,7 @@ export const BlueskyAccountSelect = ({
   const { data: atprotoAccounts } = useSWR(
     disabled ? null : ['api', '/api/atproto-accounts']
   )
-  const { logBlueskyLoginStarted, logBlueskyLoginSuccessful } = useBBAnalytics()
-
-  // this is to ensure we get the message sent from /atproto/connect
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.origin !== window.location.origin) return
-
-      if (event.data.type === 'bsky-login-successful') {
-        logBlueskyLoginSuccessful({
-          handle: event.data.data.handle,
-          userId: account?.did() as AccountDid,
-        })
-      }
-    }
-
-    window.addEventListener('message', handleMessage)
-    return () => window.removeEventListener('message', handleMessage)
-  }, [logBlueskyLoginSuccessful, account])
+  const { logBlueskyLoginStarted } = useBBAnalytics()
 
   const connectNewAccount = () => {
     const width = 500
