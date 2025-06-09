@@ -34,6 +34,20 @@ export const Text = styled.p<TextProps>`
   border: ${({ $border = '' }) => $border};
 `
 
+export const Span = styled.span<TextProps>`
+  color: ${({ $color = 'var(--color-gray-medium)' }) => $color};
+  font-size: ${({ $fontSize = '0.75rem' }) => $fontSize};
+  text-align: ${({ $textAlign = '' }) => $textAlign};
+  font-weight: ${({ $fontWeight = '400' }) => $fontWeight};
+  line-height: ${({ $lineHeight = '' }) => $lineHeight};
+  word-spacing: ${({ $wordSpacing = '' }) => $wordSpacing};
+  letter-spacing: ${({ $letterSpacing = '' }) => $letterSpacing};
+  text-transform: ${({ $textTransform = 'none' }) => $textTransform};
+  width: ${({ $width = '' }) => $width};
+  max-width: ${({ $maxWidth = '' }) => $maxWidth};
+  border: ${({ $border = '' }) => $border};
+`
+
 export const Heading = styled.h2`
   font-weight: 700;
   color: #000;

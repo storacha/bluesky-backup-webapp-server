@@ -137,6 +137,7 @@ export function IdentityTransfer({
     setIsTransferringIdentity(false)
     setIsIdentityTransferred(true)
   }
+
   return (
     <IdentityTransferView
       profile={profile}
