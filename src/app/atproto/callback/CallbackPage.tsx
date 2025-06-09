@@ -6,8 +6,10 @@ import { useEffect } from 'react'
 import { useBBAnalytics } from '@/hooks/use-bb-analytics'
 import { useStorachaAccount } from '@/hooks/use-plan'
 import { useProfile } from '@/hooks/use-profile'
+import { Loader } from '@/components/Loader'
+import { Stack } from '@/components/ui'
 
-export default function CallbackPage({ plcDid }: { plcDid: Did }) {
+export default function CallbackPage ({ plcDid }: { plcDid: Did }) {
   const account = useStorachaAccount()
   const userId = account?.did()
 
@@ -28,5 +30,9 @@ export default function CallbackPage({ plcDid }: { plcDid: Did }) {
     [logBlueskyLoginSuccessful, userId, handle]
   )
 
-  return <div></div>
+  return (
+    <Stack $justifyContent='center' $alignItems='center' $width='100vh' $height='100vh'>
+      <Loader />
+    </Stack>
+  )
 }
