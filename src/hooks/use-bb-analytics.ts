@@ -53,30 +53,38 @@ export const useBBAnalytics = () => {
 
   const logBackupCreationStarted = useCallback(
     (props: BBEvents['create-backup-started']) => {
-      plausible('create-backup-started', { props })
+      plausible('create-backup-started', {
+        props: { ...utmParams, ...props },
+      })
     },
-    [plausible]
+    [plausible, utmParams]
   )
 
   const logBackupCreationSuccessful = useCallback(
     (props: BBEvents['create-backup-success']) => {
-      plausible('create-backup-success', { props })
+      plausible('create-backup-success', {
+        props: { ...utmParams, ...props },
+      })
     },
-    [plausible]
+    [plausible, utmParams]
   )
 
   const logBlueskyLoginStarted = useCallback(
     (props: BBEvents['connect-bluesky-started']) => {
-      plausible('connect-bluesky-started', { props })
+      plausible('connect-bluesky-started', {
+        props: { ...utmParams, ...props },
+      })
     },
-    [plausible]
+    [plausible, utmParams]
   )
 
   const logBlueskyLoginSuccessful = useCallback(
     (props: BBEvents['connect-bluesky-success']) => {
-      plausible('connect-bluesky-success', { props })
+      plausible('connect-bluesky-success', {
+        props: { ...utmParams, ...props },
+      })
     },
-    [plausible]
+    [plausible, utmParams]
   )
 
   const logLoginStarted = useCallback(
