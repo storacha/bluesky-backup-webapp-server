@@ -267,44 +267,28 @@ type BackupEventParams = {
 export type AccountDid = `did:mailto:${string}:${string}`
 
 export type BBEvents = {
-  'Plan Selection': TrackingParams & { userId?: string }
-  'Email Verification Started': {
-    userId?: AccountDid | string
-    emailDomain?: string
-  }
-  'Email Verification Successful': {
-    userId?: AccountDid | string
-    emailDomain?: string
-    verificationTime?: string
-  }
-  'Bluesky Connect Successful': {
+  'plan-selection': TrackingParams & { userId?: string }
+  'connect-bluesky-success': {
     userId: AccountDid
     handle?: string
   }
-  'Bluesky Connect Started': {
+  'connect-bluesky-started': {
     userId: AccountDid
   }
-  'Login Started': {
+  'login-started': {
     userId?: string
     method?: 'email'
     returningUser?: boolean
   }
-  'Login Successful': {
+  'login-success': {
     userId?: string
     method?: 'email'
     returningUser?: boolean
   }
-  'Humanode Verification Started': {
+  'create-backup-started': BackupEventParams & {
     userId?: string
   }
-  'Humanode Verification Successful': {
-    userId?: string
-    verificationTime?: number
-  }
-  'Backup Creation Started': BackupEventParams & {
-    userId?: string
-  }
-  'Backup Creation Successful': BackupEventParams & {
+  'create-backup-success': BackupEventParams & {
     userId?: string
   }
 }

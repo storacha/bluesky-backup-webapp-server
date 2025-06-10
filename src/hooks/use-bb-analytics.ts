@@ -15,11 +15,17 @@ const utms = [
 
 export const useBBAnalytics = () => {
   const plausible = usePlausible<BBEvents>()
+  const searchParams = useSearchParams()
+
+  /**
+   * useLocalStorage and useEffect here combine to give us something
+   * similar to useMemo except:
+   * a) the value is kept in local storage
+   * b) we only update the value when searchParams has utm_* parameters
+   */
   const [utmParams, setUtmParams] = useLocalStorageState<
     Record<string, string>
   >('utms', { defaultValue: {} })
-  const searchParams = useSearchParams()
-
   useEffect(() => {
     const utmps = utms.reduce(
       (m, utm) => {
@@ -36,71 +42,59 @@ export const useBBAnalytics = () => {
     }
   }, [searchParams, setUtmParams])
 
-  // for events like first time signups/plan selection, we need the utm
-  // params alongside whatever data we choose to send
-  const withUTMParams = useCallback(
-    (props = {}) => {
-      return {
-        ...utmParams,
-        ...props,
-      }
-    },
-    [utmParams]
-  )
-
   const logPlanSelection = useCallback(
-    (props: BBEvents['Plan Selection']) => {
-      plausible('Plan Selection', {
-        props: withUTMParams(props),
+    (props: BBEvents['plan-selection']) => {
+      plausible('plan-selection', {
+        props: { ...utmParams, ...props },
       })
     },
-    [plausible, withUTMParams]
+    [plausible, utmParams]
   )
 
   const logBackupCreationStarted = useCallback(
-    (props: BBEvents['Backup Creation Started']) => {
-      plausible('Backup Creation Started', { props })
+    (props: BBEvents['create-backup-started']) => {
+      plausible('create-backup-started', { props })
     },
     [plausible]
   )
 
   const logBackupCreationSuccessful = useCallback(
-    (props: BBEvents['Backup Creation Successful']) => {
-      plausible('Backup Creation Successful', { props })
-    },
-    [plausible]
-  )
-
-  const logBlueskyLoginSuccessful = useCallback(
-    (props: BBEvents['Bluesky Connect Successful']) => {
-      plausible('Bluesky Connect Successful', { props })
+    (props: BBEvents['create-backup-success']) => {
+      plausible('create-backup-success', { props })
     },
     [plausible]
   )
 
   const logBlueskyLoginStarted = useCallback(
-    (props: BBEvents['Bluesky Connect Started']) => {
-      plausible('Bluesky Connect Started', { props })
+    (props: BBEvents['connect-bluesky-started']) => {
+      plausible('connect-bluesky-started', { props })
+    },
+    [plausible]
+  )
+
+  const logBlueskyLoginSuccessful = useCallback(
+    (props: BBEvents['connect-bluesky-success']) => {
+      plausible('connect-bluesky-success', { props })
     },
     [plausible]
   )
 
   const logLoginStarted = useCallback(
-    (props: BBEvents['Login Started']) => {
-      plausible('Login Started', {
-        props: withUTMParams(props),
+    (props: BBEvents['login-started']) => {
+      plausible('login-started', {
+        props: { ...utmParams, ...props },
       })
     },
-    [plausible, withUTMParams]
+    [plausible, utmParams]
   )
 
   const logLoginSuccessful = useCallback(
-    (props: BBEvents['Login Successful']) => {
-      plausible('Login Successful', {
-        props: withUTMParams(props),
+    (props: BBEvents['login-success']) => {
+      plausible('login-success', {
+        props: { ...utmParams, ...props },
       })
     },
-    [plausible, withUTMParams]
+    [plausible, utmParams]
   )
 
   return {
