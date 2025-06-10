@@ -247,3 +247,47 @@ export type PaginatedResultParams = {
   limit?: number
   page?: number
 }
+
+export type TrackingParams = {
+  source?: string
+  utm_term?: string
+  utm_content?: string
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+}
+
+type BackupEventParams = TrackingParams & {
+  userId?: string
+  includeBlobs?: boolean
+  includeRepository?: boolean
+  spaceId?: string
+  atprotoAccount?: string
+}
+
+export type AccountDid = `did:mailto:${string}:${string}`
+
+export type BBEvents = {
+  'plan-selection': TrackingParams & {
+    userId?: string
+  }
+  'connect-bluesky-success': {
+    userId: AccountDid
+    handle?: string
+  }
+  'connect-bluesky-started': TrackingParams & {
+    userId: AccountDid
+  }
+  'login-started': TrackingParams & {
+    userId?: string
+    method?: 'email'
+    returningUser?: boolean
+  }
+  'login-success': TrackingParams & {
+    userId?: string
+    method?: 'email'
+    returningUser?: boolean
+  }
+  'create-backup-started': BackupEventParams
+  'create-backup-success': BackupEventParams
+}

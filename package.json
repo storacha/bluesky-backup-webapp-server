@@ -54,6 +54,7 @@
     "iron-session": "^8.0.4",
     "multiformats": "^13.3.2",
     "next": "15.1.6",
+    "next-plausible": "^3.12.4",
     "next-yak": "^4.1.1",
     "nuqs": "^2.4.3",
     "p-retry": "^6.2.1",
@@ -72,6 +73,7 @@
     "swr": "^2.3.3",
     "the-new-css-reset": "^1.11.3",
     "uint8arrays": "^5.1.0",
+    "use-local-storage-state": "^19.5.0",
     "uuid": "^11.1.0",
     "yet-another-react-lightbox": "^3.23.1",
     "zod": "^3.25.7"

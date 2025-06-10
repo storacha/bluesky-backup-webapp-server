@@ -2,7 +2,10 @@
 
 import { Did, isDid } from '@atproto/api'
 
+import { useBBAnalytics } from '@/hooks/use-bb-analytics'
+import { useStorachaAccount } from '@/hooks/use-plan'
 import { useSWR } from '@/lib/swr'
+import { AccountDid } from '@/types'
 
 import { ActionButton } from '../ActionButton'
 
@@ -17,9 +20,11 @@ export const BlueskyAccountSelect = ({
   defaultValue?: Did
   disabled?: boolean
 }) => {
+  const account = useStorachaAccount()
   const { data: atprotoAccounts } = useSWR(
     disabled ? null : ['api', '/api/atproto-accounts']
   )
+  const { logBlueskyLoginStarted } = useBBAnalytics()
 
   const connectNewAccount = () => {
     const width = 500
@@ -32,6 +37,9 @@ export const BlueskyAccountSelect = ({
       'atproto-connect',
       `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
     )
+    logBlueskyLoginStarted({
+      userId: account?.did() as AccountDid,
+    })
   }
 
   const items =

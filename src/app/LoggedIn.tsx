@@ -1,6 +1,7 @@
 'use client'
 
 import { Account, Client, useAuthenticator } from '@storacha/ui-react'
+import { useRouter } from 'next/navigation'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
@@ -11,6 +12,7 @@ import { FullscreenLoader } from '@/components/Loader'
 import StripePricingTable from '@/components/StripePricingTable'
 import { Box, Explainer, ExText, Heading, Stack, Text } from '@/components/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
+import { useBBAnalytics } from '@/hooks/use-bb-analytics'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 import { usePlan, useStorachaAccount } from '@/hooks/use-plan'
 import { atproto } from '@/lib/capabilities'
@@ -69,8 +71,18 @@ function NewBackupForm({
   children: ReactNode
 }) {
   const [{ client }] = useAuthenticator()
+  const { logBackupCreationSuccessful, logBackupCreationStarted } =
+    useBBAnalytics()
+  const router = useRouter()
 
   async function generateDelegationAndCreateNewBackup(formData: FormData) {
+    logBackupCreationStarted({
+      atprotoAccount: formData.get('atproto_account')?.toString(),
+      includeBlobs: formData.get('include_blobs') === 'on',
+      includeRepository: formData.get('include_repository') === 'on',
+      spaceId: formData.get('storacha_space')?.toString(),
+      userId: account.did(),
+    })
     formData.append('account', account.did())
     try {
       const space = formData.get('storacha_space') as SpaceDid | undefined
@@ -101,7 +113,17 @@ function NewBackupForm({
       formData.append('delegation_cid', delegationCid.toString())
 
       const result = await createNewBackup(formData)
-      return result
+      if (result) {
+        logBackupCreationSuccessful({
+          atprotoAccount: result.atprotoAccount,
+          includeBlobs: result.includeBlobs,
+          includeRepository: result.includeRepository,
+          spaceId: result.storachaSpace,
+          userId: result.accountDid,
+        })
+        toast.success('Backup created!')
+        router.push(`/backups/${result.id}`)
+      }
     } catch (error) {
       toast.error(
         error instanceof Error
@@ -167,6 +189,7 @@ export function LoggedIn() {
   const [{ client }] = useAuthenticator()
   const account = useStorachaAccount()
   const { error: sessionDIDError, mutate } = useSWR(['api', '/session/did'])
+  const { logLoginSuccessful } = useBBAnalytics()
 
   const [sessionCreationAttempted, setSessionCreationAttempted] =
     useState(false)
@@ -179,12 +202,20 @@ export function LoggedIn() {
         try {
           await createSession(client, account)
           await mutate()
+          logLoginSuccessful({ method: 'email' })
         } finally {
           setSessionCreationAttempted(true)
         }
       })()
     }
-  }, [sessionCreationAttempted, account, sessionDIDError, mutate, client])
+  }, [
+    sessionCreationAttempted,
+    account,
+    sessionDIDError,
+    mutate,
+    client,
+    logLoginSuccessful,
+  ])
   if (!account) return null
   return (
     <Outside $direction="row">
