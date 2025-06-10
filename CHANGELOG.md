@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.10.1...v1.11.0) (2025-06-10)
+
+
+### Features
+
+* major improvements to the recovery key dialogs ([#210](https://github.com/storacha/bluesky-backup-webapp-server/issues/210)) ([db72e23](https://github.com/storacha/bluesky-backup-webapp-server/commit/db72e235143395647216c59281e3b1a79e77db55))
+
 ## [1.10.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.10.0...v1.10.1) (2025-06-06)
 
 
