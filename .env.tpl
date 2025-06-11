@@ -10,9 +10,8 @@ NEXT_PUBLIC_IDENTITY_AUTHORITY=did:web:staging.up.storacha.network
 # works best in development.
 #NEXT_PUBLIC_SERVER_DID='did:web:bskybackups.storacha.network'
 #SERVER_IDENTITY_PRIVATE_KEY=[multiformatted private key]
-
-# This one can be used in development. It's commented out here just in case
-# these lines make their way into a deployment.
+# 
+# Development values - must be overridden in prod
 NEXT_PUBLIC_SERVER_DID='did:key:z6Mkk89bC3JrVqKie71YEcc5M1SMVxuCgNx6zLZ8SYJsxALi'
 SERVER_IDENTITY_PRIVATE_KEY=MgCZT5vOnYZoVAeyjnzuJIVY9J4LNtJ+f8Js0cTPuKUpFne0BVEDJjEu6quFIU8yp91/TY/+MYK8GvlKoTDnqOCovCVM=
 
