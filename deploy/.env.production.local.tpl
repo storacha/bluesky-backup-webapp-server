@@ -6,12 +6,14 @@ if [ "$TF_WORKSPACE" != "prod" ]; then
   STORACHA_DID="staging.up.storacha.network"
   PRICING_TABLE_ID="prctbl_1R1egaF6A5ufQX5vyumO9QAf"
   PUBLISHABLE_KEY="pk_test_51LO87hF6A5ufQX5viNsPTbuErzfavdrEFoBuaJJPfoIhzQXdOUdefwL70YewaXA32ZrSRbK4U4fqebC7SVtyeNcz00qmgNgueC"
+  HUMANODE_OAUTH_CALLBACK_URL=https://staging.up.storacha.network/oauth/humanode/callback
 else
   UPLOAD_PREFIX=""
   GATEWAY_PREFIX=""
   STORACHA_DID="web3.storage"
   PRICING_TABLE_ID="prctbl_1R58oLF6A5ufQX5vozallJKX"
   PUBLISHABLE_KEY="pk_live_51LO87hF6A5ufQX5vQTO5BHyz8y9ybJp4kg1GsBjYuqwluuwtQTkbeZzkoQweFQDlv7JaGjuIdUWAyuwXp3tmCfsM005lJK9aS8"
+  HUMANODE_OAUTH_CALLBACK_URL=https://up.storacha.network/oauth/humanode/callback
 fi
 %>
 
@@ -44,10 +46,4 @@ NEXT_PUBLIC_SERVER_DID=<%= $TF_VAR_did %>
 # Humanode
 NEXT_PUBLIC_HUMANODE_AUTH_URL=https://auth.storacha-2025-04-22.oauth2.humanode.io/oauth2/auth
 NEXT_PUBLIC_HUMANODE_CLIENT_ID=5fe96153-b448-4873-95b3-bb6160223ed6
-<%
-if [ "$TF_WORKSPACE" != "prod" ]; then
-NEXT_PUBLIC_HUMANODE_OAUTH_CALLBACK_URL=https://staging.up.storacha.network/oauth/humanode/callback
-else
-NEXT_PUBLIC_HUMANODE_OAUTH_CALLBACK_URL=https://up.storacha.network/oauth/humanode/callback
-fi
-%>
+NEXT_PUBLIC_HUMANODE_OAUTH_CALLBACK_URL=<%= $HUMANODE_OAUTH_CALLBACK_URL %>
