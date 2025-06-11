@@ -9,8 +9,7 @@ import { toast } from 'sonner'
 
 import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
 import { FullscreenLoader } from '@/components/Loader'
-import StripePricingTable from '@/components/StripePricingTable'
-import { Box, Heading, Stack, Text } from '@/components/ui'
+import { Stack, Text } from '@/components/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
 import { useBBAnalytics } from '@/hooks/use-bb-analytics'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
@@ -22,6 +21,7 @@ import { uploadCAR } from '@/lib/storacha'
 import { SpaceDid } from '@/types'
 
 import { BackupScreen } from '../components/BackupScreen'
+import PlanSelector from '../components/PlanSelector'
 import { useSWR } from '../lib/swr'
 
 import { AppLayout } from './AppLayout'
@@ -150,11 +150,6 @@ const CreateBackupButton = () => {
   )
 }
 
-const PricingTableContainer = styled(Stack)`
-  width: 100%;
-  padding-top: 2rem;
-`
-
 const ExplainerContainer = styled.div`
   margin-top: 3em;
   margin-bottom: 1em;
@@ -177,7 +172,6 @@ export function LoggedIn() {
     '/api/backups',
   ])
   const areThereBackups = !areBackupsLoading && backups && backups.length > 0
-
   const [sessionCreationAttempted, setSessionCreationAttempted] =
     useState(false)
   const { data: plan, isLoading: planIsLoading } = usePlan(account)
@@ -231,18 +225,7 @@ export function LoggedIn() {
             </Stack>
           </BackupScreen>
         ) : (
-          <PricingTableContainer $alignItems="center" $gap="1rem">
-            <Heading>Please Sign Up for a Storacha Storage Plan</Heading>
-            <Text $textAlign="center" $maxWidth="30em" $fontSize="1rem">
-              To get started backing up your Bluesky and ATProto data, please
-              sign up for a Storacha storage plan. The 5GB of storage from our
-              free tier will be more than enough to back up most Bluesky
-              accounts for a very long time.
-            </Text>
-            <Box $width="100%">
-              <StripePricingTable />
-            </Box>
-          </PricingTableContainer>
+          <PlanSelector />
         )}
       </AppLayout>
     </Outside>
