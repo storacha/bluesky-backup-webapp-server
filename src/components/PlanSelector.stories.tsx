@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
 
-
 import PlanSelector from './PlanSelector'
 
 const meta: Meta<typeof PlanSelector> = {
@@ -11,6 +10,4 @@ export default meta
 
 type Story = StoryObj<typeof PlanSelector>
 
-
-export const Default: Story = {
-}
+export const Default: Story = {}

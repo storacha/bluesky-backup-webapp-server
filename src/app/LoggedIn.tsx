@@ -21,11 +21,11 @@ import { uploadCAR } from '@/lib/storacha'
 import { SpaceDid } from '@/types'
 
 import { BackupScreen } from '../components/BackupScreen'
+import PlanSelector from '../components/PlanSelector'
 import { useSWR } from '../lib/swr'
 
 import { AppLayout } from './AppLayout'
 import { BackupExplainer } from './BackupExplainer'
-import { PlanSelector } from '../components/PlanSelector'
 
 let createNewBackup: typeof import('./backups/new/createNewBackup').action
 
@@ -42,7 +42,7 @@ const Outside = styled(Stack)`
   align-items: stretch;
 `
 
-async function createSession (client: Client, account: Account) {
+async function createSession(client: Client, account: Account) {
   const issuer = client.agent.issuer
 
   const delegation = await atproto.delegate({
@@ -64,7 +64,7 @@ async function createSession (client: Client, account: Account) {
   })
 }
 
-function NewBackupForm ({
+function NewBackupForm({
   account,
   children,
 }: {
@@ -76,7 +76,7 @@ function NewBackupForm ({
     useBBAnalytics()
   const router = useRouter()
 
-  async function generateDelegationAndCreateNewBackup (formData: FormData) {
+  async function generateDelegationAndCreateNewBackup(formData: FormData) {
     logBackupCreationStarted({
       atprotoAccount: formData.get('atproto_account')?.toString(),
       includeBlobs: formData.get('include_blobs') === 'on',
@@ -161,7 +161,7 @@ const CreateBackupText = styled(Text)`
   margin-top: 1em;
 `
 
-export function LoggedIn () {
+export function LoggedIn() {
   const { isSmallViewPort } = useMobileScreens()
   const [{ client }] = useAuthenticator()
   const account = useStorachaAccount()
@@ -179,7 +179,7 @@ export function LoggedIn () {
     // if the client & account are loaded, the session DID is erroring and we're
     // not currently creating a session, try to create one
     if (!sessionCreationAttempted && client && account && sessionDIDError) {
-      ; (async () => {
+      ;(async () => {
         try {
           await createSession(client, account)
           await mutate()
