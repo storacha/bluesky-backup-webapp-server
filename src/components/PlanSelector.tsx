@@ -7,7 +7,7 @@ import StripePricingTable from '@/components/StripePricingTable'
 import { Box, Button, Heading, Stack, Text } from '@/components/ui'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
 
-export const PricingTableContainer = styled(Stack)`
+const PricingTableContainer = styled(Stack)`
   width: 100%;
   padding-top: 2rem;
 `
