@@ -1,3 +1,4 @@
+'use client'
 import { authorize } from '@storacha/capabilities/access'
 import { useW3 } from '@storacha/ui-react'
 import { base64url } from 'multiformats/bases/base64'
@@ -13,14 +14,14 @@ const HumanodeLink = styled.a`
   font-size: 1.125rem;
 `
 
-export default function HumanodeAuthLink() {
+export default function HumanodeAuthLink () {
   const [{ accounts, client }] = useW3()
   const account = accounts[0]
   const [state, setState] = useState<string>()
 
   useEffect(
     function () {
-      ;(async () => {
+      ; (async () => {
         if (account && client) {
           // Create an access/authorize request that can be used as the state of the OAuth request.
           const request = await authorize.delegate({
