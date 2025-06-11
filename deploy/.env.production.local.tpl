@@ -40,3 +40,14 @@ NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID=<%= $PRICING_TABLE_ID %>
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=<%= $PUBLISHABLE_KEY %>
 # Server did
 NEXT_PUBLIC_SERVER_DID=<%= $TF_VAR_did %>
+
+# Humanode
+NEXT_PUBLIC_HUMANODE_AUTH_URL=https://auth.storacha-2025-04-22.oauth2.humanode.io/oauth2/auth
+NEXT_PUBLIC_HUMANODE_CLIENT_ID=5fe96153-b448-4873-95b3-bb6160223ed6
+<%
+if [ "$TF_WORKSPACE" != "prod" ]; then
+NEXT_PUBLIC_HUMANODE_OAUTH_CALLBACK_URL=https://staging.up.storacha.network/oauth/humanode/callback
+else
+NEXT_PUBLIC_HUMANODE_OAUTH_CALLBACK_URL=https://up.storacha.network/oauth/humanode/callback
+fi
+%>
