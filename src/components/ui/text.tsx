@@ -67,5 +67,5 @@ export const Explainer = styled(Stack)`
 
 export const ExText = styled(Text)`
   font-size: 0.875em;
-  font-weight: 600;
+  font-weight: 400;
 `

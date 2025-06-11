@@ -10,7 +10,7 @@ import { toast } from 'sonner'
 import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
 import { FullscreenLoader } from '@/components/Loader'
 import StripePricingTable from '@/components/StripePricingTable'
-import { Box, Explainer, ExText, Heading, Stack, Text } from '@/components/ui'
+import { Box, Heading, Stack, Text } from '@/components/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
 import { useBBAnalytics } from '@/hooks/use-bb-analytics'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
@@ -25,6 +25,7 @@ import { BackupScreen } from '../components/BackupScreen'
 import { useSWR } from '../lib/swr'
 
 import { AppLayout } from './AppLayout'
+import { BackupExplainer } from './BackupExplainer'
 
 let createNewBackup: typeof import('./backups/new/createNewBackup').action
 
@@ -154,30 +155,11 @@ const PricingTableContainer = styled(Stack)`
   padding-top: 2rem;
 `
 
-const BackupExplainer = () => (
-  <Explainer>
-    <ExText>
-      Connect and select a Bluesky account you&apos;d like to start backing up,
-      and then create a Storacha space you&apos;d like to start saving data to.
-    </ExText>
-    <ExText $fontSize="0.875em" $fontWeight="600">
-      Once you create a backup, we&apos;ll make a snapshot of your publicly
-      available Bluesky data - posts, images, videos, follows and followers,
-      blocks, and more - every hour. Thanks to Storacha&apos;s content-addressed
-      storage, we we&apos;ll only ever store new data - look ma, no dupes!
-    </ExText>
-  </Explainer>
-)
-
-const SmallExplainerContainer = styled.div`
+const ExplainerContainer = styled.div`
   margin-top: 3em;
   margin-bottom: 1em;
   padding-bottom: 1.5em;
   border-bottom: 1px solid var(--color-gray-medium);
-`
-
-const BigExplainerContainer = styled.div`
-  margin-top: 1em;
 `
 
 const CreateBackupText = styled(Text)`
@@ -190,6 +172,11 @@ export function LoggedIn() {
   const account = useStorachaAccount()
   const { error: sessionDIDError, mutate } = useSWR(['api', '/session/did'])
   const { logLoginSuccessful } = useBBAnalytics()
+  const { data: backups, isLoading: areBackupsLoading } = useSWR([
+    'api',
+    '/api/backups',
+  ])
+  const areThereBackups = !areBackupsLoading && backups && backups.length > 0
 
   const [sessionCreationAttempted, setSessionCreationAttempted] =
     useState(false)
@@ -226,20 +213,16 @@ export function LoggedIn() {
           <BackupScreen
             selectedBackupId={null}
             rightPanelContent={
-              isSmallViewPort ? (
-                <CreateBackupText>Create a backup above.</CreateBackupText>
-              ) : (
-                <BigExplainerContainer>
-                  <BackupExplainer />
-                </BigExplainerContainer>
-              )
+              <CreateBackupText>
+                Create a backup to see details.
+              </CreateBackupText>
             }
           >
             <Stack>
-              {isSmallViewPort && (
-                <SmallExplainerContainer>
+              {isSmallViewPort && !areThereBackups && (
+                <ExplainerContainer>
                   <BackupExplainer />
-                </SmallExplainerContainer>
+                </ExplainerContainer>
               )}
               <NewBackupForm account={account}>
                 <BackupDetail />

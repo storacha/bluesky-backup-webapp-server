@@ -10,6 +10,7 @@ import { shortenCID } from '@/lib/ui'
 import { ATBlob } from '@/types'
 
 import { BackButton } from './BackButton'
+import { InlineCopyButton } from './CopyButton'
 import { Loader } from './Loader'
 import { Box, Heading, Stack, Text } from './ui'
 
@@ -39,7 +40,7 @@ export const Blobs = ({ blobs, backPath, loading, location }: BlobProps) => {
         <Stack $gap="1rem">
           <Stack $direction="row" $gap="1rem">
             <BackButton path={backPath} />
-            <Heading>Blobs in this {location}</Heading>
+            <Heading>Media in this {location}</Heading>
           </Stack>
           <Stack
             $direction="row"
@@ -69,6 +70,7 @@ export const Blobs = ({ blobs, backPath, loading, location }: BlobProps) => {
                       $color="var(--color-black)"
                     >
                       {shortenCID(blob.cid)}
+                      <InlineCopyButton text={blob.cid} />
                     </Text>
                   </Stack>
                   <Text $fontSize="0.6235rem">{blob.createdAt}</Text>

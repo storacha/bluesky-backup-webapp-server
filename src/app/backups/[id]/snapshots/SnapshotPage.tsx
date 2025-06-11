@@ -20,13 +20,17 @@ const SnapshotContainer = styled(Stack)`
 
 const SnapshotSummary = styled(Box)`
   padding: 1rem;
-  font-size: 0.75rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `
 
 const SnapshotLink = styled(Link)`
-  width: 100%;
-  height: 100%;
-  padding: 1rem;
+  display: block;
+  font-family: var(--font-dm-mono);
+  font-size: 1rem;
+  text-align: center;
 `
 
 interface SnapshotPageProps {
@@ -51,16 +55,7 @@ function Snapshots({ snapshots, loading, backupId }: SnapshotPageProps) {
           {snapshots?.map((snapshot) => (
             <SnapshotSummary key={snapshot.id} $background="var(--color-white)">
               <SnapshotLink href={`/snapshots/${snapshot.id}`}>
-                <Stack
-                  $direction="row"
-                  $alignItems="center"
-                  $justifyContent="space-between"
-                  $width="100%"
-                >
-                  <Stack $direction="column" $alignItems="flex-start">
-                    <h3>{formatDate(snapshot.createdAt)} Snapshot</h3>
-                  </Stack>
-                </Stack>
+                {formatDate(snapshot.createdAt)}
               </SnapshotLink>
             </SnapshotSummary>
           ))}
