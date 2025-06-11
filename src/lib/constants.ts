@@ -66,3 +66,8 @@ export const GATEWAY_ID =
   toWebDID('did:web:w3s.link')
 
 export const PAGINATED_RESULTS_LIMIT = 10
+
+export const HUMANODE_AUTH_URL = process.env.NEXT_PUBLIC_HUMANODE_AUTH_URL
+export const HUMANODE_CLIENT_ID = process.env.NEXT_PUBLIC_HUMANODE_CLIENT_ID
+export const HUMANODE_OAUTH_CALLBACK_URL =
+  process.env.NEXT_PUBLIC_HUMANODE_OAUTH_CALLBACK_URL
