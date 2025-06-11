@@ -5,7 +5,7 @@ import { cidUrl } from '@/lib/storacha'
 import { formatDate, shortenDID } from '@/lib/ui'
 import { Snapshot } from '@/types'
 
-import CopyButton from '../CopyButton'
+import { InlineCopyButton } from '../CopyButton'
 import { Heading, Stack, SubHeading } from '../ui'
 
 const Details = styled(Stack)``
@@ -32,7 +32,7 @@ export default function SnapshotDetail({ snapshot }: SnapshotDetailArgs) {
         <DetailName>Account DID</DetailName>
         <DetailValue>
           {shortenDID(snapshot.atprotoAccount)}
-          <CopyButton text={snapshot.atprotoAccount} />
+          <InlineCopyButton text={snapshot.atprotoAccount} />
         </DetailValue>
       </Stack>
       <Stack $direction="row" $alignItems="center" $gap="1rem">
@@ -58,9 +58,9 @@ export default function SnapshotDetail({ snapshot }: SnapshotDetailArgs) {
         </Stack>
       )}
       <Stack $direction="row" $alignItems="center" $gap="1rem">
-        <DetailName>Blobs</DetailName>
+        <DetailName>Media</DetailName>
         <Link href={`/snapshots/${snapshot.id}/blobs`}>
-          <DetailValue>View Blobs</DetailValue>
+          <DetailValue>View Media</DetailValue>
         </Link>
       </Stack>
     </Details>

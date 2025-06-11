@@ -6,6 +6,7 @@ import { ArchiveIcon, PauseIcon, XIcon } from '@phosphor-icons/react'
 import { IdentificationBadgeIcon } from '@phosphor-icons/react/dist/ssr'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { css, styled } from 'next-yak'
 
 import { Loader } from '@/components/Loader'
@@ -16,6 +17,7 @@ import { shortenIfOver } from '@/lib/ui'
 import { Backup as BackupType } from '@/types'
 
 import { LogOutButton as BaseLogOutButton } from './authentication'
+import { BackupExplainer } from './BackupExplainer'
 
 const SidebarOutside = styled.nav<{ $variant?: 'desktop' | 'mobile' }>`
   display: flex;
@@ -169,6 +171,7 @@ export function Sidebar({
   selectedBackupId,
   variant = 'desktop',
 }: SidebarProps) {
+  const pathname = usePathname()
   return (
     <SidebarOutside $variant={variant}>
       <Header>
@@ -180,9 +183,9 @@ export function Sidebar({
       <ScrollableContent>
         <div>
           <Heading>Backups</Heading>
-          <Stack $gap="1rem">
+          <Stack $gap="1rem" $mt="1rem">
             <Backups selectedBackupId={selectedBackupId} />
-            <AddBackup href="/">Add backup…</AddBackup>
+            {pathname !== '/' && <AddBackup href="/">Add backup…</AddBackup>}
           </Stack>
         </div>
       </ScrollableContent>
@@ -208,12 +211,12 @@ const BackupsLoader = styled(Loader)`
 `
 
 function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
-  const { data } = useSWR(['api', '/api/backups'])
-  if (!data) return <BackupsLoader />
-
+  const { data: backups, isLoading } = useSWR(['api', '/api/backups'])
+  if (isLoading) return <BackupsLoader />
+  if (!backups || backups.length === 0) return <BackupExplainer />
   return (
     <BackupList>
-      {data.map((backup) => {
+      {backups.map((backup) => {
         return (
           <Backup
             key={backup.id}

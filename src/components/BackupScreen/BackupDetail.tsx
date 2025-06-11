@@ -236,8 +236,8 @@ export const BackupDetail = ({ backup }: BackupProps) => {
         <BackupNameInput
           type="text"
           name="name"
-          placeholder="New Backup"
-          defaultValue="New Backup"
+          placeholder="My Bluesky Backup"
+          defaultValue="My Bluesky Backup"
           required
         />
       )}

@@ -6,7 +6,7 @@ import { css, styled } from 'next-yak'
 import { ComponentProps } from 'react'
 import { toast } from 'sonner'
 
-import CopyButton from '@/components/CopyButton'
+import { InlineCopyButton } from '@/components/CopyButton'
 import { Loader } from '@/components/Loader'
 import {
   Box,
@@ -46,13 +46,17 @@ const DetailValue = styled.div`
 
 const SnapshotSummary = styled(Box)`
   padding: 1rem;
-  font-size: 0.75rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `
 
 const SnapshotLink = styled(Link)`
-  width: 100%;
-  height: 100%;
-  padding: 1rem;
+  display: block;
+  font-family: var(--font-dm-mono);
+  font-size: 1rem;
+  text-align: center;
 `
 
 const SnapshotsLink = styled(Link)`
@@ -79,7 +83,10 @@ export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
         <SubHeading>Details</SubHeading>
         <Stack $direction="row" $alignItems="center" $gap="1rem">
           <DetailName>Account DID</DetailName>
-          <DetailValue>{shortenDID(backup.atprotoAccount)}</DetailValue>
+          <DetailValue>
+            {shortenDID(backup.atprotoAccount)}
+            <InlineCopyButton text={backup.atprotoAccount} size="0.75rem" />
+          </DetailValue>
         </Stack>
         <Stack $direction="row" $gap="1rem">
           <DetailName>Delegation</DetailName>
@@ -88,9 +95,9 @@ export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
           </DetailValue>
         </Stack>
         <Stack $direction="row" $alignItems="center" $gap="1rem">
-          <DetailName>Blobs</DetailName>
+          <DetailName>Media</DetailName>
           <Link href={`/backups/${backup.id}/blobs`}>
-            <DetailValue>View Blobs</DetailValue>
+            <DetailValue>View Media</DetailValue>
           </Link>
         </Stack>
         <Stack $direction="row" $alignItems="center" $gap="1rem">
@@ -131,16 +138,7 @@ export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
                   $background="var(--color-white)"
                 >
                   <SnapshotLink href={`/snapshots/${snapshot.id}`}>
-                    <Stack
-                      $direction="row"
-                      $alignItems="center"
-                      $justifyContent="space-between"
-                      $width="100%"
-                    >
-                      <Stack $direction="column" $alignItems="flex-start">
-                        <h3>{formatDate(snapshot.createdAt)} Snapshot</h3>
-                      </Stack>
-                    </Stack>
+                    {formatDate(snapshot.createdAt)}
                   </SnapshotLink>
                 </SnapshotSummary>
               ))}
@@ -188,7 +186,7 @@ const DelegationDetail = ({ backup }: { backup: Backup }) => {
           <span title={backup.delegationCid}>
             {shortenCID(backup.delegationCid)}
           </span>
-          <CopyButton text={backup.delegationCid} size="0.75rem" />
+          <InlineCopyButton text={backup.delegationCid} />
           {isLoading && <Spinner size="xs" />}
         </Stack>
       )}
