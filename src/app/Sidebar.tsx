@@ -10,14 +10,16 @@ import { usePathname } from 'next/navigation'
 import { css, styled } from 'next-yak'
 
 import { Loader } from '@/components/Loader'
-import { roundRectStyle, Stack } from '@/components/ui'
+import { roundRectStyle, Stack, Text } from '@/components/ui'
+import { usePlan, useStorachaAccount } from '@/hooks/use-plan'
 import wordlogo from '@/images/wordlogo.png'
 import { useSWR, useSWRImmutable } from '@/lib/swr'
 import { shortenIfOver } from '@/lib/ui'
-import { Backup as BackupType } from '@/types'
 
 import { LogOutButton as BaseLogOutButton } from './authentication'
 import { BackupExplainer } from './BackupExplainer'
+
+import type { Backup, PaginatedResult } from '@/types'
 
 const SidebarOutside = styled.nav<{ $variant?: 'desktop' | 'mobile' }>`
   display: flex;
@@ -172,6 +174,9 @@ export function Sidebar({
   variant = 'desktop',
 }: SidebarProps) {
   const pathname = usePathname()
+  const { data } = useSWR(['api', '/api/backups/archived'])
+  // @ts-expect-error this cast is necessary until we fix Fetcher
+  const archivedBackups = data as PaginatedResult<Backup>
   return (
     <SidebarOutside $variant={variant}>
       <Header>
@@ -181,19 +186,21 @@ export function Sidebar({
       </Header>
 
       <ScrollableContent>
-        <div>
+        <Stack $gap="0.5rem">
           <Heading>Backups</Heading>
-          <Stack $gap="1rem" $mt="1rem">
+          <Stack $gap="1rem">
             <Backups selectedBackupId={selectedBackupId} />
             {pathname !== '/' && <AddBackup href="/">Add backup…</AddBackup>}
           </Stack>
-        </div>
+        </Stack>
       </ScrollableContent>
 
       <BottomActions>
-        <ArchivedLink href="/backups/archived">
-          Archived&nbsp;Backups <ArchiveIcon />
-        </ArchivedLink>
+        {archivedBackups && archivedBackups.count > 0 && (
+          <ArchivedLink href="/backups/archived">
+            Archived&nbsp;Backups <ArchiveIcon />
+          </ArchivedLink>
+        )}
         <IdentitiesLink href="/identities">
           Identities <IdentificationBadgeIcon />
         </IdentitiesLink>
@@ -211,8 +218,19 @@ const BackupsLoader = styled(Loader)`
 `
 
 function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
-  const { data: backups, isLoading } = useSWR(['api', '/api/backups'])
-  if (isLoading) return <BackupsLoader />
+  const account = useStorachaAccount()
+  const { data: backups, isLoading: backupsIsLoading } = useSWR([
+    'api',
+    '/api/backups',
+  ])
+  const { data: plan, isLoading: planIsLoading } = usePlan(account)
+  if (planIsLoading || backupsIsLoading) return <BackupsLoader />
+  if (!plan)
+    return (
+      <Text>
+        Please select a storage plan to start backing up your account.
+      </Text>
+    )
   if (!backups || backups.length === 0) return <BackupExplainer />
   return (
     <BackupList>
@@ -233,7 +251,7 @@ const Backup = ({
   backup: { id, name, paused, delegationCid },
   selected,
 }: {
-  backup: BackupType
+  backup: Backup
   selected: boolean
 }) => {
   const { data: delegation } = useSWRImmutable(
