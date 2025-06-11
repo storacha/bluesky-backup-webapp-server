@@ -1,7 +1,7 @@
 'use client'
 
 import { Did } from '@atproto/api'
-import { ArrowsClockwise, Gear } from '@phosphor-icons/react'
+import { ArrowsClockwiseIcon, GearIcon } from '@phosphor-icons/react'
 import Link from 'next/link'
 import { styled } from 'next-yak'
 import { toast } from 'sonner'
@@ -169,14 +169,14 @@ export function IdentityCard({ identity }: IdentityCardProps) {
             title="Reconnect account"
             disabled={!profile?.handle}
           >
-            <ArrowsClockwise weight="bold" />
+            <ArrowsClockwiseIcon weight="bold" />
           </Button>
         ) : (
           <IdentityLink
             href={`/identities/${encodeURIComponent(currentIdentity.atprotoAccount)}`}
           >
             <Button $variant="outline" $color="var(--color-black)">
-              <Gear weight="bold" />
+              <GearIcon weight="bold" />
             </Button>
           </IdentityLink>
         )}

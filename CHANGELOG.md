@@ -1,5 +1,42 @@
 # Changelog
 
+## [1.11.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.10.1...v1.11.0) (2025-06-10)
+
+
+### Features
+
+* major improvements to the recovery key dialogs ([#210](https://github.com/storacha/bluesky-backup-webapp-server/issues/210)) ([db72e23](https://github.com/storacha/bluesky-backup-webapp-server/commit/db72e235143395647216c59281e3b1a79e77db55))
+
+## [1.10.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.10.0...v1.10.1) (2025-06-06)
+
+
+### Bug Fixes
+
+* add template script for db tunnel ([#207](https://github.com/storacha/bluesky-backup-webapp-server/issues/207)) ([0d59046](https://github.com/storacha/bluesky-backup-webapp-server/commit/0d59046fa06e0d622216a586f59d30061a26ca8e))
+
+## [1.10.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.9.0...v1.10.0) (2025-06-05)
+
+
+### Features
+
+* add 'connect new account' button to identities page ([#194](https://github.com/storacha/bluesky-backup-webapp-server/issues/194)) ([83ef1f8](https://github.com/storacha/bluesky-backup-webapp-server/commit/83ef1f8aed2e9bb52d158c035d73adec8f7704f4))
+* add a "copy secret" button to the new key dialog ([#203](https://github.com/storacha/bluesky-backup-webapp-server/issues/203)) ([e1ab0f6](https://github.com/storacha/bluesky-backup-webapp-server/commit/e1ab0f648944e0947071fdaeafc100fa5b8915cf))
+* add a route to list all archived backups ([#196](https://github.com/storacha/bluesky-backup-webapp-server/issues/196)) ([27a8430](https://github.com/storacha/bluesky-backup-webapp-server/commit/27a8430dd9c55bf885ae120712a35dde687e6bc3))
+* add ability to archive backups ([#170](https://github.com/storacha/bluesky-backup-webapp-server/issues/170)) ([3877bd5](https://github.com/storacha/bluesky-backup-webapp-server/commit/3877bd5faac93ec998383a06ef168942f26dd295))
+* add identity reconnection flow ([#178](https://github.com/storacha/bluesky-backup-webapp-server/issues/178)) ([5c7a225](https://github.com/storacha/bluesky-backup-webapp-server/commit/5c7a2252b4b14c4d8f849c18a36a7e458cad4544))
+* add x-client header ([#193](https://github.com/storacha/bluesky-backup-webapp-server/issues/193)) ([de3aef0](https://github.com/storacha/bluesky-backup-webapp-server/commit/de3aef0cc940efd4676fd15d116962f194f5d72b))
+* delete backup data ([#201](https://github.com/storacha/bluesky-backup-webapp-server/issues/201)) ([18bda3d](https://github.com/storacha/bluesky-backup-webapp-server/commit/18bda3d6b6a7bcf60fe06a40b032919ab7828fe8))
+* disable identity transfer for now ([#202](https://github.com/storacha/bluesky-backup-webapp-server/issues/202)) ([8c8915d](https://github.com/storacha/bluesky-backup-webapp-server/commit/8c8915d4bf74d7fe80eeb8b953ef5767d9cb6e45))
+* explainers and mobile improvements ([#204](https://github.com/storacha/bluesky-backup-webapp-server/issues/204)) ([190a6c2](https://github.com/storacha/bluesky-backup-webapp-server/commit/190a6c2ccf2c7e9434f329e5e86023c6065144d0))
+* Handle delegation expiration ([0336093](https://github.com/storacha/bluesky-backup-webapp-server/commit/03360932307d7ef270333af8e033bc05581fa751))
+* recovery key flow polish ([#198](https://github.com/storacha/bluesky-backup-webapp-server/issues/198)) ([5f6653a](https://github.com/storacha/bluesky-backup-webapp-server/commit/5f6653aa9a9aa2fbc6825be984a24f18507a3384))
+
+
+### Bug Fixes
+
+* pagination issue in the blobs explorer ([#206](https://github.com/storacha/bluesky-backup-webapp-server/issues/206)) ([6bed8e8](https://github.com/storacha/bluesky-backup-webapp-server/commit/6bed8e85292d16365327d9cee5130a29894b70ff))
+* **ui:** remove resizable panels on mobile ([#197](https://github.com/storacha/bluesky-backup-webapp-server/issues/197)) ([02546ad](https://github.com/storacha/bluesky-backup-webapp-server/commit/02546adb14ae3db5a27d1f04a17787e984207d35))
+
 ## [1.9.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.8.0...v1.9.0) (2025-05-29)
 
 

@@ -199,10 +199,13 @@ export interface BBDatabase {
   findSnapshot: (id: string) => Promise<{ result: Snapshot | undefined }>
   findBackups: (account: string) => Promise<{ results: Backup[] }>
   findBackup: (id: string) => Promise<{ result: Backup | undefined }>
-  findArchivedBackups: (account: string) => Promise<{ results: Backup[] }>
+  findArchivedBackups: (
+    account: string,
+    options?: PaginatedResultParams
+  ) => Promise<PaginatedResult<Backup>>
   findScheduledBackups: () => Promise<{ results: Backup[] }>
   addBackup: (input: BackupInput) => Promise<Backup>
-  deleteBackup: (id: string) => void
+  deleteBackup: (id: string) => Promise<void>
   addBlob: (input: ATBlobInput) => Promise<ATBlob>
   getBlobInBackup: (
     cid: string,
@@ -217,10 +220,15 @@ export interface BBDatabase {
     options?: PaginatedResultParams
   ) => Promise<PaginatedResult<ATBlob>>
   addRotationKey: (input: RotationKeyInput) => Promise<RotationKey>
+  findRotationKey: (
+    keyId: string
+  ) => Promise<{ result: RotationKey | undefined }>
   findRotationKeys: (
     storachaAccount: string
   ) => Promise<{ results: RotationKey[] }>
+  deleteRotationKey: (id: string) => Promise<void>
   updateBackup: (id: string, data: BackupInputUpdate) => Promise<Backup>
+  getAllCidsInBackup: (id: string) => Promise<string[]>
 }
 
 interface StorageContext {
@@ -394,10 +402,26 @@ export function getStorageContext(): StorageContext {
       },
       async deleteBackup(id: string) {
         if (!validateUUID(id)) return
-        await sql<Backup[]>`
+        await sql`
           delete from backups
           where id = ${id}
         `
+      },
+
+      async getAllCidsInBackup(id: string) {
+        if (!validateUUID(id)) return []
+
+        const results = await sql<{ cid: string }[]>`
+          select repository_upload_cid as cid
+          from snapshots
+          where backup_id = ${id} and repository_upload_cid is not null
+          union
+          select cid
+          from at_blobs
+          where backup_id = ${id}
+        `
+
+        return results.map((row) => row.cid)
       },
       async findBackups(account: string) {
         const results = await sql<Backup[]>`
@@ -411,16 +435,38 @@ export function getStorageContext(): StorageContext {
           results,
         }
       },
-      async findArchivedBackups(account: string) {
+      async findArchivedBackups(
+        account: string,
+        options?: PaginatedResultParams
+      ) {
+        const { limit = PAGINATED_RESULTS_LIMIT, page = 1 } = options ?? {}
+        const offset = (page - 1) * limit
+
+        if (!account)
+          return {
+            count: 0,
+            results: [],
+          }
+
+        const total = await sql<{ count: number }[]>`
+          select count(*) as count
+          from backups
+          where account_did = ${account} and archived = true
+        `
+
         const results = await sql<Backup[]>`
          select *
          from backups
          where account_did = ${account} and archived = true
          order by created_at desc
-         limit 10
+         limit ${limit}
+         offset ${offset}
         `
 
+        const count = Number(total?.[0]?.count) ?? 0
+
         return {
+          count,
           results,
         }
       },
@@ -466,6 +512,22 @@ export function getStorageContext(): StorageContext {
         return {
           results,
         }
+      },
+      async findRotationKey(keyId: string) {
+        const results = await sql<RotationKey[]>`
+          select *
+          from rotation_keys
+          where id = ${keyId}
+        `
+        return {
+          result: results[0],
+        }
+      },
+      async deleteRotationKey(keyId: string) {
+        await sql`
+          delete from rotation_keys
+          where id = ${keyId}
+        `
       },
       async updateBackup(id, data) {
         const results = await sql<Backup[]>`

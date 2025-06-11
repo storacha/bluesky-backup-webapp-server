@@ -1,5 +1,6 @@
 'use client'
 import { CheckFatIcon, CopyIcon, IconProps } from '@phosphor-icons/react'
+import { styled } from 'next-yak'
 import { useEffect, useState } from 'react'
 
 import { IconButton } from './ui'
@@ -36,3 +37,15 @@ export default function CopyButton({ text, size = '16' }: CopyButtonProps) {
     </IconButton>
   )
 }
+
+const InlineCopyButtonContainer = styled.div`
+  display: inline-block;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+`
+
+export const InlineCopyButton = (props: CopyButtonProps) => (
+  <InlineCopyButtonContainer>
+    <CopyButton {...props} size="0.75rem" />
+  </InlineCopyButtonContainer>
+)

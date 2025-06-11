@@ -2,10 +2,11 @@
 
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
 import { isExpired } from '@ipld/dag-ucan'
-import { PauseIcon, XIcon } from '@phosphor-icons/react'
+import { ArchiveIcon, PauseIcon, XIcon } from '@phosphor-icons/react'
 import { IdentificationBadgeIcon } from '@phosphor-icons/react/dist/ssr'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { css, styled } from 'next-yak'
 
 import { Loader } from '@/components/Loader'
@@ -16,6 +17,7 @@ import { shortenIfOver } from '@/lib/ui'
 import { Backup as BackupType } from '@/types'
 
 import { LogOutButton as BaseLogOutButton } from './authentication'
+import { BackupExplainer } from './BackupExplainer'
 
 const SidebarOutside = styled.nav<{ $variant?: 'desktop' | 'mobile' }>`
   display: flex;
@@ -26,6 +28,9 @@ const SidebarOutside = styled.nav<{ $variant?: 'desktop' | 'mobile' }>`
   padding: 2rem;
   background-color: var(--color-gray-extra-light);
   border-right: 1px solid var(--color-light-blue);
+  height: 100vh;
+  overflow: hidden;
+  flex-shrink: 0;
 
   ${({ $variant }) =>
     $variant === 'desktop' &&
@@ -49,25 +54,43 @@ const SidebarOutside = styled.nav<{ $variant?: 'desktop' | 'mobile' }>`
   }
 `
 
+const ScrollableContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+`
+
 const Header = styled.header`
   font-size: 1.5rem;
   font-weight: bold;
   padding-bottom: 2rem;
+  flex-shrink: 0;
 `
 
 const Heading = styled.h2`
   font-size: 1rem;
   font-weight: 500;
-  padding-bottom: 1rem;
   color: var(--color-gray-medium);
+  flex-shrink: 0;
 `
 
 const BackupList = styled.ul`
   display: flex;
   flex-flow: column;
   gap: 0.8rem;
-  height: 60vh;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
+`
+
+const BottomActions = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex-shrink: 0;
 `
 
 const backupItemLikeStyle = css`
@@ -83,6 +106,7 @@ const BackupItem = styled.li<{ $selected?: boolean; $expired?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-shrink: 0;
 
   ${({ $selected }) =>
     $selected &&
@@ -110,6 +134,7 @@ const AddBackup = styled(Link)`
   text-align: center;
   font-family: var(--font-dm-mono);
   font-size: 0.75rem;
+  flex-shrink: 0;
 `
 
 const actionButtonStyle = css`
@@ -122,6 +147,10 @@ const actionButtonStyle = css`
 const ActionIcon = styled(ArrowRightIcon)`
   width: 1.25rem;
   color: var(--color-gray-medium);
+`
+
+const ArchivedLink = styled(Link)`
+  ${actionButtonStyle}
 `
 
 const LogOutButton = styled(BaseLogOutButton)`
@@ -142,28 +171,36 @@ export function Sidebar({
   selectedBackupId,
   variant = 'desktop',
 }: SidebarProps) {
+  const pathname = usePathname()
   return (
     <SidebarOutside $variant={variant}>
-      <Stack>
-        <Header>
-          <Link href="/">
-            <Image src={wordlogo} alt="Storacha" width="164" height="57" />
-          </Link>
-        </Header>
-        <Heading>Backups</Heading>
-        <Stack $gap="1rem">
-          <Backups selectedBackupId={selectedBackupId} />
-          <AddBackup href="/">Add backup…</AddBackup>
-        </Stack>
-      </Stack>
-      <Stack $gap="1rem">
+      <Header>
+        <Link href="/">
+          <Image src={wordlogo} alt="Storacha" width="164" height="57" />
+        </Link>
+      </Header>
+
+      <ScrollableContent>
+        <div>
+          <Heading>Backups</Heading>
+          <Stack $gap="1rem" $mt="1rem">
+            <Backups selectedBackupId={selectedBackupId} />
+            {pathname !== '/' && <AddBackup href="/">Add backup…</AddBackup>}
+          </Stack>
+        </div>
+      </ScrollableContent>
+
+      <BottomActions>
+        <ArchivedLink href="/backups/archived">
+          Archived&nbsp;Backups <ArchiveIcon />
+        </ArchivedLink>
         <IdentitiesLink href="/identities">
           Identities <IdentificationBadgeIcon />
         </IdentitiesLink>
         <LogOutButton>
           Log Out <ActionIcon />
         </LogOutButton>
-      </Stack>
+      </BottomActions>
     </SidebarOutside>
   )
 }
@@ -174,12 +211,12 @@ const BackupsLoader = styled(Loader)`
 `
 
 function Backups({ selectedBackupId }: { selectedBackupId: string | null }) {
-  const { data } = useSWR(['api', '/api/backups'])
-  if (!data) return <BackupsLoader />
-
+  const { data: backups, isLoading } = useSWR(['api', '/api/backups'])
+  if (isLoading) return <BackupsLoader />
+  if (!backups || backups.length === 0) return <BackupExplainer />
   return (
     <BackupList>
-      {data.map((backup) => {
+      {backups.map((backup) => {
         return (
           <Backup
             key={backup.id}

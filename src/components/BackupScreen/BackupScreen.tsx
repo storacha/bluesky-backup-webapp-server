@@ -37,7 +37,7 @@ export const BackupScreen = ({
       rightPanelContent={
         <Suspense>
           <RightPanel>
-            <Heading>Backup & Restore</Heading>
+            <Heading>Details</Heading>
             {rightSidebarContent}
           </RightPanel>
         </Suspense>

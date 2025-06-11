@@ -4,6 +4,7 @@ import { Agent, CredentialSession } from '@atproto/api'
 import { useState } from 'react'
 
 import { ATPROTO_DEFAULT_SINK } from '@/lib/constants'
+import * as plc from '@/lib/crypto/plc'
 import { createServiceJwt } from '@/lib/jwt'
 import { createPlcUpdateOp } from '@/lib/plc'
 import {
@@ -37,6 +38,19 @@ export function IdentityTransfer({
   const [isIdentityTransferred, setIsIdentityTransferred] =
     useState<boolean>(false)
 
+  async function takeControl() {
+    if (!profile) throw new Error('profile not defined, cannot take control')
+
+    const op = await createPlcUpdateOp(profile, rotationKey, {
+      verificationMethods: {
+        ...profile.verificationMethods,
+        atproto: rotationKey.id,
+      },
+    })
+    const client = new plc.Client('https://plc.directory')
+    await client.sendOperation(profile.did, op)
+  }
+
   const loginToSink: LoginFn = async (
     identifier,
     password,
@@ -57,22 +71,19 @@ export function IdentityTransfer({
       server: ATPROTO_DEFAULT_SINK,
     }
   ) => {
-    if (!rotationKey.keypair)
+    if (!rotationKey.keypair) {
       throw new Error(
         'cannot create account - rotation key private key is not loaded'
       )
+    }
+
+    await takeControl()
 
     const session = new CredentialSession(new URL(httpsify(server)))
     const agent = new Agent(session)
 
     const describeRes = await agent.com.atproto.server.describeServer()
     const newServerDid = describeRes.data.did
-    console.log('creating service JWT for ', {
-      iss: profile.did,
-      aud: newServerDid,
-      lxm: 'com.atproto.server.createAccount',
-      keypair: rotationKey.keypair.did(),
-    })
     const serviceJwt = await createServiceJwt({
       iss: profile.did,
       aud: newServerDid,
@@ -123,11 +134,10 @@ export function IdentityTransfer({
       operation: plcOp,
     })
     await sinkAgent.com.atproto.server.activateAccount()
-    // TODO: I think we need to do this to be complete, but it currently throws an error
-    //await sourceAgent.com.atproto.server.deactivateAccount()
     setIsTransferringIdentity(false)
     setIsIdentityTransferred(true)
   }
+
   return (
     <IdentityTransferView
       profile={profile}

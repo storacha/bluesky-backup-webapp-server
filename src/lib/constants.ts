@@ -47,6 +47,17 @@ if (!process.env.NEXT_PUBLIC_STORACHA_GATEWAY_HOSTNAME) {
   )
 }
 
+const PUBLIC_APP_URI_DEFAULT = 'http://localhost'
+if (!process.env.NEXT_PUBLIC_APP_URI) {
+  console.warn(
+    `NEXT_PUBLIC_APP_URI not set, using default value of ${PUBLIC_APP_URI_DEFAULT}`
+  )
+}
+export const NEXT_PUBLIC_APP_URI =
+  process.env.NEXT_PUBLIC_APP_URI || PUBLIC_APP_URI_DEFAULT
+
+export const NEXT_PUBLIC_APP_DOMAIN = new URL(NEXT_PUBLIC_APP_URI).hostname
+
 const toWebDID = (input?: string) =>
   UcantoClient.Schema.DID.match({ method: 'web' }).from(input)
 
@@ -55,3 +66,8 @@ export const GATEWAY_ID =
   toWebDID('did:web:w3s.link')
 
 export const PAGINATED_RESULTS_LIMIT = 10
+
+export const HUMANODE_AUTH_URL = process.env.NEXT_PUBLIC_HUMANODE_AUTH_URL
+export const HUMANODE_CLIENT_ID = process.env.NEXT_PUBLIC_HUMANODE_CLIENT_ID
+export const HUMANODE_OAUTH_CALLBACK_URL =
+  process.env.NEXT_PUBLIC_HUMANODE_OAUTH_CALLBACK_URL

@@ -201,7 +201,7 @@ export function RestoreDialogView({
                 $left="1rem"
                 $right="1rem"
               >
-                <DataTypeHeading>Blobs</DataTypeHeading>
+                <DataTypeHeading>Media</DataTypeHeading>
                 <StorachaElement>
                   <DataSourceIcon>{blobs?.length || '0'}</DataSourceIcon>
                 </StorachaElement>

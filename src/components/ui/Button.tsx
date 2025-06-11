@@ -61,7 +61,7 @@ export const Button = ({
 }: ButtonHTMLAttributes<HTMLButtonElement> &
   Partial<BtnProps & { $noPadding: boolean }>) => (
   <ButtonElement {...props}>
-    {props.$leftIcon}
+    {props.$leftIcon && <>{props.$leftIcon} </>}
     {children}
   </ButtonElement>
 )

@@ -10,11 +10,10 @@ NEXT_PUBLIC_IDENTITY_AUTHORITY=did:web:staging.up.storacha.network
 # works best in development.
 #NEXT_PUBLIC_SERVER_DID='did:web:bskybackups.storacha.network'
 #SERVER_IDENTITY_PRIVATE_KEY=[multiformatted private key]
-
-# This one can be used in development. It's commented out here just in case
-# these lines make their way into a deployment.
-#NEXT_PUBLIC_SERVER_DID='did:key:z6Mkk89bC3JrVqKie71YEcc5M1SMVxuCgNx6zLZ8SYJsxALi'
-#SERVER_IDENTITY_PRIVATE_KEY=MgCZT5vOnYZoVAeyjnzuJIVY9J4LNtJ+f8Js0cTPuKUpFne0BVEDJjEu6quFIU8yp91/TY/+MYK8GvlKoTDnqOCovCVM=
+# 
+# Development values - must be overridden in prod
+NEXT_PUBLIC_SERVER_DID='did:key:z6Mkk89bC3JrVqKie71YEcc5M1SMVxuCgNx6zLZ8SYJsxALi'
+SERVER_IDENTITY_PRIVATE_KEY=MgCZT5vOnYZoVAeyjnzuJIVY9J4LNtJ+f8Js0cTPuKUpFne0BVEDJjEu6quFIU8yp91/TY/+MYK8GvlKoTDnqOCovCVM=
 
 # set these to your gateway service URL and DID
 NEXT_PUBLIC_STORACHA_GATEWAY_HOSTNAME=ipfs-staging.w3s.link
@@ -50,3 +49,8 @@ PGPASSWORD=bluey
 # Chromatic
 # Find this at https://www.chromatic.com/manage?appId=6810f7eed73ae95e1f9b2d85&view=configure
 #CHROMATIC_PROJECT_TOKEN=<project-token>
+
+# Humanode
+NEXT_PUBLIC_HUMANODE_AUTH_URL=https://auth.storacha-2025-04-22.oauth2.humanode.io/oauth2/auth
+NEXT_PUBLIC_HUMANODE_CLIENT_ID=5fe96153-b448-4873-95b3-bb6160223ed6
+NEXT_PUBLIC_HUMANODE_OAUTH_CALLBACK_URL=https://staging.up.storacha.network/oauth/humanode/callback

@@ -1,4 +1,5 @@
 import { Button, Stack } from '@/components/ui'
+import { useBBAnalytics } from '@/hooks/use-bb-analytics'
 
 import { H3, H4, Input } from './components'
 
@@ -9,6 +10,7 @@ export const LoginForm = ({
   email: string | undefined
   setEmail: (email: string) => void
 }) => {
+  const { logLoginStarted } = useBBAnalytics()
   return (
     <Stack $gap="2rem">
       <Stack $gap="0.5rem">
@@ -27,7 +29,14 @@ export const LoginForm = ({
           }}
         />
       </Input>
-      <Button type="submit">Log in</Button>
+      <Button
+        type="submit"
+        onClick={() => {
+          logLoginStarted({ method: 'email' })
+        }}
+      >
+        Log in
+      </Button>
     </Stack>
   )
 }

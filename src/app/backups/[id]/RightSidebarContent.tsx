@@ -6,12 +6,14 @@ import { css, styled } from 'next-yak'
 import { ComponentProps } from 'react'
 import { toast } from 'sonner'
 
-import CopyButton from '@/components/CopyButton'
+import { InlineCopyButton } from '@/components/CopyButton'
 import { Loader } from '@/components/Loader'
 import {
   Box,
   Button,
   Center,
+  Explainer,
+  ExText,
   Spinner,
   Stack,
   SubHeading,
@@ -20,12 +22,12 @@ import { delegate } from '@/lib/delegate'
 import { uploadCAR } from '@/lib/storacha'
 import { useSWR, useSWRImmutable, useSWRMutation } from '@/lib/swr'
 import { formatDate, shortenCID, shortenDID } from '@/lib/ui'
-import { Backup } from '@/types'
+import { Backup, PaginatedResult, Snapshot } from '@/types'
 
 import { CreateSnapshotButton } from './CreateSnapshotButton'
 
 const SnapshotContainer = styled(Stack)`
-  margin-top: 4rem;
+  margin-top: 3rem;
 `
 
 const Details = styled(Stack)`
@@ -34,6 +36,7 @@ const Details = styled(Stack)`
 
 const DetailName = styled(SubHeading)`
   color: black;
+  width: 5rem;
 `
 
 const DetailValue = styled.div`
@@ -43,13 +46,17 @@ const DetailValue = styled.div`
 
 const SnapshotSummary = styled(Box)`
   padding: 1rem;
-  font-size: 0.75rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `
 
 const SnapshotLink = styled(Link)`
-  width: 100%;
-  height: 100%;
-  padding: 1rem;
+  display: block;
+  font-family: var(--font-dm-mono);
+  font-size: 1rem;
+  text-align: center;
 `
 
 const SnapshotsLink = styled(Link)`
@@ -64,18 +71,22 @@ const SnapshotsLink = styled(Link)`
 `
 
 export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
-  const { data: snapshots, isLoading } = useSWR([
+  const { data, isLoading } = useSWR([
     'api',
     `/api/backups/${backup.id}/snapshots`,
   ])
-
+  // TODO: remove this cast once Fetchable no longer gets confused
+  const snapshots = data as PaginatedResult<Snapshot>
   return (
     <>
       <Details $gap="1rem">
         <SubHeading>Details</SubHeading>
         <Stack $direction="row" $alignItems="center" $gap="1rem">
           <DetailName>Account DID</DetailName>
-          <DetailValue>{shortenDID(backup.atprotoAccount)}</DetailValue>
+          <DetailValue>
+            {shortenDID(backup.atprotoAccount)}
+            <InlineCopyButton text={backup.atprotoAccount} size="0.75rem" />
+          </DetailValue>
         </Stack>
         <Stack $direction="row" $gap="1rem">
           <DetailName>Delegation</DetailName>
@@ -84,14 +95,18 @@ export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
           </DetailValue>
         </Stack>
         <Stack $direction="row" $alignItems="center" $gap="1rem">
-          <DetailName>Blobs</DetailName>
+          <DetailName>Media</DetailName>
           <Link href={`/backups/${backup.id}/blobs`}>
-            <DetailValue>View Blobs</DetailValue>
+            <DetailValue>View Media</DetailValue>
           </Link>
         </Stack>
+        <Stack $direction="row" $alignItems="center" $gap="1rem">
+          <DetailName>Archived</DetailName>
+          <DetailValue>{backup.archived ? 'yes' : 'no'}</DetailValue>
+        </Stack>
       </Details>
-      <SnapshotContainer $gap="1rem">
-        <Stack $gap="0.5em" $direction="row" $alignItems="center">
+      <SnapshotContainer $gap="2rem">
+        <Stack $gap="0.5em" $direction="row" $alignItems="center" $my="1rem">
           <CreateSnapshotButton backup={backup} />
           {snapshots && snapshots?.count > 5 && (
             <SnapshotsLink href={`/backups/${backup.id}/snapshots`}>
@@ -99,30 +114,31 @@ export const RightSidebarContent = ({ backup }: { backup: Backup }) => {
             </SnapshotsLink>
           )}
         </Stack>
-        <SubHeading>Recent Snapshots</SubHeading>
         <Stack $gap="0.6rem">
           {isLoading ? (
             <Center $height="200px">
               <Loader />
             </Center>
+          ) : snapshots?.results.length === 0 ? (
+            <Explainer>
+              <ExText>
+                We&apos;ll take a snapshot of your Bluesky account every hour.
+              </ExText>
+              <ExText>
+                If you would like to create a snapshot now, click &ldquo;Create
+                Snapshot&rdquo; above.
+              </ExText>
+            </Explainer>
           ) : (
             <>
+              <SubHeading>Recent Snapshots</SubHeading>
               {snapshots?.results.slice(0, 5).map((snapshot) => (
                 <SnapshotSummary
                   key={snapshot.id}
                   $background="var(--color-white)"
                 >
                   <SnapshotLink href={`/snapshots/${snapshot.id}`}>
-                    <Stack
-                      $direction="row"
-                      $alignItems="center"
-                      $justifyContent="space-between"
-                      $width="100%"
-                    >
-                      <Stack $direction="column" $alignItems="flex-start">
-                        <h3>{formatDate(snapshot.createdAt)} Snapshot</h3>
-                      </Stack>
-                    </Stack>
+                    {formatDate(snapshot.createdAt)}
                   </SnapshotLink>
                 </SnapshotSummary>
               ))}
@@ -170,7 +186,7 @@ const DelegationDetail = ({ backup }: { backup: Backup }) => {
           <span title={backup.delegationCid}>
             {shortenCID(backup.delegationCid)}
           </span>
-          <CopyButton text={backup.delegationCid} size="0.75rem" />
+          <InlineCopyButton text={backup.delegationCid} />
           {isLoading && <Spinner size="xs" />}
         </Stack>
       )}
@@ -213,7 +229,7 @@ const RedelegateButton = ({ backup }: { backup: Backup }) => {
 
       // Create a delegation valid for a year of backups
       const delegationDuration = 60 * 60 * 24 * 365
-      const newDelegationCid = await uploadCAR(
+      const { carCid: newDelegationCid } = await uploadCAR(
         client,
         new Blob([
           await delegate(client, backup.storachaSpace, {

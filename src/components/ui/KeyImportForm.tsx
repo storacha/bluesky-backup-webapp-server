@@ -4,22 +4,22 @@ import { RotationKey } from '@/types'
 
 import { Button, InputField, Stack } from '.'
 
-import type { KeyImportFn } from '@/contexts/keychain'
+import type { KeyHydrateFn } from '@/contexts/keychain'
 
 interface KeyImportFormParams {
   keyMaterial: string
 }
 
 export default function KeyImportForm({
-  dbKey,
+  rotationKey,
   importKey,
 }: {
-  dbKey: RotationKey
-  importKey: KeyImportFn
+  rotationKey: RotationKey
+  importKey: KeyHydrateFn
 }) {
   const { register, handleSubmit } = useForm<KeyImportFormParams>()
   async function submit(data: KeyImportFormParams) {
-    await importKey(dbKey, data.keyMaterial)
+    await importKey(rotationKey, data.keyMaterial)
   }
   return (
     <form onSubmit={handleSubmit(submit)}>
@@ -36,7 +36,7 @@ export default function KeyImportForm({
           $variant="primary"
           className="text-xs uppercase font-bold"
         >
-          Load&nbsp;Key
+          Load
         </Button>
       </Stack>
     </form>
