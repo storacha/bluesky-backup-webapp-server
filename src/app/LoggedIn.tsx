@@ -9,8 +9,7 @@ import { toast } from 'sonner'
 
 import { BackupDetail } from '@/components/BackupScreen/BackupDetail'
 import { FullscreenLoader } from '@/components/Loader'
-import StripePricingTable from '@/components/StripePricingTable'
-import { Box, Heading, Stack, Text } from '@/components/ui'
+import { Stack, Text } from '@/components/ui'
 import { CreateButton } from '@/components/ui/CreateButton'
 import { useBBAnalytics } from '@/hooks/use-bb-analytics'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
@@ -26,6 +25,7 @@ import { useSWR } from '../lib/swr'
 
 import { AppLayout } from './AppLayout'
 import { BackupExplainer } from './BackupExplainer'
+import { PlanSelector } from '../components/PlanSelector'
 
 let createNewBackup: typeof import('./backups/new/createNewBackup').action
 
@@ -42,7 +42,7 @@ const Outside = styled(Stack)`
   align-items: stretch;
 `
 
-async function createSession(client: Client, account: Account) {
+async function createSession (client: Client, account: Account) {
   const issuer = client.agent.issuer
 
   const delegation = await atproto.delegate({
@@ -64,7 +64,7 @@ async function createSession(client: Client, account: Account) {
   })
 }
 
-function NewBackupForm({
+function NewBackupForm ({
   account,
   children,
 }: {
@@ -76,7 +76,7 @@ function NewBackupForm({
     useBBAnalytics()
   const router = useRouter()
 
-  async function generateDelegationAndCreateNewBackup(formData: FormData) {
+  async function generateDelegationAndCreateNewBackup (formData: FormData) {
     logBackupCreationStarted({
       atprotoAccount: formData.get('atproto_account')?.toString(),
       includeBlobs: formData.get('include_blobs') === 'on',
@@ -150,11 +150,6 @@ const CreateBackupButton = () => {
   )
 }
 
-const PricingTableContainer = styled(Stack)`
-  width: 100%;
-  padding-top: 2rem;
-`
-
 const ExplainerContainer = styled.div`
   margin-top: 3em;
   margin-bottom: 1em;
@@ -166,7 +161,7 @@ const CreateBackupText = styled(Text)`
   margin-top: 1em;
 `
 
-export function LoggedIn() {
+export function LoggedIn () {
   const { isSmallViewPort } = useMobileScreens()
   const [{ client }] = useAuthenticator()
   const account = useStorachaAccount()
@@ -177,7 +172,6 @@ export function LoggedIn() {
     '/api/backups',
   ])
   const areThereBackups = !areBackupsLoading && backups && backups.length > 0
-
   const [sessionCreationAttempted, setSessionCreationAttempted] =
     useState(false)
   const { data: plan, isLoading: planIsLoading } = usePlan(account)
@@ -185,7 +179,7 @@ export function LoggedIn() {
     // if the client & account are loaded, the session DID is erroring and we're
     // not currently creating a session, try to create one
     if (!sessionCreationAttempted && client && account && sessionDIDError) {
-      ;(async () => {
+      ; (async () => {
         try {
           await createSession(client, account)
           await mutate()
@@ -231,18 +225,7 @@ export function LoggedIn() {
             </Stack>
           </BackupScreen>
         ) : (
-          <PricingTableContainer $alignItems="center" $gap="1rem">
-            <Heading>Please Sign Up for a Storacha Storage Plan</Heading>
-            <Text $textAlign="center" $maxWidth="30em" $fontSize="1rem">
-              To get started backing up your Bluesky and ATProto data, please
-              sign up for a Storacha storage plan. The 5GB of storage from our
-              free tier will be more than enough to back up most Bluesky
-              accounts for a very long time.
-            </Text>
-            <Box $width="100%">
-              <StripePricingTable />
-            </Box>
-          </PricingTableContainer>
+          <PlanSelector />
         )}
       </AppLayout>
     </Outside>
