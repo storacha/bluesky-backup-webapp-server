@@ -1,23 +1,12 @@
 import Link from 'next/link'
-import { styled } from 'next-yak'
 
 import { cidUrl } from '@/lib/storacha'
 import { formatDate, shortenDID } from '@/lib/ui'
 import { Snapshot } from '@/types'
 
 import { InlineCopyButton } from '../CopyButton'
+import { DetailName, Details, DetailValue } from '../Details'
 import { Heading, Stack, SubHeading } from '../ui'
-
-const Details = styled(Stack)``
-
-const DetailName = styled(SubHeading)`
-  color: black;
-`
-
-const DetailValue = styled.div`
-  font-family: var(--font-dm-mono);
-  font-size: 0.75rem;
-`
 
 export interface SnapshotDetailArgs {
   snapshot: Snapshot

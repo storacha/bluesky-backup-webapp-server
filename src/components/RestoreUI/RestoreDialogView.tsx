@@ -1,19 +1,15 @@
 // 'use client'
 
 import { CredentialSession } from '@atproto/api'
-import {
-  Popover as HPopover,
-  PopoverButton as HPopoverButton,
-  PopoverPanel as HPopoverPanel,
-} from '@headlessui/react'
-import { CircleStackIcon } from '@heroicons/react/20/solid'
-import { ArrowCircleRight, Cloud, Database } from '@phosphor-icons/react'
+import { CheckFatIcon, CloudIcon, DatabaseIcon } from '@phosphor-icons/react'
 import { css, styled } from 'next-yak'
 
 import { ATPROTO_DEFAULT_SINK } from '@/lib/constants'
-import { shortenDID } from '@/lib/ui'
+import { shortenCID, shortenDID } from '@/lib/ui'
 
-import { Box, Button, Heading, Stack, SubHeading, Text } from '../ui'
+import { InlineCopyButton } from '../CopyButton'
+import { DetailName, Details, DetailValue } from '../Details'
+import { Box, Heading, Stack, StatefulButton, SubHeading, Text } from '../ui'
 import { AtprotoLoginForm, LoginFn } from '../ui/atproto'
 
 export interface Repo {
@@ -29,23 +25,8 @@ export interface Blob {
   encryptedWith?: string
 }
 
-const Popover = styled(HPopover)`
-  display: relative;
-`
-
-const PopoverButton = styled(HPopoverButton)`
-  outline: none;
-`
-
-const PopoverPanel = styled(HPopoverPanel)`
-  display: flex;
-  background: white;
-  border: 1px solid black;
-  border-radius: 0.75rem;
-  padding: 0.75rem;
-`
-
 const DataTypeHeading = styled(Heading)`
+  font-size: 1rem;
   width: 112px;
 `
 
@@ -69,26 +50,6 @@ const DataSinkIcon = styled.div<DataSinkIconOptions>`
   width: 32px;
   height: 32px;
   ${flexCenter}
-`
-
-const DataSourceIcon = styled.div`
-  ${flexCenter}
-  width: 32px;
-  &:hover {
-    background-color: var(--color-white);
-  }
-`
-//  < div className = "rounded-full hover:bg-white border w-8 h-8 flex flex-col justify-center items-center" >
-//<span className="font-bold text-sm ">
-
-const StorachaElement = styled.div`
-  ${flexCenter}
-  width: 112px;
-`
-
-const AtProtoElement = styled.div`
-  ${flexCenter}
-  width: 112px;
 `
 
 interface RestoreDialogViewProps {
@@ -119,122 +80,113 @@ export function RestoreDialogView({
   return (
     <Box $height="100%">
       {sinkSession ? (
-        <Stack $alignItems="center">
-          <Stack $alignItems="center">
-            <Stack $alignItems="start">
+        <Stack $gap="2rem">
+          <Stack $gap="0.5rem">
+            <Heading>Restore Snapshot</Heading>
+            <SubHeading>
+              Restore to {sinkSession.serviceUrl.hostname}
+            </SubHeading>
+            <Text>
+              Use the controls below to restore this snapshot to{' '}
+              {sinkSession.serviceUrl.hostname}.
+            </Text>
+          </Stack>
+          {repo && (
+            <Stack $gap="1rem">
               <Stack
-                $gap="1rem"
                 $direction="row"
                 $alignItems="center"
-                $width="100%"
-                $bottom="1rem"
-              >
-                <DataTypeHeading />
-                <StorachaElement>
-                  <Text>Storacha</Text>
-                </StorachaElement>
-                <div style={{ width: '48px' }}></div>
-                <AtProtoElement>
-                  <Stack>
-                    <Text>{sinkSession?.serviceUrl.hostname}</Text>
-                    <Text>
-                      {sinkSession.did && shortenDID(sinkSession.did)}
-                    </Text>
-                  </Stack>
-                </AtProtoElement>
-              </Stack>
-
-              <Stack
-                $gap="1rem"
-                $direction="row"
-                $alignItems="center"
-                $left="1rem"
-                $right="1rem"
+                $justifyContent="space-between"
               >
                 <DataTypeHeading>Repository</DataTypeHeading>
-                <StorachaElement>
-                  <DataSourceIcon>
-                    <Popover>
-                      <PopoverButton>
-                        <CircleStackIcon
-                          style={{ width: '16px', height: '16px' }}
-                        />
-                      </PopoverButton>
-                      <PopoverPanel anchor="bottom">
-                        <div>Account: {repo?.accountDid}</div>
-                        <div>Created At: {repo?.createdAt.toDateString()}</div>
-                      </PopoverPanel>
-                    </Popover>
-                  </DataSourceIcon>
-                </StorachaElement>
-                {isRestoringRepo ? (
-                  <Button
-                    $isLoading
-                    $hideLoadingText
-                    $variant="outline"
-                    aria-label="Restoring repository"
-                  />
-                ) : (
-                  <Button
-                    onClick={restoreRepo}
-                    disabled={isRestoringRepo}
-                    $variant="outline"
-                    $leftIcon={
-                      <ArrowCircleRight
-                        size="16"
-                        color="var(--color-gray-medium)"
-                      />
-                    }
-                  />
-                )}
-                <AtProtoElement>
-                  <DataSinkIcon $restored={isRepoRestored}>
-                    <Database size="16" />
-                  </DataSinkIcon>
-                </AtProtoElement>
+                <DataSinkIcon $restored={isRepoRestored}>
+                  <DatabaseIcon size="16" />
+                </DataSinkIcon>
               </Stack>
-
+              <Details $gap="0.5rem">
+                <Stack
+                  $direction="row"
+                  $alignItems="center"
+                  $gap="1rem"
+                  $justifyContent="space-between"
+                >
+                  <DetailName>Repository Content ID</DetailName>
+                  <DetailValue>
+                    {shortenCID(repo.cid)}
+                    <InlineCopyButton text={repo.cid} />
+                  </DetailValue>
+                </Stack>
+                <Stack
+                  $direction="row"
+                  $alignItems="center"
+                  $gap="1rem"
+                  $justifyContent="space-between"
+                >
+                  <DetailName>Account</DetailName>
+                  <DetailValue>
+                    {shortenDID(repo.accountDid)}
+                    <InlineCopyButton text={repo.accountDid} />
+                  </DetailValue>
+                </Stack>
+                <Stack
+                  $direction="row"
+                  $alignItems="center"
+                  $gap="1rem"
+                  $justifyContent="space-between"
+                >
+                  <DetailName>Created At</DetailName>
+                  <DetailValue>{repo.createdAt.toDateString()}</DetailValue>
+                </Stack>
+              </Details>
+              <StatefulButton
+                onClick={restoreRepo}
+                isLoading={Boolean(isRestoringRepo)}
+                disabled={Boolean(isRestoringRepo || isRepoRestored)}
+              >
+                {isRepoRestored ? (
+                  <CheckFatIcon color="var(--color-green)" />
+                ) : (
+                  'Restore'
+                )}
+              </StatefulButton>
+            </Stack>
+          )}
+          {blobs && blobs.length > 0 && (
+            <Stack $gap="1rem">
               <Stack
-                $gap="1rem"
                 $direction="row"
                 $alignItems="center"
-                $left="1rem"
-                $right="1rem"
+                $justifyContent="space-between"
               >
                 <DataTypeHeading>Media</DataTypeHeading>
-                <StorachaElement>
-                  <DataSourceIcon>{blobs?.length || '0'}</DataSourceIcon>
-                </StorachaElement>
-                {isRestoringBlobs ? (
-                  <Button
-                    $isLoading
-                    $hideLoadingText
-                    $variant="outline"
-                    className="rounded-full w-8 h-8"
-                    aria-label="Restoring blobs"
-                  />
-                ) : (
-                  <Button
-                    onClick={restoreBlobs}
-                    disabled={isRestoringBlobs}
-                    $variant="outline"
-                    className="rounded-full w-8 h-8"
-                    $leftIcon={
-                      <ArrowCircleRight
-                        size="16"
-                        color="var(--color-gray-medium)"
-                      />
-                    }
-                  />
-                )}
-                <AtProtoElement>
-                  <DataSinkIcon $restored={areBlobsRestored}>
-                    <Cloud size="16" color="var(--color-gray-medium)" />
-                  </DataSinkIcon>
-                </AtProtoElement>
+                <DataSinkIcon $restored={areBlobsRestored}>
+                  <CloudIcon size="16" />
+                </DataSinkIcon>
               </Stack>
+              <Details $gap="0.5rem">
+                <Stack
+                  $direction="row"
+                  $alignItems="center"
+                  $gap="1rem"
+                  $justifyContent="space-between"
+                >
+                  <DetailName>Count</DetailName>
+                  <DetailValue>{blobs.length}</DetailValue>
+                </Stack>
+              </Details>
+              <StatefulButton
+                onClick={restoreBlobs}
+                isLoading={Boolean(isRestoringBlobs)}
+                disabled={Boolean(isRestoringBlobs || areBlobsRestored)}
+              >
+                {areBlobsRestored ? (
+                  <CheckFatIcon color="var(--color-green)" />
+                ) : (
+                  'Restore'
+                )}
+              </StatefulButton>
             </Stack>
-          </Stack>
+          )}
         </Stack>
       ) : (
         <Stack $gap="1rem">
