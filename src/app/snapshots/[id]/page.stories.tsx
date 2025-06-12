@@ -6,6 +6,11 @@ import Page from './SnapshotPage'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
+const timothy = {
+  did: () => 'did:mailto:gmail.com:timothy-chalamet',
+  toEmail: () => 'timothy-chalamet@gmail.com',
+} as unknown as Account
+
 const meta = {
   // Uses division slash (∕) instead of regular slash (/) in the title.
   title: '∕snapshots∕[id]',
@@ -18,12 +23,7 @@ const meta = {
   },
   decorators: [
     withAuthContext({
-      accounts: [
-        {
-          did: () => 'did:mailto:gmail.com:timothy-chalamet',
-          toEmail: () => 'timothy-chalamet@gmail.com',
-        } as unknown as Account,
-      ],
+      accounts: [timothy],
       spaces: [
         {
           name: 'Important Stuff',
@@ -31,6 +31,7 @@ const meta = {
         } as unknown as Space,
       ],
     }),
+    withData(['storacha-plan', timothy], 'the-super-awesome-plan'),
     withData(
       ['api', '/api/backups'],
       [
