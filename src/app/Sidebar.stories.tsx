@@ -1,14 +1,24 @@
 import { SpaceBlob, SpaceIndex, Upload } from '@storacha/capabilities'
+import { Account } from '@storacha/ui-react'
 import { Delegation } from '@ucanto/core'
 import { Capabilities, Signer } from '@ucanto/principal/ed25519'
 
 import { SERVER_DID } from '@/lib/constants'
 
-import { withData, withLinks } from '../../.storybook/decorators'
+import {
+  withAuthContext,
+  withData,
+  withLinks,
+} from '../../.storybook/decorators'
 
 import { Sidebar } from './Sidebar'
 
 import type { Decorator, Meta, StoryObj } from '@storybook/react'
+
+const timothy = {
+  did: () => 'did:mailto:gmail.com:timothy-chalamet',
+  toEmail: () => 'timothy-chalamet@gmail.com',
+} as unknown as Account
 
 const withFullViewportHeight: Decorator = (Story) => (
   <div style={{ display: 'flex', height: '100vh' }}>
@@ -26,11 +36,15 @@ const meta = {
   decorators: [
     withFullViewportHeight,
     withData(['api', '/api/backups'], []),
+    // @ts-expect-error the Fetchable typing issue strikes again
+    withData(['api', '/api/backups/archived'], []),
     withLinks({
       '/backups/new': ['Pages/∕backups∕new'],
       '/backups/1': ['Pages/∕backups∕[id]'],
       '/backups/2': ['Pages/∕backups∕[id]'],
     }),
+    withAuthContext({ accounts: [timothy] }),
+    withData(['storacha-plan', timothy], 'the-super-awesome-plan'),
   ],
   args: {
     selectedBackupId: null,
@@ -40,6 +54,10 @@ const meta = {
 export default meta
 
 type Story = StoryObj<typeof meta>
+
+export const WithNoPlan: Story = {
+  decorators: [withData(['storacha-plan', timothy], undefined)],
+}
 
 export const NoBackups: Story = {}
 
