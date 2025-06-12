@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.12.0...v1.12.1) (2025-06-12)
+
+
+### Bug Fixes
+
+* point bsky.storage at the new DID ([#222](https://github.com/storacha/bluesky-backup-webapp-server/issues/222)) ([04865fb](https://github.com/storacha/bluesky-backup-webapp-server/commit/04865fbfc9bdcb0ccb6542f7d8654a5930e97e39))
+
 ## [1.12.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.11.0...v1.12.0) (2025-06-12)
 
 
