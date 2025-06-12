@@ -37,7 +37,7 @@ export default function BlobsPage({ id }: { id: string }) {
       <Stack $gap="0.8rem">
         <Blobs
           blobs={paginatedBlobs?.results}
-          backPath={`/backups/${id}`}
+          backPath={`/snapshots/${id}`}
           loading={isLoading}
           location="Snapshot"
         />
