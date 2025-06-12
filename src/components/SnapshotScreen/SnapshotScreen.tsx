@@ -1,7 +1,8 @@
-import Link from 'next/link'
-import { css, styled } from 'next-yak'
+//import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import { styled } from 'next-yak'
 
-import { Container } from '@/components/ui'
+import { Button, Container, Text } from '@/components/ui'
 import { Snapshot } from '@/types'
 
 import { SharedScreenLayout } from '../SharedScreen'
@@ -14,18 +15,18 @@ const RestoreContainer = styled(Container)`
   padding: 2rem;
 `
 
-const roundedFull = css`
-  border-radius: calc(infinity * 1px);
-`
-
-const RestoreLink = styled(Link)`
-  border-radius: 100%;
-  border: 1px solid var(--color-black);
-  padding: 0.25rem 1rem;
-  ${roundedFull}
-`
+// const RestoreLink = styled(Link)`
+//   display: block;
+//   background-color: var(--color-dark-blue);
+//   border-radius: 0.75rem;
+//   color: var(--color-gray-medium);
+//   font-family: var(--font-dm-mono);
+//   font-size: 1rem;
+//   padding: 0.25rem 1rem;
+// `
 
 export const SnapshotScreen = ({ snapshot }: { snapshot: Snapshot }) => {
+  const params = useSearchParams()
   return (
     <SharedScreenLayout
       screenName="snapshots"
@@ -33,9 +34,13 @@ export const SnapshotScreen = ({ snapshot }: { snapshot: Snapshot }) => {
       mainContent={<SnapshotDetail snapshot={snapshot} />}
       rightPanelContent={
         <RestoreContainer>
-          <RestoreLink href={`/snapshots/${snapshot.id}/restore`}>
+          {/* <RestoreLink href={`/snapshots/${snapshot.id}/restore`}>
             Restore
-          </RestoreLink>
+          </RestoreLink> */}
+          <Button $font-size="1rem" disabled={!params.get('restore')}>
+            Restore
+            <Text>(coming soon!)</Text>
+          </Button>
         </RestoreContainer>
       }
     />
