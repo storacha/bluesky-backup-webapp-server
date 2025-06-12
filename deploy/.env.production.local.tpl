@@ -4,15 +4,13 @@ if [ "$TF_WORKSPACE" != "prod" ]; then
   UPLOAD_PREFIX="staging."
   GATEWAY_PREFIX="-staging"
   STORACHA_DID="staging.up.storacha.network"
-  STORACHA_PROVIDER_DID="staging.up.storacha.network"
   PRICING_TABLE_ID="prctbl_1R1egaF6A5ufQX5vyumO9QAf"
   PUBLISHABLE_KEY="pk_test_51LO87hF6A5ufQX5viNsPTbuErzfavdrEFoBuaJJPfoIhzQXdOUdefwL70YewaXA32ZrSRbK4U4fqebC7SVtyeNcz00qmgNgueC"
   HUMANODE_OAUTH_CALLBACK_URL=https://staging.up.storacha.network/oauth/humanode/callback
 else
   UPLOAD_PREFIX=""
   GATEWAY_PREFIX=""
-  STORACHA_DID="up.storacha.network"
-  STORACHA_PROVIDER_DID="web3.storage"
+  STORACHA_DID="web3.storage"
   PRICING_TABLE_ID="prctbl_1R58oLF6A5ufQX5vozallJKX"
   PUBLISHABLE_KEY="pk_live_51LO87hF6A5ufQX5vQTO5BHyz8y9ybJp4kg1GsBjYuqwluuwtQTkbeZzkoQweFQDlv7JaGjuIdUWAyuwXp3tmCfsM005lJK9aS8"
   HUMANODE_OAUTH_CALLBACK_URL=https://up.storacha.network/oauth/humanode/callback
@@ -23,7 +21,7 @@ fi
 NEXT_PUBLIC_STORACHA_SERVICE_URL=https://<%= $UPLOAD_PREFIX %>up.storacha.network
 NEXT_PUBLIC_STORACHA_RECEIPTS_URL=https://<%= $UPLOAD_PREFIX %>up.storacha.network/receipt/
 NEXT_PUBLIC_STORACHA_SERVICE_DID=did:web:<%= $STORACHA_DID %>
-NEXT_PUBLIC_STORACHA_PROVIDER=did:web:<%= $STORACHA_PROVIDER_DID %>
+NEXT_PUBLIC_STORACHA_PROVIDER=did:web:<%= $STORACHA_DID %>
 NEXT_PUBLIC_IDENTITY_AUTHORITY=did:web:<%= $STORACHA_DID %>
 
 # set these to your gateway service URL and DID 
