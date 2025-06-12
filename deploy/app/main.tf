@@ -52,7 +52,7 @@ resource "random_password" "session_password" {
 
 
 module "app" {
-  source = "github.com/storacha/storoku//app?ref=v0.2.40"
+  source = "github.com/storacha/storoku//app?ref=v0.2.41"
   private_key = var.private_key
   private_key_env_var = "SERVER_IDENTITY_PRIVATE_KEY"
   httpport = 3000
