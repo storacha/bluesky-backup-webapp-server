@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.12.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.11.0...v1.12.0) (2025-06-12)
+
+
+### Features
+
+* add Humanode as an option for plan selection ([#215](https://github.com/storacha/bluesky-backup-webapp-server/issues/215)) ([9388807](https://github.com/storacha/bluesky-backup-webapp-server/commit/9388807738efae234a444f3d8e9c88cdc80c5189))
+* make the restore dialogs a lot nicer ([#217](https://github.com/storacha/bluesky-backup-webapp-server/issues/217)) ([a2afcc6](https://github.com/storacha/bluesky-backup-webapp-server/commit/a2afcc622e3f99534c6dd47ff42d24d1ad075916))
+* put restore behind a feature flag ([#221](https://github.com/storacha/bluesky-backup-webapp-server/issues/221)) ([ac5f57f](https://github.com/storacha/bluesky-backup-webapp-server/commit/ac5f57f92c9684872021e30483d8ee2fb67e5442))
+
+
+### Bug Fixes
+
+* a few minor tweaks to onboarding ([#219](https://github.com/storacha/bluesky-backup-webapp-server/issues/219)) ([6f0b319](https://github.com/storacha/bluesky-backup-webapp-server/commit/6f0b31939811f6c5c9bcd9c3162886c04b920ff0))
+* add empty line to .env.production.local.tpl ([#216](https://github.com/storacha/bluesky-backup-webapp-server/issues/216)) ([7d4a449](https://github.com/storacha/bluesky-backup-webapp-server/commit/7d4a449ad609e341032e4b0334dfda35038902b3))
+* assorted changes from feedback from [@alanshaw](https://github.com/alanshaw) ([#214](https://github.com/storacha/bluesky-backup-webapp-server/issues/214)) ([54d8847](https://github.com/storacha/bluesky-backup-webapp-server/commit/54d884781bffa2ccb1b04ea8f9bf1647aaac16b6))
+* **deploy:** remove staging replication ([#220](https://github.com/storacha/bluesky-backup-webapp-server/issues/220)) ([436be82](https://github.com/storacha/bluesky-backup-webapp-server/commit/436be82a841c5334fab471ae325b0bdcf401dccb))
+* fix env config for template vars ([#218](https://github.com/storacha/bluesky-backup-webapp-server/issues/218)) ([81fbbaf](https://github.com/storacha/bluesky-backup-webapp-server/commit/81fbbafd571c00df1b09a430153191dbbef862b7))
+* **ui:** sidebar should not scroll alongside main content ([#212](https://github.com/storacha/bluesky-backup-webapp-server/issues/212)) ([b219412](https://github.com/storacha/bluesky-backup-webapp-server/commit/b219412c6fd8122375ab94beb2e601e283e19a34))
+
 ## [1.11.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.10.1...v1.11.0) (2025-06-10)
 
 
