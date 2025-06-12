@@ -34,7 +34,6 @@
     "@atproto/jwk-jose": "^0.1.6",
     "@atproto/oauth-client-node": "^0.2.17",
     "@aws-sdk/rds-signer": "^3.787.0",
-    "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@ipld/dag-cbor": "^9.2.3",
     "@ipld/dag-ucan": "^3.4.5",
