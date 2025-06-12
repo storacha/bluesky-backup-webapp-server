@@ -17,6 +17,9 @@ interface DataBoxProps extends SwitchProps {
 
 const Label = styled.label`
   display: contents;
+  & > * {
+    flex: 1;
+  }
 `
 
 export const DataBox = ({
