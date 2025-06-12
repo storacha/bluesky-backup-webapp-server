@@ -1,10 +1,30 @@
 import { Account, Space } from '@storacha/ui-react'
 
 import { withAuthContext, withData } from '@/../.storybook/decorators'
+import { Backup } from '@/types'
 
 import Page from './BackupPage'
 
 import type { Meta, StoryObj } from '@storybook/react'
+
+const timothy = {
+  did: () => 'did:mailto:gmail.com:timothy-chalamet',
+  toEmail: () => 'timothy-chalamet@gmail.com',
+} as unknown as Account
+
+const backup = {
+  id: 'abc',
+  accountDid: 'did:mailto:gmail.com:timothy-chalamet',
+  name: 'Backup #1',
+  atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
+  storachaSpace: 'did:key:zMw6cW3gpcPQzNkdfprbTZZh2MajkgZ3MdbqgUsqmksvBPiz',
+  includeRepository: true,
+  includeBlobs: true,
+  includePreferences: false,
+  delegationCid: null,
+  paused: false,
+  archived: false,
+} as Backup
 
 const meta = {
   // Uses division slash (∕) instead of regular slash (/) in the title.
@@ -18,12 +38,7 @@ const meta = {
   },
   decorators: [
     withAuthContext({
-      accounts: [
-        {
-          did: () => 'did:mailto:gmail.com:timothy-chalamet',
-          toEmail: () => 'timothy-chalamet@gmail.com',
-        } as unknown as Account,
-      ],
+      accounts: [timothy],
       spaces: [
         {
           name: 'Important Stuff',
@@ -31,19 +46,9 @@ const meta = {
         } as unknown as Space,
       ],
     }),
-    withData(['api', '/api/backups/abc'], {
-      id: 'abc',
-      accountDid: 'did:mailto:gmail.com:timothy-chalamet',
-      name: 'Backup #1',
-      atprotoAccount: 'did:plc:ro3eio7zgqosf5gnxsq6ik5m',
-      storachaSpace: 'did:key:zMw6cW3gpcPQzNkdfprbTZZh2MajkgZ3MdbqgUsqmksvBPiz',
-      includeRepository: true,
-      includeBlobs: true,
-      includePreferences: false,
-      delegationCid: null,
-      paused: false,
-      archived: false,
-    }),
+    withData(['storacha-plan', timothy], 'the-super-awesome-plan'),
+    withData(['api', '/api/backups'], [backup]),
+    withData(['api', '/api/backups/abc'], backup),
     withData(['api', '/api/backups/abc/snapshots'], { count: 0, results: [] }),
   ],
 } satisfies Meta<typeof Page>

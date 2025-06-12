@@ -268,6 +268,7 @@ const Backup = ({
           $direction="row"
           $justifyContent="space-between"
           $alignItems="center"
+          $gap="0.5rem"
         >
           {shortenIfOver(modifiedName)}
           {paused && (
