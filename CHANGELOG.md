@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.3](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.12.2...v1.12.3) (2025-06-12)
+
+
+### Bug Fixes
+
+* Align data boxes correctly ([4fdc8a4](https://github.com/storacha/bluesky-backup-webapp-server/commit/4fdc8a472a86a65aa8e323fb0f27c319dfaf5198))
+* unauthorized error after clicking back on snapshot blobs ([#228](https://github.com/storacha/bluesky-backup-webapp-server/issues/228)) ([3abb71d](https://github.com/storacha/bluesky-backup-webapp-server/commit/3abb71d8335070f8ec9f3ae1d03167b838093ffe))
+
 ## [1.12.2](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.12.1...v1.12.2) (2025-06-12)
 
 
