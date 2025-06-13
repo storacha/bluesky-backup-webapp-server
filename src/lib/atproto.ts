@@ -118,22 +118,55 @@ export const findAllIdentities = async () => {
   // Get all of the logged-in user's backups
   const { results: backupAccounts } = await db.findBackups(account)
 
-  // Create a map of connected accounts for quick lookup
-  const connectedMap = new Map(connectedAccounts.map((did) => [did, true]))
-
-  // Create a map to deduplicate by atprotoAccount
+  // Create a map to store all identities (both connected and from backups)
   const identityMap = new Map()
 
-  // Combine both sets with connection status, keeping only the most recent backup for each account
-  backupAccounts.forEach((backup) => {
-    const existing = identityMap.get(backup.atprotoAccount)
-    if (!existing) {
-      identityMap.set(backup.atprotoAccount, {
+  for (const did of connectedAccounts) {
+    // Find the backup for this account if it exists
+    const backup = backupAccounts.find((b) => b.atprotoAccount === did)
+    if (backup) {
+      identityMap.set(did, {
         ...backup,
-        isConnected: connectedMap.has(backup.atprotoAccount),
+        isConnected: true,
+      })
+    } else {
+      // Account is connected but not in any backup
+      identityMap.set(did, {
+        atprotoAccount: did,
+        isConnected: true,
       })
     }
-  })
+  }
+
+  // Then, add all accounts from backups that aren't connected
+  for (const backup of backupAccounts) {
+    if (!identityMap.has(backup.atprotoAccount)) {
+      identityMap.set(backup.atprotoAccount, {
+        ...backup,
+        isConnected: false,
+      })
+    }
+
+    // Then add any other accounts in this backup
+    const { results: backupBskyAccounts } = await db.findBskyAccountsInBackups(
+      backup.id
+    )
+
+    if (backupBskyAccounts?.length > 0) {
+      for (const bskyAccount of backupBskyAccounts) {
+        if (!isDidPlc(bskyAccount)) continue
+
+        // Only add if not already in the map
+        if (!identityMap.has(bskyAccount)) {
+          identityMap.set(bskyAccount, {
+            ...backup,
+            atprotoAccount: bskyAccount as `did:${string}`,
+            isConnected: false,
+          })
+        }
+      }
+    }
+  }
 
   return Array.from(identityMap.values())
 }

@@ -228,6 +228,9 @@ export interface BBDatabase {
   ) => Promise<{ results: RotationKey[] }>
   deleteRotationKey: (id: string) => Promise<void>
   updateBackup: (id: string, data: BackupInputUpdate) => Promise<Backup>
+  findBskyAccountsInBackups: (
+    backupId: string
+  ) => Promise<{ results: string[] }>
   getAllCidsInBackup: (id: string) => Promise<string[]>
 }
 
@@ -540,6 +543,16 @@ export function getStorageContext(): StorageContext {
           throw new Error('error updating backup')
         }
         return results[0]
+      },
+      async findBskyAccountsInBackups(backupId: string) {
+        if (!validateUUID(backupId)) return { results: [] }
+
+        const results = await sql<{ atproto_account: string }[]>`
+          select atproto_account
+          from backups
+          where id = ${backupId}
+        `
+        return { results: results.map((r) => r.atproto_account) }
       },
     },
   }
