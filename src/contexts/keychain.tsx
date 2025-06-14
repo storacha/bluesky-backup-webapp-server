@@ -80,7 +80,9 @@ export const KeychainProvider = ({
   const [selectedKey, setSelectedKey] = useState<RotationKey>()
   const [isDeletingKey, setIsDeletingKey] = useState(false)
   const storachaAccount = useStorachaAccount()
-  const { data: keys, mutate: mutateKeys } = useSWR(['api', `/api/keys`])
+  const { data: keys, mutate: mutateKeys } = useSWR(
+    storachaAccount ? ['api', `/api/keys`] : null
+  )
   async function generateKeyPair(atprotoAccount: string) {
     if (storachaAccount) {
       const keypair = await Secp256k1Keypair.create({ exportable: true })
