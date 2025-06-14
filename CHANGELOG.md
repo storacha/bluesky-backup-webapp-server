@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.4](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.12.3...v1.12.4) (2025-06-14)
+
+
+### Bug Fixes
+
+* dont fetch `/api/keys` without auth ([#231](https://github.com/storacha/bluesky-backup-webapp-server/issues/231)) ([a058f4b](https://github.com/storacha/bluesky-backup-webapp-server/commit/a058f4b2a839dfc4070964ab0f0b9c2916cd0e1b))
+* **lint:** fix prettier ([39e4da8](https://github.com/storacha/bluesky-backup-webapp-server/commit/39e4da88131324b0420d5134fa2a55993d97c501))
+
 ## [1.12.3](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.12.2...v1.12.3) (2025-06-12)
 
 
