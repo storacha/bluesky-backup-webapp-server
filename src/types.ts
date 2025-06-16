@@ -290,4 +290,7 @@ export type BBEvents = {
   }
   'create-backup-started': BackupEventParams
   'create-backup-success': BackupEventParams
+  'humanode-started': TrackingParams & {
+    userId?: AccountDid
+  }
 }

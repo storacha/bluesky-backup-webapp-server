@@ -5,7 +5,9 @@ import { useState } from 'react'
 import HumanodeAuthLink from '@/components/HumanodeAuthLink'
 import StripePricingTable from '@/components/StripePricingTable'
 import { Box, Button, Heading, Stack, Text } from '@/components/ui'
+import { useBBAnalytics } from '@/hooks/use-bb-analytics'
 import { useMobileScreens } from '@/hooks/use-mobile-screens'
+import { useStorachaAccount } from '@/hooks/use-plan'
 
 const PricingTableContainer = styled(Stack)`
   width: 100%;
@@ -15,7 +17,8 @@ const PricingTableContainer = styled(Stack)`
 export default function PlanSelector() {
   const [stripeSignup, setStripeSignup] = useState(false)
   const { isMobile } = useMobileScreens()
-
+  const { logPlanSelection } = useBBAnalytics()
+  const account = useStorachaAccount()
   return (
     <PricingTableContainer $alignItems="center" $gap="1rem">
       <Heading>Please Sign Up for a Storacha Storage Plan</Heading>
@@ -47,6 +50,7 @@ export default function PlanSelector() {
           <HumanodeAuthLink />
           <Button
             onClick={() => {
+              logPlanSelection({ userId: account?.did() })
               setStripeSignup(true)
             }}
           >

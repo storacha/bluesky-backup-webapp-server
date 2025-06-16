@@ -105,6 +105,15 @@ export const useBBAnalytics = () => {
     [plausible, utmParams]
   )
 
+  const logHumanodeStarted = useCallback(
+    (props: BBEvents['humanode-started']) => {
+      plausible('humanode-started', {
+        props: { ...utmParams, ...props },
+      })
+    },
+    [plausible, utmParams]
+  )
+
   return {
     logPlanSelection,
     logBackupCreationStarted,
@@ -113,5 +122,6 @@ export const useBBAnalytics = () => {
     logBlueskyLoginSuccessful,
     logLoginStarted,
     logLoginSuccessful,
+    logHumanodeStarted,
   }
 }
