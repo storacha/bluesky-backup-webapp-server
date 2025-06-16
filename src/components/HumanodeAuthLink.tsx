@@ -5,6 +5,8 @@ import { base64url } from 'multiformats/bases/base64'
 import { styled } from 'next-yak'
 import { useEffect, useState } from 'react'
 
+import { useBBAnalytics } from '@/hooks/use-bb-analytics'
+import { useStorachaAccount } from '@/hooks/use-plan'
 import {
   HUMANODE_AUTH_URL,
   HUMANODE_CLIENT_ID,
@@ -21,8 +23,8 @@ const HumanodeLink = styled.a`
 `
 
 export default function HumanodeAuthLink() {
-  const [{ accounts, client }] = useW3()
-  const account = accounts[0]
+  const [{ client }] = useW3()
+  const account = useStorachaAccount()
   const [state, setState] = useState<string>()
 
   useEffect(
@@ -59,9 +61,17 @@ export default function HumanodeAuthLink() {
     [client, account]
   )
   const humanodeHref = `${HUMANODE_AUTH_URL}?response_type=code&client_id=${HUMANODE_CLIENT_ID}&redirect_uri=${HUMANODE_OAUTH_CALLBACK_URL}&scope=openid&state=${state}`
+  const { logHumanodeStarted } = useBBAnalytics()
   return (
-    <HumanodeLink href={humanodeHref} target="_blank" rel="noopener noreferrer">
-      Give me a free plan!
+    <HumanodeLink
+      href={humanodeHref}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={() => {
+        logHumanodeStarted({ userId: account?.did() })
+      }}
+    >
+      Show I&apos;m Not a Bot
     </HumanodeLink>
   )
 }
