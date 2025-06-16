@@ -26,7 +26,7 @@ const PricingExplanation = styled(Stack)`
   max-width: 29em;
 `
 
-export default function PlanSelector () {
+export default function PlanSelector() {
   const [stripeSignup, setStripeSignup] = useState(false)
   const { isMobile } = useMobileScreens()
   const { logPlanSelection } = useBBAnalytics()
