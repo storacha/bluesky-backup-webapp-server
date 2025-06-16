@@ -14,7 +14,19 @@ const PricingTableContainer = styled(Stack)`
   padding-top: 2rem;
 `
 
-export default function PlanSelector() {
+const PricingText = styled(Text)`
+  font-size: 1rem;
+  text-align: center;
+`
+
+const PricingExplanation = styled(Stack)`
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  max-width: 29em;
+`
+
+export default function PlanSelector () {
   const [stripeSignup, setStripeSignup] = useState(false)
   const { isMobile } = useMobileScreens()
   const { logPlanSelection } = useBBAnalytics()
@@ -22,16 +34,21 @@ export default function PlanSelector() {
   return (
     <PricingTableContainer $alignItems="center" $gap="1rem">
       <Heading>Please Sign Up for a Storacha Storage Plan</Heading>
-      <Text $textAlign="center" $maxWidth="45em" $fontSize="1rem">
-        To start storing data on Storacha you need a storage plan. You can
-        either go through our Humanode-powered biometric verification flow to
-        get a limited free storage plan or sign up for a storage plan with a
-        credit card below.
-      </Text>
-      <Text $textAlign="center" $maxWidth="45em" $fontSize="1rem">
-        Either way will give you enough storage to back up most Bluesky accounts
-        for quite a while.
-      </Text>
+      <PricingExplanation>
+        <PricingText>
+          To start storing data on Storacha you need a storage plan. The easiest
+          way to get one is a quick face check - no account, no credit card, and{' '}
+          <b>no biometric data is stored. Ever.</b>
+        </PricingText>
+        <PricingText>
+          Alternatively, you can choose one of our paid storage plans by
+          providing credit card information using Stripe.
+        </PricingText>
+        <PricingText>
+          Either way will give you enough storage to back up most Bluesky
+          accounts for quite a while.
+        </PricingText>
+      </PricingExplanation>
       {stripeSignup ? (
         <Box $width="100%">
           <Stack $alignItems="center">
@@ -54,7 +71,7 @@ export default function PlanSelector() {
               setStripeSignup(true)
             }}
           >
-            I&apos;ll sign up with my card
+            I&apos;ll Sign Up With My Card
           </Button>
         </Stack>
       )}

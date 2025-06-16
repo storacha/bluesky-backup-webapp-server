@@ -71,7 +71,7 @@ export default function HumanodeAuthLink() {
         logHumanodeStarted({ userId: account?.did() })
       }}
     >
-      Give me a free plan!
+      Show I&apos;m Not a Bot
     </HumanodeLink>
   )
 }
