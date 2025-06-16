@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.13.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.12.3...v1.13.0) (2025-06-16)
+
+
+### Features
+
+* send analytics when someone starts the Humanode or plan selection processes ([#233](https://github.com/storacha/bluesky-backup-webapp-server/issues/233)) ([eaaa42d](https://github.com/storacha/bluesky-backup-webapp-server/commit/eaaa42d0ac956115ebec06156af622504a2563b1))
+
+
+### Bug Fixes
+
+* dont fetch `/api/keys` without auth ([#231](https://github.com/storacha/bluesky-backup-webapp-server/issues/231)) ([a058f4b](https://github.com/storacha/bluesky-backup-webapp-server/commit/a058f4b2a839dfc4070964ab0f0b9c2916cd0e1b))
+* **lint:** fix prettier ([39e4da8](https://github.com/storacha/bluesky-backup-webapp-server/commit/39e4da88131324b0420d5134fa2a55993d97c501))
+
 ## [1.12.3](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.12.2...v1.12.3) (2025-06-12)
 
 
