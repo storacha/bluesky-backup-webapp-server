@@ -6,12 +6,24 @@ import useSWR from 'swr'
 
 import { ATPROTO_DEFAULT_SINK } from '@/lib/constants'
 import { loadCid } from '@/lib/storacha'
-import { ATBlob, Snapshot } from '@/types'
+import {
+  ATBlob,
+  atBlobPaginatedResultSchema,
+  PaginatedResult,
+  Snapshot,
+} from '@/types'
 
 import { Box } from '../ui'
 import { LoginFn } from '../ui/atproto'
 
 import { Repo, RestoreDialogView } from './RestoreDialogView'
+
+async function* blobsAtUrl(url: string): AsyncGenerator<ATBlob> {
+  const result = await fetch(url)
+  const page = atBlobPaginatedResultSchema.parse(await result.json())
+  yield* page.results
+  if (page.next) yield* blobsAtUrl(page.next)
+}
 
 export default function RestoreDialog({ snapshotId }: { snapshotId: string }) {
   const { data: snapshot } = useSWR<Snapshot>([
@@ -25,16 +37,30 @@ export default function RestoreDialog({ snapshotId }: { snapshotId: string }) {
         createdAt: new Date(snapshot.createdAt),
       }
     : undefined
-  const { data: blobs } = useSWR<ATBlob[]>([
-    'api',
-    `/api/snapshots/${snapshotId}/blobs`,
-  ])
+  const snapshotBlobsUrl = `/api/snapshots/${snapshotId}/blobs`
+  const { data: snapshotBlobData } = useSWR<ATBlob[]>(['api', snapshotBlobsUrl])
+  // TODO remove once we fix fetcher
+  const snapshotBlobResult = snapshotBlobData as
+    | PaginatedResult<ATBlob>
+    | undefined
+
+  const backupBlobsUrl = `/api/backups/${snapshot?.backupId}/blobs`
+  const { data: backupBlobData } = useSWR<ATBlob[]>(['api', backupBlobsUrl])
+  // TODO remove once we fix fetcher
+  const backupBlobResult = backupBlobData as PaginatedResult<ATBlob> | undefined
 
   const [isRestoringRepo, setIsRestoringRepo] = useState<boolean>(false)
-  const [isRestoringBlobs, setIsRestoringBlobs] = useState<boolean>(false)
-
   const [isRepoRestored, setIsRepoRestored] = useState<boolean>(false)
-  const [areBlobsRestored, setAreBlobsRestored] = useState<boolean>(false)
+
+  const [isRestoringSnapshotBlobs, setIsRestoringSnapshotBlobs] =
+    useState<boolean>(false)
+  const [areSnapshotBlobsRestored, setAreSnapshotBlobsRestored] =
+    useState<boolean>(false)
+
+  const [areBackupBlobsRestored, setAreBackupBlobsRestored] =
+    useState<boolean>(false)
+  const [isRestoringBackupBlobs, setIsRestoringBackupBlobs] =
+    useState<boolean>(false)
 
   const [sinkSession, setSinkSession] = useState<CredentialSession>()
   const [sinkAgent, setSinkAgent] = useState<Agent>()
@@ -68,10 +94,9 @@ export default function RestoreDialog({ snapshotId }: { snapshotId: string }) {
     }
   }
 
-  async function restoreBlobs() {
-    if (blobs && sinkAgent) {
-      setIsRestoringBlobs(true)
-      for (const blob of blobs) {
+  async function restoreBlobs(blobs: AsyncIterable<ATBlob>) {
+    if (sinkAgent) {
+      for await (const blob of blobs) {
         console.log('restoring blob', blob.cid)
         await sinkAgent.com.atproto.repo.uploadBlob(
           new Uint8Array(await loadCid(blob.cid)),
@@ -80,10 +105,30 @@ export default function RestoreDialog({ snapshotId }: { snapshotId: string }) {
           }
         )
       }
-      setIsRestoringBlobs(false)
-      setAreBlobsRestored(true)
     } else {
       console.warn('not restoring:', blobs, sinkAgent)
+    }
+  }
+
+  async function restoreSnapshotBlobs() {
+    try {
+      setIsRestoringSnapshotBlobs(true)
+      await restoreBlobs(blobsAtUrl(snapshotBlobsUrl))
+
+      setAreSnapshotBlobsRestored(true)
+    } finally {
+      setIsRestoringSnapshotBlobs(false)
+    }
+  }
+
+  async function restoreBackupBlobs() {
+    try {
+      setIsRestoringBackupBlobs(true)
+      await restoreBlobs(blobsAtUrl(backupBlobsUrl))
+
+      setAreBackupBlobsRestored(true)
+    } finally {
+      setIsRestoringBackupBlobs(false)
     }
   }
 
@@ -93,13 +138,17 @@ export default function RestoreDialog({ snapshotId }: { snapshotId: string }) {
         sinkSession={sinkSession}
         loginToSink={loginToSink}
         restoreRepo={restoreRepo}
-        restoreBlobs={restoreBlobs}
+        restoreSnapshotBlobs={restoreSnapshotBlobs}
+        restoreBackupBlobs={restoreBackupBlobs}
         repo={repo}
-        blobs={blobs}
         isRestoringRepo={isRestoringRepo}
-        isRestoringBlobs={isRestoringBlobs}
         isRepoRestored={isRepoRestored}
-        areBlobsRestored={areBlobsRestored}
+        snapshotBlobsCount={snapshotBlobResult?.count}
+        isRestoringSnapshotBlobs={isRestoringSnapshotBlobs}
+        areSnapshotBlobsRestored={areSnapshotBlobsRestored}
+        backupBlobsCount={backupBlobResult?.count}
+        isRestoringBackupBlobs={isRestoringBackupBlobs}
+        areBackupBlobsRestored={areBackupBlobsRestored}
       />
     </Box>
   )
