@@ -89,7 +89,7 @@ export type SnapshotInput = z.infer<typeof snapshotInputSchema>
 const stateSchema = z.enum(['loading', 'idle', 'deleting'])
 export type State = z.infer<typeof stateSchema>
 
-export const atBlobSchema = z.strictObject({
+const atBlobSchema = z.strictObject({
   id: z.string(),
   cid: z.string(),
   contentType: z.string().optional(),
@@ -236,7 +236,7 @@ export interface BskyProfile {
 
 export type ProfileData = PlcProfile & BskyProfile
 
-export function createPaginatedResultSchema<ItemType extends z.ZodType>(
+function createPaginatedResultSchema<ItemType extends z.ZodType>(
   itemSchema: ItemType
 ) {
   return z.strictObject({
