@@ -85,8 +85,8 @@ export function RestoreDialogView({
   isRestoringBackupBlobs,
   areBackupBlobsRestored,
 }: RestoreDialogViewProps) {
-  const hasSnapshotBlobs = Boolean(snapshotBlobsCount && (snapshotBlobsCount > 0))
-  const hasBackupBlobs = Boolean(backupBlobsCount && (backupBlobsCount > 0))
+  const hasSnapshotBlobs = Boolean(snapshotBlobsCount && snapshotBlobsCount > 0)
+  const hasBackupBlobs = Boolean(backupBlobsCount && backupBlobsCount > 0)
   return (
     <Box $height="100%">
       {sinkSession ? (
