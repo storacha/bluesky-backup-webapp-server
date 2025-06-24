@@ -23,10 +23,12 @@ const meta = {
       accountDid: 'did:key:accountDidasdfj92348j',
       createdAt: new Date(2025, 0, 1),
     },
-    blobs: [{ cid: 'xyz789' }],
+    snapshotBlobsCount: 3,
+    backupBlobsCount: 10,
     loginToSink: fn(),
     restoreRepo: fn(),
-    restoreBlobs: fn(),
+    restoreSnapshotBlobs: fn(),
+    restoreBackupBlobs: fn(),
   },
   decorators: [],
 } satisfies Meta<typeof RestoreDialogView>
@@ -52,7 +54,7 @@ export const RestoringRepostory: Story = {
 export const RestoringBlobs: Story = {
   args: {
     sinkSession,
-    isRestoringBlobs: true,
+    isRestoringSnapshotBlobs: true,
   },
 }
 
@@ -66,14 +68,22 @@ export const RestoredRepostory: Story = {
 export const RestoredBlobs: Story = {
   args: {
     sinkSession,
-    areBlobsRestored: true,
+    areSnapshotBlobsRestored: true,
   },
 }
 
-export const NoBlobs: Story = {
+export const NoSnapshotBlobs: Story = {
   args: {
     sinkSession,
-    blobs: [],
+    snapshotBlobsCount: 0,
+  },
+}
+
+export const NoBackupBlobs: Story = {
+  args: {
+    sinkSession,
+    snapshotBlobsCount: 0,
+    backupBlobsCount: 0,
   },
 }
 

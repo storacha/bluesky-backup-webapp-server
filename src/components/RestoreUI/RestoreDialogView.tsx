@@ -56,27 +56,37 @@ interface RestoreDialogViewProps {
   sinkSession?: CredentialSession
   loginToSink: LoginFn
   restoreRepo: () => Promise<void>
-  restoreBlobs: () => Promise<void>
+  restoreSnapshotBlobs: () => Promise<void>
+  restoreBackupBlobs: () => Promise<void>
   repo?: Repo
-  blobs?: Blob[]
   isRestoringRepo?: boolean
-  isRestoringBlobs?: boolean
   isRepoRestored?: boolean
-  areBlobsRestored?: boolean
+  snapshotBlobsCount?: number
+  isRestoringSnapshotBlobs?: boolean
+  areSnapshotBlobsRestored?: boolean
+  backupBlobsCount?: number
+  isRestoringBackupBlobs?: boolean
+  areBackupBlobsRestored?: boolean
 }
 
 export function RestoreDialogView({
   sinkSession,
   loginToSink,
   restoreRepo,
-  restoreBlobs,
+  restoreSnapshotBlobs,
+  restoreBackupBlobs,
   repo,
-  blobs,
   isRestoringRepo,
-  isRestoringBlobs,
   isRepoRestored,
-  areBlobsRestored,
+  snapshotBlobsCount,
+  isRestoringSnapshotBlobs,
+  areSnapshotBlobsRestored,
+  backupBlobsCount,
+  isRestoringBackupBlobs,
+  areBackupBlobsRestored,
 }: RestoreDialogViewProps) {
+  const hasSnapshotBlobs = Boolean(snapshotBlobsCount && snapshotBlobsCount > 0)
+  const hasBackupBlobs = Boolean(backupBlobsCount && backupBlobsCount > 0)
   return (
     <Box $height="100%">
       {sinkSession ? (
@@ -151,15 +161,15 @@ export function RestoreDialogView({
               </StatefulButton>
             </Stack>
           )}
-          {blobs && blobs.length > 0 && (
+          {hasSnapshotBlobs && (
             <Stack $gap="1rem">
               <Stack
                 $direction="row"
                 $alignItems="center"
                 $justifyContent="space-between"
               >
-                <DataTypeHeading>Media</DataTypeHeading>
-                <DataSinkIcon $restored={areBlobsRestored}>
+                <DataTypeHeading>Media In This Snapshot</DataTypeHeading>
+                <DataSinkIcon $restored={areSnapshotBlobsRestored}>
                   <CloudIcon size="16" />
                 </DataSinkIcon>
               </Stack>
@@ -171,15 +181,55 @@ export function RestoreDialogView({
                   $justifyContent="space-between"
                 >
                   <DetailName>Count</DetailName>
-                  <DetailValue>{blobs.length}</DetailValue>
+                  <DetailValue>{snapshotBlobsCount}</DetailValue>
                 </Stack>
               </Details>
               <StatefulButton
-                onClick={restoreBlobs}
-                isLoading={Boolean(isRestoringBlobs)}
-                disabled={Boolean(isRestoringBlobs || areBlobsRestored)}
+                onClick={restoreSnapshotBlobs}
+                isLoading={Boolean(isRestoringSnapshotBlobs)}
+                disabled={Boolean(
+                  isRestoringSnapshotBlobs || areSnapshotBlobsRestored
+                )}
               >
-                {areBlobsRestored ? (
+                {areSnapshotBlobsRestored ? (
+                  <CheckFatIcon color="var(--color-green)" />
+                ) : (
+                  'Restore'
+                )}
+              </StatefulButton>
+            </Stack>
+          )}
+          {hasBackupBlobs && (
+            <Stack $gap="1rem">
+              <Stack
+                $direction="row"
+                $alignItems="center"
+                $justifyContent="space-between"
+              >
+                <DataTypeHeading>Media In This Backup</DataTypeHeading>
+                <DataSinkIcon $restored={areBackupBlobsRestored}>
+                  <CloudIcon size="16" />
+                </DataSinkIcon>
+              </Stack>
+              <Details $gap="0.5rem">
+                <Stack
+                  $direction="row"
+                  $alignItems="center"
+                  $gap="1rem"
+                  $justifyContent="space-between"
+                >
+                  <DetailName>Count</DetailName>
+                  <DetailValue>{backupBlobsCount}</DetailValue>
+                </Stack>
+              </Details>
+              <StatefulButton
+                onClick={restoreBackupBlobs}
+                isLoading={Boolean(isRestoringBackupBlobs)}
+                disabled={Boolean(
+                  isRestoringBackupBlobs || areBackupBlobsRestored
+                )}
+              >
+                {areBackupBlobsRestored ? (
                   <CheckFatIcon color="var(--color-green)" />
                 ) : (
                   'Restore'

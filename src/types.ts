@@ -236,6 +236,20 @@ export interface BskyProfile {
 
 export type ProfileData = PlcProfile & BskyProfile
 
+function createPaginatedResultSchema<ItemType extends z.ZodType>(
+  itemSchema: ItemType
+) {
+  return z.strictObject({
+    count: z.number(),
+    results: z.array(itemSchema),
+    next: z.string().nullable().optional(),
+    prev: z.string().nullable().optional(),
+  })
+}
+
+export const atBlobPaginatedResultSchema =
+  createPaginatedResultSchema(atBlobSchema)
+
 export type PaginatedResult<T> = {
   count: number
   results: T[]
