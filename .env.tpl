@@ -5,8 +5,9 @@ NEXT_PUBLIC_STORACHA_SERVICE_DID=did:web:staging.up.storacha.network
 NEXT_PUBLIC_STORACHA_PROVIDER=did:web:staging.up.storacha.network
 NEXT_PUBLIC_IDENTITY_AUTHORITY=did:web:staging.up.storacha.network
 # Optional - additional proof if needed by the validator. If the service has an
-# alias, this needs to be a proof delegating 'ucan/attest' from
-# NEXT_PUBLIC_IDENTITY_AUTHORITY to the alias DID.
+# alias, this needs to be a proof delegating `ucan/attest` from
+# `NEXT_PUBLIC_IDENTITY_AUTHORITY` to the alias DID. You can use the script in
+# `scripts/mk-validator-proof.mjs` to generate.
 #NEXT_PUBLIC_UCAN_VALIDATOR_PROOF=
 
 # The identity of this service, and the private key associated with it. Note
