@@ -32,6 +32,7 @@
     // Consider this an "entry" because, like a library would, it exports things
     // we may not use yet, but want to have clearly available.
     "src/types.tsx!",
+    "scripts/mk-validator-proof.mjs!",
   ],
   // It's okay to export types even if they aren't (currently) used.
   "exclude": ["types"],
