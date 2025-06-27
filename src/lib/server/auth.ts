@@ -1,4 +1,5 @@
 import { Capabilities } from '@ipld/dag-ucan'
+import * as Proof from '@storacha/client/proof'
 import { ok, Schema } from '@ucanto/core'
 import { Delegation as DelegationType } from '@ucanto/interface'
 import { ed25519, Verifier } from '@ucanto/principal'
@@ -12,6 +13,7 @@ import {
   PRODUCTION_UPLOAD_SERVICE_PUBLIC_KEY,
   SERVER_DID,
   STAGING_UPLOAD_SERVICE_PUBLIC_KEY,
+  UCAN_VALIDATOR_PROOF,
 } from '@/lib/constants'
 import { getConstants } from '@/lib/server/constants'
 
@@ -78,6 +80,18 @@ const getAuthority = () => {
   return cachedAuthority
 }
 
+let cachedValidatorProofs: DelegationType[]
+const getValidatorProofs = async () => {
+  if (cachedValidatorProofs) {
+    return cachedValidatorProofs
+  }
+  cachedValidatorProofs = []
+  if (UCAN_VALIDATOR_PROOF) {
+    cachedValidatorProofs = [await Proof.parse(UCAN_VALIDATOR_PROOF)]
+  }
+  return cachedValidatorProofs
+}
+
 export const authorize = async (
   account: `did:${string}:${string}`,
   proof: DelegationType<Capabilities>
@@ -98,6 +112,7 @@ export const authorize = async (
     capability: atproto,
     authority: authority,
     principal: Verifier,
+    proofs: await getValidatorProofs(),
     // TODO at some point we need to implement revocation here
     validateAuthorization: () => ok({}),
     resolveDIDKey: async (did: `did:${string}:${string}`) => {

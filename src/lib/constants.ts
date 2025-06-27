@@ -26,6 +26,7 @@ if (!isDidWeb(process.env.NEXT_PUBLIC_IDENTITY_AUTHORITY))
     'NEXT_PUBLIC_IDENTITY_AUTHORITY must be set to the did:web of the service whose authentication decisions we trust - usually this should be did:web:up.storacha.network or did:web:staging.up.storacha.network'
   )
 export const IDENTITY_AUTHORITY = process.env.NEXT_PUBLIC_IDENTITY_AUTHORITY
+export const UCAN_VALIDATOR_PROOF = process.env.NEXT_PUBLIC_UCAN_VALIDATOR_PROOF
 
 if (
   !(
