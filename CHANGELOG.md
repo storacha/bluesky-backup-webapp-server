@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.14.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.13.0...v1.14.0) (2025-06-27)
+
+
+### Features
+
+* get restore flow working ([#234](https://github.com/storacha/bluesky-backup-webapp-server/issues/234)) ([36ea043](https://github.com/storacha/bluesky-backup-webapp-server/commit/36ea043500493dbea4012e70a56c92c998c620d7))
+
+
+### Bug Fixes
+
+* validate session authorized by alias DID ([#236](https://github.com/storacha/bluesky-backup-webapp-server/issues/236)) ([02d7dee](https://github.com/storacha/bluesky-backup-webapp-server/commit/02d7dee643763caff7d14df6495f7badfd1be857))
+
 ## [1.13.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.12.3...v1.13.0) (2025-06-16)
 
 
