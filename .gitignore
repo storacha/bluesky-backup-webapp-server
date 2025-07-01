@@ -60,3 +60,6 @@ storybook-static
 deploy/app/code_deploy.sh
 deploy/shared/builds
 deploy/app/builds
+
+# Sentry Config File
+.env.sentry-build-plugin
