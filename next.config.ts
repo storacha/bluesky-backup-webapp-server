@@ -1,5 +1,6 @@
 import { withSentryConfig } from '@sentry/nextjs'
 import { withYak } from 'next-yak/withYak'
+
 import { version } from './package.json'
 
 import type { NextConfig } from 'next'

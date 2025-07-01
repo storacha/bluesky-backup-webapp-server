@@ -1,8 +1,8 @@
 'use client'
 
+import { diagnoseSdkConnectivity, startSpan } from '@sentry/nextjs'
 import Head from 'next/head'
-import * as Sentry from '@sentry/nextjs'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 class SentryExampleFrontendError extends Error {
   constructor(message: string | undefined) {
@@ -17,7 +17,7 @@ export default function Page() {
 
   useEffect(() => {
     async function checkConnectivity() {
-      const result = await Sentry.diagnoseSdkConnectivity()
+      const result = await diagnoseSdkConnectivity()
       setIsConnected(result !== 'sentry-unreachable')
     }
     checkConnectivity()
@@ -66,7 +66,7 @@ export default function Page() {
         <button
           type="button"
           onClick={async () => {
-            await Sentry.startSpan(
+            await startSpan(
               {
                 name: 'Example Frontend Span',
                 op: 'test',
