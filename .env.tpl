@@ -56,6 +56,6 @@ PGPASSWORD=bluey
 #CHROMATIC_PROJECT_TOKEN=<project-token>
 
 # Humanode
-NEXT_PUBLIC_HUMANODE_AUTH_URL=https://auth.storacha-2025-04-22.oauth2.humanode.io/oauth2/auth
-NEXT_PUBLIC_HUMANODE_CLIENT_ID=5fe96153-b448-4873-95b3-bb6160223ed6
+NEXT_PUBLIC_HUMANODE_AUTH_URL=https://auth.storacha-2025-10-09.oauth2.humanode.io/oauth2/auth
+NEXT_PUBLIC_HUMANODE_CLIENT_ID=c9f6c85e-5ccc-4a86-8584-37522d146480
 NEXT_PUBLIC_HUMANODE_OAUTH_CALLBACK_URL=https://staging.up.storacha.network/oauth/humanode/callback
