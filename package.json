@@ -38,7 +38,7 @@
     "@ipld/dag-cbor": "^9.2.3",
     "@ipld/dag-ucan": "^3.4.5",
     "@phosphor-icons/react": "^2.1.7",
-    "@sentry/nextjs": "^9.10.1",
+    "@sentry/nextjs": "^9.34.0",
     "@storacha/access": "^1.2.0",
     "@storacha/capabilities": "^1.5.0",
     "@storacha/client": "^1.3.0",

@@ -25,9 +25,9 @@ NEXT_PUBLIC_STORACHA_GATEWAY_HOSTNAME=ipfs-staging.w3s.link
 NEXT_PUBLIC_STORACHA_GATEWAY_ID=did:web:ipfs-staging.w3s.link
 
 # Sentry
-NEXT_PUBLIC_SENTRY_DSN=https://bf79c216fe3c72328219f04aabeebc99@o609598.ingest.us.sentry.io/4508456692940801
+NEXT_PUBLIC_SENTRY_DSN=https://5d497dd98801ee03b51fa1abe107f244@o609598.ingest.us.sentry.io/4509594763788288
 NEXT_PUBLIC_SENTRY_ORG=storacha-it
-NEXT_PUBLIC_SENTRY_PROJECT=bluesky-backup
+NEXT_PUBLIC_SENTRY_PROJECT=bskystorage
 NEXT_PUBLIC_SENTRY_ENV=development
 
 # Deployment URL, for Bluesky and scheduled backups
