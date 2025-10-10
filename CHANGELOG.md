@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.14.0...v1.15.0) (2025-10-10)
+
+
+### Features
+
+* update to latest humanode ([#238](https://github.com/storacha/bluesky-backup-webapp-server/issues/238)) ([695e928](https://github.com/storacha/bluesky-backup-webapp-server/commit/695e9289b316113193ce3e2a9c727063fad93f2f))
+
 ## [1.14.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.13.0...v1.14.0) (2025-06-27)
 
 
