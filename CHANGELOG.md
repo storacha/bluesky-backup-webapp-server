@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.15.0...v1.16.0) (2025-11-26)
+
+
+### Features
+
+* new pricing table for bsky.storage! ([#240](https://github.com/storacha/bluesky-backup-webapp-server/issues/240)) ([506a510](https://github.com/storacha/bluesky-backup-webapp-server/commit/506a5102b1025d0a0136e7288f5c6dcd931bfa50))
+
 ## [1.15.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.14.0...v1.15.0) (2025-10-10)
 
 
