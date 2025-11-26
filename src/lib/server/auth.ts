@@ -120,7 +120,7 @@ export const authorize = async (
         const didweb = did as `did:web:${string}`
         const principal = getPrincipalMapping()[didweb]
         if (principal) {
-          return ok(principal)
+          return ok([principal])
         }
       }
       return { error: new DIDResolutionError(did) }

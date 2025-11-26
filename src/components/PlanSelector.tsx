@@ -51,7 +51,8 @@ export default function PlanSelector() {
       </PricingExplanation>
       {stripeSignup ? (
         <Box $width="100%">
-          <Stack $alignItems="center">
+          <Stack $alignItems="center" $gap="1rem">
+            <StripePricingTable />
             <Button
               onClick={() => {
                 setStripeSignup(false)
@@ -59,7 +60,6 @@ export default function PlanSelector() {
             >
               Back
             </Button>
-            <StripePricingTable />
           </Stack>
         </Box>
       ) : (
