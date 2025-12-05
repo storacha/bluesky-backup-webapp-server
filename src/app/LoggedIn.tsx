@@ -1,7 +1,7 @@
 'use client'
 
 import { Account, Client, useAuthenticator } from '@storacha/ui-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { styled } from 'next-yak'
 import { ReactNode, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
@@ -175,6 +175,8 @@ export function LoggedIn() {
   const [sessionCreationAttempted, setSessionCreationAttempted] =
     useState(false)
   const { data: plan, isLoading: planIsLoading } = usePlan(account)
+  const params = useSearchParams()
+  const justCheckedOut = params.get('checkout-success') === 'true'
   useEffect(() => {
     // if the client & account are loaded, the session DID is erroring and we're
     // not currently creating a session, try to create one
@@ -203,7 +205,7 @@ export function LoggedIn() {
       <AppLayout selectedBackupId={null}>
         {planIsLoading ? (
           <FullscreenLoader />
-        ) : plan ? (
+        ) : (plan || justCheckedOut) ? (
           <BackupScreen
             selectedBackupId={null}
             rightPanelContent={
