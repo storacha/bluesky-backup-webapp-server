@@ -150,18 +150,17 @@ interface CreateCheckoutSessionProps {
   redirectAfterCompletion?: boolean
 }
 
-function createSuccessUrl(){
+function createSuccessUrl() {
   const u = new URL(location.href)
-  u.searchParams.append("checkout-success", "true")
+  u.searchParams.append('checkout-success', 'true')
   return u.href
 }
 
 function createCancelUrl() {
   const u = new URL(location.href)
-  u.searchParams.append("checkout-success", "false")
+  u.searchParams.append('checkout-success', 'false')
   return u.href
 }
-
 
 export default function StripePricingTable({
   freeTrial = false,

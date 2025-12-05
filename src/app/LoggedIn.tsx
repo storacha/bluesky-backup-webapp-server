@@ -205,7 +205,7 @@ export function LoggedIn() {
       <AppLayout selectedBackupId={null}>
         {planIsLoading ? (
           <FullscreenLoader />
-        ) : (plan || justCheckedOut) ? (
+        ) : plan || justCheckedOut ? (
           <BackupScreen
             selectedBackupId={null}
             rightPanelContent={
