@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.16.1](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.16.0...v1.16.1) (2025-12-09)
+
+
+### Bug Fixes
+
+* don't show pricing table after stripe checkout ([#242](https://github.com/storacha/bluesky-backup-webapp-server/issues/242)) ([ccdfe47](https://github.com/storacha/bluesky-backup-webapp-server/commit/ccdfe47b5a8acd864c6d2b6dc48ff476f96d0a9a))
+* upgrade next for CVE ([#244](https://github.com/storacha/bluesky-backup-webapp-server/issues/244)) ([32bb5d8](https://github.com/storacha/bluesky-backup-webapp-server/commit/32bb5d8580f745a1e31ad12c077b07a2d4d919b9))
+
 ## [1.16.0](https://github.com/storacha/bluesky-backup-webapp-server/compare/v1.15.0...v1.16.0) (2025-11-26)
 
 
