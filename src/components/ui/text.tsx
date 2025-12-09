@@ -17,6 +17,7 @@ export type TextProps = Partial<
     | '$width'
     | '$maxWidth'
     | '$border'
+    | '$whiteSpace'
   >
 >
 
@@ -32,6 +33,7 @@ export const Text = styled.p<TextProps>`
   width: ${({ $width = '' }) => $width};
   max-width: ${({ $maxWidth = '' }) => $maxWidth};
   border: ${({ $border = '' }) => $border};
+  white-space: ${({ $whiteSpace = '' }) => $whiteSpace};
 `
 
 export const Span = styled.span<TextProps>`
